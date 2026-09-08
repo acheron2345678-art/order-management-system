@@ -1,43 +1,31 @@
 {% extends "base.html" %}
 
-
 {% block title %}
-
 {{ platform }} Order {{ order.order_number }} - Order Management
-
 {% endblock %}
 
 
 {% block content %}
 
-
 <div
     class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
 >
 
-
     <div>
 
-
         <div class="d-flex align-items-center gap-2 mb-1">
-
 
             <span
                 class="platform-dot platform-{{ platform_url }}"
             >
-
                 {{ 'S' if platform_url == 'swiggy' else 'I' }}
-
             </span>
-
 
             <h1 class="h2 fw-bold mb-0">
                 Order Details
             </h1>
 
-
         </div>
-
 
 
         <p class="text-body-secondary mb-0">
@@ -52,16 +40,12 @@
 
         </p>
 
-
     </div>
-
 
 
     <div class="d-flex flex-wrap gap-2">
 
-
         {% if current_user.role == "client" %}
-
 
         <a
             href="/my-purchases"
@@ -70,9 +54,7 @@
             ← My Purchases
         </a>
 
-
         {% else %}
-
 
         <a
             href="/{{ platform_url }}/orders"
@@ -81,13 +63,10 @@
             ← Back to Orders
         </a>
 
-
         {% endif %}
 
 
-
         {% if current_user.role == "admin" %}
-
 
         <a
             href="/{{ platform_url }}/orders/edit/{{ order.id }}"
@@ -96,12 +75,9 @@
             Edit Order
         </a>
 
-
         {% endif %}
 
-
     </div>
-
 
 </div>
 
@@ -110,54 +86,34 @@
 <div class="row g-4">
 
 
-
-    <!-- ========================================= -->
-    <!-- LEFT COLUMN -->
-    <!-- ========================================= -->
-
     <div class="col-xl-8">
 
 
-
-        <!-- ========================================= -->
-        <!-- PURCHASED PRODUCTS -->
-        <!-- ========================================= -->
-
         <div class="card border-0 shadow-sm mb-4">
-
 
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
 
-
                 <div
                     class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
                 >
 
-
                     <div>
-
 
                         <h2 class="h5 fw-bold mb-1">
                             Purchased Products
                         </h2>
 
-
                         <p class="small text-body-secondary mb-0">
-
                             Products and quantities included
                             in this order.
-
                         </p>
-
 
                     </div>
 
 
-
                     {% if order_items %}
-
 
                     <span class="badge text-bg-primary">
 
@@ -167,12 +123,9 @@
 
                     </span>
 
-
                     {% endif %}
 
-
                 </div>
-
 
             </div>
 
@@ -184,28 +137,20 @@
                 {% if order_items %}
 
 
-
                     {% for item in order_items %}
-
 
                     <div
                         class="p-3 p-md-4 {% if not loop.last %}border-bottom{% endif %}"
                     >
 
-
                         <div class="row g-3 align-items-center">
 
 
-
-                            <!-- PRODUCT -->
-
                             <div class="col-md-5">
-
 
                                 <div
                                     class="d-flex align-items-center gap-3"
                                 >
-
 
                                     <div
                                         class="quick-icon bg-primary-subtle text-primary flex-shrink-0"
@@ -214,9 +159,7 @@
                                     </div>
 
 
-
                                     <div class="min-w-0">
-
 
                                         <div
                                             class="fw-bold text-truncate"
@@ -228,27 +171,19 @@
                                         <div
                                             class="small text-body-secondary"
                                         >
-
                                             Product ID:
                                             {{ item.product_id }}
-
                                         </div>
-
 
                                     </div>
 
-
                                 </div>
-
 
                             </div>
 
 
 
-                            <!-- UNIT PRICE -->
-
                             <div class="col-4 col-md-2">
-
 
                                 <div
                                     class="small text-body-secondary mb-1"
@@ -256,22 +191,15 @@
                                     Unit Price
                                 </div>
 
-
                                 <div class="fw-semibold">
-
                                     ₹{{ "{:,.2f}".format(item.unit_price) }}
-
                                 </div>
-
 
                             </div>
 
 
 
-                            <!-- QUANTITY -->
-
                             <div class="col-4 col-md-2">
-
 
                                 <div
                                     class="small text-body-secondary mb-1"
@@ -279,22 +207,17 @@
                                     Quantity
                                 </div>
 
-
                                 <div class="fw-semibold">
                                     {{ item.quantity }}
                                 </div>
-
 
                             </div>
 
 
 
-                            <!-- TOTAL -->
-
                             <div
                                 class="col-4 col-md-3 text-end"
                             >
-
 
                                 <div
                                     class="small text-body-secondary mb-1"
@@ -302,66 +225,49 @@
                                     Total
                                 </div>
 
-
                                 <div
                                     class="h5 fw-bold text-primary mb-0"
                                 >
-
                                     ₹{{ "{:,.2f}".format(item.line_total) }}
-
                                 </div>
-
 
                             </div>
 
 
                         </div>
 
-
                     </div>
-
 
                     {% endfor %}
 
 
 
-                    <!-- ================================= -->
-                    <!-- ORDER TOTAL -->
-                    <!-- ================================= -->
-
                     <div
                         class="p-3 p-md-4 border-top bg-body-tertiary"
                     >
-
 
                         <div
                             class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
                         >
 
-
                             <div>
-
 
                                 <div class="fw-bold">
                                     Order Total
                                 </div>
 
 
-
                                 <div
                                     class="small text-body-secondary"
                                 >
 
-
                                     {% set ns = namespace(total_quantity=0) %}
-
 
                                     {% for item in order_items %}
 
                                         {% set ns.total_quantity = ns.total_quantity + item.quantity %}
 
                                     {% endfor %}
-
 
 
                                     {{ ns.total_quantity }}
@@ -374,25 +280,18 @@
 
                                     product{% if order_items|length != 1 %}s{% endif %}
 
-
                                 </div>
 
-
                             </div>
-
 
 
                             <div
                                 class="h3 fw-bold text-primary mb-0"
                             >
-
                                 ₹{{ "{:,.2f}".format(order.amount) }}
-
                             </div>
 
-
                         </div>
-
 
                     </div>
 
@@ -401,66 +300,44 @@
                 {% else %}
 
 
-
-                <!-- ================================= -->
-                <!-- LEGACY ORDER -->
-                <!-- ================================= -->
-
                 <div class="p-4">
-
 
                     <div
                         class="alert alert-secondary mb-0"
                         role="alert"
                     >
 
-
                         <strong class="d-block mb-1">
                             Legacy Order
                         </strong>
 
 
-
                         {% if order.product_name and order.product_name != "Multiple Products" %}
 
-
                         <div>
-
                             Product:
-
                             <strong>
                                 {{ order.product_name }}
                             </strong>
-
                         </div>
 
 
-
                         <div class="mt-1">
-
                             Amount:
-
                             <strong>
-
                                 ₹{{ "{:,.2f}".format(order.amount) }}
-
                             </strong>
-
                         </div>
 
 
                         {% else %}
 
-
                         Product-level information is not
                         available for this older order.
 
-
                         {% endif %}
 
-
                     </div>
-
 
                 </div>
 
@@ -470,695 +347,173 @@
 
             </div>
 
-
         </div>
 
 
 
-        <!-- ========================================= -->
-        <!-- ORDER HISTORY -->
-        <!-- ========================================= -->
-
-        {% if history %}
-
-
-        <div class="card border-0 shadow-sm">
-
-
-            <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
-            >
-
-
-                <div>
-
-
-                    <h2 class="h5 fw-bold mb-1">
-                        Order History
-                    </h2>
-
-
-                    <p class="small text-body-secondary mb-0">
-
-                        Changes made to this order over time.
-
-                    </p>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="card-body p-0">
-
-
-                {% for item in history %}
-
-
-                <div
-                    class="p-3 p-md-4 {% if not loop.last %}border-bottom{% endif %}"
-                >
-
-
-                    <div
-                        class="d-flex flex-column flex-md-row justify-content-between gap-3"
-                    >
-
-
-                        <div>
-
-
-                            <div class="fw-semibold mb-1">
-
-
-                                {% if item.action == "created" %}
-
-                                    Order created
-
-
-                                {% elif item.action == "deleted" %}
-
-                                    Order deleted
-
-
-                                {% elif item.action == "updated" %}
-
-                                    Order updated
-
-
-                                {% else %}
-
-                                    {{ item.action|replace('_', ' ')|title }}
-
-                                {% endif %}
-
-
-                            </div>
-
-
-
-                            {% if item.field_name %}
-
-
-                            <div
-                                class="small text-body-secondary"
-                            >
-
-
-                                <strong>
-
-                                    {{ item.field_name|replace('_', ' ')|title }}
-
-                                </strong>
-
-
-
-                                {% if item.old_value is not none %}
-
-
-                                <span class="mx-1">
-                                    :
-                                </span>
-
-
-                                <span>
-                                    {{ item.old_value }}
-                                </span>
-
-
-                                {% endif %}
-
-
-
-                                {% if item.new_value is not none %}
-
-
-                                <span class="mx-1">
-                                    →
-                                </span>
-
-
-                                <span class="fw-semibold text-body">
-
-                                    {{ item.new_value }}
-
-                                </span>
-
-
-                                {% endif %}
-
-
-                            </div>
-
-
-                            {% endif %}
-
-
-                        </div>
-
-
-
-                        <div
-                            class="small text-body-secondary text-md-end"
-                        >
-
-
-                            {% if item.created_at %}
-
-                            {{ item.created_at.strftime("%d %b %Y, %I:%M %p") }}
-
-                            {% endif %}
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-                {% endfor %}
-
-
-            </div>
-
-
-        </div>
-
-
-        {% endif %}
+        {% include "orders/_history_timeline.html" %}
 
 
     </div>
 
 
 
-    <!-- ========================================= -->
-    <!-- RIGHT COLUMN -->
-    <!-- ========================================= -->
-
     <div class="col-xl-4">
 
 
-
-        <!-- ========================================= -->
-        <!-- ORDER INFORMATION -->
-        <!-- ========================================= -->
-
         <div class="card border-0 shadow-sm mb-4">
-
 
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
-
 
                 <h2 class="h5 fw-bold mb-0">
                     Order Information
                 </h2>
 
-
             </div>
-
 
 
             <div class="card-body p-4">
 
 
-
-                <!-- ORDER NUMBER -->
-
                 <div class="mb-4">
-
 
                     <div class="detail-label">
                         Order Number
                     </div>
 
-
                     <div class="detail-value">
-
                         {{ order.order_number }}
-
                     </div>
-
 
                 </div>
 
 
 
-                <!-- PLATFORM -->
-
                 <div class="mb-4">
-
 
                     <div class="detail-label">
                         Platform
                     </div>
 
-
                     <div
                         class="d-flex align-items-center gap-2"
                     >
 
-
                         <span
                             class="platform-dot platform-{{ platform_url }}"
                         >
-
                             {{ 'S' if platform_url == 'swiggy' else 'I' }}
-
                         </span>
-
 
                         <strong>
                             {{ platform }}
                         </strong>
 
-
                     </div>
-
 
                 </div>
 
 
 
-                <!-- CUSTOMER -->
-
                 <div class="mb-4">
-
 
                     <div class="detail-label">
                         Customer
                     </div>
 
-
                     <div class="detail-value">
-
                         {{ order.customer_name }}
-
                     </div>
-
 
                 </div>
 
 
 
-                <!-- STATUS -->
-
                 <div class="mb-4">
-
 
                     <div class="detail-label">
                         Status
                     </div>
 
-
                     <div>
-
 
                         <span
                             class="status-badge status-{{ order.status }}"
                         >
-
                             {{ order.status|capitalize }}
-
                         </span>
 
-
                     </div>
-
 
                 </div>
 
 
 
-                <!-- ORDER DATE -->
-
                 <div class="mb-4">
-
 
                     <div class="detail-label">
                         Order Date
                     </div>
 
-
                     <div class="detail-value">
-
 
                         {% if order.order_date %}
 
                             {{ order.order_date.strftime("%d %b %Y") }}
 
-
                         {% else %}
 
                             —
 
-
                         {% endif %}
 
-
                     </div>
-
 
                 </div>
 
 
 
-                <!-- TOTAL -->
-
                 <div>
-
 
                     <div class="detail-label">
                         Total Amount
                     </div>
 
-
                     <div
                         class="h3 fw-bold text-primary mb-0"
                     >
-
                         ₹{{ "{:,.2f}".format(order.amount) }}
-
                     </div>
-
 
                 </div>
 
 
             </div>
-
 
         </div>
 
 
-
-        <!-- ========================================= -->
-        <!-- SWIGGY DELIVERY DETAILS -->
-        <!-- ========================================= -->
-
-        {% if platform_url == "swiggy" %}
-
-
-        {% set has_delivery_details =
-            order.delivery_name
-            or order.delivery_phone
-            or order.delivery_address_line1
-            or order.delivery_address_line2
-            or order.delivery_city
-            or order.delivery_state
-            or order.delivery_postal_code
-            or order.delivery_country
-        %}
-
-
-
-        <div class="card border-0 shadow-sm mb-4">
-
-
-            <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
-            >
-
-
-                <div>
-
-
-                    <h2 class="h5 fw-bold mb-1">
-                        Delivery Details
-                    </h2>
-
-
-                    <p class="small text-body-secondary mb-0">
-
-                        Delivery information captured
-                        when this order was placed.
-
-                    </p>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="card-body p-4">
-
-
-                {% if has_delivery_details %}
-
-
-
-                <!-- DELIVERY NAME -->
-
-                <div class="mb-4">
-
-
-                    <div class="detail-label">
-                        Deliver To
-                    </div>
-
-
-                    <div class="detail-value">
-
-
-                        {{
-                            order.delivery_name
-                            or
-                            order.customer_name
-                        }}
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- PHONE -->
-
-                <div class="mb-4">
-
-
-                    <div class="detail-label">
-                        Phone
-                    </div>
-
-
-                    <div class="detail-value">
-
-
-                        {% if order.delivery_phone %}
-
-                            {{ order.delivery_phone }}
-
-
-                        {% else %}
-
-                            —
-
-
-                        {% endif %}
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- ADDRESS -->
-
-                <div>
-
-
-                    <div class="detail-label">
-                        Delivery Address
-                    </div>
-
-
-                    <div class="detail-value lh-lg">
-
-
-
-                        {% if order.delivery_address_line1 %}
-
-
-                        <div>
-                            {{ order.delivery_address_line1 }}
-                        </div>
-
-
-                        {% endif %}
-
-
-
-                        {% if order.delivery_address_line2 %}
-
-
-                        <div>
-                            {{ order.delivery_address_line2 }}
-                        </div>
-
-
-                        {% endif %}
-
-
-
-                        {% if
-                            order.delivery_city
-                            or
-                            order.delivery_state
-                            or
-                            order.delivery_postal_code
-                        %}
-
-
-                        <div>
-
-
-                            {% if order.delivery_city %}
-
-                                {{ order.delivery_city }}
-
-                            {% endif %}
-
-
-
-                            {% if
-                                order.delivery_city
-                                and
-                                order.delivery_state
-                            %}
-
-                                ,
-
-                            {% endif %}
-
-
-
-                            {% if order.delivery_state %}
-
-                                {{ order.delivery_state }}
-
-                            {% endif %}
-
-
-
-                            {% if order.delivery_postal_code %}
-
-                                {{ order.delivery_postal_code }}
-
-                            {% endif %}
-
-
-                        </div>
-
-
-                        {% endif %}
-
-
-
-                        {% if order.delivery_country %}
-
-
-                        <div>
-                            {{ order.delivery_country }}
-                        </div>
-
-
-                        {% endif %}
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                {% else %}
-
-
-
-                <!-- ================================= -->
-                <!-- LEGACY DELIVERY FALLBACK -->
-                <!-- ================================= -->
-
-                <div
-                    class="alert alert-secondary mb-0"
-                >
-
-
-                    <strong class="d-block mb-1">
-                        Delivery details unavailable
-                    </strong>
-
-
-                    <div class="small">
-
-                        This order was created before
-                        delivery details were stored.
-
-                    </div>
-
-
-                </div>
-
-
-                {% endif %}
-
-
-            </div>
-
-
-        </div>
-
-
-        {% endif %}
-
-
-
-        <!-- ========================================= -->
-        <!-- ADMIN ACTIONS -->
-        <!-- ========================================= -->
 
         {% if current_user.role == "admin" %}
 
-
         <div class="card border-0 shadow-sm">
-
 
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
-
 
                 <h2 class="h5 fw-bold mb-0">
                     Admin Actions
                 </h2>
 
-
             </div>
-
 
 
             <div class="card-body p-4">
 
-
                 <div class="d-grid gap-2">
-
 
                     <a
                         href="/{{ platform_url }}/orders/edit/{{ order.id }}"
@@ -1168,13 +523,11 @@
                     </a>
 
 
-
                     <form
                         method="post"
                         action="/{{ platform_url }}/orders/delete/{{ order.id }}"
                         onsubmit="return confirm('Are you sure you want to delete this order?');"
                     >
-
 
                         <button
                             type="submit"
@@ -1183,18 +536,13 @@
                             Delete Order
                         </button>
 
-
                     </form>
-
 
                 </div>
 
-
             </div>
 
-
         </div>
-
 
         {% endif %}
 
@@ -1203,6 +551,5 @@
 
 
 </div>
-
 
 {% endblock %}

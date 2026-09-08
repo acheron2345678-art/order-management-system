@@ -1,0 +1,216 @@
+{% if history %}
+
+<div class="card border-0 shadow-sm">
+
+    <div
+        class="card-header bg-body border-bottom p-3 p-md-4"
+    >
+
+        <div>
+
+            <h2 class="h5 fw-bold mb-1">
+                Activity Timeline
+            </h2>
+
+            <p class="small text-body-secondary mb-0">
+                A record of changes made to this
+                {{ "project" if platform_url == "insights" else "order" }}.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body p-3 p-md-4">
+
+        <div class="order-history-timeline">
+
+            {% for item in history %}
+
+            <div class="order-history-item">
+
+                <div
+                    class="order-history-marker order-history-{{ item.action }}"
+                    title="{{ item.action|replace('_', ' ')|title }}"
+                >
+
+                    {% if item.action == "create" %}
+                        +
+                    {% elif item.action == "update" %}
+                        ↻
+                    {% elif item.action == "delete" %}
+                        ×
+                    {% else %}
+                        •
+                    {% endif %}
+
+                </div>
+
+
+                <div class="order-history-content">
+
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between gap-2"
+                    >
+
+                        <div>
+
+                            <div class="fw-semibold">
+
+                                {% if item.action == "create" %}
+
+                                    {{
+                                        "Project created"
+                                        if platform_url == "insights"
+                                        else "Order created"
+                                    }}
+
+                                {% elif item.action == "update" %}
+
+                                    {% if item.field_name %}
+
+                                        {{
+                                            item.field_name
+                                            |replace('_', ' ')
+                                            |title
+                                        }} updated
+
+                                    {% else %}
+
+                                        {{
+                                            "Project updated"
+                                            if platform_url == "insights"
+                                            else "Order updated"
+                                        }}
+
+                                    {% endif %}
+
+                                {% elif item.action == "delete" %}
+
+                                    {{
+                                        "Project deleted"
+                                        if platform_url == "insights"
+                                        else "Order deleted"
+                                    }}
+
+                                {% else %}
+
+                                    {{
+                                        item.action
+                                        |replace('_', ' ')
+                                        |title
+                                    }}
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="small text-body-secondary mt-1">
+
+                                {% if item.user %}
+
+                                    {{ item.user.username }}
+
+                                    {% if item.user.role %}
+
+                                        <span class="mx-1">•</span>
+
+                                        {{ item.user.role|capitalize }}
+
+                                    {% endif %}
+
+                                {% elif item.changed_by %}
+
+                                    User #{{ item.changed_by }}
+
+                                {% else %}
+
+                                    System
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="small text-body-secondary text-md-end flex-shrink-0"
+                        >
+
+                            {% if item.created_at %}
+
+                                <div>
+                                    {{ item.created_at.strftime("%d %b %Y") }}
+                                </div>
+
+                                <div>
+                                    {{ item.created_at.strftime("%I:%M %p") }}
+                                </div>
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    {% if
+                        item.action == "update"
+                        and
+                        item.field_name
+                    %}
+
+                    <div class="mt-2">
+
+                        <span class="text-body-secondary">
+                            Previous:
+                        </span>
+
+                        <strong>
+                            {{
+                                item.old_value
+                                if item.old_value is not none
+                                else "—"
+                            }}
+                        </strong>
+
+                        <span class="text-body-secondary">
+                            →
+                        </span>
+
+                        <span class="text-body-secondary">
+                            New:
+                        </span>
+
+                        <strong>
+                            {{
+                                item.new_value
+                                if item.new_value is not none
+                                else "—"
+                            }}
+                        </strong>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
