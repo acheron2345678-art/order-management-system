@@ -66,17 +66,52 @@
 
 
 
+    <!-- ========================================= -->
+    <!-- BOOTSTRAP -->
+    <!-- ========================================= -->
+
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
 
+
+    <!-- ========================================= -->
+    <!-- DATATABLES -->
+    <!-- ========================================= -->
+
     <link
         href="https://cdn.datatables.net/2.3.8/css/dataTables.bootstrap5.min.css"
         rel="stylesheet"
     >
 
+
+
+    <!-- ========================================= -->
+    <!-- DATATABLES BUTTONS - ADMIN ONLY -->
+    <!-- ========================================= -->
+
+    {% if
+        current_user is defined
+        and
+        current_user
+        and
+        current_user.role == "admin"
+    %}
+
+    <link
+        href="https://cdn.datatables.net/buttons/3.2.6/css/buttons.bootstrap5.min.css"
+        rel="stylesheet"
+    >
+
+    {% endif %}
+
+
+
+    <!-- ========================================= -->
+    <!-- APPLICATION CSS -->
+    <!-- ========================================= -->
 
     <link
         rel="stylesheet"
@@ -912,6 +947,11 @@
 ></script>
 
 
+
+<!-- ========================================= -->
+<!-- DATATABLES -->
+<!-- ========================================= -->
+
 <script
     src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"
 ></script>
@@ -920,6 +960,44 @@
 <script
     src="https://cdn.datatables.net/2.3.8/js/dataTables.bootstrap5.min.js"
 ></script>
+
+
+
+<!-- ========================================= -->
+<!-- EXCEL EXPORT - ADMIN ONLY -->
+<!-- ========================================= -->
+
+{% if
+    current_user is defined
+    and
+    current_user
+    and
+    current_user.role == "admin"
+%}
+
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+></script>
+
+
+<script
+    src="https://cdn.datatables.net/buttons/3.2.6/js/dataTables.buttons.min.js"
+></script>
+
+
+<script
+    src="https://cdn.datatables.net/buttons/3.2.6/js/buttons.bootstrap5.min.js"
+></script>
+
+
+<script
+    src="https://cdn.datatables.net/buttons/3.2.6/js/buttons.html5.min.js"
+></script>
+
+
+{% endif %}
+
 
 
 <script
@@ -938,7 +1016,7 @@
 
 
 <script
-    src="/static/js/datatables.js?v=4"
+    src="/static/js/datatables.js?v=5"
 ></script>
 
 
