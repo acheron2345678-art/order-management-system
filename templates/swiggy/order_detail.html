@@ -392,7 +392,7 @@
 
 
                 <div
-                    class="card border-0 shadow-sm"
+                    class="card border-0 shadow-sm mb-4"
                 >
 
 
@@ -543,6 +543,231 @@
 
 
                         </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =====================================
+                     DELIVERY DETAILS
+                     ===================================== -->
+
+                {% set has_delivery_details =
+                    order.delivery_name
+                    or order.delivery_phone
+                    or order.delivery_address_line1
+                    or order.delivery_address_line2
+                    or order.delivery_city
+                    or order.delivery_state
+                    or order.delivery_postal_code
+                    or order.delivery_country
+                %}
+
+
+                <div
+                    class="card border-0 shadow-sm"
+                >
+
+
+                    <div class="card-body p-4">
+
+
+                        <span class="sw-eyebrow">
+                            DELIVERY
+                        </span>
+
+
+                        <h2
+                            class="h5 fw-bold mt-2 mb-4"
+                        >
+                            Delivery Details
+                        </h2>
+
+
+                        {% if has_delivery_details %}
+
+
+                        <!-- NAME -->
+
+                        <div class="mb-3">
+
+                            <div
+                                class="small text-body-secondary mb-1"
+                            >
+                                Deliver To
+                            </div>
+
+
+                            <div class="fw-semibold">
+
+                                {{
+                                    order.delivery_name
+                                    or
+                                    order.customer_name
+                                }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PHONE -->
+
+                        {% if order.delivery_phone %}
+
+                        <div class="mb-3">
+
+                            <div
+                                class="small text-body-secondary mb-1"
+                            >
+                                Phone
+                            </div>
+
+
+                            <div class="fw-semibold">
+                                {{ order.delivery_phone }}
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+
+                        <!-- ADDRESS -->
+
+                        <div>
+
+                            <div
+                                class="small text-body-secondary mb-1"
+                            >
+                                Delivery Address
+                            </div>
+
+
+                            <div class="fw-semibold lh-lg">
+
+
+                                {% if order.delivery_address_line1 %}
+
+                                <div>
+                                    {{ order.delivery_address_line1 }}
+                                </div>
+
+                                {% endif %}
+
+
+
+                                {% if order.delivery_address_line2 %}
+
+                                <div>
+                                    {{ order.delivery_address_line2 }}
+                                </div>
+
+                                {% endif %}
+
+
+
+                                {% if
+                                    order.delivery_city
+                                    or
+                                    order.delivery_state
+                                    or
+                                    order.delivery_postal_code
+                                %}
+
+                                <div>
+
+
+                                    {% if order.delivery_city %}
+
+                                        {{ order.delivery_city }}
+
+                                    {% endif %}
+
+
+                                    {% if
+                                        order.delivery_city
+                                        and
+                                        order.delivery_state
+                                    %}
+
+                                        ,
+
+                                    {% endif %}
+
+
+                                    {% if order.delivery_state %}
+
+                                        {{ order.delivery_state }}
+
+                                    {% endif %}
+
+
+                                    {% if order.delivery_postal_code %}
+
+                                        {{ order.delivery_postal_code }}
+
+                                    {% endif %}
+
+
+                                </div>
+
+                                {% endif %}
+
+
+
+                                {% if order.delivery_country %}
+
+                                <div>
+                                    {{ order.delivery_country }}
+                                </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div
+                            class="small text-body-secondary border-top pt-3 mt-4"
+                        >
+                            This is the delivery information
+                            saved when this order was placed.
+                        </div>
+
+
+                        {% else %}
+
+
+                        <div
+                            class="alert alert-secondary mb-0"
+                        >
+
+                            <strong class="d-block mb-1">
+                                Delivery details unavailable
+                            </strong>
+
+
+                            <div class="small">
+
+                                This is an older order created before
+                                delivery information was stored.
+
+                            </div>
+
+                        </div>
+
+
+                        {% endif %}
 
 
                     </div>
