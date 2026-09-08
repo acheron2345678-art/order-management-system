@@ -458,7 +458,7 @@ def create_cart_orders(
             # REDUCE STOCK
             # =================================
 
-            product = (
+            product = ( 
                 item["product"]
             )
 
