@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit {{ platform }} Order - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-xl-10 col-xxl-9">
+
+        <div
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+        >
+
+            <div>
+
+                <div class="d-flex align-items-center gap-2 mb-1">
+
+                    <span
+                        class="platform-dot platform-{{ platform_url }}"
+                    >
+                        {{ 'S' if platform_url == 'swiggy' else 'I' }}
+                    </span>
+
+                    <h1 class="h2 fw-bold mb-0">
+                        Edit {{ platform }} Order
+                    </h1>
+
+                </div>
+
+                <p class="text-body-secondary mb-0">
+                    Update the selected order information.
+                    Products, quantities and the order total remain unchanged.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/{{ platform_url }}/orders"
+                class="btn btn-outline-secondary"
+            >
+                ← Back to Orders
+            </a>
+
+        </div>
+
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body p-4 p-md-5">
+
+                {% if not clients %}
+
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                >
+                    No active client accounts are available.
+                    Create or activate a client before reassigning
+                    this order.
+                </div>
+
+                {% endif %}
+
+
+                <div
+                    class="alert alert-primary border-0 mb-4"
+                    role="alert"
+                >
+                    <strong>
+                        Administration only.
+                    </strong>
+
+                    Orders cannot be created from Order Management.
+                    Clients create new orders through Swiggy or submit
+                    new projects through Insights.
+                </div>
+
+
+                <form
+                    method="post"
+                    action="/{{ platform_url }}/orders/edit/{{ order.id }}"
+                    id="order-form"
+                >
+
+                    <div class="row g-4">
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="customer_name"
+                                class="form-label"
+                            >
+                                Customer Name
+                            </label>
+
+                            <input
+                                id="customer_name"
+                                name="customer_name"
+                                type="text"
+                                class="form-control"
+                                value="{{ order.customer_name }}"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="order_number"
+                                class="form-label"
+                            >
+                                Order Number
+                            </label>
+
+                            <input
+                                id="order_number"
+                                name="order_number"
+                                type="text"
+                                class="form-control"
+                                value="{{ order.order_number }}"
+                                maxlength="50"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="client_id"
+                                class="form-label"
+                            >
+                                Client Account
+                            </label>
+
+                            <select
+                                id="client_id"
+                                name="client_id"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select a client
+                                </option>
+
+                                {% for client in clients %}
+
+                                <option
+                                    value="{{ client.id }}"
+                                    {% if order.client_id == client.id %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    {{ client.username }}
+                                    — {{ client.email }}
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                            <div class="form-text">
+                                The selected client owns and can view this order.
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="order_date"
+                                class="form-label"
+                            >
+                                Order Date
+                            </label>
+
+                            <input
+                                id="order_date"
+                                name="order_date"
+                                type="date"
+                                class="form-control"
+                                value="{{ order.order_date.isoformat() }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="order-total-display"
+                                class="form-label"
+                            >
+                                Order Total
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    ₹
+                                </span>
+
+                                <input
+                                    id="order-total-display"
+                                    type="text"
+                                    class="form-control"
+                                    value="{{ '{:,.2f}'.format(order.amount) }}"
+                                    readonly
+                                >
+
+                            </div>
+
+                            <div class="form-text">
+                                The order total is preserved while editing.
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="status"
+                                class="form-label"
+                            >
+                                Status
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status"
+                                class="form-select"
+                                required
+                            >
+
+                                {% for item in statuses %}
+
+                                <option
+                                    value="{{ item }}"
+                                    {% if order.status == item %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    {{ item|capitalize }}
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+
+                            <div class="form-text">
+
+                                Current status:
+
+                                <strong>
+                                    {{ order.status|capitalize }}
+                                </strong>
+
+                                {% if statuses|length == 1 %}
+
+                                    — this order has reached a final status.
+
+                                {% else %}
+
+                                    — only valid next statuses are available.
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div
+                        class="border rounded-3 p-3 mt-4 bg-body-tertiary"
+                    >
+
+                        <div class="d-flex gap-3">
+
+                            <div
+                                class="checkout-info-icon d-flex align-items-center justify-content-center flex-shrink-0"
+                            >
+                                i
+                            </div>
+
+
+                            <div>
+
+                                <strong class="d-block mb-1">
+                                    Products remain unchanged
+                                </strong>
+
+                                <small class="text-body-secondary">
+                                    Updating the customer, client, status,
+                                    order number or date will not change this
+                                    order's products, quantities or total.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <div
+                        class="d-flex flex-wrap gap-2 justify-content-end"
+                    >
+
+                        <a
+                            href="/{{ platform_url }}/orders"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancel
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            id="submit-order-button"
+                            class="btn btn-primary"
+                            {% if not clients %}
+                            disabled
+                            {% endif %}
+                        >
+                            Save Changes
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

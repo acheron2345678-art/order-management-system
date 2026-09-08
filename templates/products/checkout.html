@@ -1,0 +1,597 @@
+{% extends "base.html" %}
+
+{% block title %}
+Checkout - {{ product.product_name }}
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+>
+
+    <div>
+
+        <div class="d-flex align-items-center gap-2 mb-1">
+
+            <span
+                class="platform-dot platform-{{ product.platform|lower }}"
+            >
+                {{ 'S' if product.platform|lower == 'swiggy' else 'I' }}
+            </span>
+
+            <h1 class="h2 fw-bold mb-0">
+                Checkout
+            </h1>
+
+        </div>
+
+        <p class="text-body-secondary mb-0">
+            Review your selected product and place your order.
+        </p>
+
+    </div>
+
+
+    <a
+        href="/products/{{ product.id }}"
+        class="btn btn-outline-secondary"
+    >
+        ← Back to Product
+    </a>
+
+</div>
+
+
+
+<div class="row g-4 justify-content-center">
+
+
+    <div class="col-lg-5">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-header bg-body border-bottom p-4">
+
+                <h2 class="h5 fw-bold mb-0">
+                    Order Summary
+                </h2>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+
+                {% if product.image_url %}
+
+                <div class="checkout-product-image-wrapper mb-4">
+
+                    <img
+                        src="{{ product.image_url }}"
+                        alt="{{ product.product_name }}"
+                        class="checkout-product-image"
+                    >
+
+                </div>
+
+
+                {% else %}
+
+                <div
+                    class="checkout-product-placeholder d-flex align-items-center justify-content-center mb-4"
+                >
+
+                    <span>
+                        {{ product.product_name[0]|upper }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div
+                    class="d-flex align-items-center justify-content-between gap-3 mb-3"
+                >
+
+                    <span
+                        class="badge product-platform-badge platform-{{ product.platform|lower }} text-white"
+                    >
+                        {{ product.platform }}
+                    </span>
+
+
+                    {% if not product.is_active %}
+
+                    <span class="badge text-bg-secondary">
+                        Unavailable
+                    </span>
+
+
+                    {% elif product.stock_quantity == 0 %}
+
+                    <span class="badge text-bg-danger">
+                        Out of Stock
+                    </span>
+
+
+                    {% elif product.stock_quantity <= product.reorder_level %}
+
+                    <span
+                        class="badge text-bg-warning text-dark"
+                    >
+                        Low Stock
+                    </span>
+
+
+                    {% else %}
+
+                    <span
+                        class="badge text-bg-success-subtle text-success-emphasis"
+                    >
+                        In Stock
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <h3 class="h4 fw-bold mb-2">
+                    {{ product.product_name }}
+                </h3>
+
+
+                {% if product.description %}
+
+                <p class="text-body-secondary mb-4">
+                    {{ product.description }}
+                </p>
+
+                {% else %}
+
+                <p class="text-body-secondary mb-4">
+                    No description available.
+                </p>
+
+                {% endif %}
+
+
+
+                <hr>
+
+
+
+                <div class="checkout-summary-row">
+
+                    <span class="text-body-secondary">
+                        Product
+                    </span>
+
+                    <strong>
+                        {{ product.product_name }}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="checkout-summary-row">
+
+                    <span class="text-body-secondary">
+                        Platform
+                    </span>
+
+                    <strong>
+                        {{ product.platform }}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="checkout-summary-row">
+
+                    <span class="text-body-secondary">
+                        Status
+                    </span>
+
+                    <strong>
+                        Pending
+                    </strong>
+
+                </div>
+
+
+
+                <div class="checkout-summary-row">
+
+                    <span class="text-body-secondary">
+                        Stock Available
+                    </span>
+
+
+                    {% if product.stock_quantity == 0 %}
+
+                    <strong class="text-danger">
+                        0
+                    </strong>
+
+
+                    {% elif product.stock_quantity <= product.reorder_level %}
+
+                    <strong class="text-warning-emphasis">
+                        {{ product.stock_quantity }}
+                    </strong>
+
+
+                    {% else %}
+
+                    <strong class="text-success">
+                        {{ product.stock_quantity }}
+                    </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <div class="checkout-summary-row">
+
+                    <span class="text-body-secondary">
+                        Availability
+                    </span>
+
+
+                    {% if not product.is_active %}
+
+                    <strong class="text-secondary">
+                        Unavailable
+                    </strong>
+
+
+                    {% elif product.stock_quantity == 0 %}
+
+                    <strong class="text-danger">
+                        Out of Stock
+                    </strong>
+
+
+                    {% elif product.stock_quantity <= product.reorder_level %}
+
+                    <strong class="text-warning-emphasis">
+                        Low Stock
+                    </strong>
+
+
+                    {% else %}
+
+                    <strong class="text-success">
+                        In Stock
+                    </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <hr>
+
+
+
+                <div
+                    class="d-flex align-items-end justify-content-between gap-3"
+                >
+
+                    <span class="text-body-secondary">
+                        Total
+                    </span>
+
+                    <span class="h3 fw-bold text-primary mb-0">
+                        ₹{{ "{:,.2f}".format(product.price) }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-lg-7">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-body border-bottom p-4">
+
+                <h2 class="h5 fw-bold mb-1">
+                    Customer Details
+                </h2>
+
+                <p class="text-body-secondary small mb-0">
+                    Enter the customer information to complete the order.
+                </p>
+
+            </div>
+
+
+            <div class="card-body p-4 p-md-5">
+
+
+                {% if error %}
+
+                <div
+                    class="alert alert-danger mb-4"
+                    role="alert"
+                >
+
+                    <strong class="d-block mb-1">
+                        Unable to place order
+                    </strong>
+
+                    <span>
+                        {{ error }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if not product.is_active %}
+
+                <div
+                    class="alert alert-secondary mb-4"
+                    role="alert"
+                >
+
+                    <strong class="d-block mb-1">
+                        Product unavailable
+                    </strong>
+
+                    <span>
+                        This product is currently not available
+                        for ordering.
+                    </span>
+
+                </div>
+
+
+                {% elif product.stock_quantity == 0 %}
+
+                <div
+                    class="alert alert-danger mb-4"
+                    role="alert"
+                >
+
+                    <strong class="d-block mb-1">
+                        This product is out of stock
+                    </strong>
+
+                    <span>
+                        New orders cannot be placed until
+                        stock is replenished.
+                    </span>
+
+                </div>
+
+
+                {% elif product.stock_quantity <= product.reorder_level %}
+
+                <div
+                    class="alert alert-warning mb-4"
+                    role="alert"
+                >
+
+                    <strong class="d-block mb-1">
+                        Limited stock available
+                    </strong>
+
+                    <span>
+
+                        Only
+
+                        <strong>
+                            {{ product.stock_quantity }}
+                        </strong>
+
+                        unit{% if product.stock_quantity != 1 %}s{% endif %}
+                        remaining.
+
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                <form
+                    method="post"
+                    action="/checkout/{{ product.id }}"
+                >
+
+
+                    <div class="mb-4">
+
+                        <label
+                            for="customer_name"
+                            class="form-label"
+                        >
+                            Customer Name
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="customer_name"
+                            name="customer_name"
+                            class="form-control form-control-lg"
+                            placeholder="Enter customer name"
+                            value="{{ customer_name or '' }}"
+                            maxlength="100"
+                            required
+                            autofocus
+                            {% if not product.is_active or product.stock_quantity == 0 %}
+                            disabled
+                            {% endif %}
+                        >
+
+                    </div>
+
+
+
+                    <div
+                        class="border rounded-3 p-3 mb-4 bg-body-tertiary"
+                    >
+
+                        <div class="d-flex gap-3">
+
+                            <div
+                                class="checkout-info-icon d-flex align-items-center justify-content-center flex-shrink-0"
+                            >
+                                i
+                            </div>
+
+
+                            <div>
+
+                                <strong class="d-block mb-1">
+                                    Order details are automatic
+                                </strong>
+
+                                <small class="text-body-secondary">
+
+                                    Product, price, platform,
+                                    order date, status and order
+                                    number are determined
+                                    automatically by the system.
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    {% if product.stock_quantity > 0 and product.is_active %}
+
+                    <div
+                        class="border rounded-3 p-3 mb-4 bg-body-tertiary"
+                    >
+
+                        <div
+                            class="d-flex justify-content-between align-items-center gap-3"
+                        >
+
+                            <div>
+
+                                <div class="small text-body-secondary">
+                                    Current Stock
+                                </div>
+
+                                <strong>
+                                    {{ product.stock_quantity }}
+                                    unit{% if product.stock_quantity != 1 %}s{% endif %}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="text-end">
+
+                                <div class="small text-body-secondary">
+                                    After this order
+                                </div>
+
+                                <strong>
+                                    {{ product.stock_quantity - 1 }}
+                                    unit{% if product.stock_quantity - 1 != 1 %}s{% endif %}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    <div
+                        class="d-flex flex-column flex-sm-row gap-2 justify-content-end"
+                    >
+
+                        <a
+                            href="/products/{{ product.id }}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancel
+                        </a>
+
+
+                        {% if not product.is_active %}
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-lg"
+                            disabled
+                        >
+                            Product Unavailable
+                        </button>
+
+
+                        {% elif product.stock_quantity == 0 %}
+
+                        <button
+                            type="button"
+                            class="btn btn-danger btn-lg"
+                            disabled
+                        >
+                            Out of Stock
+                        </button>
+
+
+                        {% else %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Place Order
+                        </button>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

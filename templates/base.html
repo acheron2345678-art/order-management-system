@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+
+    <title>
+
+        {% block title %}
+
+        Order Management
+
+        {% endblock %}
+
+    </title>
+
+
+
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="/static/images/favicon.ico?v=1"
+    >
+
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="64x64"
+        href="/static/images/favicon.png?v=1"
+    >
+
+
+
+    <script>
+
+        (() => {
+
+            const savedTheme =
+                localStorage.getItem(
+                    "theme"
+                )
+                ||
+                "light";
+
+
+            document.documentElement.setAttribute(
+                "data-bs-theme",
+                savedTheme
+            );
+
+        })();
+
+    </script>
+
+
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <link
+        href="https://cdn.datatables.net/2.3.8/css/dataTables.bootstrap5.min.css"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css?v=9"
+    >
+
+
+    {% block head %}
+    {% endblock %}
+
+</head>
+
+
+
+<body>
+
+
+<div
+    class="app-shell d-flex min-vh-100"
+>
+
+
+    <!-- ========================================= -->
+    <!-- DESKTOP SIDEBAR -->
+    <!-- ========================================= -->
+
+    <aside
+        class="app-sidebar d-none d-lg-flex flex-column flex-shrink-0"
+    >
+
+
+        <a
+            href="/home"
+            class="brand text-decoration-none"
+        >
+
+            <span class="brand-mark">
+                OM
+            </span>
+
+
+            <span>
+
+                <strong
+                    class="brand-title d-block"
+                >
+                    Order Management
+                </strong>
+
+
+                <small class="brand-subtitle">
+                    OrderTask Manager
+                </small>
+
+            </span>
+
+        </a>
+
+
+
+        <div
+            class="flex-grow-1 mt-4"
+        >
+
+            {% include "partials/sidebar_links.html" %}
+
+        </div>
+
+
+
+        {% if current_user is defined and current_user %}
+
+
+        <div class="sidebar-user">
+
+
+            <div
+                class="d-flex align-items-center gap-3 mb-3"
+            >
+
+                <span class="user-avatar">
+
+                    {{ current_user.username[0]|upper }}
+
+                </span>
+
+
+                <span
+                    class="flex-grow-1 min-w-0"
+                >
+
+                    <strong
+                        class="d-block text-truncate"
+                    >
+                        {{ current_user.username }}
+                    </strong>
+
+
+                    <small>
+                        {{ current_user.role|capitalize }}
+                    </small>
+
+                </span>
+
+            </div>
+
+
+
+            <form
+                method="post"
+                action="/logout"
+            >
+
+                <button
+                    type="submit"
+                    class="btn btn-outline-secondary btn-sm w-100"
+                >
+                    Logout
+                </button>
+
+            </form>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </aside>
+
+
+
+    <!-- ========================================= -->
+    <!-- MOBILE SIDEBAR -->
+    <!-- ========================================= -->
+
+    <div
+        class="offcanvas offcanvas-start"
+        tabindex="-1"
+        id="mobileSidebar"
+        aria-labelledby="mobileSidebarLabel"
+    >
+
+
+        <div
+            class="offcanvas-header border-bottom"
+        >
+
+            <a
+                href="/home"
+                class="d-flex align-items-center gap-2 text-decoration-none text-body"
+                id="mobileSidebarLabel"
+            >
+
+                <span class="brand-mark">
+                    OM
+                </span>
+
+
+                <strong>
+                    Order Management
+                </strong>
+
+            </a>
+
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+            >
+            </button>
+
+        </div>
+
+
+
+        <div
+            class="offcanvas-body d-flex flex-column"
+        >
+
+
+            <div>
+
+                {% include "partials/sidebar_links.html" %}
+
+            </div>
+
+
+
+            <div class="mt-4">
+
+                <div class="sidebar-section-label">
+                    Switch Application
+                </div>
+
+
+                <nav
+                    class="nav nav-pills flex-column gap-1"
+                >
+
+
+                    <a
+                        href="/home"
+                        class="nav-link sidebar-link active"
+                    >
+
+                        <span
+                            class="brand-mark"
+                            style="
+                                width: 30px;
+                                height: 30px;
+                                border-radius: 9px;
+                                font-size: 0.65rem;
+                                box-shadow: none;
+                            "
+                        >
+                            OM
+                        </span>
+
+
+                        <span>
+                            Order Management
+                        </span>
+
+                    </a>
+
+
+
+                    <a
+                        href="/swiggy"
+                        class="nav-link sidebar-link"
+                    >
+
+                        <span
+                            class="platform-dot platform-swiggy"
+                        >
+                            S
+                        </span>
+
+
+                        <span class="flex-grow-1">
+                            Swiggy
+                        </span>
+
+
+                        <span
+                            class="text-body-secondary"
+                            aria-hidden="true"
+                        >
+                            ↗
+                        </span>
+
+                    </a>
+
+
+
+                    <a
+                        href="/insights"
+                        class="nav-link sidebar-link"
+                    >
+
+                        <span
+                            class="platform-dot platform-insights"
+                        >
+                            I
+                        </span>
+
+
+                        <span class="flex-grow-1">
+                            Insights
+                        </span>
+
+
+                        <span
+                            class="text-body-secondary"
+                            aria-hidden="true"
+                        >
+                            ↗
+                        </span>
+
+                    </a>
+
+
+                </nav>
+
+            </div>
+
+
+
+            <div class="flex-grow-1">
+            </div>
+
+
+
+            {% if current_user is defined and current_user %}
+
+
+            <div
+                class="sidebar-user mt-4"
+            >
+
+
+                <div
+                    class="d-flex align-items-center gap-3 mb-3"
+                >
+
+                    <span class="user-avatar">
+
+                        {{ current_user.username[0]|upper }}
+
+                    </span>
+
+
+                    <span
+                        class="flex-grow-1 min-w-0"
+                    >
+
+                        <strong
+                            class="d-block text-truncate"
+                        >
+                            {{ current_user.username }}
+                        </strong>
+
+
+                        <small>
+                            {{ current_user.role|capitalize }}
+                        </small>
+
+                    </span>
+
+                </div>
+
+
+
+                <form
+                    method="post"
+                    action="/logout"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-secondary btn-sm w-100"
+                    >
+                        Logout
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- MAIN -->
+    <!-- ========================================= -->
+
+    <main
+        class="app-main flex-grow-1 min-w-0"
+    >
+
+
+        <!-- ========================================= -->
+        <!-- TOPBAR -->
+        <!-- ========================================= -->
+
+        <header
+            class="app-topbar sticky-top border-bottom bg-body"
+        >
+
+
+            <div
+                class="container-fluid py-3 px-3 px-md-4 d-flex align-items-center gap-3"
+            >
+
+
+                <!-- MOBILE BUTTON -->
+
+                <button
+                    class="btn btn-outline-secondary d-lg-none flex-shrink-0"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileSidebar"
+                    aria-controls="mobileSidebar"
+                    aria-label="Open navigation"
+                >
+                    ☰
+                </button>
+
+
+
+                <!-- SEARCH -->
+
+                <div
+                    class="global-search position-relative flex-grow-1"
+                >
+
+                    <div class="input-group">
+
+                        <span
+                            class="input-group-text bg-body border-end-0"
+                        >
+                            ⌕
+                        </span>
+
+
+                        <input
+                            id="global-search"
+                            class="form-control border-start-0 ps-0"
+                            type="search"
+                            placeholder="Search client, customer, order number, product, status, date or amount..."
+                            autocomplete="off"
+                            aria-label="Search all orders"
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="search-results"
+                        class="search-results shadow-lg"
+                        role="listbox"
+                    >
+                    </div>
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- TOPBAR ACTIONS -->
+                <!-- ========================================= -->
+
+                <div
+                    class="d-flex align-items-center gap-2 flex-shrink-0"
+                >
+
+
+                    <!-- USER -->
+
+                    {% if current_user is defined and current_user %}
+
+
+                    <div
+                        class="d-none d-xl-flex align-items-center gap-2 border rounded-3 px-2 py-1 bg-body flex-shrink-0"
+                        title="{{ current_user.username }}"
+                    >
+
+
+                        <span
+                            class="user-avatar"
+                            style="
+                                width: 34px;
+                                height: 34px;
+                            "
+                        >
+
+                            {{ current_user.username[0]|upper }}
+
+                        </span>
+
+
+                        <div
+                            class="d-flex flex-column"
+                            style="
+                                line-height: 1.15;
+                                min-width: 90px;
+                            "
+                        >
+
+                            <strong
+                                class="text-truncate"
+                                style="
+                                    max-width: 130px;
+                                    font-size: 0.78rem;
+                                "
+                            >
+                                {{ current_user.username }}
+                            </strong>
+
+
+                            <small
+                                class="text-body-secondary"
+                                style="
+                                    font-size: 0.65rem;
+                                "
+                            >
+                                {{ current_user.role|capitalize }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    {% endif %}
+
+
+
+                    <!-- ========================================= -->
+                    <!-- APP SWITCHER -->
+                    <!-- ========================================= -->
+
+                    <div
+                        class="dropdown flex-shrink-0"
+                    >
+
+
+                        <button
+                            class="btn btn-outline-secondary dropdown-toggle"
+                            type="button"
+                            id="omAppsDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Apps
+                        </button>
+
+
+
+                        <ul
+                            class="dropdown-menu dropdown-menu-end shadow"
+                            aria-labelledby="omAppsDropdown"
+                            style="
+                                min-width: 280px;
+                            "
+                        >
+
+
+                            <li>
+
+                                <h6 class="dropdown-header">
+                                    Switch Application
+                                </h6>
+
+                            </li>
+
+
+
+                            <!-- ORDER MANAGEMENT -->
+
+                            <li>
+
+                                <a
+                                    href="/home"
+                                    class="dropdown-item active d-flex align-items-center gap-3 py-2"
+                                >
+
+                                    <span
+                                        class="brand-mark"
+                                        style="
+                                            width: 36px;
+                                            height: 36px;
+                                            border-radius: 10px;
+                                            font-size: 0.68rem;
+                                            box-shadow: none;
+                                        "
+                                    >
+                                        OM
+                                    </span>
+
+
+                                    <span>
+
+                                        <strong
+                                            class="d-block"
+                                        >
+                                            Order Management
+                                        </strong>
+
+
+                                        <small
+                                            class="text-body-secondary"
+                                        >
+                                            Operations & management
+                                        </small>
+
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+
+
+                            <!-- SWIGGY -->
+
+                            <li>
+
+                                <a
+                                    href="/swiggy"
+                                    class="dropdown-item d-flex align-items-center gap-3 py-2"
+                                >
+
+                                    <span
+                                        class="platform-dot platform-swiggy"
+                                        style="
+                                            width: 36px;
+                                            height: 36px;
+                                            border-radius: 10px;
+                                        "
+                                    >
+                                        S
+                                    </span>
+
+
+                                    <span>
+
+                                        <strong
+                                            class="d-block"
+                                        >
+                                            Swiggy
+                                        </strong>
+
+
+                                        <small
+                                            class="text-body-secondary"
+                                        >
+                                            Product storefront
+                                        </small>
+
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- INSIGHTS -->
+
+                            <li>
+
+                                <a
+                                    href="/insights"
+                                    class="dropdown-item d-flex align-items-center gap-3 py-2"
+                                >
+
+                                    <span
+                                        class="platform-dot platform-insights"
+                                        style="
+                                            width: 36px;
+                                            height: 36px;
+                                            border-radius: 10px;
+                                        "
+                                    >
+                                        I
+                                    </span>
+
+
+                                    <span>
+
+                                        <strong
+                                            class="d-block"
+                                        >
+                                            Insights
+                                        </strong>
+
+
+                                        <small
+                                            class="text-body-secondary"
+                                        >
+                                            Analytics services
+                                        </small>
+
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- THEME -->
+
+                    <button
+                        id="theme-toggle"
+                        type="button"
+                        class="btn btn-outline-secondary theme-toggle flex-shrink-0"
+                        aria-label="Switch theme"
+                        title="Switch theme"
+                    >
+
+                        <span
+                            id="theme-icon"
+                            aria-hidden="true"
+                        >
+                            ☾
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- LOGOUT -->
+
+                    {% if current_user is defined and current_user %}
+
+
+                    <form
+                        method="post"
+                        action="/logout"
+                        class="d-none d-sm-block m-0"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-secondary"
+                        >
+                            Logout
+                        </button>
+
+                    </form>
+
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ========================================= -->
+        <!-- PAGE CONTENT -->
+        <!-- ========================================= -->
+
+        <div
+            class="container-fluid page-content px-3 px-md-4 py-4 py-md-5"
+        >
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- INACTIVITY -->
+<!-- ========================================= -->
+
+{% if current_user is defined and current_user %}
+
+
+<div
+    id="inactivity-modal"
+    class="inactivity-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="inactivity-modal-title"
+    aria-describedby="inactivity-modal-message"
+>
+
+    <div class="inactivity-modal-card">
+
+        <div
+            class="inactivity-modal-icon"
+            aria-hidden="true"
+        >
+            !
+        </div>
+
+
+        <h2 id="inactivity-modal-title">
+            Session Expired
+        </h2>
+
+
+        <p id="inactivity-modal-message">
+            You have been logged out due to inactivity.
+            Please log in again to continue.
+        </p>
+
+
+        <button
+            type="button"
+            id="inactivity-modal-ok"
+            class="inactivity-modal-button"
+        >
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ========================================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+></script>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+<script
+    src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"
+></script>
+
+
+<script
+    src="https://cdn.datatables.net/2.3.8/js/dataTables.bootstrap5.min.js"
+></script>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"
+></script>
+
+
+<script
+    src="/static/js/theme.js?v=3"
+></script>
+
+
+<script
+    src="/static/js/search.js?v=4"
+></script>
+
+
+<script
+    src="/static/js/datatables.js?v=4"
+></script>
+
+
+<script
+    src="/static/js/dashboard.js?v=5"
+></script>
+
+
+
+{% if current_user is defined and current_user %}
+
+
+<script
+    src="/static/js/csrf.js?v=1"
+></script>
+
+
+<script
+    src="/static/js/inactivity.js?v=2"
+></script>
+
+
+{% endif %}
+
+
+
+{% block scripts %}
+{% endblock %}
+
+
+</body>
+
+</html>

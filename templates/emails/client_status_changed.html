@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ title }}
+    </title>
+
+</head>
+
+
+<body
+    style="
+        margin: 0;
+        padding: 0;
+        background: #f4f6f8;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #212529;
+    "
+>
+
+
+<table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+        padding: 32px 16px;
+        background: #f4f6f8;
+    "
+>
+
+<tr>
+
+<td align="center">
+
+
+<table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+        max-width: 620px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: hidden;
+    "
+>
+
+
+<tr>
+
+<td
+    style="
+        padding: 26px 32px;
+        background:
+            {% if platform == 'swiggy' %}
+            #fc8019
+            {% else %}
+            #4f6bed
+            {% endif %};
+        color: #ffffff;
+    "
+>
+
+    <div
+        style="
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        "
+    >
+        {{ platform_name|upper }}
+    </div>
+
+
+    <h1
+        style="
+            margin: 8px 0 0;
+            font-size: 24px;
+        "
+    >
+
+        {% if platform == "swiggy" %}
+
+            Order Status Updated
+
+        {% else %}
+
+            Project Status Updated
+
+        {% endif %}
+
+    </h1>
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td
+    style="
+        padding: 32px;
+    "
+>
+
+    <p
+        style="
+            margin-top: 0;
+            font-size: 16px;
+        "
+    >
+        Hi {{ client_name }},
+    </p>
+
+
+    <p
+        style="
+            color: #495057;
+            font-size: 15px;
+            line-height: 1.7;
+        "
+    >
+
+        {% if platform == "swiggy" %}
+
+            The status of your Swiggy order
+            <strong>{{ order_number }}</strong>
+            has changed.
+
+        {% else %}
+
+            The status of your Insights project
+            <strong>{{ order_number }}</strong>
+            has changed.
+
+        {% endif %}
+
+    </p>
+
+
+
+    <table
+        role="presentation"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        style="
+            margin: 28px 0;
+        "
+    >
+
+        <tr>
+
+            <td
+                width="44%"
+                align="center"
+                style="
+                    padding: 22px;
+                    background: #f8f9fa;
+                    border-radius: 10px;
+                "
+            >
+
+                <div
+                    style="
+                        margin-bottom: 7px;
+                        color: #6c757d;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                    "
+                >
+                    Previous
+                </div>
+
+
+                <strong
+                    style="
+                        font-size: 16px;
+                    "
+                >
+                    {{ old_status|capitalize }}
+                </strong>
+
+            </td>
+
+
+            <td
+                width="12%"
+                align="center"
+                style="
+                    font-size: 22px;
+                    color: #adb5bd;
+                "
+            >
+                →
+            </td>
+
+
+            <td
+                width="44%"
+                align="center"
+                style="
+                    padding: 22px;
+                    background:
+                        {% if new_status == 'completed' %}
+                        #d1e7dd
+                        {% elif new_status == 'cancelled' %}
+                        #f8d7da
+                        {% elif new_status == 'processing' %}
+                        #cff4fc
+                        {% else %}
+                        #fff3cd
+                        {% endif %};
+                    border-radius: 10px;
+                "
+            >
+
+                <div
+                    style="
+                        margin-bottom: 7px;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                        color: #6c757d;
+                    "
+                >
+                    Current
+                </div>
+
+
+                <strong
+                    style="
+                        font-size: 16px;
+                    "
+                >
+                    {{ new_status|capitalize }}
+                </strong>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+
+    {% if new_status == "processing" %}
+
+    <p
+        style="
+            padding: 16px 18px;
+            background: #cff4fc;
+            border-radius: 9px;
+            color: #055160;
+            font-size: 13px;
+            line-height: 1.6;
+        "
+    >
+
+        {% if platform == "swiggy" %}
+
+            Your order is now being processed.
+
+        {% else %}
+
+            Work on your Insights project is now in progress.
+
+        {% endif %}
+
+    </p>
+
+
+    {% elif new_status == "completed" %}
+
+    <p
+        style="
+            padding: 16px 18px;
+            background: #d1e7dd;
+            border-radius: 9px;
+            color: #0f5132;
+            font-size: 13px;
+            line-height: 1.6;
+        "
+    >
+
+        {% if platform == "swiggy" %}
+
+            Your order has been completed successfully.
+
+        {% else %}
+
+            Your Insights project has been marked as completed.
+
+        {% endif %}
+
+    </p>
+
+
+    {% elif new_status == "cancelled" %}
+
+    <p
+        style="
+            padding: 16px 18px;
+            background: #f8d7da;
+            border-radius: 9px;
+            color: #842029;
+            font-size: 13px;
+            line-height: 1.6;
+        "
+    >
+
+        {% if platform == "swiggy" %}
+
+            Your order has been cancelled.
+
+        {% else %}
+
+            Your Insights project has been cancelled.
+
+        {% endif %}
+
+    </p>
+
+    {% endif %}
+
+
+
+    <p
+        style="
+            margin: 26px 0 0;
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.6;
+        "
+    >
+        You can sign in to your account to view the latest
+        details and status.
+    </p>
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td
+    style="
+        padding: 20px 32px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+        color: #868e96;
+        font-size: 12px;
+    "
+>
+    Automated notification from Order Management.
+</td>
+
+</tr>
+
+
+</table>
+
+
+</td>
+
+</tr>
+
+</table>
+
+
+</body>
+
+</html>

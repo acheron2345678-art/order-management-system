@@ -1,0 +1,566 @@
+{% extends "swiggy/base.html" %}
+
+
+{% block title %}
+
+{{ order.order_number }} | Swiggy
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="sw-section">
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+
+        <!-- BACK -->
+
+        <div class="mb-4">
+
+            <a
+                href="/swiggy/my-orders"
+                class="sw-back-link"
+            >
+                ← Back to My Orders
+            </a>
+
+        </div>
+
+
+
+        <div class="row g-4">
+
+
+            <!-- =====================================
+                 ORDER DETAILS
+                 ===================================== -->
+
+            <div class="col-lg-8">
+
+
+                <div
+                    class="card border-0 shadow-sm h-100"
+                >
+
+
+                    <div class="card-body p-4">
+
+
+                        <!-- ORDER HEADER -->
+
+                        <div
+                            class="d-flex align-items-start justify-content-between gap-3 flex-wrap"
+                        >
+
+
+                            <div>
+
+
+                                <span class="sw-eyebrow">
+                                    SWIGGY ORDER
+                                </span>
+
+
+                                <h1
+                                    class="h3 fw-bold mt-2 mb-1"
+                                >
+                                    {{ order.order_number }}
+                                </h1>
+
+
+                                <p
+                                    class="text-body-secondary mb-0"
+                                >
+                                    Ordered on
+                                    {{ order.order_date.strftime('%d %b %Y') }}
+                                </p>
+
+
+                            </div>
+
+
+
+                            <div>
+
+
+                                {% if order.status == "pending" %}
+
+                                <span
+                                    class="badge text-bg-warning fs-6"
+                                >
+                                    Pending
+                                </span>
+
+
+                                {% elif order.status == "processing" %}
+
+                                <span
+                                    class="badge text-bg-info fs-6"
+                                >
+                                    Processing
+                                </span>
+
+
+                                {% elif order.status == "completed" %}
+
+                                <span
+                                    class="badge text-bg-success fs-6"
+                                >
+                                    Completed
+                                </span>
+
+
+                                {% elif order.status == "cancelled" %}
+
+                                <span
+                                    class="badge text-bg-danger fs-6"
+                                >
+                                    Cancelled
+                                </span>
+
+
+                                {% else %}
+
+                                <span
+                                    class="badge text-bg-secondary fs-6"
+                                >
+                                    {{ order.status|capitalize }}
+                                </span>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <hr class="my-4">
+
+
+
+                        <!-- =====================================
+                             TRACKING
+                             ===================================== -->
+
+                        <h2 class="h6 fw-bold mb-3">
+                            Order Tracking
+                        </h2>
+
+
+                        {% if order.status != "cancelled" %}
+
+
+                        <div class="row g-3 mb-4">
+
+
+                            <!-- RECEIVED -->
+
+                            <div class="col-md-4">
+
+                                <div
+                                    class="p-3 rounded border h-100
+                                    {% if order.status in ['pending', 'processing', 'completed'] %}
+                                    border-warning
+                                    {% endif %}"
+                                >
+
+                                    <small
+                                        class="text-body-secondary d-block mb-1"
+                                    >
+                                        STEP 1
+                                    </small>
+
+
+                                    <strong>
+                                        Order Received
+                                    </strong>
+
+
+                                    <p
+                                        class="small text-body-secondary mt-2 mb-0"
+                                    >
+                                        Your order has been received.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- PROCESSING -->
+
+                            <div class="col-md-4">
+
+                                <div
+                                    class="p-3 rounded border h-100
+                                    {% if order.status in ['processing', 'completed'] %}
+                                    border-info
+                                    {% endif %}"
+                                >
+
+                                    <small
+                                        class="text-body-secondary d-block mb-1"
+                                    >
+                                        STEP 2
+                                    </small>
+
+
+                                    <strong>
+                                        Preparing Order
+                                    </strong>
+
+
+                                    <p
+                                        class="small text-body-secondary mt-2 mb-0"
+                                    >
+                                        Your order is being prepared.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- COMPLETED -->
+
+                            <div class="col-md-4">
+
+                                <div
+                                    class="p-3 rounded border h-100
+                                    {% if order.status == 'completed' %}
+                                    border-success
+                                    {% endif %}"
+                                >
+
+                                    <small
+                                        class="text-body-secondary d-block mb-1"
+                                    >
+                                        STEP 3
+                                    </small>
+
+
+                                    <strong>
+                                        Completed
+                                    </strong>
+
+
+                                    <p
+                                        class="small text-body-secondary mt-2 mb-0"
+                                    >
+                                        Your order has been completed.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        {% else %}
+
+
+                        <div class="alert alert-danger">
+
+                            <strong>
+                                Order Cancelled
+                            </strong>
+
+                            <div>
+                                This order has been cancelled.
+                            </div>
+
+                        </div>
+
+
+                        {% endif %}
+
+
+
+                        <!-- =====================================
+                             ORDER ITEMS
+                             ===================================== -->
+
+                        <h2 class="h6 fw-bold mb-3">
+                            Order Items
+                        </h2>
+
+
+                        {% if order_items %}
+
+
+                        <div
+                            class="border rounded overflow-hidden"
+                        >
+
+
+                            {% for item in order_items %}
+
+
+                            <div
+                                class="d-flex align-items-center justify-content-between gap-3 p-3
+                                {% if not loop.last %}
+                                border-bottom
+                                {% endif %}"
+                            >
+
+
+                                <div>
+
+
+                                    <strong class="d-block">
+
+                                        {{ item.product_name }}
+
+                                    </strong>
+
+
+                                    <small
+                                        class="text-body-secondary"
+                                    >
+
+                                        Quantity:
+                                        {{ item.quantity }}
+
+                                        ×
+
+                                        ₹{{ "%.2f"|format(item.unit_price) }}
+
+                                    </small>
+
+
+                                </div>
+
+
+
+                                <strong>
+
+                                    ₹{{ "%.2f"|format(item.line_total) }}
+
+                                </strong>
+
+
+                            </div>
+
+
+                            {% endfor %}
+
+
+                        </div>
+
+
+                        {% else %}
+
+
+                        <div class="alert alert-secondary mb-0">
+
+                            No individual item information is available
+                            for this order.
+
+                        </div>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 ORDER SUMMARY
+                 ===================================== -->
+
+            <div class="col-lg-4">
+
+
+                <div
+                    class="card border-0 shadow-sm"
+                >
+
+
+                    <div class="card-body p-4">
+
+
+                        <span class="sw-eyebrow">
+                            ORDER SUMMARY
+                        </span>
+
+
+                        <h2
+                            class="h5 fw-bold mt-2 mb-4"
+                        >
+                            Details
+                        </h2>
+
+
+
+                        <!-- CUSTOMER -->
+
+                        <div
+                            class="d-flex justify-content-between gap-3 py-2"
+                        >
+
+                            <span
+                                class="text-body-secondary"
+                            >
+                                Customer
+                            </span>
+
+
+                            <strong class="text-end">
+                                {{ order.customer_name }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- ORDER NUMBER -->
+
+                        <div
+                            class="d-flex justify-content-between gap-3 py-2"
+                        >
+
+                            <span
+                                class="text-body-secondary"
+                            >
+                                Order Number
+                            </span>
+
+
+                            <strong class="text-end">
+                                {{ order.order_number }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- DATE -->
+
+                        <div
+                            class="d-flex justify-content-between gap-3 py-2"
+                        >
+
+                            <span
+                                class="text-body-secondary"
+                            >
+                                Order Date
+                            </span>
+
+
+                            <strong class="text-end">
+                                {{ order.order_date.strftime('%d %b %Y') }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- STATUS -->
+
+                        <div
+                            class="d-flex justify-content-between gap-3 py-2"
+                        >
+
+                            <span
+                                class="text-body-secondary"
+                            >
+                                Status
+                            </span>
+
+
+                            <strong class="text-end">
+                                {{ order.status|capitalize }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <hr>
+
+
+
+                        <!-- TOTAL -->
+
+                        <div
+                            class="d-flex justify-content-between align-items-center gap-3"
+                        >
+
+                            <span class="fw-semibold">
+                                Total
+                            </span>
+
+
+                            <strong
+                                class="fs-4"
+                            >
+                                ₹{{ "%.2f"|format(order.amount) }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="d-grid gap-2 mt-4">
+
+
+                            <a
+                                href="/swiggy/products"
+                                class="btn btn-primary sw-primary-action"
+                            >
+                                Order Again
+                            </a>
+
+
+                            <a
+                                href="/swiggy/my-orders"
+                                class="btn btn-outline-secondary"
+                            >
+                                Back to My Orders
+                            </a>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}

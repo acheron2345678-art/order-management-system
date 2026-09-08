@@ -1,0 +1,1055 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ order.order_number }} - Insights Project
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ========================================= -->
+<!-- PAGE HEADER -->
+<!-- ========================================= -->
+
+<div
+    class="
+        d-flex
+        flex-column
+        flex-lg-row
+        justify-content-between
+        align-items-lg-start
+        gap-3
+        mb-4
+    "
+>
+
+    <div>
+
+        <div
+            class="
+                d-flex
+                align-items-center
+                gap-2
+                mb-2
+            "
+        >
+
+            <span
+                class="
+                    badge
+                    bg-primary-subtle
+                    text-primary-emphasis
+                    border
+                "
+            >
+                Insights Project
+            </span>
+
+            <span
+                class="
+                    small
+                    text-body-secondary
+                "
+            >
+                Admin Review
+            </span>
+
+        </div>
+
+
+        <h1 class="h2 fw-bold mb-1">
+            {{ order.order_number }}
+        </h1>
+
+
+        <p class="text-body-secondary mb-0">
+            Review the project brief, business objective,
+            requested timeline and current delivery status.
+        </p>
+
+    </div>
+
+
+    <div
+        class="
+            d-flex
+            flex-wrap
+            gap-2
+        "
+    >
+
+        <a
+            href="/insights/orders"
+            class="btn btn-outline-secondary"
+        >
+            ← Back to Projects
+        </a>
+
+
+        <a
+            href="/insights/orders/edit/{{ order.id }}"
+            class="btn btn-primary"
+        >
+            Edit Project
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- TOP SUMMARY -->
+<!-- ========================================= -->
+
+<div class="row g-3 g-xl-4 mb-4">
+
+
+    <!-- STATUS -->
+
+    <div class="col-sm-6 col-xl-3">
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                h-100
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        mb-2
+                    "
+                >
+                    Project Status
+                </div>
+
+
+                {% if order.status == "pending" %}
+
+                <span
+                    class="
+                        badge
+                        bg-warning-subtle
+                        text-warning-emphasis
+                        border
+                        px-3
+                        py-2
+                    "
+                >
+                    Pending Review
+                </span>
+
+
+                {% elif order.status == "processing" %}
+
+                <span
+                    class="
+                        badge
+                        bg-info-subtle
+                        text-info-emphasis
+                        border
+                        px-3
+                        py-2
+                    "
+                >
+                    Processing
+                </span>
+
+
+                {% elif order.status == "completed" %}
+
+                <span
+                    class="
+                        badge
+                        bg-success-subtle
+                        text-success-emphasis
+                        border
+                        px-3
+                        py-2
+                    "
+                >
+                    Completed
+                </span>
+
+
+                {% elif order.status == "cancelled" %}
+
+                <span
+                    class="
+                        badge
+                        bg-danger-subtle
+                        text-danger-emphasis
+                        border
+                        px-3
+                        py-2
+                    "
+                >
+                    Cancelled
+                </span>
+
+
+                {% else %}
+
+                <span
+                    class="
+                        badge
+                        bg-body-tertiary
+                        text-body
+                        border
+                        px-3
+                        py-2
+                    "
+                >
+                    {{ order.status|capitalize }}
+                </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- VALUE -->
+
+    <div class="col-sm-6 col-xl-3">
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                h-100
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        mb-1
+                    "
+                >
+                    Project Value
+                </div>
+
+
+                <div class="h4 fw-bold mb-0">
+
+                    ₹{{
+                        "{:,.2f}".format(
+                            order.amount
+                        )
+                    }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- REQUEST DATE -->
+
+    <div class="col-sm-6 col-xl-3">
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                h-100
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        mb-1
+                    "
+                >
+                    Request Date
+                </div>
+
+
+                <div class="fw-bold">
+
+                    {% if order.order_date %}
+
+                        {{
+                            order.order_date.strftime(
+                                "%d %b %Y"
+                            )
+                        }}
+
+                    {% else %}
+
+                        Not available
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PREFERRED COMPLETION -->
+
+    <div class="col-sm-6 col-xl-3">
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                h-100
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        mb-1
+                    "
+                >
+                    Preferred Completion
+                </div>
+
+
+                <div class="fw-bold">
+
+                    {% if order.preferred_completion_date %}
+
+                        {{
+                            order
+                            .preferred_completion_date
+                            .strftime(
+                                "%d %b %Y"
+                            )
+                        }}
+
+                    {% else %}
+
+                        Not specified
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- MAIN GRID -->
+<!-- ========================================= -->
+
+<div class="row g-4">
+
+
+    <!-- ===================================== -->
+    <!-- LEFT COLUMN -->
+    <!-- ===================================== -->
+
+    <div class="col-xl-8">
+
+
+        <!-- ================================= -->
+        <!-- PROJECT BRIEF -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Project Scope
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-3">
+                    Project Brief
+                </h2>
+
+
+                {% if order.project_brief %}
+
+                <div
+                    class="text-body-secondary"
+                    style="
+                        white-space: pre-wrap;
+                        line-height: 1.8;
+                    "
+                >{{ order.project_brief }}</div>
+
+
+                {% else %}
+
+                <div
+                    class="
+                        alert
+                        alert-secondary
+                        mb-0
+                    "
+                >
+                    No project brief was provided for
+                    this project.
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- BUSINESS GOAL -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Business Objective
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-3">
+                    Business Goal
+                </h2>
+
+
+                {% if order.business_goal %}
+
+                <div
+                    class="text-body-secondary"
+                    style="
+                        white-space: pre-wrap;
+                        line-height: 1.8;
+                    "
+                >{{ order.business_goal }}</div>
+
+
+                {% else %}
+
+                <div
+                    class="
+                        alert
+                        alert-secondary
+                        mb-0
+                    "
+                >
+                    No business goal was provided for
+                    this project.
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- ADDITIONAL NOTES -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+            "
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Supporting Context
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-3">
+                    Additional Notes
+                </h2>
+
+
+                {% if order.additional_notes %}
+
+                <div
+                    class="text-body-secondary"
+                    style="
+                        white-space: pre-wrap;
+                        line-height: 1.8;
+                    "
+                >{{ order.additional_notes }}</div>
+
+
+                {% else %}
+
+                <p
+                    class="
+                        text-body-secondary
+                        mb-0
+                    "
+                >
+                    No additional notes were provided.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- RIGHT COLUMN -->
+    <!-- ===================================== -->
+
+    <div class="col-xl-4">
+
+
+        <!-- ================================= -->
+        <!-- CLIENT INFORMATION -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Account
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-4">
+                    Client Information
+                </h2>
+
+
+
+                <!-- CUSTOMER -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Client / Company
+                    </span>
+
+                    <strong class="text-end">
+                        {{ order.customer_name }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- USERNAME -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Account
+                    </span>
+
+                    <strong class="text-end">
+
+                        {% if client %}
+                            {{ client.username }}
+                        {% else %}
+                            Unassigned
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- EMAIL -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Email
+                    </span>
+
+                    <strong
+                        class="
+                            text-end
+                            text-break
+                        "
+                    >
+
+                        {% if client %}
+                            {{ client.email }}
+                        {% else %}
+                            Not available
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- PROJECT INFORMATION -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Project
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-4">
+                    Project Summary
+                </h2>
+
+
+
+                <!-- PROJECT NUMBER -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Project Number
+                    </span>
+
+                    <strong class="text-end">
+                        {{ order.order_number }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- SERVICE -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Service
+                    </span>
+
+                    <strong class="text-end">
+
+                        {{
+                            order.product_name
+                            or
+                            "Insights Service"
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- PLATFORM -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Platform
+                    </span>
+
+                    <strong>
+                        Insights
+                    </strong>
+
+                </div>
+
+
+
+                <!-- PROJECT VALUE -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Project Value
+                    </span>
+
+                    <strong>
+
+                        ₹{{
+                            "{:,.2f}".format(
+                                order.amount
+                            )
+                        }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- SELECTED SERVICE -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Deliverable
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-3">
+                    Selected Service
+                </h2>
+
+
+                {% if order_items %}
+
+                    {% for item in order_items %}
+
+                    <div
+                        class="
+                            py-3
+                            {% if not loop.last %}
+                                border-bottom
+                            {% endif %}
+                        "
+                    >
+
+                        <div class="fw-semibold">
+                            {{ item.product_name }}
+                        </div>
+
+
+                        <div
+                            class="
+                                d-flex
+                                justify-content-between
+                                gap-3
+                                mt-2
+                                small
+                                text-body-secondary
+                            "
+                        >
+
+                            <span>
+                                Service Value
+                            </span>
+
+
+                            <span>
+
+                                ₹{{
+                                    "{:,.2f}".format(
+                                        item.line_total
+                                    )
+                                }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                <p
+                    class="
+                        text-body-secondary
+                        small
+                        mb-0
+                    "
+                >
+                    No service-line information is
+                    available for this project.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- ADMIN ACTION -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <h2 class="h6 fw-bold mb-2">
+                    Project Management
+                </h2>
+
+
+                <p
+                    class="
+                        small
+                        text-body-secondary
+                        mb-3
+                    "
+                >
+                    Review the project request before
+                    updating its delivery status.
+                    Status changes automatically notify
+                    the client by email.
+                </p>
+
+
+                <a
+                    href="/insights/orders/edit/{{ order.id }}"
+                    class="btn btn-primary w-100"
+                >
+                    Manage Project
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- FOOTER ACTION -->
+<!-- ========================================= -->
+
+<div
+    class="
+        d-flex
+        justify-content-between
+        flex-wrap
+        gap-2
+        mt-4
+    "
+>
+
+    <a
+        href="/insights/orders"
+        class="btn btn-outline-secondary"
+    >
+        ← Back to Insights Projects
+    </a>
+
+
+    <a
+        href="/insights/orders/edit/{{ order.id }}"
+        class="btn btn-primary"
+    >
+        Edit Project
+    </a>
+
+</div>
+
+
+{% endblock %}

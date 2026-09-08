@@ -1,0 +1,239 @@
+{% extends "insights/base.html" %}
+
+{% block title %}
+Insights | Services
+{% endblock %}
+
+
+{% block content %}
+
+<section class="in-section">
+
+    <div
+        class="container-fluid in-content-width px-3 px-md-4"
+    >
+
+        <div class="in-page-header">
+
+            <div>
+
+                <span class="in-eyebrow">
+                    SERVICE CATALOGUE
+                </span>
+
+                <h1>
+                    Analytics for better decisions
+                </h1>
+
+                <p>
+                    Choose a service and start a
+                    focused Insights project.
+                </p>
+
+            </div>
+
+
+            {% if current_user and current_user.role == "client" %}
+
+            <a
+                href="/insights/my-projects"
+                class="btn btn-primary in-primary-btn"
+            >
+                My Projects
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="in-services-toolbar">
+
+            <form
+                method="get"
+                action="/insights/services"
+                class="in-services-search"
+            >
+
+                <span aria-hidden="true">
+                    ⌕
+                </span>
+
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ search_query }}"
+                    placeholder="Search analytics services..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary in-primary-btn"
+                >
+                    Search
+                </button>
+
+            </form>
+
+
+            <div class="in-result-count">
+
+                <strong>
+                    {{ services|length }}
+                </strong>
+
+                <span>
+                    service{% if services|length != 1 %}s{% endif %}
+                </span>
+
+
+                {% if search_query %}
+
+                <a
+                    href="/insights/services"
+                >
+                    Clear
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        {% if services %}
+
+        <div class="in-service-grid">
+
+            {% for service in services %}
+
+            <article class="in-service-card">
+
+                <div class="in-service-index">
+                    {{ "%02d"|format(loop.index) }}
+                </div>
+
+
+                <div class="in-service-body">
+
+                    <div class="in-service-meta">
+
+                        <span class="in-service-platform">
+                            Insights
+                        </span>
+
+                        <span
+                            class="in-availability available"
+                        >
+                            Available
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        href="/insights/services/{{ service.id }}"
+                        class="in-service-title"
+                    >
+                        {{ service.product_name }}
+                    </a>
+
+
+                    <p>
+                        {{ service.description or "Focused business analysis designed to support clearer decisions." }}
+                    </p>
+
+
+                    <div class="in-service-footer">
+
+                        <strong>
+                            ₹{{ "%.2f"|format(service.price) }}
+                        </strong>
+
+
+                        <div class="in-service-actions">
+
+                            <a
+                                href="/insights/services/{{ service.id }}"
+                                class="btn btn-outline-secondary btn-sm"
+                            >
+                                View Service
+                            </a>
+
+
+                            {% if current_user and current_user.role == "client" %}
+
+                            <a
+                                href="/insights/checkout/{{ service.id }}"
+                                class="btn btn-primary btn-sm in-primary-btn"
+                            >
+                                Request Service
+                            </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <div class="in-empty-state">
+
+            <span class="in-empty-state-icon">
+                ⌕
+            </span>
+
+            <h3>
+                No services found
+            </h3>
+
+
+            <p>
+
+                {% if search_query %}
+
+                No Insights services matched
+                “{{ search_query }}”.
+
+                {% else %}
+
+                No active Insights services are
+                currently available.
+
+                {% endif %}
+
+            </p>
+
+
+            {% if search_query %}
+
+            <a
+                href="/insights/services"
+                class="btn btn-primary in-primary-btn"
+            >
+                Show All Services
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

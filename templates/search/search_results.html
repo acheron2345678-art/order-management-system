@@ -1,0 +1,56 @@
+{% if query and results %}
+
+<div class="list-group list-group-flush">
+
+    {% for order in results %}
+
+    <a
+        href="/{{ order.platform|lower }}/orders/view/{{ order.id }}"
+        class="list-group-item list-group-item-action d-flex align-items-center gap-3"
+    >
+
+        <span class="platform-dot platform-{{ order.platform|lower }}">
+            {{ order.platform[0] }}
+        </span>
+
+
+        <span class="flex-grow-1">
+
+            <strong class="d-block">
+                {{ order.customer_name }}
+            </strong>
+
+
+            <small class="text-body-secondary d-block">
+
+                {{ order.order_number }}
+
+                {% if order.product_name %}
+                    · {{ order.product_name }}
+                {% endif %}
+
+                · {{ order.order_date }}
+
+            </small>
+
+        </span>
+
+
+        <span class="status-badge status-{{ order.status }}">
+            {{ order.status|capitalize }}
+        </span>
+
+    </a>
+
+    {% endfor %}
+
+</div>
+
+
+{% elif query %}
+
+<div class="p-3 text-body-secondary">
+    No orders found.
+</div>
+
+{% endif %}

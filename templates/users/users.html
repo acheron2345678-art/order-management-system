@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+User Management - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+>
+
+    <div>
+
+        <h1 class="h2 fw-bold mb-1">
+            User Management
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Manage administrators and client accounts.
+        </p>
+
+    </div>
+
+
+    <a
+        href="/admin/users/add"
+        class="btn btn-primary"
+    >
+        + Add User
+    </a>
+
+</div>
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body p-3 p-md-4">
+
+        <table
+            class="table table-hover align-middle w-100 mb-0"
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Username
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Role
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Created
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for user in users %}
+
+                <tr>
+
+                    <td>
+                        {{ user.id }}
+                    </td>
+
+
+                    <td class="fw-semibold">
+
+                        {{ user.username }}
+
+                        {% if user.id == current_user.id %}
+
+                        <span
+                            class="badge text-bg-primary ms-1"
+                        >
+                            You
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ user.email }}
+                    </td>
+
+
+                    <td>
+
+                        {% if user.role == "admin" %}
+
+                        <span
+                            class="badge text-bg-primary"
+                        >
+                            Admin
+                        </span>
+
+                        {% else %}
+
+                        <span
+                            class="badge text-bg-secondary"
+                        >
+                            Client
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if user.is_active %}
+
+                        <span
+                            class="badge text-bg-success"
+                        >
+                            Active
+                        </span>
+
+                        {% else %}
+
+                        <span
+                            class="badge text-bg-danger"
+                        >
+                            Disabled
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if user.created_at %}
+
+                            {{ user.created_at.strftime("%Y-%m-%d") }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <div
+                            class="d-flex flex-wrap gap-2"
+                        >
+
+                            <a
+                                href="/admin/users/{{ user.id }}/edit"
+                                class="btn btn-sm btn-outline-primary"
+                            >
+                                Edit
+                            </a>
+
+
+                            {% if user.id != current_user.id %}
+
+                            <form
+                                method="post"
+                                action="/admin/users/{{ user.id }}/toggle"
+                            >
+
+                                {% if user.is_active %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Disable this user account?');"
+                                >
+                                    Disable
+                                </button>
+
+                                {% else %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-sm btn-outline-success"
+                                >
+                                    Activate
+                                </button>
+
+                                {% endif %}
+
+                            </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

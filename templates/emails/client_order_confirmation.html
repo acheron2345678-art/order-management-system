@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ title }}
+    </title>
+
+</head>
+
+
+<body
+    style="
+        margin: 0;
+        padding: 0;
+        background: #f4f6f8;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #212529;
+    "
+>
+
+
+<table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+        background: #f4f6f8;
+        padding: 32px 16px;
+    "
+>
+
+<tr>
+
+<td align="center">
+
+
+<table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+        max-width: 640px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: hidden;
+    "
+>
+
+
+<tr>
+
+<td
+    style="
+        padding: 26px 32px;
+        background:
+            {% if platform == 'swiggy' %}
+            #fc8019
+            {% else %}
+            #4f6bed
+            {% endif %};
+        color: #ffffff;
+    "
+>
+
+    <div
+        style="
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        "
+    >
+        {{ platform_name }}
+    </div>
+
+
+    <h1
+        style="
+            margin: 8px 0 0;
+            font-size: 25px;
+            line-height: 1.3;
+        "
+    >
+        {% if platform == "swiggy" %}
+
+            Order Confirmed
+
+        {% else %}
+
+            Project Request Received
+
+        {% endif %}
+    </h1>
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td
+    style="
+        padding: 32px;
+    "
+>
+
+    <p
+        style="
+            margin: 0 0 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        "
+    >
+        Hi {{ client_name }},
+    </p>
+
+
+    <p
+        style="
+            margin: 0 0 24px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #495057;
+        "
+    >
+
+        {% if platform == "swiggy" %}
+
+            Your Swiggy order has been received successfully.
+            Our team can now review and process your order.
+
+        {% else %}
+
+            Your Insights project request has been received successfully.
+            Our team can now review the service request and begin processing it.
+
+        {% endif %}
+
+    </p>
+
+
+
+    <table
+        role="presentation"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        style="
+            margin-bottom: 26px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        "
+    >
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 13px;
+                    color: #6c757d;
+                "
+            >
+
+                {% if platform == "swiggy" %}
+                    Order Number
+                {% else %}
+                    Project Number
+                {% endif %}
+
+            </td>
+
+
+            <td
+                align="right"
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 14px;
+                    font-weight: 700;
+                "
+            >
+                {{ order_number }}
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 13px;
+                    color: #6c757d;
+                "
+            >
+
+                {% if platform == "swiggy" %}
+                    Order Date
+                {% else %}
+                    Request Date
+                {% endif %}
+
+            </td>
+
+
+            <td
+                align="right"
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 14px;
+                    font-weight: 600;
+                "
+            >
+                {{ order_date }}
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 13px;
+                    color: #6c757d;
+                "
+            >
+
+                {% if platform == "swiggy" %}
+                    Customer
+                {% else %}
+                    Client / Company
+                {% endif %}
+
+            </td>
+
+
+            <td
+                align="right"
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 14px;
+                    font-weight: 600;
+                "
+            >
+                {{ customer_name }}
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-size: 13px;
+                    color: #6c757d;
+                "
+            >
+                Status
+            </td>
+
+
+            <td
+                align="right"
+                style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e9ecef;
+                "
+            >
+
+                <span
+                    style="
+                        display: inline-block;
+                        padding: 5px 10px;
+                        background: #fff3cd;
+                        color: #664d03;
+                        border-radius: 999px;
+                        font-size: 12px;
+                        font-weight: 700;
+                    "
+                >
+                    {{ status|capitalize }}
+                </span>
+
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 18px 20px;
+                    font-size: 13px;
+                    color: #6c757d;
+                "
+            >
+
+                {% if platform == "swiggy" %}
+                    Order Total
+                {% else %}
+                    Project Value
+                {% endif %}
+
+            </td>
+
+
+            <td
+                align="right"
+                style="
+                    padding: 18px 20px;
+                    font-size: 17px;
+                    font-weight: 700;
+                "
+            >
+                ₹{{ "{:,.2f}".format(amount) }}
+            </td>
+
+        </tr>
+
+
+    </table>
+
+
+
+    {% if items %}
+
+    <div
+        style="
+            margin-bottom: 26px;
+        "
+    >
+
+        <div
+            style="
+                margin-bottom: 12px;
+                font-size: 13px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.7px;
+                color: #6c757d;
+            "
+        >
+
+            {% if platform == "swiggy" %}
+                Order Items
+            {% else %}
+                Selected Service
+            {% endif %}
+
+        </div>
+
+
+        {% for item in items %}
+
+        <table
+            role="presentation"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+                border-top: 1px solid #e9ecef;
+            "
+        >
+
+            <tr>
+
+                <td
+                    style="
+                        padding: 14px 0;
+                    "
+                >
+
+                    <strong
+                        style="
+                            display: block;
+                            font-size: 14px;
+                        "
+                    >
+                        {{ item.product_name }}
+                    </strong>
+
+
+                    {% if platform == "swiggy" %}
+
+                    <span
+                        style="
+                            display: block;
+                            margin-top: 4px;
+                            font-size: 12px;
+                            color: #6c757d;
+                        "
+                    >
+                        Quantity: {{ item.quantity }}
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+
+                <td
+                    align="right"
+                    style="
+                        padding: 14px 0;
+                        font-size: 14px;
+                        font-weight: 600;
+                    "
+                >
+                    ₹{{ "{:,.2f}".format(item.line_total) }}
+                </td>
+
+            </tr>
+
+        </table>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+
+    <div
+        style="
+            padding: 18px 20px;
+            border-left: 4px solid
+                {% if platform == 'swiggy' %}
+                #fc8019
+                {% else %}
+                #4f6bed
+                {% endif %};
+            background: #f8f9fa;
+            border-radius: 8px;
+        "
+    >
+
+        <strong
+            style="
+                display: block;
+                margin-bottom: 5px;
+                font-size: 14px;
+            "
+        >
+            What happens next?
+        </strong>
+
+
+        <span
+            style="
+                font-size: 13px;
+                line-height: 1.6;
+                color: #6c757d;
+            "
+        >
+
+            {% if platform == "swiggy" %}
+
+                We will notify you whenever the status of your
+                order changes.
+
+            {% else %}
+
+                We will notify you whenever the status of your
+                Insights project changes.
+
+            {% endif %}
+
+        </span>
+
+    </div>
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td
+    style="
+        padding: 22px 32px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+        color: #868e96;
+        font-size: 12px;
+        line-height: 1.6;
+    "
+>
+
+    This is an automated message from Order Management.
+
+    <br>
+
+    Please do not share confidential account information by replying
+    to this email.
+
+</td>
+
+</tr>
+
+
+</table>
+
+
+</td>
+
+</tr>
+
+</table>
+
+
+</body>
+
+</html>

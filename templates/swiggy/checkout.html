@@ -1,0 +1,712 @@
+{% extends "swiggy/base.html" %}
+
+
+{% block title %}
+Checkout | Swiggy
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="sw-section">
+
+    <div
+        class="
+            container-fluid
+            sw-content-width
+            px-3
+            px-md-4
+        "
+    >
+
+
+        <!-- ================================= -->
+        <!-- HEADER -->
+        <!-- ================================= -->
+
+        <div class="sw-page-header">
+
+            <div>
+
+                <span class="sw-eyebrow">
+                    CHECKOUT
+                </span>
+
+
+                <h1>
+                    Complete your order
+                </h1>
+
+
+                <p>
+                    Confirm your delivery information
+                    before placing the order.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/swiggy/cart"
+                class="btn btn-outline-secondary"
+            >
+                ← Back to Cart
+            </a>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- ERROR -->
+        <!-- ================================= -->
+
+        {% if error %}
+
+        <div
+            class="
+                alert
+                alert-danger
+                mb-4
+            "
+            role="alert"
+        >
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- ================================= -->
+        <!-- GRID -->
+        <!-- ================================= -->
+
+        <div class="row g-4">
+
+
+            <!-- ============================= -->
+            <!-- DELIVERY -->
+            <!-- ============================= -->
+
+            <div class="col-lg-7">
+
+
+                <form
+                    id="checkout-form"
+                    method="post"
+                    action="/swiggy/checkout"
+                    data-loading-form
+                >
+
+
+                    <div
+                        class="
+                            card
+                            border-0
+                            shadow-sm
+                        "
+                    >
+
+                        <div
+                            class="
+                                card-body
+                                p-4
+                                p-lg-5
+                            "
+                        >
+
+
+                            <div
+                                class="
+                                    small
+                                    text-body-secondary
+                                    text-uppercase
+                                    fw-semibold
+                                    mb-1
+                                "
+                            >
+                                Delivery
+                            </div>
+
+
+                            <h2 class="h5 fw-bold mb-2">
+                                Delivery Details
+                            </h2>
+
+
+                            <p
+                                class="
+                                    text-body-secondary
+                                    small
+                                    mb-4
+                                "
+                            >
+                                Your saved profile is used
+                                as the default. Changes made
+                                here apply only to this order.
+                            </p>
+
+
+
+                            <div class="row g-4">
+
+
+                                <!-- ===================== -->
+                                <!-- NAME -->
+                                <!-- ===================== -->
+
+                                <div class="col-12">
+
+                                    <label
+                                        for="delivery_name"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Delivery Name
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_name"
+                                        name="delivery_name"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="100"
+                                        value="{{ delivery_name }}"
+                                        placeholder="Full name"
+                                        autocomplete="name"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- PHONE -->
+                                <!-- ===================== -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="delivery_phone"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Phone Number
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_phone"
+                                        name="delivery_phone"
+                                        type="tel"
+                                        class="form-control"
+                                        maxlength="20"
+                                        value="{{ delivery_phone }}"
+                                        placeholder="+91 98765 43210"
+                                        autocomplete="tel"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- COUNTRY -->
+                                <!-- ===================== -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="delivery_country"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Country
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_country"
+                                        name="delivery_country"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="100"
+                                        value="{{ delivery_country }}"
+                                        autocomplete="country-name"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- ADDRESS 1 -->
+                                <!-- ===================== -->
+
+                                <div class="col-12">
+
+                                    <label
+                                        for="delivery_address_line1"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Address Line 1
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_address_line1"
+                                        name="delivery_address_line1"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="255"
+                                        value="{{ delivery_address_line1 }}"
+                                        placeholder="House / flat number, street, building"
+                                        autocomplete="address-line1"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- ADDRESS 2 -->
+                                <!-- ===================== -->
+
+                                <div class="col-12">
+
+                                    <label
+                                        for="delivery_address_line2"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Address Line 2
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_address_line2"
+                                        name="delivery_address_line2"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="255"
+                                        value="{{ delivery_address_line2 }}"
+                                        placeholder="Area, landmark or additional information"
+                                        autocomplete="address-line2"
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- CITY -->
+                                <!-- ===================== -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="delivery_city"
+                                        class="form-label fw-semibold"
+                                    >
+                                        City
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_city"
+                                        name="delivery_city"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="100"
+                                        value="{{ delivery_city }}"
+                                        placeholder="Chennai"
+                                        autocomplete="address-level2"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- STATE -->
+                                <!-- ===================== -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="delivery_state"
+                                        class="form-label fw-semibold"
+                                    >
+                                        State
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_state"
+                                        name="delivery_state"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="100"
+                                        value="{{ delivery_state }}"
+                                        placeholder="Tamil Nadu"
+                                        autocomplete="address-level1"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- ===================== -->
+                                <!-- POSTAL -->
+                                <!-- ===================== -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="delivery_postal_code"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Postal Code
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        id="delivery_postal_code"
+                                        name="delivery_postal_code"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="20"
+                                        value="{{ delivery_postal_code }}"
+                                        placeholder="600001"
+                                        autocomplete="postal-code"
+                                        required
+                                    >
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- ========================= -->
+                            <!-- PROFILE INFO -->
+                            <!-- ========================= -->
+
+                            <div
+                                class="
+                                    alert
+                                    alert-light
+                                    border
+                                    mt-4
+                                    mb-0
+                                "
+                            >
+
+                                <div class="fw-semibold mb-1">
+                                    Default delivery profile
+                                </div>
+
+
+                                <div
+                                    class="
+                                        small
+                                        text-body-secondary
+                                    "
+                                >
+                                    Changes on this checkout
+                                    do not modify your saved
+                                    profile.
+
+                                    <a
+                                        href="/profile"
+                                        class="ms-1"
+                                    >
+                                        Edit My Profile
+                                    </a>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+
+            <!-- ============================= -->
+            <!-- ORDER SUMMARY -->
+            <!-- ============================= -->
+
+            <div class="col-lg-5">
+
+
+                <div
+                    class="
+                        card
+                        border-0
+                        shadow-sm
+                    "
+                    style="
+                        position: sticky;
+                        top: 1rem;
+                    "
+                >
+
+                    <div class="card-body p-4">
+
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                text-uppercase
+                                fw-semibold
+                                mb-1
+                            "
+                        >
+                            Order
+                        </div>
+
+
+                        <h2 class="h5 fw-bold mb-4">
+                            Order Summary
+                        </h2>
+
+
+
+                        <!-- ================= -->
+                        <!-- ITEMS -->
+                        <!-- ================= -->
+
+                        {% for item in cart["items"] %}
+
+                        <div
+                            class="
+                                d-flex
+                                justify-content-between
+                                gap-3
+                                py-3
+                                {% if not loop.last %}
+                                    border-bottom
+                                {% endif %}
+                            "
+                        >
+
+                            <div>
+
+                                <div class="fw-semibold">
+
+                                    {% if item["product"] is defined %}
+
+                                        {{
+                                            item[
+                                                "product"
+                                            ].product_name
+                                        }}
+
+                                    {% else %}
+
+                                        {{
+                                            item[
+                                                "product_name"
+                                            ]
+                                        }}
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div
+                                    class="
+                                        small
+                                        text-body-secondary
+                                        mt-1
+                                    "
+                                >
+                                    Quantity:
+                                    {{
+                                        item[
+                                            "quantity"
+                                        ]
+                                    }}
+                                </div>
+
+
+                                {% if item["unit_price"] is defined %}
+
+                                <div
+                                    class="
+                                        small
+                                        text-body-secondary
+                                    "
+                                >
+                                    ₹{{
+                                        "%.2f"|format(
+                                            item[
+                                                "unit_price"
+                                            ]
+                                        )
+                                    }}
+                                    each
+                                </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <strong class="text-end">
+
+                                ₹{{
+                                    "%.2f"|format(
+                                        item[
+                                            "line_total"
+                                        ]
+                                    )
+                                }}
+
+                            </strong>
+
+                        </div>
+
+                        {% endfor %}
+
+
+
+                        <!-- ================= -->
+                        <!-- TOTAL -->
+                        <!-- ================= -->
+
+                        <hr>
+
+
+                        <div
+                            class="
+                                d-flex
+                                justify-content-between
+                                align-items-center
+                                gap-3
+                                mb-4
+                            "
+                        >
+
+                            <span class="fw-semibold">
+                                Order Total
+                            </span>
+
+
+                            <strong class="fs-5">
+
+                                ₹{{
+                                    "%.2f"|format(
+                                        cart[
+                                            "total"
+                                        ]
+                                    )
+                                }}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- ================= -->
+                        <!-- PLACE ORDER -->
+                        <!-- ================= -->
+
+                        <button
+                            type="submit"
+                            form="checkout-form"
+                            class="
+                                btn
+                                btn-warning
+                                w-100
+                                fw-semibold
+                            "
+                            data-loading-text="Placing order..."
+                        >
+                            Place Order
+                        </button>
+
+
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                text-center
+                                mt-3
+                            "
+                        >
+                            Product availability and
+                            stock are verified again
+                            when the order is submitted.
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}

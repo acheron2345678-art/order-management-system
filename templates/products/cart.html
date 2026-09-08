@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shopping Cart - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+>
+
+    <div>
+
+        <div class="d-flex align-items-center gap-2 mb-1">
+
+            <div class="quick-icon bg-primary-subtle text-primary">
+                🛒
+            </div>
+
+            <h1 class="h2 fw-bold mb-0">
+                Shopping Cart
+            </h1>
+
+        </div>
+
+        <p class="text-body-secondary mb-0">
+            Review your products and quantities before checkout.
+        </p>
+
+    </div>
+
+
+    <a
+        href="/products"
+        class="btn btn-outline-secondary"
+    >
+        ← Continue Shopping
+    </a>
+
+</div>
+
+
+
+{% if error %}
+
+<div
+    class="alert alert-danger mb-4"
+    role="alert"
+>
+
+    <strong class="d-block mb-1">
+        Unable to update cart
+    </strong>
+
+    <span>
+        {{ error }}
+    </span>
+
+</div>
+
+{% endif %}
+
+
+
+{% if cart["items"] %}
+
+<div class="row g-4">
+
+
+    <div class="col-lg-8">
+
+        <div class="card border-0 shadow-sm">
+
+            <div
+                class="card-header bg-body border-bottom p-3 p-md-4"
+            >
+
+                <div
+                    class="d-flex align-items-center justify-content-between gap-3"
+                >
+
+                    <div>
+
+                        <h2 class="h5 fw-bold mb-1">
+                            Cart Items
+                        </h2>
+
+                        <p class="small text-body-secondary mb-0">
+
+                            {{ cart["item_count"] }}
+
+                            item{% if cart["item_count"] != 1 %}s{% endif %}
+
+                            in your cart
+
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        method="post"
+                        action="/cart/clear"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-danger btn-sm"
+                        >
+                            Clear Cart
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="card-body p-0">
+
+
+                {% for item in cart["items"] %}
+
+                <div
+                    class="p-3 p-md-4 {% if not loop.last %}border-bottom{% endif %}"
+                >
+
+                    <div class="row g-3 align-items-center">
+
+
+                        <div class="col-md-5">
+
+                            <div
+                                class="d-flex gap-3 align-items-center"
+                            >
+
+
+                                {% if item["product"].image_url %}
+
+                                <img
+                                    src="{{ item['product'].image_url }}"
+                                    alt="{{ item['product'].product_name }}"
+                                    class="rounded"
+                                    style="width: 72px; height: 72px; object-fit: cover;"
+                                >
+
+
+                                {% else %}
+
+                                <div
+                                    class="product-placeholder rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width: 72px; height: 72px;"
+                                >
+
+                                    <span>
+                                        {{ item["product"].product_name[0]|upper }}
+                                    </span>
+
+                                </div>
+
+                                {% endif %}
+
+
+                                <div>
+
+                                    <span
+                                        class="badge product-platform-badge platform-{{ item['product'].platform|lower }} text-white mb-2"
+                                    >
+                                        {{ item["product"].platform }}
+                                    </span>
+
+
+                                    <h3 class="h6 fw-bold mb-1">
+                                        {{ item["product"].product_name }}
+                                    </h3>
+
+
+                                    <div class="small text-body-secondary">
+
+                                        ₹{{ "{:,.2f}".format(item["unit_price"]) }}
+                                        each
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-md-3">
+
+                            <form
+                                method="post"
+                                action="/cart/update/{{ item['product'].id }}"
+                            >
+
+                                <label
+                                    for="quantity-{{ item['product'].id }}"
+                                    class="small text-body-secondary mb-1"
+                                >
+                                    Quantity
+                                </label>
+
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        id="quantity-{{ item['product'].id }}"
+                                        name="quantity"
+                                        value="{{ item['quantity'] }}"
+                                        min="0"
+                                        max="{{ item['available_stock'] }}"
+                                        step="1"
+                                        class="form-control"
+                                        required
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-primary"
+                                    >
+                                        Update
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+
+                            <div class="small text-body-secondary mt-1">
+
+                                {{ item["available_stock"] }}
+
+                                unit{% if item["available_stock"] != 1 %}s{% endif %}
+
+                                available
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-md-2 text-md-end">
+
+                            <div class="small text-body-secondary mb-1">
+                                Subtotal
+                            </div>
+
+                            <div class="fw-bold">
+                                ₹{{ "{:,.2f}".format(item["line_total"]) }}
+                            </div>
+
+
+                            {% if not item["is_available"] %}
+
+                            <div class="small text-danger mt-1">
+                                Stock unavailable
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <div class="col-md-2 text-md-end">
+
+                            <form
+                                method="post"
+                                action="/cart/remove/{{ item['product'].id }}"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-danger btn-sm"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-lg-4">
+
+        <div
+            class="card border-0 shadow-sm position-sticky"
+            style="top: 1rem;"
+        >
+
+            <div
+                class="card-header bg-body border-bottom p-4"
+            >
+
+                <h2 class="h5 fw-bold mb-0">
+                    Order Summary
+                </h2>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+
+                <div
+                    class="d-flex justify-content-between gap-3 mb-3"
+                >
+
+                    <span class="text-body-secondary">
+                        Items
+                    </span>
+
+                    <strong>
+                        {{ cart["item_count"] }}
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    class="d-flex justify-content-between gap-3 mb-3"
+                >
+
+                    <span class="text-body-secondary">
+                        Products
+                    </span>
+
+                    <strong>
+                        {{ cart["items"]|length }}
+                    </strong>
+
+                </div>
+
+
+
+                <hr>
+
+
+
+                {% for item in cart["items"] %}
+
+                <div
+                    class="d-flex justify-content-between gap-3 mb-2"
+                >
+
+                    <div class="small">
+
+                        {{ item["product"].product_name }}
+
+                        <span class="text-body-secondary">
+                            × {{ item["quantity"] }}
+                        </span>
+
+                    </div>
+
+                    <div class="small fw-semibold">
+                        ₹{{ "{:,.2f}".format(item["line_total"]) }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+
+
+                <hr>
+
+
+
+                <div
+                    class="d-flex align-items-end justify-content-between gap-3 mb-4"
+                >
+
+                    <span class="fw-semibold">
+                        Total
+                    </span>
+
+                    <span
+                        class="h3 fw-bold text-primary mb-0"
+                    >
+                        ₹{{ "{:,.2f}".format(cart["total"]) }}
+                    </span>
+
+                </div>
+
+
+
+                {% if cart["has_stock_errors"] %}
+
+                <div
+                    class="alert alert-warning small"
+                    role="alert"
+                >
+
+                    <strong class="d-block mb-1">
+                        Cart needs attention
+                    </strong>
+
+                    Some products are no longer available
+                    in the requested quantity.
+
+                    Update the quantities before checkout.
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="btn btn-secondary btn-lg w-100"
+                    disabled
+                >
+                    Checkout Unavailable
+                </button>
+
+
+                {% else %}
+
+                <a
+                    href="/cart/checkout"
+                    class="btn btn-primary btn-lg w-100"
+                >
+                    Proceed to Checkout
+                </a>
+
+                {% endif %}
+
+
+                <a
+                    href="/products"
+                    class="btn btn-outline-secondary w-100 mt-2"
+                >
+                    Continue Shopping
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+{% else %}
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body text-center py-5">
+
+        <div
+            class="quick-icon bg-primary-subtle text-primary mx-auto mb-3"
+        >
+            🛒
+        </div>
+
+        <h2 class="h4 fw-bold">
+            Your cart is empty
+        </h2>
+
+        <p class="text-body-secondary mb-4">
+            Add products to your cart to place an order.
+        </p>
+
+        <a
+            href="/products"
+            class="btn btn-primary"
+        >
+            Browse Products
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

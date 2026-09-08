@@ -1,0 +1,680 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ platform }} Order {{ order.order_number }} - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+>
+
+    <div>
+
+        <div class="d-flex align-items-center gap-2 mb-1">
+
+            <span
+                class="platform-dot platform-{{ platform_url }}"
+            >
+                {{ 'S' if platform_url == 'swiggy' else 'I' }}
+            </span>
+
+            <h1 class="h2 fw-bold mb-0">
+                Order Details
+            </h1>
+
+        </div>
+
+
+        <p class="text-body-secondary mb-0">
+
+            {{ platform }}
+
+            <span class="mx-1">
+                •
+            </span>
+
+            {{ order.order_number }}
+
+        </p>
+
+    </div>
+
+
+    <div class="d-flex flex-wrap gap-2">
+
+        {% if current_user.role == "client" %}
+
+        <a
+            href="/my-purchases"
+            class="btn btn-outline-secondary"
+        >
+            ← My Purchases
+        </a>
+
+        {% else %}
+
+        <a
+            href="/{{ platform_url }}/orders"
+            class="btn btn-outline-secondary"
+        >
+            ← Back to Orders
+        </a>
+
+        {% endif %}
+
+
+        {% if current_user.role == "admin" %}
+
+        <a
+            href="/{{ platform_url }}/orders/edit/{{ order.id }}"
+            class="btn btn-primary"
+        >
+            Edit Order
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+
+<div class="row g-4">
+
+
+    <div class="col-xl-8">
+
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div
+                class="card-header bg-body border-bottom p-3 p-md-4"
+            >
+
+                <div
+                    class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
+                >
+
+                    <div>
+
+                        <h2 class="h5 fw-bold mb-1">
+                            Purchased Products
+                        </h2>
+
+                        <p class="small text-body-secondary mb-0">
+                            Products and quantities included
+                            in this order.
+                        </p>
+
+                    </div>
+
+
+                    {% if order_items %}
+
+                    <span class="badge text-bg-primary">
+
+                        {{ order_items|length }}
+
+                        product{% if order_items|length != 1 %}s{% endif %}
+
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <div class="card-body p-0">
+
+
+                {% if order_items %}
+
+
+                    {% for item in order_items %}
+
+                    <div
+                        class="p-3 p-md-4 {% if not loop.last %}border-bottom{% endif %}"
+                    >
+
+                        <div class="row g-3 align-items-center">
+
+
+                            <div class="col-md-5">
+
+                                <div
+                                    class="d-flex align-items-center gap-3"
+                                >
+
+                                    <div
+                                        class="quick-icon bg-primary-subtle text-primary flex-shrink-0"
+                                    >
+                                        ◇
+                                    </div>
+
+
+                                    <div class="min-w-0">
+
+                                        <div
+                                            class="fw-bold text-truncate"
+                                        >
+                                            {{ item.product_name }}
+                                        </div>
+
+
+                                        <div
+                                            class="small text-body-secondary"
+                                        >
+                                            Product ID:
+                                            {{ item.product_id }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-4 col-md-2">
+
+                                <div
+                                    class="small text-body-secondary mb-1"
+                                >
+                                    Unit Price
+                                </div>
+
+                                <div class="fw-semibold">
+                                    ₹{{ "{:,.2f}".format(item.unit_price) }}
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-4 col-md-2">
+
+                                <div
+                                    class="small text-body-secondary mb-1"
+                                >
+                                    Quantity
+                                </div>
+
+                                <div class="fw-semibold">
+                                    {{ item.quantity }}
+                                </div>
+
+                            </div>
+
+
+
+                            <div
+                                class="col-4 col-md-3 text-end"
+                            >
+
+                                <div
+                                    class="small text-body-secondary mb-1"
+                                >
+                                    Total
+                                </div>
+
+                                <div
+                                    class="h5 fw-bold text-primary mb-0"
+                                >
+                                    ₹{{ "{:,.2f}".format(item.line_total) }}
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+
+
+                    <div
+                        class="p-3 p-md-4 border-top bg-body-tertiary"
+                    >
+
+                        <div
+                            class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
+                        >
+
+                            <div>
+
+                                <div class="fw-bold">
+                                    Order Total
+                                </div>
+
+
+                                <div
+                                    class="small text-body-secondary"
+                                >
+
+                                    {% set ns = namespace(total_quantity=0) %}
+
+                                    {% for item in order_items %}
+
+                                        {% set ns.total_quantity = ns.total_quantity + item.quantity %}
+
+                                    {% endfor %}
+
+
+                                    {{ ns.total_quantity }}
+
+                                    item{% if ns.total_quantity != 1 %}s{% endif %}
+
+                                    across
+
+                                    {{ order_items|length }}
+
+                                    product{% if order_items|length != 1 %}s{% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="h3 fw-bold text-primary mb-0"
+                            >
+                                ₹{{ "{:,.2f}".format(order.amount) }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                {% else %}
+
+
+                <div class="p-4">
+
+                    <div
+                        class="alert alert-secondary mb-0"
+                        role="alert"
+                    >
+
+                        <strong class="d-block mb-1">
+                            Legacy Order
+                        </strong>
+
+
+                        {% if order.product_name and order.product_name != "Multiple Products" %}
+
+                        <div>
+                            Product:
+                            <strong>
+                                {{ order.product_name }}
+                            </strong>
+                        </div>
+
+
+                        <div class="mt-1">
+                            Amount:
+                            <strong>
+                                ₹{{ "{:,.2f}".format(order.amount) }}
+                            </strong>
+                        </div>
+
+
+                        {% else %}
+
+                        Product-level information is not
+                        available for this older order.
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+
+        {% if history %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div
+                class="card-header bg-body border-bottom p-3 p-md-4"
+            >
+
+                <div>
+
+                    <h2 class="h5 fw-bold mb-1">
+                        Order History
+                    </h2>
+
+                    <p class="small text-body-secondary mb-0">
+                        Changes made to this order over time.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                {% for item in history %}
+
+                <div
+                    class="p-3 p-md-4 {% if not loop.last %}border-bottom{% endif %}"
+                >
+
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between gap-3"
+                    >
+
+                        <div>
+
+                            <div class="fw-semibold mb-1">
+
+                                {% if item.action == "created" %}
+
+                                    Order created
+
+                                {% elif item.action == "deleted" %}
+
+                                    Order deleted
+
+                                {% elif item.action == "updated" %}
+
+                                    Order updated
+
+                                {% else %}
+
+                                    {{ item.action|replace('_', ' ')|title }}
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if item.field_name %}
+
+                            <div
+                                class="small text-body-secondary"
+                            >
+
+                                <strong>
+                                    {{ item.field_name|replace('_', ' ')|title }}
+                                </strong>
+
+
+                                {% if item.old_value is not none %}
+
+                                <span class="mx-1">
+                                    :
+                                </span>
+
+                                <span>
+                                    {{ item.old_value }}
+                                </span>
+
+                                {% endif %}
+
+
+                                {% if item.new_value is not none %}
+
+                                <span class="mx-1">
+                                    →
+                                </span>
+
+                                <span class="fw-semibold text-body">
+                                    {{ item.new_value }}
+                                </span>
+
+                                {% endif %}
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div
+                            class="small text-body-secondary text-md-end"
+                        >
+
+                            {% if item.created_at %}
+
+                            {{ item.created_at.strftime("%d %b %Y, %I:%M %p") }}
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <div class="col-xl-4">
+
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div
+                class="card-header bg-body border-bottom p-3 p-md-4"
+            >
+
+                <h2 class="h5 fw-bold mb-0">
+                    Order Information
+                </h2>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+
+                <div class="mb-4">
+
+                    <div class="detail-label">
+                        Order Number
+                    </div>
+
+                    <div class="detail-value">
+                        {{ order.order_number }}
+                    </div>
+
+                </div>
+
+
+
+                <div class="mb-4">
+
+                    <div class="detail-label">
+                        Platform
+                    </div>
+
+                    <div
+                        class="d-flex align-items-center gap-2"
+                    >
+
+                        <span
+                            class="platform-dot platform-{{ platform_url }}"
+                        >
+                            {{ 'S' if platform_url == 'swiggy' else 'I' }}
+                        </span>
+
+                        <strong>
+                            {{ platform }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="mb-4">
+
+                    <div class="detail-label">
+                        Customer
+                    </div>
+
+                    <div class="detail-value">
+                        {{ order.customer_name }}
+                    </div>
+
+                </div>
+
+
+
+                <div class="mb-4">
+
+                    <div class="detail-label">
+                        Status
+                    </div>
+
+                    <div>
+
+                        <span
+                            class="status-badge status-{{ order.status }}"
+                        >
+                            {{ order.status|capitalize }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="mb-4">
+
+                    <div class="detail-label">
+                        Order Date
+                    </div>
+
+                    <div class="detail-value">
+
+                        {% if order.order_date %}
+
+                            {{ order.order_date.strftime("%d %b %Y") }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <div>
+
+                    <div class="detail-label">
+                        Total Amount
+                    </div>
+
+                    <div
+                        class="h3 fw-bold text-primary mb-0"
+                    >
+                        ₹{{ "{:,.2f}".format(order.amount) }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        {% if current_user.role == "admin" %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div
+                class="card-header bg-body border-bottom p-3 p-md-4"
+            >
+
+                <h2 class="h5 fw-bold mb-0">
+                    Admin Actions
+                </h2>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+                <div class="d-grid gap-2">
+
+                    <a
+                        href="/{{ platform_url }}/orders/edit/{{ order.id }}"
+                        class="btn btn-primary"
+                    >
+                        Edit Order
+                    </a>
+
+
+                    <form
+                        method="post"
+                        action="/{{ platform_url }}/orders/delete/{{ order.id }}"
+                        onsubmit="return confirm('Are you sure you want to delete this order?');"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-danger w-100"
+                        >
+                            Delete Order
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

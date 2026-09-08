@@ -1,0 +1,275 @@
+{% extends "insights/base.html" %}
+
+{% block title %}
+{{ service.product_name }} | Insights
+{% endblock %}
+
+
+{% block content %}
+
+<section class="in-section">
+
+    <div
+        class="container-fluid in-content-width px-3 px-md-4"
+    >
+
+        <a
+            href="/insights/services"
+            class="in-back-link"
+        >
+            ← Back to services
+        </a>
+
+
+        <div class="in-detail-card">
+
+            <div class="in-detail-overview">
+
+                <span class="in-detail-symbol">
+                    ◈
+                </span>
+
+                <span class="in-eyebrow">
+                    INSIGHTS SOLUTION
+                </span>
+
+                <h2>
+                    Structured analysis for
+                    a clear business outcome.
+                </h2>
+
+
+                <div class="in-detail-points">
+
+                    <div>
+
+                        <span>
+                            01
+                        </span>
+
+                        <p>
+                            Choose the service that
+                            matches your goal
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            02
+                        </span>
+
+                        <p>
+                            Submit one focused
+                            project request
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            03
+                        </span>
+
+                        <p>
+                            Track progress from
+                            request to delivery
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="in-detail-content">
+
+                <div class="in-service-meta">
+
+                    <span class="in-service-platform">
+                        Insights
+                    </span>
+
+                    <span
+                        class="in-availability available"
+                    >
+                        Available
+                    </span>
+
+                </div>
+
+
+                <h1>
+                    {{ service.product_name }}
+                </h1>
+
+
+                <p class="in-detail-description">
+                    {{ service.description or "A focused analytics service designed to turn business information into clearer decisions." }}
+                </p>
+
+
+                <div class="in-detail-price">
+                    ₹{{ "%.2f"|format(service.price) }}
+                </div>
+
+
+                <div class="in-detail-info-grid">
+
+                    <div>
+
+                        <span>
+                            Platform
+                        </span>
+
+                        <strong>
+                            Insights
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Request Type
+                        </span>
+
+                        <strong>
+                            Individual Project
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Inventory
+                        </span>
+
+                        <strong>
+                            Not Applicable
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Availability
+                        </span>
+
+                        <strong>
+                            Active Service
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                {% if current_user and current_user.role == "client" %}
+
+                <div class="in-direct-request-box">
+
+                    <div>
+
+                        <span class="in-eyebrow">
+                            READY TO START?
+                        </span>
+
+                        <strong>
+                            Request this service as
+                            a new project.
+                        </strong>
+
+                        <small>
+                            No cart, stock or quantity
+                            selection is required.
+                        </small>
+
+                    </div>
+
+
+                    <a
+                        href="/insights/checkout/{{ service.id }}"
+                        class="btn btn-primary in-primary-btn"
+                    >
+                        Request This Service
+                    </a>
+
+                </div>
+
+
+                {% elif not current_user %}
+
+                <div class="in-callout">
+
+                    <div>
+
+                        <strong>
+                            Ready to start?
+                        </strong>
+
+                        <span>
+                            Sign in to request this
+                            analytics service.
+                        </span>
+
+                    </div>
+
+                    <a
+                        href="/login"
+                        class="btn btn-primary in-primary-btn"
+                    >
+                        Sign In
+                    </a>
+
+                </div>
+
+
+                {% else %}
+
+                <div class="in-callout">
+
+                    <div>
+
+                        <strong>
+                            Admin account
+                        </strong>
+
+                        <span>
+                            You can inspect this service,
+                            but project requests can only
+                            be submitted by client accounts.
+                        </span>
+
+                    </div>
+
+                    <a
+                        href="/products/{{ service.id }}"
+                        class="btn btn-outline-secondary"
+                    >
+                        View in Management
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

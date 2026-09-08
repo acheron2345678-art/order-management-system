@@ -1,0 +1,274 @@
+{% extends "insights/base.html" %}
+
+{% block title %}
+Project Cart | Insights
+{% endblock %}
+
+{% block content %}
+
+<section class="in-section">
+
+    <div class="container-fluid in-content-width px-3 px-md-4">
+
+        <div class="in-page-header">
+
+            <div>
+                <span class="in-eyebrow">
+                    PROJECT CART
+                </span>
+
+                <h1>
+                    Review selected services
+                </h1>
+
+                <p>
+                    Confirm your analytics services before project checkout.
+                </p>
+            </div>
+
+            <a
+                href="/insights/services"
+                class="btn btn-outline-secondary"
+            >
+                + Add More Services
+            </a>
+
+        </div>
+
+        {% if error %}
+
+        <div
+            class="alert alert-danger in-alert"
+            role="alert"
+            data-auto-dismiss-alert
+        >
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+        {% if cart["items"] %}
+
+        <div class="in-cart-layout">
+
+            <div class="in-cart-items">
+
+                {% for item in cart["items"] %}
+
+                <article class="in-cart-item">
+
+                    <div class="in-cart-item-index">
+                        {{ "%02d"|format(loop.index) }}
+                    </div>
+
+                    <div class="in-cart-item-copy">
+
+                        <span class="in-service-platform">
+                            Insights
+                        </span>
+
+                        <a
+                            href="/insights/services/{{ item['product'].id }}"
+                            class="in-cart-item-title"
+                        >
+                            {{ item["product"].product_name }}
+                        </a>
+
+                        <span class="in-cart-unit-price">
+                            ₹{{ "%.2f"|format(item["unit_price"]) }} per package
+                        </span>
+
+                        {% if not item["is_available"] %}
+                        <small class="in-item-warning">
+                            Selected quantity exceeds current capacity.
+                        </small>
+                        {% endif %}
+
+                    </div>
+
+                    <form
+                        method="post"
+                        action="/insights/cart/update/{{ item['product'].id }}"
+                        class="in-cart-quantity-form"
+                        data-loading-form
+                    >
+
+                        <label>
+                            Packages
+                        </label>
+
+                        <div
+                            class="in-quantity-stepper in-quantity-stepper-small"
+                            data-quantity-stepper
+                        >
+
+                            <button
+                                type="button"
+                                data-qty-decrease
+                                aria-label="Decrease quantity"
+                            >
+                                −
+                            </button>
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                min="0"
+                                max="{{ item['available_stock'] }}"
+                                value="{{ item['quantity'] }}"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                data-qty-increase
+                                aria-label="Increase quantity"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-loading-text="Updating..."
+                        >
+                            Update
+                        </button>
+
+                    </form>
+
+                    <div class="in-cart-line-total">
+
+                        <span>
+                            Service total
+                        </span>
+
+                        <strong>
+                            ₹{{ "%.2f"|format(item["line_total"]) }}
+                        </strong>
+
+                        <form
+                            method="post"
+                            action="/insights/cart/remove/{{ item['product'].id }}"
+                            data-loading-form
+                        >
+                            <button
+                                type="submit"
+                                class="btn btn-link in-remove-btn"
+                                data-loading-text="Removing..."
+                            >
+                                Remove
+                            </button>
+                        </form>
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </div>
+
+            <aside class="in-summary-card">
+
+                <span class="in-eyebrow">
+                    PROJECT SUMMARY
+                </span>
+
+                <h2>
+                    Selected services
+                </h2>
+
+                <div class="in-summary-row">
+                    <span>
+                        Packages
+                    </span>
+
+                    <strong>
+                        {{ cart["item_count"] }}
+                    </strong>
+                </div>
+
+                <div class="in-summary-divider">
+                </div>
+
+                <div class="in-summary-row in-summary-total">
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(cart["total"]) }}
+                    </strong>
+                </div>
+
+                {% if cart["has_stock_errors"] %}
+
+                <div class="alert alert-warning mt-3 mb-0">
+                    Fix unavailable quantities before checkout.
+                </div>
+
+                {% else %}
+
+                <a
+                    href="/insights/checkout"
+                    class="btn btn-primary in-primary-btn in-full-btn mt-3"
+                >
+                    Continue to Checkout
+                </a>
+
+                {% endif %}
+
+                <form
+                    method="post"
+                    action="/insights/cart/clear"
+                    class="mt-2"
+                    data-loading-form
+                >
+                    <button
+                        type="submit"
+                        class="btn btn-outline-secondary in-full-btn"
+                        data-loading-text="Clearing..."
+                    >
+                        Clear Cart
+                    </button>
+                </form>
+
+            </aside>
+
+        </div>
+
+        {% else %}
+
+        <div class="in-empty-state">
+
+            <span class="in-empty-state-icon">
+                ◫
+            </span>
+
+            <h3>
+                No services selected
+            </h3>
+
+            <p>
+                Choose an analytics service and it will appear here.
+            </p>
+
+            <a
+                href="/insights/services"
+                class="btn btn-primary in-primary-btn"
+            >
+                Browse Services
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

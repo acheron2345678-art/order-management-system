@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block title %}
+Checkout - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+>
+
+    <div>
+
+        <div class="d-flex align-items-center gap-2 mb-1">
+
+            <div
+                class="quick-icon bg-primary-subtle text-primary"
+            >
+                ✓
+            </div>
+
+            <h1 class="h2 fw-bold mb-0">
+                Checkout
+            </h1>
+
+        </div>
+
+        <p class="text-body-secondary mb-0">
+            Review your complete cart before placing the order.
+        </p>
+
+    </div>
+
+
+    <a
+        href="/cart"
+        class="btn btn-outline-secondary"
+    >
+        ← Back to Cart
+    </a>
+
+</div>
+
+
+
+{% if error %}
+
+<div
+    class="alert alert-danger mb-4"
+    role="alert"
+>
+
+    <strong class="d-block mb-1">
+        Unable to place order
+    </strong>
+
+    <span>
+        {{ error }}
+    </span>
+
+</div>
+
+{% endif %}
+
+
+
+<div class="row g-4">
+
+
+    <div class="col-lg-7">
+
+        <div class="card border-0 shadow-sm">
+
+            <div
+                class="card-header bg-body border-bottom p-4"
+            >
+
+                <div
+                    class="d-flex justify-content-between align-items-center gap-3"
+                >
+
+                    <div>
+
+                        <h2 class="h5 fw-bold mb-1">
+                            Order Items
+                        </h2>
+
+                        <p
+                            class="small text-body-secondary mb-0"
+                        >
+
+                            {{ cart["item_count"] }}
+
+                            item{% if cart["item_count"] != 1 %}s{% endif %}
+
+                            across
+
+                            {{ cart["items"]|length }}
+
+                            product{% if cart["items"]|length != 1 %}s{% endif %}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                {% for item in cart["items"] %}
+
+                <div
+                    class="p-3 p-md-4 {% if not loop.last %}border-bottom{% endif %}"
+                >
+
+                    <div
+                        class="d-flex align-items-center justify-content-between gap-3"
+                    >
+
+                        <div>
+
+                            <div class="mb-2">
+
+                                <span
+                                    class="badge product-platform-badge platform-{{ item['product'].platform|lower }} text-white"
+                                >
+                                    {{ item["product"].platform }}
+                                </span>
+
+                            </div>
+
+
+                            <h3 class="h6 fw-bold mb-1">
+                                {{ item["product"].product_name }}
+                            </h3>
+
+
+                            <div
+                                class="small text-body-secondary"
+                            >
+
+                                ₹{{ "{:,.2f}".format(item["unit_price"]) }}
+
+                                ×
+
+                                {{ item["quantity"] }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="text-end">
+
+                            <div
+                                class="small text-body-secondary mb-1"
+                            >
+                                Subtotal
+                            </div>
+
+                            <div class="fw-bold">
+                                ₹{{ "{:,.2f}".format(item["line_total"]) }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-lg-5">
+
+        <div
+            class="card border-0 shadow-sm position-sticky"
+            style="top: 1rem;"
+        >
+
+            <div
+                class="card-header bg-body border-bottom p-4"
+            >
+
+                <h2 class="h5 fw-bold mb-0">
+                    Checkout Details
+                </h2>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+
+                <form
+                    method="post"
+                    action="/cart/checkout"
+                >
+
+
+                    <div class="mb-4">
+
+                        <label
+                            for="customer_name"
+                            class="form-label"
+                        >
+                            Customer Name
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="customer_name"
+                            name="customer_name"
+                            value="{{ customer_name or '' }}"
+                            class="form-control form-control-lg"
+                            maxlength="100"
+                            placeholder="Enter customer name"
+                            required
+                            autofocus
+                        >
+
+                    </div>
+
+
+
+                    <div
+                        class="border rounded-3 p-3 mb-4 bg-body-tertiary"
+                    >
+
+                        <div
+                            class="d-flex justify-content-between gap-3 mb-2"
+                        >
+
+                            <span class="text-body-secondary">
+                                Total Items
+                            </span>
+
+                            <strong>
+                                {{ cart["item_count"] }}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="d-flex justify-content-between gap-3"
+                        >
+
+                            <span class="text-body-secondary">
+                                Products
+                            </span>
+
+                            <strong>
+                                {{ cart["items"]|length }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div
+                        class="d-flex align-items-end justify-content-between gap-3 mb-4"
+                    >
+
+                        <div>
+
+                            <div
+                                class="small text-body-secondary"
+                            >
+                                Order Total
+                            </div>
+
+                            <div class="small text-body-secondary">
+                                All selected products
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="h2 fw-bold text-primary mb-0"
+                        >
+                            ₹{{ "{:,.2f}".format(cart["total"]) }}
+                        </div>
+
+                    </div>
+
+
+
+                    <div
+                        class="alert alert-info small mb-4"
+                    >
+
+                        <strong class="d-block mb-1">
+                            Multi-platform checkout
+                        </strong>
+
+                        If your cart contains products from
+                        both Swiggy and Insights, the system
+                        will create one order for each
+                        platform automatically.
+
+                    </div>
+
+
+
+                    <div class="d-grid gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Place Complete Order
+                        </button>
+
+
+                        <a
+                            href="/cart"
+                            class="btn btn-outline-secondary"
+                        >
+                            Edit Cart
+                        </a>
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

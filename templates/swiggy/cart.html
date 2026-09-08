@@ -1,0 +1,329 @@
+{% extends "swiggy/base.html" %}
+
+{% block title %}
+Your Cart | Swiggy
+{% endblock %}
+
+{% block content %}
+
+
+<section class="sw-section">
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+        <div class="sw-page-header">
+
+            <div>
+
+                <span class="sw-eyebrow">
+                    YOUR CART
+                </span>
+
+                <h1>
+                    Review your order
+                </h1>
+
+                <p>
+                    Update quantities, remove items or continue to checkout.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/swiggy/products"
+                class="btn btn-outline-secondary"
+            >
+                + Add more items
+            </a>
+
+        </div>
+
+
+        {% if error %}
+
+        <div
+            class="alert alert-danger sw-alert"
+            role="alert"
+            data-auto-dismiss-alert
+        >
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        {% if cart["items"] %}
+
+        <div class="sw-cart-layout">
+
+            <div class="sw-cart-items">
+
+                {% for item in cart["items"] %}
+
+                <article class="sw-cart-item">
+
+                    <a
+                        href="/swiggy/products/{{ item['product'].id }}"
+                        class="sw-cart-item-visual"
+                    >
+
+                        {% if item["product"].image_url %}
+
+                        <img
+                            src="{{ item['product'].image_url }}"
+                            alt="{{ item['product'].product_name }}"
+                        >
+
+                        {% else %}
+
+                        <span>
+                            {{ item["product"].product_name[0]|upper }}
+                        </span>
+
+                        {% endif %}
+
+                    </a>
+
+
+                    <div class="sw-cart-item-copy">
+
+                        <span class="sw-product-platform">
+                            Swiggy
+                        </span>
+
+
+                        <a
+                            href="/swiggy/products/{{ item['product'].id }}"
+                            class="sw-cart-item-title"
+                        >
+                            {{ item["product"].product_name }}
+                        </a>
+
+
+                        <span class="sw-cart-unit-price">
+                            ₹{{ "%.2f"|format(item["unit_price"]) }} each
+                        </span>
+
+
+                        {% if not item["is_available"] %}
+
+                        <small class="sw-item-warning">
+                            Only {{ item["available_stock"] }} currently available.
+                        </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <form
+                        method="post"
+                        action="/swiggy/cart/update/{{ item['product'].id }}"
+                        class="sw-cart-quantity-form"
+                        data-loading-form
+                    >
+
+                        <label>
+                            Quantity
+                        </label>
+
+
+                        <div
+                            class="sw-quantity-stepper sw-quantity-stepper-small"
+                            data-quantity-stepper
+                        >
+
+                            <button
+                                type="button"
+                                data-qty-decrease
+                                aria-label="Decrease quantity"
+                            >
+                                −
+                            </button>
+
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                min="0"
+                                max="{{ item['available_stock'] }}"
+                                value="{{ item['quantity'] }}"
+                                required
+                            >
+
+
+                            <button
+                                type="button"
+                                data-qty-increase
+                                aria-label="Increase quantity"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-loading-text="Updating..."
+                        >
+                            Update
+                        </button>
+
+                    </form>
+
+
+                    <div class="sw-cart-line-total">
+
+                        <span>
+                            Item total
+                        </span>
+
+                        <strong>
+                            ₹{{ "%.2f"|format(item["line_total"]) }}
+                        </strong>
+
+
+                        <form
+                            method="post"
+                            action="/swiggy/cart/remove/{{ item['product'].id }}"
+                            data-loading-form
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-link sw-remove-btn"
+                                data-loading-text="Removing..."
+                            >
+                                Remove
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </div>
+
+
+            <aside class="sw-summary-card">
+
+                <span class="sw-eyebrow">
+                    ORDER SUMMARY
+                </span>
+
+
+                <h2>
+                    Your total
+                </h2>
+
+
+                <div class="sw-summary-row">
+
+                    <span>
+                        Items
+                    </span>
+
+                    <strong>
+                        {{ cart["item_count"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="sw-summary-divider">
+                </div>
+
+
+                <div class="sw-summary-row sw-summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(cart["total"]) }}
+                    </strong>
+
+                </div>
+
+
+                {% if cart["has_stock_errors"] %}
+
+                <div class="alert alert-warning mt-3 mb-0">
+                    Fix unavailable quantities before checkout.
+                </div>
+
+                {% else %}
+
+                <a
+                    href="/swiggy/checkout"
+                    class="btn btn-primary sw-primary-action sw-full-btn mt-3"
+                >
+                    Proceed to Checkout
+                </a>
+
+                {% endif %}
+
+
+                <form
+                    method="post"
+                    action="/swiggy/cart/clear"
+                    class="mt-2"
+                    data-loading-form
+                >
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-secondary sw-full-btn"
+                        data-loading-text="Clearing..."
+                    >
+                        Clear Cart
+                    </button>
+
+                </form>
+
+            </aside>
+
+        </div>
+
+        {% else %}
+
+        <div class="sw-empty-state">
+
+            <span class="sw-empty-state-icon">
+                🛒
+            </span>
+
+            <h3>
+                Your cart is empty
+            </h3>
+
+            <p>
+                Choose something from the menu and it will appear here.
+            </p>
+
+            <a
+                href="/swiggy/products"
+                class="btn btn-primary"
+            >
+                Browse Menu
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+{% endblock %}

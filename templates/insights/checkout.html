@@ -1,0 +1,507 @@
+{% extends "insights/base.html" %}
+
+
+{% block title %}
+Request {{ service.product_name }} | Insights
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="in-section">
+
+    <div
+        class="
+            container-fluid
+            in-content-width
+            px-3
+            px-md-4
+        "
+    >
+
+
+        <!-- ================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================= -->
+
+        <div class="in-page-header">
+
+            <div>
+
+                <span class="in-eyebrow">
+                    PROJECT REQUEST
+                </span>
+
+                <h1>
+                    Tell us about your project
+                </h1>
+
+                <p>
+                    Give the Insights team the context,
+                    objective and preferred timeline for
+                    your request.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/insights/services/{{ service.id }}"
+                class="btn btn-outline-secondary"
+            >
+                ← Back to Service
+            </a>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- ERROR -->
+        <!-- ================================= -->
+
+        {% if error %}
+
+        <div
+            class="
+                alert
+                alert-danger
+                in-alert
+            "
+            role="alert"
+            data-auto-dismiss-alert
+        >
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- ================================= -->
+        <!-- PROJECT REQUEST LAYOUT -->
+        <!-- ================================= -->
+
+        <div class="in-checkout-layout">
+
+
+            <!-- ============================= -->
+            <!-- REQUEST FORM -->
+            <!-- ============================= -->
+
+            <form
+                method="post"
+                action="/insights/checkout/{{ service.id }}"
+                class="in-checkout-card"
+                data-loading-form
+            >
+
+
+                <!-- ========================= -->
+                <!-- INTRO -->
+                <!-- ========================= -->
+
+                <div class="in-card-head">
+
+                    <div>
+
+                        <span class="in-card-kicker">
+                            PROJECT DETAILS
+                        </span>
+
+                        <h2>
+                            Build your project brief
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- CLIENT / COMPANY -->
+                <!-- ========================= -->
+
+                <div class="in-field">
+
+                    <label for="customer_name">
+
+                        Client / Company
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        id="customer_name"
+                        class="form-control"
+                        type="text"
+                        name="customer_name"
+                        value="{{ customer_name }}"
+                        maxlength="100"
+                        placeholder="Enter client, department or company name"
+                        required
+                    >
+
+
+                    <small>
+                        The client, company or department
+                        this project is being requested for.
+                    </small>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- PROJECT BRIEF -->
+                <!-- ========================= -->
+
+                <div class="in-field">
+
+                    <label for="project_brief">
+
+                        Project Brief
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <textarea
+                        id="project_brief"
+                        class="form-control"
+                        name="project_brief"
+                        rows="6"
+                        minlength="20"
+                        maxlength="3000"
+                        placeholder="Describe the problem, analysis, data or insight you need..."
+                        required
+                    >{{ project_brief }}</textarea>
+
+
+                    <small>
+                        Explain what you would like the
+                        Insights team to investigate,
+                        analyse or deliver.
+                    </small>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- BUSINESS GOAL -->
+                <!-- ========================= -->
+
+                <div class="in-field">
+
+                    <label for="business_goal">
+
+                        Business Goal
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <textarea
+                        id="business_goal"
+                        class="form-control"
+                        name="business_goal"
+                        rows="4"
+                        minlength="10"
+                        maxlength="2000"
+                        placeholder="What decision or business outcome should this work support?"
+                        required
+                    >{{ business_goal }}</textarea>
+
+
+                    <small>
+                        Tell us how the completed analysis
+                        should help your business or team.
+                    </small>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- PREFERRED DATE -->
+                <!-- ========================= -->
+
+                <div class="in-field">
+
+                    <label
+                        for="preferred_completion_date"
+                    >
+                        Preferred Completion Date
+                    </label>
+
+
+                    <input
+                        id="preferred_completion_date"
+                        class="form-control"
+                        type="date"
+                        name="preferred_completion_date"
+                        value="{{ preferred_completion_date }}"
+                        min="{{ today }}"
+                    >
+
+
+                    <small>
+                        Optional. This helps the team
+                        understand your preferred timeline
+                        and is not a guaranteed delivery
+                        date.
+                    </small>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- NOTES -->
+                <!-- ========================= -->
+
+                <div class="in-field">
+
+                    <label for="additional_notes">
+                        Additional Notes
+                    </label>
+
+
+                    <textarea
+                        id="additional_notes"
+                        class="form-control"
+                        name="additional_notes"
+                        rows="4"
+                        maxlength="2000"
+                        placeholder="Add any constraints, priorities or additional instructions..."
+                    >{{ additional_notes }}</textarea>
+
+
+                    <small>
+                        Optional supporting information,
+                        limitations or instructions for
+                        the Insights team.
+                    </small>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- INFORMATION NOTE -->
+                <!-- ========================= -->
+
+                <div class="in-checkout-note">
+
+                    <span>
+                        i
+                    </span>
+
+
+                    <p>
+                        Submitting this request creates one
+                        Insights project with an initial
+                        status of
+                        <strong>Pending</strong>.
+
+                        The Insights team will review the
+                        brief before moving the project
+                        into processing.
+                    </p>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- ACTIONS -->
+                <!-- ========================= -->
+
+                <div
+                    class="
+                        d-flex
+                        flex-column
+                        flex-sm-row
+                        gap-2
+                        mt-4
+                    "
+                >
+
+                    <a
+                        href="/insights/services/{{ service.id }}"
+                        class="
+                            btn
+                            btn-outline-secondary
+                            flex-sm-fill
+                        "
+                    >
+                        Back to Service
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="
+                            btn
+                            btn-primary
+                            in-primary-btn
+                            flex-sm-fill
+                        "
+                        data-loading-text="Submitting project..."
+                    >
+                        Submit Project Request
+                    </button>
+
+                </div>
+
+
+            </form>
+
+
+            <!-- ============================= -->
+            <!-- SERVICE SUMMARY -->
+            <!-- ============================= -->
+
+            <aside class="in-summary-card">
+
+                <span class="in-eyebrow">
+                    SELECTED SERVICE
+                </span>
+
+
+                <h2>
+                    {{ service.product_name }}
+                </h2>
+
+
+                <p class="in-selected-service-description">
+
+                    {{
+                        service.description
+                        or
+                        "Focused business analysis designed to support clearer decisions."
+                    }}
+
+                </p>
+
+
+                <!-- PLATFORM -->
+
+                <div class="in-detail-summary-row">
+
+                    <span>
+                        Platform
+                    </span>
+
+                    <strong>
+                        Insights
+                    </strong>
+
+                </div>
+
+
+                <!-- REQUEST TYPE -->
+
+                <div class="in-detail-summary-row">
+
+                    <span>
+                        Request Type
+                    </span>
+
+                    <strong>
+                        Individual Project
+                    </strong>
+
+                </div>
+
+
+                <!-- INITIAL STATUS -->
+
+                <div class="in-detail-summary-row">
+
+                    <span>
+                        Initial Status
+                    </span>
+
+                    <strong>
+                        Pending
+                    </strong>
+
+                </div>
+
+
+                <!-- INVENTORY -->
+
+                <div class="in-detail-summary-row">
+
+                    <span>
+                        Inventory
+                    </span>
+
+                    <strong>
+                        Not Applicable
+                    </strong>
+
+                </div>
+
+
+                <div class="in-summary-divider">
+                </div>
+
+
+                <!-- PROJECT VALUE -->
+
+                <div
+                    class="
+                        in-summary-row
+                        in-summary-total
+                    "
+                >
+
+                    <span>
+                        Project Value
+                    </span>
+
+
+                    <strong>
+                        ₹{{ "%.2f"|format(service.price) }}
+                    </strong>
+
+                </div>
+
+
+                <!-- PROCESS -->
+
+                <div class="in-checkout-note mt-4">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <p>
+                        After submission, you can follow
+                        this request from
+                        <strong>My Projects</strong>
+                        and receive email notifications
+                        when its status changes.
+                    </p>
+
+                </div>
+
+
+            </aside>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}

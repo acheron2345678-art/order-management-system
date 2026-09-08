@@ -1,0 +1,508 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<section
+    class="hero-panel rounded-4 p-4 p-md-5 mb-5 overflow-hidden position-relative"
+>
+
+    <div class="row align-items-center g-4 position-relative">
+
+        <div class="col-xl-8">
+
+            <span
+                class="badge text-bg-primary-subtle text-primary-emphasis mb-3"
+            >
+                {% if current_user.role == "admin" %}
+                    Administration Workspace
+                {% else %}
+                    Client Workspace
+                {% endif %}
+            </span>
+
+
+            {% if current_user.role == "admin" %}
+
+            <h1 class="display-5 fw-bold mb-3">
+                Manage operations
+                <span class="text-primary">
+                    efficiently.
+                </span>
+            </h1>
+
+            <p class="lead text-body-secondary mb-4 mw-700">
+                Review orders, manage the catalog, restock Swiggy
+                products, monitor Insights services and manage users
+                from one centralized Order Management workspace.
+            </p>
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <a
+                    href="/products"
+                    class="btn btn-primary btn-lg"
+                >
+                    Open Catalog
+                </a>
+
+                <a
+                    href="/dashboard"
+                    class="btn btn-outline-primary btn-lg"
+                >
+                    View Dashboard
+                </a>
+
+            </div>
+
+
+            {% else %}
+
+
+            <h1 class="display-5 fw-bold mb-3">
+                Track your orders
+                <span class="text-primary">
+                    in one place.
+                </span>
+            </h1>
+
+            <p class="lead text-body-secondary mb-4 mw-700">
+                View your own Swiggy orders and Insights projects,
+                follow their progress and move to the appropriate
+                storefront whenever you want to place a new request.
+            </p>
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <a
+                    href="/swiggy"
+                    class="btn btn-primary btn-lg"
+                >
+                    Open Swiggy
+                </a>
+
+                <a
+                    href="/insights"
+                    class="btn btn-outline-primary btn-lg"
+                >
+                    Open Insights
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="col-xl-4 d-none d-xl-block text-center">
+
+            <div class="hero-visual mx-auto">
+
+                <div class="hero-visual-icon">
+                    OM
+                </div>
+
+                <div class="small text-body-secondary mt-3">
+                    FastAPI · MySQL · D3.js
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<div class="mb-4">
+
+    <h2 class="h3 fw-bold mb-1">
+        Quick Access
+    </h2>
+
+    <p class="text-body-secondary mb-0">
+
+        {% if current_user.role == "admin" %}
+
+            Jump directly to the management areas you use most.
+
+        {% else %}
+
+            Jump directly to your orders and storefronts.
+
+        {% endif %}
+
+    </p>
+
+</div>
+
+
+
+{% if current_user.role == "admin" %}
+
+
+<div class="row g-4">
+
+
+    <div class="col-md-6 col-xl-4">
+
+        <a
+            href="/products"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon bg-primary-subtle text-primary mb-4">
+                    ◫
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Catalog
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    Review active Swiggy products and Insights services,
+                    and restock Swiggy inventory.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Open catalog →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-4">
+
+        <a
+            href="/dashboard"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon bg-primary-subtle text-primary mb-4">
+                    ▦
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Dashboard
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    View platform-wide order statistics, summaries
+                    and interactive D3 visualizations.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Open dashboard →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-4">
+
+        <a
+            href="/admin/users"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon bg-primary-subtle text-primary mb-4">
+                    ♙
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Users
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    Create, edit, activate and deactivate
+                    administrator and client accounts.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Manage users →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-6">
+
+        <a
+            href="/swiggy/orders"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon platform-swiggy text-white mb-4">
+                    S
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Swiggy Orders
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    Review and manage existing Swiggy orders.
+                    New orders are placed only by client accounts.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Manage Swiggy orders →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-6">
+
+        <a
+            href="/insights/orders"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon platform-insights text-white mb-4">
+                    I
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Insights Projects
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    Review and manage existing Insights projects.
+                    Project requests are created only by clients.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Manage Insights projects →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+{% else %}
+
+
+<div class="row g-4">
+
+
+    <div class="col-md-6 col-xl-4">
+
+        <a
+            href="/dashboard"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon bg-primary-subtle text-primary mb-4">
+                    ▦
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    My Dashboard
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    View statistics and visualizations based only
+                    on your own Swiggy orders and Insights projects.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Open my dashboard →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-4">
+
+        <a
+            href="/swiggy/orders"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon platform-swiggy text-white mb-4">
+                    S
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    My Swiggy Orders
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    View and track only the Swiggy orders
+                    that belong to your account.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    View my orders →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-4">
+
+        <a
+            href="/insights/orders"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon platform-insights text-white mb-4">
+                    I
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    My Insights Projects
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    View and track only the Insights projects
+                    associated with your account.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    View my projects →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-6">
+
+        <a
+            href="/swiggy"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon platform-swiggy text-white mb-4">
+                    S
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Swiggy Storefront
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    Browse active Swiggy products, add them to your
+                    cart and place a new order.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Open Swiggy →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <div class="col-md-6 col-xl-6">
+
+        <a
+            href="/insights"
+            class="quick-card card h-100 text-decoration-none border-0 shadow-sm"
+        >
+
+            <div class="card-body p-4">
+
+                <div class="quick-icon platform-insights text-white mb-4">
+                    I
+                </div>
+
+                <h3 class="h5 text-body fw-bold">
+                    Insights Services
+                </h3>
+
+                <p class="text-body-secondary mb-4">
+                    Browse active analytics services and submit
+                    a new project request directly.
+                </p>
+
+                <span class="fw-semibold text-primary">
+                    Open Insights →
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+{% endif %}
+
+{% endblock %}

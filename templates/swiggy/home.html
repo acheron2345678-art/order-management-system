@@ -1,0 +1,586 @@
+{% extends "swiggy/base.html" %}
+
+{% block title %}
+Swiggy | Home
+{% endblock %}
+
+{% block content %}
+
+
+<section class="sw-section sw-hero-section">
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+        <div class="sw-hero-panel">
+
+            <div class="sw-hero-copy">
+
+                <span class="sw-eyebrow">
+                    SWIGGY STOREFRONT
+                </span>
+
+
+                <h1>
+                    Good food,
+                    <span>ordered simply.</span>
+                </h1>
+
+
+                <p>
+                    Browse the menu, manage your cart and place orders
+                    through a storefront connected directly to the same
+                    Order Management system.
+                </p>
+
+
+                <div class="sw-hero-actions">
+
+                    <a
+                        href="/swiggy/products"
+                        class="btn btn-primary sw-primary-action"
+                    >
+                        Browse Menu
+                    </a>
+
+
+                    {% if current_user and current_user.role == "client" %}
+
+                    <a
+                        href="/swiggy/cart"
+                        class="btn btn-outline-secondary"
+                    >
+                        View Cart
+                    </a>
+
+                    {% elif not current_user %}
+
+                    <a
+                        href="/login"
+                        class="btn btn-outline-secondary"
+                    >
+                        Sign in
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="sw-hero-feature-card">
+
+                <div class="sw-card-head">
+
+                    <div>
+
+                        <span class="sw-card-kicker">
+                            QUICK PICK
+                        </span>
+
+                        <h2>
+                            Ready when you are
+                        </h2>
+
+                    </div>
+
+
+                    <span class="sw-live-indicator">
+
+                        <i></i>
+
+                        Live
+
+                    </span>
+
+                </div>
+
+
+                {% if featured_products %}
+
+                {% set hero_product = featured_products[0] %}
+
+                <a
+                    href="/swiggy/products/{{ hero_product.id }}"
+                    class="sw-quick-product"
+                >
+
+                    <div class="sw-quick-product-visual">
+
+                        {% if hero_product.image_url %}
+
+                        <img
+                            src="{{ hero_product.image_url }}"
+                            alt="{{ hero_product.product_name }}"
+                        >
+
+                        {% else %}
+
+                        <span>
+                            {{ hero_product.product_name[0]|upper }}
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="sw-quick-product-copy">
+
+                        <small>
+                            Featured item
+                        </small>
+
+                        <strong>
+                            {{ hero_product.product_name }}
+                        </strong>
+
+                        <span>
+                            ₹{{ "%.2f"|format(hero_product.price) }}
+                        </span>
+
+                    </div>
+
+
+                    <span class="sw-quick-arrow">
+                        →
+                    </span>
+
+                </a>
+
+                {% else %}
+
+                <div class="sw-empty-inline">
+                    No active Swiggy products yet.
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section class="sw-section sw-section-tight">
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+        <div class="sw-feature-strip">
+
+            <article>
+
+                <span class="sw-feature-icon">
+                    ⚡
+                </span>
+
+                <div>
+
+                    <strong>
+                        Fast ordering
+                    </strong>
+
+                    <small>
+                        Fewer steps from product to checkout.
+                    </small>
+
+                </div>
+
+            </article>
+
+
+            <article>
+
+                <span class="sw-feature-icon">
+                    ✓
+                </span>
+
+                <div>
+
+                    <strong>
+                        Live availability
+                    </strong>
+
+                    <small>
+                        Products follow your current inventory.
+                    </small>
+
+                </div>
+
+            </article>
+
+
+            <article>
+
+                <span class="sw-feature-icon">
+                    ◫
+                </span>
+
+                <div>
+
+                    <strong>
+                        Centralized tracking
+                    </strong>
+
+                    <small>
+                        Orders flow into Order Management.
+                    </small>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section class="sw-section">
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+        <div class="sw-section-header">
+
+            <div>
+
+                <span class="sw-eyebrow">
+                    DISCOVER
+                </span>
+
+                <h2>
+                    Browse by category
+                </h2>
+
+                <p>
+                    Jump straight to what you want.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="sw-category-grid">
+
+            <a
+                href="/swiggy/products?q=Burger"
+                class="sw-category-card"
+            >
+
+                <span>
+                    🍔
+                </span>
+
+                <div>
+
+                    <strong>
+                        Burgers
+                    </strong>
+
+                    <small>
+                        Quick favourites
+                    </small>
+
+                </div>
+
+                <b>
+                    →
+                </b>
+
+            </a>
+
+
+            <a
+                href="/swiggy/products?q=Pizza"
+                class="sw-category-card"
+            >
+
+                <span>
+                    🍕
+                </span>
+
+                <div>
+
+                    <strong>
+                        Pizza
+                    </strong>
+
+                    <small>
+                        Easy sharing
+                    </small>
+
+                </div>
+
+                <b>
+                    →
+                </b>
+
+            </a>
+
+
+            <a
+                href="/swiggy/products?q=Meal"
+                class="sw-category-card"
+            >
+
+                <span>
+                    🥗
+                </span>
+
+                <div>
+
+                    <strong>
+                        Meals
+                    </strong>
+
+                    <small>
+                        Everyday picks
+                    </small>
+
+                </div>
+
+                <b>
+                    →
+                </b>
+
+            </a>
+
+
+            <a
+                href="/swiggy/products?q=Drink"
+                class="sw-category-card"
+            >
+
+                <span>
+                    🥤
+                </span>
+
+                <div>
+
+                    <strong>
+                        Drinks
+                    </strong>
+
+                    <small>
+                        Complete your order
+                    </small>
+
+                </div>
+
+                <b>
+                    →
+                </b>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section
+    id="featured"
+    class="sw-section"
+>
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+        <div class="sw-section-header sw-section-header-row">
+
+            <div>
+
+                <span class="sw-eyebrow">
+                    POPULAR NOW
+                </span>
+
+                <h2>
+                    Featured products
+                </h2>
+
+                <p>
+                    Active Swiggy products from your existing catalogue.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/swiggy/products"
+                class="btn btn-outline-secondary"
+            >
+                View full menu
+            </a>
+
+        </div>
+
+
+        {% if featured_products %}
+
+        <div class="sw-product-grid">
+
+            {% for product in featured_products %}
+
+            <article class="sw-product-card">
+
+                <a
+                    href="/swiggy/products/{{ product.id }}"
+                    class="sw-product-visual"
+                >
+
+                    {% if product.image_url %}
+
+                    <img
+                        src="{{ product.image_url }}"
+                        alt="{{ product.product_name }}"
+                    >
+
+                    {% else %}
+
+                    <span>
+                        {{ product.product_name[0]|upper }}
+                    </span>
+
+                    {% endif %}
+
+                </a>
+
+
+                <div class="sw-product-body">
+
+                    <div class="sw-product-meta">
+
+                        <span class="sw-product-platform">
+                            Swiggy
+                        </span>
+
+
+                        {% if product.stock_quantity > 0 %}
+
+                        <span class="sw-stock available">
+                            Available
+                        </span>
+
+                        {% else %}
+
+                        <span class="sw-stock unavailable">
+                            Sold out
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <a
+                        href="/swiggy/products/{{ product.id }}"
+                        class="sw-product-title"
+                    >
+                        {{ product.product_name }}
+                    </a>
+
+
+                    <p>
+                        {{ product.description or "Ready to order." }}
+                    </p>
+
+
+                    <div class="sw-product-footer">
+
+                        <strong>
+                            ₹{{ "%.2f"|format(product.price) }}
+                        </strong>
+
+
+                        <div class="sw-product-actions">
+
+                            <a
+                                href="/swiggy/products/{{ product.id }}"
+                                class="btn btn-outline-secondary btn-sm"
+                            >
+                                View
+                            </a>
+
+
+                            {% if current_user and current_user.role == "client" and product.stock_quantity > 0 %}
+
+                            <form
+                                method="post"
+                                action="/swiggy/cart/add/{{ product.id }}"
+                                class="sw-inline-form"
+                                data-loading-form
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="quantity"
+                                    value="1"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-sm sw-add-btn"
+                                    data-loading-text="Adding..."
+                                >
+                                    Add
+                                </button>
+
+                            </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="sw-empty-state">
+
+            <span class="sw-empty-state-icon">
+                🍽
+            </span>
+
+            <h3>
+                No products yet
+            </h3>
+
+            <p>
+                Add active Swiggy products from Order Management.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+{% endblock %}

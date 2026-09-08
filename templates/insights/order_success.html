@@ -1,0 +1,124 @@
+{% extends "insights/base.html" %}
+
+{% block title %}
+Project Submitted | Insights
+{% endblock %}
+
+{% block content %}
+
+<section class="in-section">
+
+    <div class="container-fluid in-content-width px-3 px-md-4">
+
+        <div class="in-success-card">
+
+            <div class="in-success-icon">
+                ✓
+            </div>
+
+            <span class="in-eyebrow">
+                PROJECT SUBMITTED
+            </span>
+
+            <h1>
+                Your Insights project is in.
+            </h1>
+
+            <p>
+                Project
+                <strong>{{ project.order_number }}</strong>
+                has been created successfully and is ready for review.
+            </p>
+
+            <div class="in-success-meta">
+
+                <div>
+                    <span>
+                        Status
+                    </span>
+
+                    <strong>
+                        {{ project.status|capitalize }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>
+                        Submitted
+                    </span>
+
+                    <strong>
+                        {{ project.order_date.strftime('%d %b %Y') }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>
+                        Project value
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(project.amount) }}
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="in-success-items">
+
+                <div class="in-success-items-head">
+                    <strong>
+                        Selected services
+                    </strong>
+
+                    <span>
+                        {{ order_items|length }}
+                        service{% if order_items|length != 1 %}s{% endif %}
+                    </span>
+                </div>
+
+                {% for item in order_items %}
+
+                <div class="in-success-item">
+
+                    <span>
+                        {{ item.product_name }}
+                        ×
+                        {{ item.quantity }}
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(item.line_total) }}
+                    </strong>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="in-success-actions">
+
+                <a
+                    href="/insights/services"
+                    class="btn btn-outline-secondary"
+                >
+                    Browse More Services
+                </a>
+
+                <a
+                    href="/insights/my-projects/{{ project.id }}"
+                    class="btn btn-primary in-primary-btn"
+                >
+                    Track This Project
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

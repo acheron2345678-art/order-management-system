@@ -1,0 +1,427 @@
+{% extends "swiggy/base.html" %}
+
+
+{% block title %}
+
+{{ product.product_name }} | Swiggy
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="sw-section">
+
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+
+        <!-- BACK -->
+
+        <a
+            href="/swiggy/products"
+            class="sw-back-link"
+        >
+
+            ← Back to Menu
+
+        </a>
+
+
+
+        <!-- PRODUCT DETAIL -->
+
+        <div class="sw-detail-card">
+
+
+            <!-- =====================================
+                 PRODUCT VISUAL
+                 ===================================== -->
+
+            <div class="sw-detail-media">
+
+
+                {% if product.image_url %}
+
+
+                <img
+                    src="{{ product.image_url }}"
+                    alt="{{ product.product_name }}"
+                    class="sw-detail-image"
+                >
+
+
+                {% else %}
+
+
+                <div class="sw-detail-placeholder">
+
+                    <span>
+
+                        {{ product.product_name[0]|upper }}
+
+                    </span>
+
+                </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 PRODUCT INFORMATION
+                 ===================================== -->
+
+            <div class="sw-detail-content">
+
+
+                <div class="sw-product-meta">
+
+
+                    <span class="sw-platform-label">
+
+                        Swiggy
+
+                    </span>
+
+
+
+                    {% if product.stock_quantity > 0 %}
+
+
+                    <span class="sw-stock-badge available">
+
+                        In Stock
+
+                    </span>
+
+
+                    {% else %}
+
+
+                    <span class="sw-stock-badge unavailable">
+
+                        Out of Stock
+
+                    </span>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+
+                <h1>
+
+                    {{ product.product_name }}
+
+                </h1>
+
+
+
+                <p class="sw-detail-description">
+
+
+                    {{ product.description or "A delicious item available through the Swiggy storefront." }}
+
+
+                </p>
+
+
+
+                <div class="sw-detail-price">
+
+                    ₹{{ "%.2f"|format(product.price) }}
+
+                </div>
+
+
+
+                <!-- INFO -->
+
+                <div class="sw-detail-info-grid">
+
+
+                    <div>
+
+
+                        <span>
+
+                            Platform
+
+                        </span>
+
+
+                        <strong>
+
+                            Swiggy
+
+                        </strong>
+
+
+                    </div>
+
+
+
+                    <div>
+
+
+                        <span>
+
+                            Availability
+
+                        </span>
+
+
+                        <strong>
+
+
+                            {% if product.stock_quantity > 0 %}
+
+                            {{ product.stock_quantity }} available
+
+                            {% else %}
+
+                            Out of stock
+
+                            {% endif %}
+
+
+                        </strong>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =====================================
+                     CLIENT
+                     ===================================== -->
+
+                {% if current_user and current_user.role == "client" %}
+
+
+                    {% if product.stock_quantity > 0 %}
+
+
+                    <form
+                        method="post"
+                        action="/swiggy/cart/add/{{ product.id }}"
+                        class="sw-add-form"
+                        data-loading-form
+                    >
+
+
+                        <label>
+
+                            Quantity
+
+                        </label>
+
+
+
+                        <div
+                            class="sw-quantity-stepper"
+                            data-quantity-stepper
+                        >
+
+
+                            <button
+                                type="button"
+                                data-qty-decrease
+                                aria-label="Decrease quantity"
+                            >
+
+                                −
+
+                            </button>
+
+
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                min="1"
+                                max="{{ product.stock_quantity }}"
+                                value="1"
+                                required
+                            >
+
+
+
+                            <button
+                                type="button"
+                                data-qty-increase
+                                aria-label="Increase quantity"
+                            >
+
+                                +
+
+                            </button>
+
+
+                        </div>
+
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary sw-primary-action"
+                            data-loading-text="Adding to cart..."
+                        >
+
+                            Add to Cart
+
+                        </button>
+
+
+                    </form>
+
+
+
+                    <a
+                        href="/swiggy/cart"
+                        class="btn btn-outline-secondary sw-full-btn"
+                    >
+
+                        View Cart
+
+                    </a>
+
+
+                    {% else %}
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary sw-full-btn mt-auto"
+                        disabled
+                    >
+
+                        Currently Unavailable
+
+                    </button>
+
+
+                    {% endif %}
+
+
+
+                <!-- =====================================
+                     NOT LOGGED IN
+                     ===================================== -->
+
+                {% elif not current_user %}
+
+
+                <div class="sw-callout">
+
+
+                    <div>
+
+
+                        <strong>
+
+                            Want to order this?
+
+                        </strong>
+
+
+                        <span>
+
+                            Sign in with a client account to add
+                            products to your cart.
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <a
+                        href="/login"
+                        class="btn btn-primary sw-primary-action"
+                    >
+
+                        Sign In
+
+                    </a>
+
+
+                </div>
+
+
+
+                <!-- =====================================
+                     ADMIN
+                     ===================================== -->
+
+                {% else %}
+
+
+                <div class="sw-callout">
+
+
+                    <div>
+
+
+                        <strong>
+
+                            Admin account
+
+                        </strong>
+
+
+                        <span>
+
+                            Ordering is available to client accounts.
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <a
+                        href="/home"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        Management
+
+                    </a>
+
+
+                </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,1105 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ product.product_name }} - Catalog
+{% endblock %}
+
+
+{% block content %}
+
+
+{% set item_platform = product.platform|lower %}
+
+
+<!-- ========================================= -->
+<!-- HEADER -->
+<!-- ========================================= -->
+
+<div
+    class="
+        d-flex
+        flex-column
+        flex-lg-row
+        justify-content-between
+        align-items-lg-start
+        gap-3
+        mb-4
+    "
+>
+
+    <div>
+
+        <div
+            class="
+                d-flex
+                align-items-center
+                gap-2
+                mb-2
+            "
+        >
+
+            <span
+                class="
+                    badge
+                    bg-primary-subtle
+                    text-primary-emphasis
+                    border
+                "
+            >
+                Catalog
+            </span>
+
+
+            {% if item_platform == "swiggy" %}
+
+            <span
+                class="
+                    badge
+                    bg-warning-subtle
+                    text-warning-emphasis
+                    border
+                "
+            >
+                Swiggy Product
+            </span>
+
+            {% elif item_platform == "insights" %}
+
+            <span
+                class="
+                    badge
+                    bg-info-subtle
+                    text-info-emphasis
+                    border
+                "
+            >
+                Insights Service
+            </span>
+
+            {% endif %}
+
+
+            {% if product.is_active %}
+
+            <span
+                class="
+                    badge
+                    bg-success-subtle
+                    text-success-emphasis
+                    border
+                "
+            >
+                Active
+            </span>
+
+            {% else %}
+
+            <span
+                class="
+                    badge
+                    bg-secondary-subtle
+                    text-secondary-emphasis
+                    border
+                "
+            >
+                Inactive
+            </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <h1 class="h2 fw-bold mb-1">
+            {{ product.product_name }}
+        </h1>
+
+
+        <p class="text-body-secondary mb-0">
+
+            {% if item_platform == "swiggy" %}
+
+                Review product information,
+                pricing and inventory.
+
+            {% elif item_platform == "insights" %}
+
+                Review service information
+                and project pricing.
+
+            {% else %}
+
+                Review catalog information.
+
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    <div
+        class="
+            d-flex
+            flex-wrap
+            gap-2
+        "
+    >
+
+        <a
+            href="/products"
+            class="btn btn-outline-secondary"
+        >
+            ← Back to Catalog
+        </a>
+
+
+        <a
+            href="/products/{{ product.id }}/edit"
+            class="btn btn-primary"
+        >
+            Edit
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- MAIN GRID -->
+<!-- ========================================= -->
+
+<div class="row g-4">
+
+
+    <!-- ===================================== -->
+    <!-- LEFT -->
+    <!-- ===================================== -->
+
+    <div class="col-xl-8">
+
+
+        <!-- ================================= -->
+        <!-- BASIC INFORMATION -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Catalog Information
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-4">
+
+                    {% if item_platform == "swiggy" %}
+
+                        Product Details
+
+                    {% elif item_platform == "insights" %}
+
+                        Service Details
+
+                    {% else %}
+
+                        Details
+
+                    {% endif %}
+
+                </h2>
+
+
+
+                <div class="row g-4">
+
+
+                    <!-- NAME -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-1
+                            "
+                        >
+
+                            {% if item_platform == "swiggy" %}
+                                Product Name
+                            {% else %}
+                                Service Name
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="fw-semibold">
+                            {{ product.product_name }}
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PLATFORM -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-1
+                            "
+                        >
+                            Platform
+                        </div>
+
+
+                        <div class="fw-semibold">
+
+                            {% if item_platform == "swiggy" %}
+
+                                Swiggy
+
+                            {% elif item_platform == "insights" %}
+
+                                Insights
+
+                            {% else %}
+
+                                {{ product.platform }}
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PRICE -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-1
+                            "
+                        >
+
+                            {% if item_platform == "swiggy" %}
+                                Product Price
+                            {% else %}
+                                Service Price
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="h5 fw-bold mb-0">
+
+                            ₹{{
+                                "{:,.2f}".format(
+                                    product.price
+                                )
+                            }}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-1
+                            "
+                        >
+                            Catalog Status
+                        </div>
+
+
+                        {% if product.is_active %}
+
+                        <span
+                            class="
+                                badge
+                                bg-success-subtle
+                                text-success-emphasis
+                                border
+                            "
+                        >
+                            Active
+                        </span>
+
+
+                        {% else %}
+
+                        <span
+                            class="
+                                badge
+                                bg-secondary-subtle
+                                text-secondary-emphasis
+                                border
+                            "
+                        >
+                            Inactive
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+
+                <hr class="my-4">
+
+
+
+                <!-- DESCRIPTION -->
+
+                <div>
+
+                    <div
+                        class="
+                            small
+                            text-body-secondary
+                            text-uppercase
+                            fw-semibold
+                            mb-2
+                        "
+                    >
+                        Description
+                    </div>
+
+
+                    {% if product.description %}
+
+                    <p
+                        class="
+                            text-body-secondary
+                            mb-0
+                        "
+                        style="
+                            white-space: pre-wrap;
+                            line-height: 1.8;
+                        "
+                    >{{ product.description }}</p>
+
+
+                    {% else %}
+
+                    <p
+                        class="
+                            text-body-secondary
+                            mb-0
+                        "
+                    >
+                        No description available.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- SWIGGY INVENTORY -->
+        <!-- ================================= -->
+
+        {% if item_platform == "swiggy" %}
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+            "
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Inventory
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-4">
+                    Stock Management
+                </h2>
+
+
+
+                <div class="row g-4">
+
+
+                    <!-- STOCK -->
+
+                    <div class="col-md-4">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-1
+                            "
+                        >
+                            Stock Quantity
+                        </div>
+
+
+                        <div class="h4 fw-bold mb-0">
+                            {{ product.stock_quantity }}
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- REORDER -->
+
+                    <div class="col-md-4">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-1
+                            "
+                        >
+                            Reorder Level
+                        </div>
+
+
+                        <div class="h4 fw-bold mb-0">
+                            {{ product.reorder_level }}
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- AVAILABILITY -->
+
+                    <div class="col-md-4">
+
+                        <div
+                            class="
+                                small
+                                text-body-secondary
+                                mb-2
+                            "
+                        >
+                            Inventory Status
+                        </div>
+
+
+                        {% if product.stock_quantity == 0 %}
+
+                        <span
+                            class="
+                                badge
+                                bg-danger-subtle
+                                text-danger-emphasis
+                                border
+                            "
+                        >
+                            Out of Stock
+                        </span>
+
+
+                        {% elif product.stock_quantity <= product.reorder_level %}
+
+                        <span
+                            class="
+                                badge
+                                bg-warning-subtle
+                                text-warning-emphasis
+                                border
+                            "
+                        >
+                            Low Stock
+                        </span>
+
+
+                        {% else %}
+
+                        <span
+                            class="
+                                badge
+                                bg-success-subtle
+                                text-success-emphasis
+                                border
+                            "
+                        >
+                            In Stock
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+
+                <hr class="my-4">
+
+
+
+                <div
+                    class="
+                        d-flex
+                        flex-column
+                        flex-sm-row
+                        justify-content-between
+                        align-items-sm-center
+                        gap-3
+                    "
+                >
+
+                    <div>
+
+                        <div class="fw-semibold">
+                            Restock Inventory
+                        </div>
+
+
+                        <div
+                            class="
+                                text-body-secondary
+                                small
+                                mt-1
+                            "
+                        >
+
+                            {% if product.last_restocked %}
+
+                                Last restocked:
+                                {{
+                                    product.last_restocked.strftime(
+                                        "%d %b %Y %I:%M %p"
+                                    )
+                                }}
+
+                            {% else %}
+
+                                This product has not been
+                                restocked yet.
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="/products/{{ product.id }}/restock"
+                        class="btn btn-outline-primary"
+                    >
+                        Restock Product
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% elif item_platform == "insights" %}
+
+
+        <!-- ================================= -->
+        <!-- INSIGHTS SERVICE INFO -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+            "
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Service Model
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-3">
+                    Project-Based Service
+                </h2>
+
+
+                <p
+                    class="
+                        text-body-secondary
+                        mb-0
+                    "
+                >
+                    Insights services are requested as
+                    individual projects. Inventory,
+                    stock quantities, reorder levels and
+                    restocking do not apply.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- RIGHT -->
+    <!-- ===================================== -->
+
+    <div class="col-xl-4">
+
+
+        <!-- ================================= -->
+        <!-- SUMMARY -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Summary
+                </div>
+
+
+                <h2 class="h5 fw-bold mb-4">
+
+                    {% if item_platform == "swiggy" %}
+
+                        Swiggy Product
+
+                    {% elif item_platform == "insights" %}
+
+                        Insights Service
+
+                    {% else %}
+
+                        Catalog Item
+
+                    {% endif %}
+
+                </h2>
+
+
+
+                <!-- ID -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Catalog ID
+                    </span>
+
+
+                    <strong>
+                        #{{ product.id }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- PLATFORM -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Platform
+                    </span>
+
+
+                    <strong>
+
+                        {% if item_platform == "swiggy" %}
+                            Swiggy
+                        {% elif item_platform == "insights" %}
+                            Insights
+                        {% else %}
+                            {{ product.platform }}
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- TYPE -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Type
+                    </span>
+
+
+                    <strong>
+
+                        {% if item_platform == "swiggy" %}
+                            Product
+                        {% elif item_platform == "insights" %}
+                            Service
+                        {% else %}
+                            Item
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- INVENTORY -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                        border-bottom
+                    "
+                >
+
+                    <span class="text-body-secondary">
+                        Inventory
+                    </span>
+
+
+                    <strong>
+
+                        {% if item_platform == "swiggy" %}
+
+                            Managed
+
+                        {% else %}
+
+                            Not Applicable
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- PRICE -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        gap-3
+                        py-3
+                    "
+                >
+
+                    <span class="text-body-secondary">
+
+                        {% if item_platform == "swiggy" %}
+                            Price
+                        {% else %}
+                            Project Value
+                        {% endif %}
+
+                    </span>
+
+
+                    <strong>
+
+                        ₹{{
+                            "{:,.2f}".format(
+                                product.price
+                            )
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- MANAGEMENT -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <h2 class="h6 fw-bold mb-2">
+                    Catalog Management
+                </h2>
+
+
+                <p
+                    class="
+                        text-body-secondary
+                        small
+                        mb-3
+                    "
+                >
+
+                    {% if item_platform == "swiggy" %}
+
+                        Manage pricing, inventory and
+                        storefront availability.
+
+                    {% else %}
+
+                        Manage service details, pricing
+                        and storefront availability.
+
+                    {% endif %}
+
+                </p>
+
+
+
+                <a
+                    href="/products/{{ product.id }}/edit"
+                    class="btn btn-primary w-100"
+                >
+                    Edit
+
+                    {% if item_platform == "swiggy" %}
+                        Product
+                    {% else %}
+                        Service
+                    {% endif %}
+
+                </a>
+
+
+
+                {% if item_platform == "swiggy" %}
+
+                <a
+                    href="/products/{{ product.id }}/restock"
+                    class="
+                        btn
+                        btn-outline-secondary
+                        w-100
+                        mt-2
+                    "
+                >
+                    Restock Product
+                </a>
+
+                {% endif %}
+
+
+
+                {% if product.is_active %}
+
+                <form
+                    method="post"
+                    action="/products/{{ product.id }}/deactivate"
+                    class="mt-2"
+                    onsubmit="
+                        return confirm(
+                            'Deactivate this catalog item?'
+                        );
+                    "
+                >
+
+                    <button
+                        type="submit"
+                        class="
+                            btn
+                            btn-outline-danger
+                            w-100
+                        "
+                    >
+                        Deactivate
+
+                        {% if item_platform == "swiggy" %}
+                            Product
+                        {% else %}
+                            Service
+                        {% endif %}
+
+                    </button>
+
+                </form>
+
+
+                {% else %}
+
+                <form
+                    method="post"
+                    action="/products/{{ product.id }}/activate"
+                    class="mt-2"
+                >
+
+                    <button
+                        type="submit"
+                        class="
+                            btn
+                            btn-success
+                            w-100
+                        "
+                    >
+                        Activate
+
+                        {% if item_platform == "swiggy" %}
+                            Product
+                        {% else %}
+                            Service
+                        {% endif %}
+
+                    </button>
+
+                </form>
+
+                {% endif %}
+
+
+
+                <a
+                    href="/products"
+                    class="
+                        btn
+                        btn-outline-secondary
+                        w-100
+                        mt-2
+                    "
+                >
+                    Back to Catalog
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

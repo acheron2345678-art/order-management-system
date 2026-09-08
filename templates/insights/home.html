@@ -1,0 +1,325 @@
+{% extends "insights/base.html" %}
+
+{% block title %}
+Insights | Business Intelligence
+{% endblock %}
+
+
+{% block content %}
+
+<section
+    class="in-section in-hero-section"
+>
+
+    <div
+        class="container-fluid in-content-width px-3 px-md-4"
+    >
+
+        <div class="in-hero-panel">
+
+            <div class="in-hero-copy">
+
+                <span class="in-eyebrow">
+                    INSIGHTS SERVICES
+                </span>
+
+                <h1>
+                    Turn data into
+                    <span>
+                        better decisions.
+                    </span>
+                </h1>
+
+                <p>
+                    Choose the analytics service you need,
+                    submit a project request directly and
+                    track its progress through the same
+                    Order Management platform.
+                </p>
+
+
+                <div class="in-hero-actions">
+
+                    <a
+                        href="/insights/services"
+                        class="btn btn-primary in-primary-btn"
+                    >
+                        Explore Services
+                    </a>
+
+
+                    {% if current_user and current_user.role == "client" %}
+
+                    <a
+                        href="/insights/my-projects"
+                        class="btn btn-outline-secondary"
+                    >
+                        My Projects
+                    </a>
+
+                    {% elif not current_user %}
+
+                    <a
+                        href="/login"
+                        class="btn btn-outline-secondary"
+                    >
+                        Client Sign In
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="in-overview-card">
+
+                <div class="in-card-head">
+
+                    <div>
+
+                        <span class="in-card-kicker">
+                            PROJECT WORKFLOW
+                        </span>
+
+                        <h2>
+                            One service.
+                            One focused project.
+                        </h2>
+
+                    </div>
+
+
+                    <span class="in-live-indicator">
+                        <i></i>
+                        Connected
+                    </span>
+
+                </div>
+
+
+                <div class="in-workflow">
+
+                    <div class="active">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Choose a service
+                            </strong>
+
+                            <small>
+                                Select the analysis you need
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Submit request
+                            </strong>
+
+                            <small>
+                                Confirm the project directly
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Track delivery
+                            </strong>
+
+                            <small>
+                                Follow the project status
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section class="in-section">
+
+    <div
+        class="container-fluid in-content-width px-3 px-md-4"
+    >
+
+        <div
+            class="in-section-header in-section-header-row"
+        >
+
+            <div>
+
+                <span class="in-eyebrow">
+                    FEATURED SERVICES
+                </span>
+
+                <h2>
+                    Start your next project
+                </h2>
+
+                <p>
+                    Choose a service and move directly
+                    to project checkout.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/insights/services"
+                class="btn btn-outline-secondary"
+            >
+                View All Services
+            </a>
+
+        </div>
+
+
+        {% if featured_services %}
+
+        <div class="in-service-grid">
+
+            {% for service in featured_services %}
+
+            <article class="in-service-card">
+
+                <div class="in-service-index">
+                    {{ "%02d"|format(loop.index) }}
+                </div>
+
+
+                <div class="in-service-body">
+
+                    <div class="in-service-meta">
+
+                        <span class="in-service-platform">
+                            Insights
+                        </span>
+
+                        <span
+                            class="in-availability available"
+                        >
+                            Available
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        href="/insights/services/{{ service.id }}"
+                        class="in-service-title"
+                    >
+                        {{ service.product_name }}
+                    </a>
+
+
+                    <p>
+                        {{ service.description or "Focused business analysis designed to support clearer decisions." }}
+                    </p>
+
+
+                    <div class="in-service-footer">
+
+                        <strong>
+                            ₹{{ "%.2f"|format(service.price) }}
+                        </strong>
+
+
+                        <div class="in-service-actions">
+
+                            <a
+                                href="/insights/services/{{ service.id }}"
+                                class="btn btn-outline-secondary btn-sm"
+                            >
+                                View
+                            </a>
+
+
+                            {% if current_user and current_user.role == "client" %}
+
+                            <a
+                                href="/insights/checkout/{{ service.id }}"
+                                class="btn btn-primary btn-sm in-primary-btn"
+                            >
+                                Request
+                            </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <div class="in-empty-state">
+
+            <span class="in-empty-state-icon">
+                ◫
+            </span>
+
+            <h3>
+                No services yet
+            </h3>
+
+            <p>
+                No active Insights services are
+                currently available.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

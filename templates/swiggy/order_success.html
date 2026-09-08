@@ -1,0 +1,200 @@
+{% extends "swiggy/base.html" %}
+
+
+{% block title %}
+
+Order Confirmed | Swiggy
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="sw-section">
+
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+
+        <div class="sw-success-card">
+
+
+            <div class="sw-success-icon">
+                ✓
+            </div>
+
+
+            <span class="sw-eyebrow">
+                ORDER CONFIRMED
+            </span>
+
+
+            <h1>
+                Your order is in.
+            </h1>
+
+
+            <p>
+
+                Swiggy order
+
+                <strong>
+                    {{ order.order_number }}
+                </strong>
+
+                has been created successfully.
+
+            </p>
+
+
+
+            <div class="sw-success-meta">
+
+
+                <div>
+
+
+                    <span>
+                        Status
+                    </span>
+
+
+                    <strong>
+                        {{ order.status|capitalize }}
+                    </strong>
+
+
+                </div>
+
+
+
+                <div>
+
+
+                    <span>
+                        Order date
+                    </span>
+
+
+                    <strong>
+                        {{ order.order_date.strftime('%d %b %Y') }}
+                    </strong>
+
+
+                </div>
+
+
+
+                <div>
+
+
+                    <span>
+                        Total
+                    </span>
+
+
+                    <strong>
+                        ₹{{ "%.2f"|format(order.amount) }}
+                    </strong>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="sw-success-items">
+
+
+                <div class="sw-success-items-head">
+
+
+                    <strong>
+                        Order items
+                    </strong>
+
+
+                    <span>
+
+                        {{ order_items|length }}
+
+                        product{% if order_items|length != 1 %}s{% endif %}
+
+                    </span>
+
+
+                </div>
+
+
+
+                {% for item in order_items %}
+
+
+                <div class="sw-success-item">
+
+
+                    <span>
+
+                        {{ item.product_name }}
+
+                        ×
+
+                        {{ item.quantity }}
+
+                    </span>
+
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(item.line_total) }}
+
+                    </strong>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+
+            <div class="sw-success-actions">
+
+
+                <a
+                    href="/swiggy/products"
+                    class="btn btn-outline-secondary"
+                >
+                    Continue Ordering
+                </a>
+
+
+                <a
+                    href="/swiggy/my-orders"
+                    class="btn btn-primary sw-primary-action"
+                >
+                    View My Orders
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}

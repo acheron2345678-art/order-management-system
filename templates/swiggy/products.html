@@ -1,0 +1,285 @@
+{% extends "swiggy/base.html" %}
+
+{% block title %}
+Swiggy | Menu
+{% endblock %}
+
+{% block content %}
+
+
+<section class="sw-section">
+
+    <div
+        class="container-fluid sw-content-width px-3 px-md-4"
+    >
+
+        <div class="sw-page-header">
+
+            <div>
+
+                <span class="sw-eyebrow">
+                    SWIGGY MENU
+                </span>
+
+                <h1>
+                    Choose your next order
+                </h1>
+
+                <p>
+                    Browse every active Swiggy product currently available.
+                </p>
+
+            </div>
+
+
+            {% if current_user and current_user.role == "client" %}
+
+            <a
+                href="/swiggy/cart"
+                class="btn btn-primary sw-primary-action"
+            >
+                View Cart
+
+                {% if cart_count is defined and cart_count > 0 %}
+
+                <span class="sw-button-count">
+                    {{ cart_count }}
+                </span>
+
+                {% endif %}
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="sw-menu-toolbar">
+
+            <form
+                method="get"
+                action="/swiggy/products"
+                class="sw-menu-search"
+            >
+
+                <span aria-hidden="true">
+                    ⌕
+                </span>
+
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ search_query }}"
+                    placeholder="Search products..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Search
+                </button>
+
+            </form>
+
+
+            <div class="sw-menu-result-count">
+
+                <strong>
+                    {{ products|length }}
+                </strong>
+
+                <span>
+                    item{% if products|length != 1 %}s{% endif %}
+                </span>
+
+
+                {% if search_query %}
+
+                <a href="/swiggy/products">
+                    Clear
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        {% if products %}
+
+        <div class="sw-product-grid">
+
+            {% for product in products %}
+
+            <article class="sw-product-card">
+
+                <a
+                    href="/swiggy/products/{{ product.id }}"
+                    class="sw-product-visual"
+                >
+
+                    {% if product.image_url %}
+
+                    <img
+                        src="{{ product.image_url }}"
+                        alt="{{ product.product_name }}"
+                    >
+
+                    {% else %}
+
+                    <span>
+                        {{ product.product_name[0]|upper }}
+                    </span>
+
+                    {% endif %}
+
+                </a>
+
+
+                <div class="sw-product-body">
+
+                    <div class="sw-product-meta">
+
+                        <span class="sw-product-platform">
+                            Swiggy
+                        </span>
+
+
+                        {% if product.stock_quantity > 0 %}
+
+                        <span class="sw-stock available">
+                            {{ product.stock_quantity }} available
+                        </span>
+
+                        {% else %}
+
+                        <span class="sw-stock unavailable">
+                            Sold out
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <a
+                        href="/swiggy/products/{{ product.id }}"
+                        class="sw-product-title"
+                    >
+                        {{ product.product_name }}
+                    </a>
+
+
+                    <p>
+                        {{ product.description or "Ready to order." }}
+                    </p>
+
+
+                    <div class="sw-product-footer">
+
+                        <strong>
+                            ₹{{ "%.2f"|format(product.price) }}
+                        </strong>
+
+
+                        <div class="sw-product-actions">
+
+                            <a
+                                href="/swiggy/products/{{ product.id }}"
+                                class="btn btn-outline-secondary btn-sm"
+                            >
+                                View Product
+                            </a>
+
+
+                            {% if current_user and current_user.role == "client" and product.stock_quantity > 0 %}
+
+                            <form
+                                method="post"
+                                action="/swiggy/cart/add/{{ product.id }}"
+                                class="sw-inline-form"
+                                data-loading-form
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="quantity"
+                                    value="1"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-sm sw-add-btn"
+                                    data-loading-text="Adding..."
+                                >
+                                    Add to Cart
+                                </button>
+
+                            </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="sw-empty-state">
+
+            <span class="sw-empty-state-icon">
+                ⌕
+            </span>
+
+            <h3>
+                No products found
+            </h3>
+
+            <p>
+
+                {% if search_query %}
+
+                No products matched “{{ search_query }}”.
+
+                {% else %}
+
+                No active Swiggy products are currently available.
+
+                {% endif %}
+
+            </p>
+
+
+            {% if search_query %}
+
+            <a
+                href="/swiggy/products"
+                class="btn btn-primary"
+            >
+                Show all products
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+pymysql
+jinja2
+python-multipart
+pydantic
+pwdlib
+PyJWT
+itsdangerous
+python-dotenv

@@ -1,0 +1,446 @@
+{% extends "insights/base.html" %}
+
+
+{% block title %}
+
+My Projects | Insights
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="in-section">
+
+
+    <div
+        class="container-fluid in-content-width px-3 px-md-4"
+    >
+
+
+        <!-- =========================================
+             PAGE HEADER
+             ========================================= -->
+
+        <div class="in-page-header">
+
+
+            <div>
+
+
+                <span class="in-eyebrow">
+
+                    MY PROJECTS
+
+                </span>
+
+
+                <h1>
+
+                    Track your Insights work
+
+                </h1>
+
+
+                <p>
+
+                    Search, sort and manage all analytics projects
+                    associated with your account.
+
+                </p>
+
+
+            </div>
+
+
+
+            <a
+                href="/insights/services"
+                class="btn btn-primary in-primary-btn"
+            >
+
+                + New Project
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             PROJECT TABLE
+             ========================================= -->
+
+        {% if projects %}
+
+
+        <div class="card border-0 shadow-sm">
+
+
+            <div
+                class="card-header bg-body border-bottom p-3"
+            >
+
+
+                <div
+                    class="d-flex align-items-center justify-content-between flex-wrap gap-3"
+                >
+
+
+                    <div>
+
+
+                        <span class="in-card-kicker">
+
+                            PROJECT HISTORY
+
+                        </span>
+
+
+                        <h2
+                            class="h6 mb-0 mt-1 fw-bold"
+                        >
+
+                            All Projects
+
+                        </h2>
+
+
+                    </div>
+
+
+
+                    <span
+                        class="badge text-bg-secondary"
+                    >
+
+                        {{ projects|length }}
+                        Project{% if projects|length != 1 %}s{% endif %}
+
+                    </span>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="card-body p-3">
+
+
+                <div class="table-responsive">
+
+
+                    <table
+                        id="insights-projects-table"
+                        class="table table-hover align-middle w-100"
+                    >
+
+
+                        <!-- =========================================
+                             TABLE HEADER
+                             ========================================= -->
+
+                        <thead>
+
+
+                            <tr>
+
+
+                                <th>
+
+                                    Project
+
+                                </th>
+
+
+                                <th>
+
+                                    Client
+
+                                </th>
+
+
+                                <th>
+
+                                    Submitted
+
+                                </th>
+
+
+                                <th>
+
+                                    Value
+
+                                </th>
+
+
+                                <th>
+
+                                    Status
+
+                                </th>
+
+
+                                <th>
+
+                                    Action
+
+                                </th>
+
+
+                            </tr>
+
+
+                        </thead>
+
+
+
+                        <!-- =========================================
+                             TABLE BODY
+                             ========================================= -->
+
+                        <tbody>
+
+
+                            {% for project in projects %}
+
+
+                            <tr>
+
+
+                                <!-- PROJECT NUMBER -->
+
+                                <td>
+
+
+                                    <a
+                                        href="/insights/my-projects/{{ project.id }}"
+                                        class="fw-bold text-decoration-none"
+                                    >
+
+                                        {{ project.order_number }}
+
+                                    </a>
+
+
+                                </td>
+
+
+
+                                <!-- CLIENT -->
+
+                                <td>
+
+
+                                    {{ project.customer_name }}
+
+
+                                </td>
+
+
+
+                                <!-- DATE -->
+
+                                <td
+                                    data-order="{{ project.order_date.isoformat() }}"
+                                >
+
+
+                                    {{ project.order_date.strftime('%d %b %Y') }}
+
+
+                                </td>
+
+
+
+                                <!-- VALUE -->
+
+                                <td
+                                    data-order="{{ project.amount }}"
+                                >
+
+
+                                    <strong>
+
+                                        ₹{{ "%.2f"|format(project.amount) }}
+
+                                    </strong>
+
+
+                                </td>
+
+
+
+                                <!-- STATUS -->
+
+                                <td
+                                    data-order="{{ project.status }}"
+                                >
+
+
+                                    {% if project.status == "pending" %}
+
+
+                                    <span
+                                        class="badge text-bg-warning"
+                                    >
+
+                                        Pending
+
+                                    </span>
+
+
+                                    {% elif project.status == "processing" %}
+
+
+                                    <span
+                                        class="badge text-bg-info"
+                                    >
+
+                                        Processing
+
+                                    </span>
+
+
+                                    {% elif project.status == "completed" %}
+
+
+                                    <span
+                                        class="badge text-bg-success"
+                                    >
+
+                                        Completed
+
+                                    </span>
+
+
+                                    {% elif project.status == "cancelled" %}
+
+
+                                    <span
+                                        class="badge text-bg-danger"
+                                    >
+
+                                        Cancelled
+
+                                    </span>
+
+
+                                    {% else %}
+
+
+                                    <span
+                                        class="badge text-bg-secondary"
+                                    >
+
+                                        {{ project.status|capitalize }}
+
+                                    </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- ACTION -->
+
+                                <td>
+
+
+                                    <a
+                                        href="/insights/my-projects/{{ project.id }}"
+                                        class="btn btn-outline-primary btn-sm"
+                                    >
+
+                                        View
+
+                                    </a>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        {% else %}
+
+
+        <!-- =========================================
+             EMPTY STATE
+             ========================================= -->
+
+        <div class="in-empty-state">
+
+
+            <span class="in-empty-state-icon">
+
+                ◫
+
+            </span>
+
+
+            <h3>
+
+                No Insights projects yet
+
+            </h3>
+
+
+            <p>
+
+                Your submitted analytics projects will appear here.
+
+            </p>
+
+
+            <a
+                href="/insights/services"
+                class="btn btn-primary in-primary-btn"
+            >
+
+                Explore Services
+
+            </a>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,1378 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard - Order Management
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- ========================================= -->
+    <!-- DASHBOARD HEADER -->
+    <!-- ========================================= -->
+
+    <div
+        class="dashboard-page-header dashboard-page-header-pro"
+    >
+
+        <div class="dashboard-header-copy">
+
+            <div class="dashboard-header-meta">
+
+                <div class="dashboard-eyebrow">
+
+                    {% if current_user.role == "admin" %}
+
+                        Operations Workspace
+
+                    {% else %}
+
+                        Account Workspace
+
+                    {% endif %}
+
+                </div>
+
+
+                <span
+                    class="dashboard-role-pill dashboard-role-{{ current_user.role }}"
+                >
+                    {{ current_user.role|capitalize }}
+                </span>
+
+            </div>
+
+
+            <h1 class="dashboard-page-title">
+
+                {% if current_user.role == "admin" %}
+
+                    Operations Dashboard
+
+                {% else %}
+
+                    My Dashboard
+
+                {% endif %}
+
+            </h1>
+
+
+            <p class="dashboard-page-subtitle">
+
+                {% if current_user.role == "admin" %}
+
+                    Monitor order performance, revenue and activity
+                    across Swiggy and Insights.
+
+                {% else %}
+
+                    Track the performance and status of your Swiggy
+                    orders and Insights projects.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="dashboard-header-actions">
+
+            {% if current_user.role == "admin" %}
+
+
+            <a
+                href="/products"
+                class="btn btn-primary dashboard-header-action"
+            >
+                Catalog
+            </a>
+
+
+            <a
+                href="/admin/users"
+                class="btn btn-outline-secondary dashboard-header-action"
+            >
+                Users
+            </a>
+
+
+            {% else %}
+
+
+            <a
+                href="/swiggy"
+                class="btn btn-primary dashboard-header-action"
+            >
+                Open Swiggy
+            </a>
+
+
+            <a
+                href="/insights"
+                class="btn btn-outline-secondary dashboard-header-action"
+            >
+                Open Insights
+            </a>
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- KPI CARDS -->
+    <!-- ========================================= -->
+
+    <div
+        class="row g-3 g-xl-4 dashboard-kpi-grid"
+    >
+
+
+        <!-- TOTAL -->
+
+        <div class="col-sm-6 col-xl-3">
+
+            <div
+                class="dashboard-kpi-card dashboard-kpi-card-orders"
+            >
+
+                <div class="dashboard-kpi-glow">
+                </div>
+
+
+                <div class="dashboard-kpi-content">
+
+                    <div class="dashboard-kpi-top">
+
+                        <div
+                            class="dashboard-kpi-icon dashboard-kpi-orders"
+                        >
+                            ◫
+                        </div>
+
+                        <div class="dashboard-kpi-trend-icon">
+                            ↗
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-kpi-label">
+
+                        {% if current_user.role == "admin" %}
+
+                            Total Orders
+
+                        {% else %}
+
+                            My Orders & Projects
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="dashboard-kpi-value">
+                        {{ summary.total_orders }}
+                    </div>
+
+
+                    <div class="dashboard-kpi-foot">
+
+                        {% if current_user.role == "admin" %}
+
+                            Across all customers and platforms
+
+                        {% else %}
+
+                            Across your Swiggy and Insights activity
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REVENUE / COMPLETED VALUE -->
+
+        <div class="col-sm-6 col-xl-3">
+
+            <div
+                class="dashboard-kpi-card dashboard-kpi-card-revenue"
+            >
+
+                <div class="dashboard-kpi-glow">
+                </div>
+
+
+                <div class="dashboard-kpi-content">
+
+                    <div class="dashboard-kpi-top">
+
+                        <div
+                            class="dashboard-kpi-icon dashboard-kpi-revenue"
+                        >
+                            ₹
+                        </div>
+
+                        <div class="dashboard-kpi-trend-icon">
+                            ↗
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-kpi-label">
+
+                        {% if current_user.role == "admin" %}
+
+                            Revenue
+
+                        {% else %}
+
+                            Completed Value
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div
+                        class="dashboard-kpi-value dashboard-kpi-currency"
+                    >
+                        ₹{{ "{:,.2f}".format(summary.revenue) }}
+                    </div>
+
+
+                    <div class="dashboard-kpi-foot">
+
+                        {% if current_user.role == "admin" %}
+
+                            Completed orders and projects
+
+                        {% else %}
+
+                            Value of your completed activity
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COMPLETION -->
+
+        <div class="col-sm-6 col-xl-3">
+
+            <div
+                class="dashboard-kpi-card dashboard-kpi-card-completion"
+            >
+
+                <div class="dashboard-kpi-glow">
+                </div>
+
+
+                <div class="dashboard-kpi-content">
+
+                    <div class="dashboard-kpi-top">
+
+                        <div
+                            class="dashboard-kpi-icon dashboard-kpi-completion"
+                        >
+                            ✓
+                        </div>
+
+                        <div class="dashboard-kpi-trend-icon">
+                            %
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-kpi-label">
+                        Completion Rate
+                    </div>
+
+
+                    <div class="dashboard-kpi-value">
+                        {{ summary.completion_rate }}%
+                    </div>
+
+
+                    <div class="dashboard-kpi-foot">
+
+                        {% if current_user.role == "admin" %}
+
+                            Completed activity ratio
+
+                        {% else %}
+
+                            Your completed activity ratio
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- AVERAGE -->
+
+        <div class="col-sm-6 col-xl-3">
+
+            <div
+                class="dashboard-kpi-card dashboard-kpi-card-average"
+            >
+
+                <div class="dashboard-kpi-glow">
+                </div>
+
+
+                <div class="dashboard-kpi-content">
+
+                    <div class="dashboard-kpi-top">
+
+                        <div
+                            class="dashboard-kpi-icon dashboard-kpi-average"
+                        >
+                            ◇
+                        </div>
+
+                        <div class="dashboard-kpi-trend-icon">
+                            ₹
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-kpi-label">
+
+                        {% if current_user.role == "admin" %}
+
+                            Avg Order Value
+
+                        {% else %}
+
+                            Avg Completed Value
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div
+                        class="dashboard-kpi-value dashboard-kpi-currency"
+                    >
+                        ₹{{ "{:,.2f}".format(summary.average_order_value) }}
+                    </div>
+
+
+                    <div class="dashboard-kpi-foot">
+                        Per completed order or project
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- ANALYSIS HEADER -->
+    <!-- ========================================= -->
+
+    <div class="dashboard-analysis-header">
+
+        <div>
+
+            <div class="dashboard-section-eyebrow">
+                Analytics
+            </div>
+
+
+            <h2 class="dashboard-section-title">
+                Performance Analysis
+            </h2>
+
+
+            <p class="dashboard-section-description">
+
+                {% if current_user.role == "admin" %}
+
+                    Select a metric to compare platform performance.
+                    Click any chart point to inspect the underlying orders.
+
+                {% else %}
+
+                    Select a metric to review your activity across both platforms.
+                    Click any chart point to inspect your orders.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+
+        <div
+            id="dashboard-metric-selector"
+            class="dashboard-metric-selector"
+            aria-label="Dashboard metric selector"
+        >
+
+            <button
+                type="button"
+                class="dashboard-metric-btn"
+                data-metric="total"
+            >
+                Orders
+            </button>
+
+
+            <button
+                type="button"
+                class="dashboard-metric-btn"
+                data-metric="pending"
+            >
+                Pending
+            </button>
+
+
+            <button
+                type="button"
+                class="dashboard-metric-btn"
+                data-metric="processing"
+            >
+                Processing
+            </button>
+
+
+            <button
+                type="button"
+                class="dashboard-metric-btn active"
+                data-metric="completed"
+            >
+                Completed
+            </button>
+
+
+            <button
+                type="button"
+                class="dashboard-metric-btn"
+                data-metric="cancelled"
+            >
+                Cancelled
+            </button>
+
+
+            <button
+                type="button"
+                class="dashboard-metric-btn"
+                data-metric="amount"
+            >
+                Revenue
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- PLATFORM ANALYSIS -->
+    <!-- ========================================= -->
+
+    <div
+        class="row g-4 dashboard-analysis-grid"
+    >
+
+
+        <!-- SWIGGY -->
+
+        <div class="col-lg-6 col-xl-3">
+
+            <div
+                class="dashboard-analysis-card dashboard-analysis-swiggy"
+            >
+
+                <div class="dashboard-card-accent">
+                </div>
+
+
+                <div class="dashboard-analysis-card-body">
+
+                    <div class="dashboard-platform-header">
+
+                        <div class="dashboard-platform-identity">
+
+                            <span
+                                class="platform-dot platform-swiggy"
+                            >
+                                S
+                            </span>
+
+
+                            <div>
+
+                                <div class="dashboard-platform-name">
+                                    Swiggy
+                                </div>
+
+                                <div class="dashboard-platform-caption">
+                                    Platform performance
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="/swiggy/orders"
+                            class="dashboard-view-link"
+                        >
+                            View →
+                        </a>
+
+                    </div>
+
+
+
+                    <div class="dashboard-analysis-summary">
+
+                        <div
+                            id="swiggy-metric-label"
+                            class="dashboard-analysis-label"
+                        >
+                            Completed
+                        </div>
+
+
+                        <div
+                            id="swiggy-metric-value"
+                            class="dashboard-analysis-value"
+                        >
+                            {{ swiggy.completed }}
+                        </div>
+
+
+                        <div
+                            id="swiggy-metric-helper"
+                            class="dashboard-analysis-helper"
+                        >
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-chart-shell">
+
+                        <div
+                            id="swiggy-dashboard-chart"
+                            class="dashboard-chart"
+                            role="img"
+                            aria-label="Swiggy performance trend"
+                        >
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-chart-hint">
+                        Click a point to view orders
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COMBINED -->
+
+        <div
+            class="col-lg-12 col-xl-6 order-lg-3 order-xl-2"
+        >
+
+            <div
+                class="dashboard-analysis-card dashboard-analysis-main"
+            >
+
+                <div class="dashboard-card-accent">
+                </div>
+
+
+                <div class="dashboard-analysis-card-body">
+
+                    <div class="dashboard-platform-header">
+
+                        <div class="dashboard-platform-identity">
+
+                            <div class="dashboard-all-platform-icon">
+                                ◎
+                            </div>
+
+
+                            <div>
+
+                                <div class="dashboard-platform-name">
+                                    All Platforms
+                                </div>
+
+                                <div class="dashboard-platform-caption">
+                                    Swiggy + Insights
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="dashboard-live-badge">
+
+                            <span>
+                            </span>
+
+                            Combined
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-main-summary">
+
+                        <div>
+
+                            <div
+                                id="combined-metric-label"
+                                class="dashboard-analysis-label"
+                            >
+                                Completed
+                            </div>
+
+
+                            <div
+                                id="combined-metric-value"
+                                class="dashboard-analysis-value dashboard-analysis-value-main"
+                            >
+                                {{ combined.completed }}
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="combined-metric-helper"
+                            class="dashboard-analysis-helper dashboard-main-helper"
+                        >
+                            Swiggy + Insights
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-comparison-legend">
+
+                        <span>
+
+                            <i
+                                class="legend-dot legend-swiggy"
+                            >
+                            </i>
+
+                            Swiggy
+
+                        </span>
+
+
+                        <span>
+
+                            <i
+                                class="legend-dot legend-insights"
+                            >
+                            </i>
+
+                            Insights
+
+                        </span>
+
+                    </div>
+
+
+
+                    <div
+                        class="dashboard-chart-shell dashboard-chart-shell-main"
+                    >
+
+                        <div
+                            id="combined-dashboard-chart"
+                            class="dashboard-chart dashboard-chart-main"
+                            role="img"
+                            aria-label="Combined platform comparison"
+                        >
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-chart-hint">
+                        Click a date to inspect combined orders
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- INSIGHTS -->
+
+        <div
+            class="col-lg-6 col-xl-3 order-lg-2 order-xl-3"
+        >
+
+            <div
+                class="dashboard-analysis-card dashboard-analysis-insights"
+            >
+
+                <div class="dashboard-card-accent">
+                </div>
+
+
+                <div class="dashboard-analysis-card-body">
+
+                    <div class="dashboard-platform-header">
+
+                        <div class="dashboard-platform-identity">
+
+                            <span
+                                class="platform-dot platform-insights"
+                            >
+                                I
+                            </span>
+
+
+                            <div>
+
+                                <div class="dashboard-platform-name">
+                                    Insights
+                                </div>
+
+                                <div class="dashboard-platform-caption">
+                                    Platform performance
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="/insights/orders"
+                            class="dashboard-view-link"
+                        >
+                            View →
+                        </a>
+
+                    </div>
+
+
+
+                    <div class="dashboard-analysis-summary">
+
+                        <div
+                            id="insights-metric-label"
+                            class="dashboard-analysis-label"
+                        >
+                            Completed
+                        </div>
+
+
+                        <div
+                            id="insights-metric-value"
+                            class="dashboard-analysis-value"
+                        >
+                            {{ insights.completed }}
+                        </div>
+
+
+                        <div
+                            id="insights-metric-helper"
+                            class="dashboard-analysis-helper"
+                        >
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-chart-shell">
+
+                        <div
+                            id="insights-dashboard-chart"
+                            class="dashboard-chart"
+                            role="img"
+                            aria-label="Insights performance trend"
+                        >
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-chart-hint">
+                        Click a point to view orders
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- PRODUCTS / SERVICES -->
+    <!-- ========================================= -->
+
+    <div class="dashboard-products-card">
+
+
+        {% if current_user.role == "client" %}
+
+
+        <!-- CLIENT -->
+
+        <div class="dashboard-product-header">
+
+            <div>
+
+                <div class="dashboard-section-eyebrow">
+                    Your Activity
+                </div>
+
+
+                <h2 class="dashboard-section-title">
+                    Most Used Products & Services
+                </h2>
+
+
+                <p class="dashboard-section-description">
+                    Ranked from your completed Swiggy orders
+                    and Insights projects only.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/my-purchases"
+                class="btn btn-outline-secondary btn-sm dashboard-section-action"
+            >
+                View History
+            </a>
+
+        </div>
+
+
+
+        {% if top_selling_products %}
+
+
+        <div class="dashboard-top-products">
+
+
+            {% for product in top_selling_products %}
+
+
+            <div class="dashboard-top-product-item">
+
+
+                <div class="dashboard-top-product-left">
+
+
+                    <div class="dashboard-top-product-rank">
+                        {{ "%02d"|format(loop.index) }}
+                    </div>
+
+
+
+                    <div class="dashboard-top-product-copy">
+
+
+                        <div class="dashboard-top-product-meta">
+
+
+                            {% if product.platform == "swiggy" %}
+
+                            <span
+                                class="dashboard-platform-chip dashboard-platform-chip-swiggy"
+                            >
+                                Swiggy
+                            </span>
+
+
+                            {% elif product.platform == "insights" %}
+
+                            <span
+                                class="dashboard-platform-chip dashboard-platform-chip-insights"
+                            >
+                                Insights
+                            </span>
+
+                            {% endif %}
+
+
+
+                            <span class="dashboard-top-product-stat">
+
+                                {{ product.orders }}
+                                completed
+
+                            </span>
+
+
+
+                            <span class="dashboard-top-product-stat">
+
+                                ₹{{ "{:,.2f}".format(product.revenue) }}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="dashboard-top-product-name">
+                            {{ product.product_name }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if product.product_id %}
+
+
+                    {% if product.platform == "swiggy" %}
+
+
+                    <a
+                        href="/swiggy/products/{{ product.product_id }}"
+                        class="dashboard-order-product-btn dashboard-order-product-btn-swiggy"
+                    >
+
+                        <span>
+                            View Product
+                        </span>
+
+                        <span aria-hidden="true">
+                            →
+                        </span>
+
+                    </a>
+
+
+                    {% elif product.platform == "insights" %}
+
+
+                    <a
+                        href="/insights/services/{{ product.product_id }}"
+                        class="dashboard-order-product-btn dashboard-order-product-btn-insights"
+                    >
+
+                        <span>
+                            View Service
+                        </span>
+
+                        <span aria-hidden="true">
+                            →
+                        </span>
+
+                    </a>
+
+
+                    {% endif %}
+
+
+                {% endif %}
+
+            </div>
+
+
+            {% endfor %}
+
+        </div>
+
+
+
+        {% else %}
+
+
+        <div
+            class="dashboard-empty-state dashboard-empty-state-pro"
+        >
+
+            <div>
+
+                <strong>
+                    No completed activity yet
+                </strong>
+
+                <span>
+                    Completed Swiggy orders and Insights
+                    projects will appear here.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        {% endif %}
+
+
+
+        {% else %}
+
+
+        <!-- ADMIN -->
+
+        <div class="dashboard-product-header">
+
+            <div>
+
+                <div class="dashboard-section-eyebrow">
+                    Catalog
+                </div>
+
+
+                <h2 class="dashboard-section-title">
+                    Catalog Performance
+                </h2>
+
+
+                <p
+                    id="product-chart-description"
+                    class="dashboard-section-description"
+                >
+                    Top products and services by completed activity.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="dashboard-product-toggle"
+                aria-label="Product performance metric selector"
+            >
+
+                <button
+                    type="button"
+                    class="dashboard-product-btn active"
+                    data-product-metric="orders"
+                >
+                    Orders
+                </button>
+
+
+                <button
+                    type="button"
+                    class="dashboard-product-btn"
+                    data-product-metric="revenue"
+                >
+                    Revenue
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            id="product-performance-chart"
+            class="product-performance-chart"
+            role="img"
+            aria-label="Product performance ranking"
+        >
+        </div>
+
+
+        <div
+            id="product-performance-empty"
+            class="dashboard-empty-state d-none"
+        >
+            No completed product or service activity available yet.
+        </div>
+
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- ORDER DRILLDOWN -->
+<!-- ========================================= -->
+
+<div
+    class="offcanvas offcanvas-end dashboard-drilldown-panel"
+    tabindex="-1"
+    id="dashboard-order-drilldown"
+    aria-labelledby="dashboard-order-drilldown-title"
+>
+
+    <div class="dashboard-drilldown-header">
+
+        <div>
+
+            <div
+                id="dashboard-drilldown-platform"
+                class="dashboard-drilldown-eyebrow"
+            >
+                Platform
+            </div>
+
+
+            <h2
+                id="dashboard-order-drilldown-title"
+                class="dashboard-drilldown-title"
+            >
+                Order Details
+            </h2>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+        >
+        </button>
+
+    </div>
+
+
+
+    <div class="offcanvas-body p-0">
+
+
+        <div class="dashboard-drilldown-summary">
+
+
+            <div class="dashboard-drilldown-selected">
+
+                <div>
+
+                    <div class="dashboard-drilldown-mini-label">
+                        Selected Date
+                    </div>
+
+                    <div
+                        id="dashboard-drilldown-date"
+                        class="dashboard-drilldown-date"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <span
+                    id="dashboard-drilldown-badge"
+                    class="dashboard-drilldown-badge"
+                >
+                    Details
+                </span>
+
+            </div>
+
+
+
+            <div
+                id="dashboard-drilldown-metric"
+                class="dashboard-drilldown-metric"
+            >
+                Selected metric
+            </div>
+
+
+
+            <div class="dashboard-drilldown-stats">
+
+
+                <div class="dashboard-drilldown-stat">
+
+                    <div class="dashboard-drilldown-stat-label">
+                        Orders
+                    </div>
+
+                    <div
+                        id="dashboard-drilldown-count"
+                        class="dashboard-drilldown-stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+
+                <div class="dashboard-drilldown-stat">
+
+                    <div class="dashboard-drilldown-stat-label">
+                        Amount
+                    </div>
+
+                    <div
+                        id="dashboard-drilldown-total"
+                        class="dashboard-drilldown-stat-value"
+                    >
+                        ₹0.00
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            id="dashboard-drilldown-loading"
+            class="d-none dashboard-drilldown-state"
+        >
+
+            <div
+                class="spinner-border spinner-border-sm"
+            >
+            </div>
+
+            <span>
+                Loading orders...
+            </span>
+
+        </div>
+
+
+
+        <div
+            id="dashboard-drilldown-error"
+            class="d-none dashboard-drilldown-state"
+        >
+
+            <div
+                class="alert alert-danger mb-0 w-100"
+            >
+                Unable to load orders for this chart point.
+            </div>
+
+        </div>
+
+
+
+        <div
+            id="dashboard-drilldown-empty"
+            class="d-none dashboard-drilldown-empty"
+        >
+
+            <div class="dashboard-drilldown-empty-icon">
+                ◌
+            </div>
+
+            <strong>
+                No orders found
+            </strong>
+
+            <span>
+                No orders contributed to this chart point.
+            </span>
+
+        </div>
+
+
+
+        <div
+            id="dashboard-drilldown-orders"
+            class="dashboard-drilldown-orders"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- DASHBOARD DATA -->
+<!-- ========================================= -->
+
+<script
+    id="dashboard-data"
+    type="application/json"
+>
+{{ {
+    "swiggy": swiggy,
+    "insights": insights,
+    "combined": combined,
+    "summary": summary,
+    "products": products
+}|tojson }}
+</script>
+
+
+{% endblock %}

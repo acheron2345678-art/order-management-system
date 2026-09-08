@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+{{ 'Add User' if action == 'add' else 'Edit User' }}
+- Order Management
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-xl-8 col-xxl-7">
+
+
+        <div
+            class="d-flex align-items-center justify-content-between gap-3 mb-4"
+        >
+
+            <div>
+
+                <h1 class="h2 fw-bold mb-1">
+
+                    {% if action == "add" %}
+
+                        Add User
+
+                    {% else %}
+
+                        Edit User
+
+                    {% endif %}
+
+                </h1>
+
+
+                <p class="text-body-secondary mb-0">
+
+                    {% if action == "add" %}
+
+                        Create an administrator or client account.
+
+                    {% else %}
+
+                        Update the selected user account.
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+
+            <a
+                href="/admin/users"
+                class="btn btn-outline-secondary"
+            >
+                ← Back
+            </a>
+
+        </div>
+
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body p-4 p-md-5">
+
+
+                {% if error %}
+
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+
+                {% endif %}
+
+
+                <form
+                    method="post"
+                    action="{% if action == 'add' %}/admin/users/add{% else %}/admin/users/{{ user.id }}/edit{% endif %}"
+                >
+
+                    <div class="row g-4">
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="username"
+                                class="form-label"
+                            >
+                                Username
+                            </label>
+
+
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                class="form-control"
+                                value="{% if action == 'add' %}{{ form_username or '' }}{% else %}{{ user.username }}{% endif %}"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="email"
+                                class="form-label"
+                            >
+                                Email
+                            </label>
+
+
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                class="form-control"
+                                value="{% if action == 'add' %}{{ form_email or '' }}{% else %}{{ user.email }}{% endif %}"
+                                maxlength="255"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="role"
+                                class="form-label"
+                            >
+                                Role
+                            </label>
+
+
+                            <select
+                                id="role"
+                                name="role"
+                                class="form-select"
+                                required
+                            >
+
+                                {% set selected_role =
+                                    form_role
+                                    if action == 'add' and form_role
+                                    else (
+                                        user.role
+                                        if user
+                                        else 'client'
+                                    )
+                                %}
+
+
+                                <option
+                                    value="client"
+                                    {% if selected_role == "client" %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Client
+                                </option>
+
+
+                                <option
+                                    value="admin"
+                                    {% if selected_role == "admin" %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Admin
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        {% if action == "add" %}
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="password"
+                                class="form-label"
+                            >
+                                Password
+                            </label>
+
+
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                class="form-control"
+                                minlength="6"
+                                autocomplete="new-password"
+                                required
+                            >
+
+
+                            <div class="form-text">
+                                Minimum 6 characters.
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <div
+                        class="d-flex justify-content-end gap-2"
+                    >
+
+                        <a
+                            href="/admin/users"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancel
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            {% if action == "add" %}
+
+                                Create User
+
+                            {% else %}
+
+                                Save Changes
+
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
