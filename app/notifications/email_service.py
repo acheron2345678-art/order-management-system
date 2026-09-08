@@ -27,11 +27,15 @@ logger = logging.getLogger(
 
 
 def send_email(
-    to_email: str,
+    recipient_email: str,
     subject: str,
-    html_content: str,
-    text_content: str | None = None,
+    html_body: str,
+    text_body: str | None = None,
 ) -> bool:
+
+    # =========================================
+    # EMAIL ENABLED
+    # =========================================
 
     if not EMAIL_ENABLED:
 
@@ -42,12 +46,16 @@ def send_email(
         return False
 
 
-    to_email = normalize_email(
-        to_email
+    # =========================================
+    # NORMALIZE RECIPIENT
+    # =========================================
+
+    recipient_email = normalize_email(
+        recipient_email
     )
 
 
-    if not to_email:
+    if not recipient_email:
 
         logger.warning(
             "Email skipped because "
@@ -57,19 +65,27 @@ def send_email(
         return False
 
 
+    # =========================================
+    # GMAIL ONLY
+    # =========================================
+
     if not is_gmail_address(
-        to_email
+        recipient_email
     ):
 
         logger.warning(
             "Email skipped because "
             "recipient is not a Gmail "
             "account: %s",
-            to_email,
+            recipient_email,
         )
 
         return False
 
+
+    # =========================================
+    # SMTP CONFIG VALIDATION
+    # =========================================
 
     if not SMTP_HOST:
 
@@ -124,20 +140,27 @@ def send_email(
         return False
 
 
-    if not html_content:
+    if not html_body:
 
         logger.error(
             "Email could not be sent "
-            "because HTML content "
-            "is missing."
+            "because HTML body is missing."
         )
 
         return False
 
 
+    # =========================================
+    # BUILD MESSAGE
+    # =========================================
+
     message = EmailMessage()
 
-    message["Subject"] = subject
+
+    message["Subject"] = (
+        subject
+    )
+
 
     message["From"] = formataddr(
         (
@@ -146,13 +169,20 @@ def send_email(
         )
     )
 
-    message["To"] = to_email
+
+    message["To"] = (
+        recipient_email
+    )
 
 
-    if text_content:
+    # =========================================
+    # TEXT VERSION
+    # =========================================
+
+    if text_body:
 
         message.set_content(
-            text_content
+            text_body
         )
 
     else:
@@ -164,11 +194,19 @@ def send_email(
         )
 
 
+    # =========================================
+    # HTML VERSION
+    # =========================================
+
     message.add_alternative(
-        html_content,
+        html_body,
         subtype="html",
     )
 
+
+    # =========================================
+    # SEND EMAIL
+    # =========================================
 
     try:
 
@@ -202,11 +240,15 @@ def send_email(
         logger.info(
             "Email sent successfully "
             "to %s",
-            to_email,
+            recipient_email,
         )
 
         return True
 
+
+    # =========================================
+    # AUTHENTICATION ERROR
+    # =========================================
 
     except smtplib.SMTPAuthenticationError:
 
@@ -217,23 +259,31 @@ def send_email(
         return False
 
 
+    # =========================================
+    # SMTP ERROR
+    # =========================================
+
     except smtplib.SMTPException:
 
         logger.exception(
             "SMTP error while sending "
             "email to %s",
-            to_email,
+            recipient_email,
         )
 
         return False
 
+
+    # =========================================
+    # UNKNOWN ERROR
+    # =========================================
 
     except Exception:
 
         logger.exception(
             "Unexpected error while "
             "sending email to %s",
-            to_email,
+            recipient_email,
         )
 
         return False

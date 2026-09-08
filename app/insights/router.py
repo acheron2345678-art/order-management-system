@@ -56,6 +56,10 @@ from app.users.models import (
     User,
 )
 
+from app.users.profile_service import (
+    get_client_profile,
+)
+
 
 router = APIRouter(
     prefix="/insights",
@@ -219,9 +223,11 @@ def insights_service_detail(
 def insights_checkout_page(
     request: Request,
     service_id: int,
+
     db: Session = Depends(
         get_db
     ),
+
     current_user: User = Depends(
         require_client
     ),
@@ -233,6 +239,7 @@ def insights_checkout_page(
         )
     )
 
+
     if service is None:
 
         raise HTTPException(
@@ -240,6 +247,51 @@ def insights_checkout_page(
             detail=(
                 "Insights service not found"
             ),
+        )
+
+
+    # =====================================================
+    # CLIENT PROFILE
+    # =====================================================
+
+    profile = (
+        get_client_profile(
+            db=db,
+            user_id=current_user.id,
+        )
+    )
+
+
+    # =====================================================
+    # PREFILL CLIENT / COMPANY NAME
+    # =====================================================
+
+    if (
+        profile
+        and
+        profile.company_name
+    ):
+
+        customer_name = (
+            profile.company_name
+        )
+
+
+    elif (
+        profile
+        and
+        profile.full_name
+    ):
+
+        customer_name = (
+            profile.full_name
+        )
+
+
+    else:
+
+        customer_name = (
+            current_user.username
         )
 
 
@@ -257,7 +309,7 @@ def insights_checkout_page(
                 service,
 
             "customer_name":
-                "",
+                customer_name,
 
             "project_brief":
                 "",
@@ -415,6 +467,15 @@ def insights_checkout_submit(
         return return_form_error(
             "Client or company name "
             "is required."
+        )
+
+    if len(
+        customer_name
+    ) > 100:
+
+        return return_form_error(
+            "Client or company name "
+            "cannot exceed 100 characters."
         )
 
 
