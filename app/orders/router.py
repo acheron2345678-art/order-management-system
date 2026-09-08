@@ -231,6 +231,15 @@ def view_order(
         order_id=order.id,
     )
 
+    allowed_next_statuses = [
+        status
+        for status in ORDER_STATUSES
+        if status in ORDER_STATUS_TRANSITIONS.get(
+            order.status,
+            set(),
+        )
+    ]
+
     client = None
 
     if order.client_id is not None:
@@ -264,6 +273,9 @@ def view_order(
 
             "history":
                 history,
+
+            "allowed_next_statuses":
+                allowed_next_statuses,
 
             "client":
                 client,

@@ -722,6 +722,160 @@
 
 
         <!-- ================================= -->
+        <!-- STATUS WORKFLOW -->
+        <!-- ================================= -->
+
+        <div
+            class="
+                card
+                border-0
+                shadow-sm
+                mb-4
+            "
+        >
+
+            <div class="card-body p-4">
+
+                <div
+                    class="
+                        small
+                        text-body-secondary
+                        text-uppercase
+                        fw-semibold
+                        mb-1
+                    "
+                >
+                    Workflow
+                </div>
+
+                <h2 class="h5 fw-bold mb-2">
+                    Project Status Workflow
+                </h2>
+
+                <p class="small text-body-secondary mb-4">
+                    Review the current stage and valid next project statuses.
+                </p>
+
+                <div class="mb-4">
+                    <div class="small text-body-secondary mb-2">
+                        Current Status
+                    </div>
+
+                    <span
+                        class="status-badge status-{{ order.status }}"
+                    >
+                        {% if order.status == "pending" %}
+                            Pending Review
+                        {% else %}
+                            {{ order.status|capitalize }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if order.status != "cancelled" %}
+
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
+
+                    <span
+                        class="badge {% if order.status in ['pending', 'processing', 'completed'] %}text-bg-primary{% else %}text-bg-light border text-body{% endif %}"
+                    >
+                        1. Request Received
+                    </span>
+
+                    <span class="text-body-secondary">→</span>
+
+                    <span
+                        class="badge {% if order.status in ['processing', 'completed'] %}text-bg-info{% else %}text-bg-light border text-body{% endif %}"
+                    >
+                        2. In Progress
+                    </span>
+
+                    <span class="text-body-secondary">→</span>
+
+                    <span
+                        class="
+                            badge
+                            workflow-completed-step
+                            {% if order.status == 'completed' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        3. Completed
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if allowed_next_statuses %}
+
+                <div class="border-top pt-3">
+
+                    <div class="small text-body-secondary mb-2">
+                        Available next actions
+                    </div>
+
+                    <div class="d-grid gap-2">
+
+                        {% if "processing" in allowed_next_statuses %}
+                        <a
+                            href="/insights/orders/edit/{{ order.id }}#status"
+                            class="btn btn-primary"
+                        >
+                            Start Project
+                        </a>
+                        {% endif %}
+
+                        {% if "completed" in allowed_next_statuses %}
+                        <a
+                            href="/insights/orders/edit/{{ order.id }}#status"
+                            class="btn btn-success"
+                        >
+                            Mark Completed
+                        </a>
+                        {% endif %}
+
+                        {% if "cancelled" in allowed_next_statuses %}
+                        <a
+                            href="/insights/orders/edit/{{ order.id }}#status"
+                            class="btn btn-outline-danger"
+                        >
+                            Cancel Project
+                        </a>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="small text-body-secondary mt-2">
+                        Select the new status on the management page. Existing transition validation, audit history and email notifications remain unchanged.
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div
+                    class="alert {% if order.status == 'completed' %}alert-success{% else %}alert-secondary{% endif %} mb-0"
+                >
+                    {% if order.status == "completed" %}
+                        This project is complete. No further status changes are available.
+                    {% elif order.status == "cancelled" %}
+                        This project has been cancelled. No further status changes are available.
+                    {% else %}
+                        No further status changes are available.
+                    {% endif %}
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
         <!-- PROJECT INFORMATION -->
         <!-- ================================= -->
 
