@@ -48,11 +48,42 @@ DATABASE_URL = (
 
 
 if not DATABASE_URL:
-
     raise RuntimeError(
         "DATABASE_URL is not configured. "
         "Add it to your environment or .env file."
     )
+
+
+# =========================================
+# HOST VALIDATION
+# =========================================
+
+_default_allowed_hosts = (
+    ""
+    if IS_PRODUCTION
+    else "*"
+)
+
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        _default_allowed_hosts,
+    ).split(",")
+    if host.strip()
+]
+
+
+if IS_PRODUCTION:
+    if (
+        not ALLOWED_HOSTS
+        or "*" in ALLOWED_HOSTS
+    ):
+        raise RuntimeError(
+            "ALLOWED_HOSTS must contain explicit hostnames "
+            "in production."
+        )
 
 
 # =========================================
@@ -78,7 +109,6 @@ ORDER_STATUSES = (
 
 
 ORDER_STATUS_TRANSITIONS = {
-
     "pending": {
         "processing",
         "cancelled",
@@ -89,11 +119,9 @@ ORDER_STATUS_TRANSITIONS = {
         "cancelled",
     },
 
-    "completed":
-        set(),
+    "completed": set(),
 
-    "cancelled":
-        set(),
+    "cancelled": set(),
 }
 
 
@@ -102,7 +130,6 @@ ORDER_STATUS_TRANSITIONS = {
 # =========================================
 
 JWT_ALGORITHM = "HS256"
-
 
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
@@ -120,14 +147,8 @@ JWT_SECRET_KEY = (
 )
 
 
-# =========================================
-# DEVELOPMENT JWT FALLBACK
-# =========================================
-
 if not JWT_SECRET_KEY:
-
     if IS_PRODUCTION:
-
         raise RuntimeError(
             "JWT_SECRET_KEY must be configured "
             "in production."
@@ -138,10 +159,6 @@ if not JWT_SECRET_KEY:
         "secret-key-not-for-production"
     )
 
-
-# =========================================
-# PRODUCTION JWT VALIDATION
-# =========================================
 
 if (
     IS_PRODUCTION
@@ -154,7 +171,6 @@ if (
     <
     32
 ):
-
     raise RuntimeError(
         "JWT_SECRET_KEY must be at least "
         "32 bytes long in production."
@@ -181,8 +197,7 @@ JWT_COOKIE_SECURE = (
         (
             "true"
             if IS_PRODUCTION
-            else
-            "false"
+            else "false"
         ),
     )
     .strip()
@@ -207,7 +222,6 @@ if JWT_COOKIE_SAMESITE not in {
     "strict",
     "none",
 }:
-
     raise RuntimeError(
         "JWT_COOKIE_SAMESITE must be "
         "'lax', 'strict', or 'none'."
@@ -221,7 +235,6 @@ if (
     and
     not JWT_COOKIE_SECURE
 ):
-
     raise RuntimeError(
         "SameSite=None cookies require "
         "JWT_COOKIE_SECURE=true."
@@ -240,6 +253,70 @@ CSRF_COOKIE_NAME = (
 CSRF_HEADER_NAME = (
     "X-CSRF-Token"
 )
+
+
+# =========================================
+# LOGIN RATE LIMITING
+# =========================================
+
+LOGIN_RATE_LIMIT_WINDOW_SECONDS = int(
+    os.getenv(
+        "LOGIN_RATE_LIMIT_WINDOW_SECONDS",
+        "900",
+    )
+)
+
+
+LOGIN_RATE_LIMIT_ACCOUNT_ATTEMPTS = int(
+    os.getenv(
+        "LOGIN_RATE_LIMIT_ACCOUNT_ATTEMPTS",
+        "5",
+    )
+)
+
+
+LOGIN_RATE_LIMIT_IP_ATTEMPTS = int(
+    os.getenv(
+        "LOGIN_RATE_LIMIT_IP_ATTEMPTS",
+        "20",
+    )
+)
+
+
+if LOGIN_RATE_LIMIT_WINDOW_SECONDS < 1:
+    raise RuntimeError(
+        "LOGIN_RATE_LIMIT_WINDOW_SECONDS must be positive."
+    )
+
+
+if LOGIN_RATE_LIMIT_ACCOUNT_ATTEMPTS < 1:
+    raise RuntimeError(
+        "LOGIN_RATE_LIMIT_ACCOUNT_ATTEMPTS must be positive."
+    )
+
+
+if LOGIN_RATE_LIMIT_IP_ATTEMPTS < 1:
+    raise RuntimeError(
+        "LOGIN_RATE_LIMIT_IP_ATTEMPTS must be positive."
+    )
+
+
+# =========================================
+# SECURITY HEADERS
+# =========================================
+
+HSTS_MAX_AGE_SECONDS = int(
+    os.getenv(
+        "HSTS_MAX_AGE_SECONDS",
+        "31536000",
+    )
+)
+
+
+if HSTS_MAX_AGE_SECONDS < 0:
+    raise RuntimeError(
+        "HSTS_MAX_AGE_SECONDS cannot be negative."
+    )
 
 
 # =========================================
@@ -272,11 +349,9 @@ SMTP_USERNAME = (
 )
 
 
-SMTP_PASSWORD = (
-    os.getenv(
-        "SMTP_PASSWORD",
-        "",
-    )
+SMTP_PASSWORD = os.getenv(
+    "SMTP_PASSWORD",
+    "",
 )
 
 

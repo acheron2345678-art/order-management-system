@@ -13,6 +13,10 @@ from fastapi.staticfiles import (
     StaticFiles,
 )
 
+from starlette.middleware.trustedhost import (
+    TrustedHostMiddleware,
+)
+
 from app.auth.csrf import (
     validate_csrf,
 )
@@ -33,6 +37,14 @@ from app.core import (
     APP_NAME,
     STATIC_DIR,
     templates,
+)
+
+from app.core.config import (
+    ALLOWED_HOSTS,
+)
+
+from app.core.security_headers import (
+    SecurityHeadersMiddleware,
 )
 
 from app.dashboard.router import (
@@ -87,6 +99,25 @@ app = FastAPI(
 )
 
 
+# =========================================
+# SECURITY MIDDLEWARE
+# =========================================
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=ALLOWED_HOSTS,
+)
+
+
+app.add_middleware(
+    SecurityHeadersMiddleware,
+)
+
+
+# =========================================
+# STATIC FILES
+# =========================================
+
 app.mount(
     "/static",
     StaticFiles(
@@ -96,10 +127,18 @@ app.mount(
 )
 
 
+# =========================================
+# DATABASE
+# =========================================
+
 Base.metadata.create_all(
     bind=engine
 )
 
+
+# =========================================
+# ROUTERS
+# =========================================
 
 app.include_router(
     auth_router
@@ -138,6 +177,10 @@ app.include_router(
 )
 
 
+# =========================================
+# ROOT
+# =========================================
+
 @app.get(
     "/",
     response_class=HTMLResponse,
@@ -148,6 +191,10 @@ def root():
         status_code=303,
     )
 
+
+# =========================================
+# HOME
+# =========================================
 
 @app.get(
     "/home",
@@ -163,10 +210,7 @@ def home(
         request=request,
         name="home.html",
         context={
-            "request":
-                request,
-
-            "current_user":
-                current_user,
+            "request": request,
+            "current_user": current_user,
         },
     )
