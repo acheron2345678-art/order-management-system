@@ -1,7 +1,7 @@
 {% extends "insights/base.html" %}
 
 {% block title %}
-Project Submitted | Insights
+Project Request Submitted | Insights
 {% endblock %}
 
 {% block content %}
@@ -17,15 +17,15 @@ Project Submitted | Insights
             </div>
 
             <span class="in-eyebrow">
-                PROJECT SUBMITTED
+                PROJECT REQUEST SUBMITTED
             </span>
 
             <h1>
-                Your Insights project is in.
+                Your project request has been submitted.
             </h1>
 
             <p>
-                Project
+                Project Number
                 <strong>{{ project.order_number }}</strong>
                 has been created successfully and is ready for review.
             </p>
@@ -34,7 +34,7 @@ Project Submitted | Insights
 
                 <div>
                     <span>
-                        Status
+                        Project Status
                     </span>
 
                     <strong>
@@ -44,7 +44,7 @@ Project Submitted | Insights
 
                 <div>
                     <span>
-                        Submitted
+                        Request Date
                     </span>
 
                     <strong>
@@ -54,7 +54,7 @@ Project Submitted | Insights
 
                 <div>
                     <span>
-                        Project value
+                        Project Value
                     </span>
 
                     <strong>
@@ -68,7 +68,7 @@ Project Submitted | Insights
 
                 <div class="in-success-items-head">
                     <strong>
-                        Selected services
+                        Selected Service
                     </strong>
 
                     <span>
@@ -110,7 +110,7 @@ Project Submitted | Insights
                     href="/insights/my-projects/{{ project.id }}"
                     class="btn btn-primary in-primary-btn"
                 >
-                    Track This Project
+                    View Project Details
                 </a>
 
             </div>

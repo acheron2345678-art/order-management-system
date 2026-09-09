@@ -1,7 +1,7 @@
 {% extends "insights/base.html" %}
 
 {% block title %}
-Insights | Business Intelligence
+Insights | Analytics Services
 {% endblock %}
 
 
@@ -20,7 +20,7 @@ Insights | Business Intelligence
             <div class="in-hero-copy">
 
                 <span class="in-eyebrow">
-                    INSIGHTS SERVICES
+                    INSIGHTS
                 </span>
 
                 <h1>
@@ -44,7 +44,7 @@ Insights | Business Intelligence
                         href="/insights/services"
                         class="btn btn-primary in-primary-btn"
                     >
-                        Explore Services
+                        Browse Services
                     </a>
 
 
@@ -131,11 +131,11 @@ Insights | Business Intelligence
                         <div>
 
                             <strong>
-                                Submit request
+                                Submit project request
                             </strong>
 
                             <small>
-                                Confirm the project directly
+                                Provide your project requirements
                             </small>
 
                         </div>
@@ -152,11 +152,11 @@ Insights | Business Intelligence
                         <div>
 
                             <strong>
-                                Track delivery
+                                Track project status
                             </strong>
 
                             <small>
-                                Follow the project status
+                                Follow progress through My Projects
                             </small>
 
                         </div>
@@ -192,12 +192,12 @@ Insights | Business Intelligence
                 </span>
 
                 <h2>
-                    Start your next project
+                    Choose an analytics service
                 </h2>
 
                 <p>
-                    Choose a service and move directly
-                    to project checkout.
+                    Select a service and submit a focused
+                    project request.
                 </p>
 
             </div>
@@ -207,7 +207,7 @@ Insights | Business Intelligence
                 href="/insights/services"
                 class="btn btn-outline-secondary"
             >
-                View All Services
+                Browse All Services
             </a>
 
         </div>
@@ -269,7 +269,7 @@ Insights | Business Intelligence
                                 href="/insights/services/{{ service.id }}"
                                 class="btn btn-outline-secondary btn-sm"
                             >
-                                View
+                                View Service
                             </a>
 
 
@@ -279,7 +279,7 @@ Insights | Business Intelligence
                                 href="/insights/checkout/{{ service.id }}"
                                 class="btn btn-primary btn-sm in-primary-btn"
                             >
-                                Request
+                                Request Service
                             </a>
 
                             {% endif %}
@@ -306,7 +306,7 @@ Insights | Business Intelligence
             </span>
 
             <h3>
-                No services yet
+                No services available
             </h3>
 
             <p>
