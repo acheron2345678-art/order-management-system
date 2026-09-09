@@ -255,7 +255,7 @@ My Purchases - Order Management
                         </th>
 
                         <th>
-                            Total
+                            Line Total
                         </th>
 
                         <th>
@@ -263,11 +263,11 @@ My Purchases - Order Management
                         </th>
 
                         <th>
-                            Purchased
+                            Ordered
                         </th>
 
                         <th>
-                            Order
+                            Order Number
                         </th>
 
                         <th>
@@ -359,7 +359,7 @@ My Purchases - Order Management
                         <td>
 
                             <a
-                                href="/swiggy/orders/view/{{ purchase['order_id'] }}"
+                                href="/swiggy/my-orders/{{ purchase['order_id'] }}"
                                 class="btn btn-outline-primary btn-sm"
                             >
                                 View
@@ -429,7 +429,7 @@ My Purchases - Order Management
                 <div>
 
                     <h2 class="h5 fw-bold mb-1">
-                        Insights Services
+                        Insights Project Requests
                     </h2>
 
                     <p class="small text-body-secondary mb-0">
@@ -469,19 +469,19 @@ My Purchases - Order Management
                     <tr>
 
                         <th>
-                            Product
+                            Service
                         </th>
 
                         <th>
-                            Quantity
+                            Requests
                         </th>
 
                         <th>
-                            Unit Price
+                            Project Value
                         </th>
 
                         <th>
-                            Total
+                            Total Value
                         </th>
 
                         <th>
@@ -489,11 +489,11 @@ My Purchases - Order Management
                         </th>
 
                         <th>
-                            Purchased
+                            Requested
                         </th>
 
                         <th>
-                            Order
+                            Project Number
                         </th>
 
                         <th>
@@ -585,7 +585,7 @@ My Purchases - Order Management
                         <td>
 
                             <a
-                                href="/insights/orders/view/{{ purchase['order_id'] }}"
+                                href="/insights/my-projects/{{ purchase['order_id'] }}"
                                 class="btn btn-outline-primary btn-sm"
                             >
                                 View
@@ -615,7 +615,7 @@ My Purchases - Order Management
             </span>
 
             <h3 class="h5 fw-bold mt-3">
-                No Insights purchases
+                No Insights project requests
             </h3>
 
             <p class="text-body-secondary mb-0">
@@ -723,22 +723,22 @@ document.addEventListener(
                         {
 
                             search:
-                                "Search purchases:",
+                                "Search history:",
 
                             searchPlaceholder:
-                                "Product, status or order...",
+                                "Product, service, status or number...",
 
                             lengthMenu:
-                                "Show _MENU_ purchases",
+                                "Show _MENU_ records",
 
                             info:
-                                "Showing _START_ to _END_ of _TOTAL_ purchases",
+                                "Showing _START_ to _END_ of _TOTAL_ records",
 
                             infoEmpty:
-                                "No purchases available",
+                                "No records available",
 
                             zeroRecords:
-                                "No matching purchases found",
+                                "No matching records found",
 
                             paginate:
                                 {

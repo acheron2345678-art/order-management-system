@@ -14,7 +14,7 @@
     const metricConfig = {
 
         total: {
-            label: "Orders",
+            label: "Activity",
             currency: false
         },
 
@@ -39,7 +39,7 @@
         },
 
         amount: {
-            label: "Revenue",
+            label: "Completed Value",
             currency: true
         }
 
@@ -195,6 +195,131 @@
 
         return formatNumber(
             value
+        );
+
+    }
+
+
+    function currentUserRole() {
+
+        return (
+            document.body
+                ?.dataset
+                ?.userRole
+            ||
+            ""
+        );
+
+    }
+
+
+    function recordTerminology(
+        platform
+    ) {
+
+        const normalized =
+            String(
+                platform || ""
+            )
+            .toLowerCase();
+
+
+        if (
+            normalized
+            ===
+            "swiggy"
+        ) {
+
+            return {
+                singular: "order",
+                plural: "orders",
+                itemLabel: "Product",
+                valueLabel: "Order Value",
+                countLabel: "Orders",
+                detailTitle: "Swiggy Order Details"
+            };
+
+        }
+
+
+        if (
+            normalized
+            ===
+            "insights"
+        ) {
+
+            return {
+                singular: "project",
+                plural: "projects",
+                itemLabel: "Service",
+                valueLabel: "Project Value",
+                countLabel: "Projects",
+                detailTitle: "Insights Project Details"
+            };
+
+        }
+
+
+        return {
+            singular: "record",
+            plural: "records",
+            itemLabel: "Product / Service",
+            valueLabel: "Completed Value",
+            countLabel: "Records",
+            detailTitle: "Activity Details"
+        };
+
+    }
+
+
+    function detailUrl(
+        platform,
+        id
+    ) {
+
+        const normalized =
+            String(
+                platform || ""
+            )
+            .toLowerCase();
+
+
+        if (
+            currentUserRole()
+            ===
+            "client"
+        ) {
+
+            if (
+                normalized
+                ===
+                "swiggy"
+            ) {
+
+                return (
+                    `/swiggy/my-orders/${id}`
+                );
+
+            }
+
+
+            if (
+                normalized
+                ===
+                "insights"
+            ) {
+
+                return (
+                    `/insights/my-projects/${id}`
+                );
+
+            }
+
+        }
+
+
+        return (
+            `/${normalized}/orders/view/${id}`
         );
 
     }
@@ -361,27 +486,37 @@
         platformName
     ) {
 
+        const terminology =
+            recordTerminology(
+                platformName
+            );
+
+
         if (
             selectedMetric
-            === "amount"
+            ===
+            "amount"
         ) {
 
             return (
-                "Completed revenue"
+                terminology.valueLabel
             );
 
         }
 
+
         if (
             selectedMetric
-            === "total"
+            ===
+            "total"
         ) {
 
             return (
-                `All ${platformName} orders`
+                `All ${platformName} ${terminology.plural}`
             );
 
         }
+
 
         const total =
             Number(
@@ -389,6 +524,7 @@
                 ||
                 0
             );
+
 
         const value =
             Number(
@@ -399,13 +535,15 @@
                 0
             );
 
+
         if (!total) {
 
             return (
-                "No orders yet"
+                `No ${terminology.plural} yet`
             );
 
         }
+
 
         return (
             (
@@ -418,7 +556,7 @@
                 1
             )
             +
-            `% of ${platformName} orders`
+            `% of ${platformName} ${terminology.plural}`
         );
 
     }
@@ -542,7 +680,7 @@
                 ===
                 "amount"
                     ?
-                    "Completed revenue across both platforms"
+                    "Completed value across both platforms"
                     :
                     "Swiggy + Insights";
 
@@ -1251,7 +1389,7 @@
                             </span>
 
                             <small>
-                                Click to inspect orders
+                                Click to inspect ${recordTerminology(platform).plural}
                             </small>
                             `
                         );
@@ -1883,7 +2021,7 @@
                             </span>
 
                             <small>
-                                Click to inspect orders
+                                Click to inspect activity
                             </small>
                             `
                         );
@@ -1973,7 +2111,7 @@
                         ) {
 
                             button.textContent =
-                                "Units Sold";
+                                "Usage";
 
                         }
 
@@ -2005,12 +2143,12 @@
         ) {
 
             description.textContent =
-                "Top individual products by completed revenue.";
+                "Top products and services by completed value.";
 
         } else {
 
             description.textContent =
-                "Top individual products by units sold from completed orders.";
+                "Top products and services by completed usage.";
 
         }
 
@@ -2380,7 +2518,7 @@
                     String(
                         product.product_name
                         ||
-                        "Unknown Product"
+                        "Unknown Product / Service"
                     );
 
 
@@ -2618,17 +2756,17 @@
                                     </strong>
 
                                     <span>
-                                        Units sold:
+                                        Completed usage:
                                         ${formatNumber(product.quantity)}
                                     </span>
 
                                     <span>
-                                        Completed orders:
+                                        Completed orders / projects:
                                         ${formatNumber(product.orders)}
                                     </span>
 
                                     <span>
-                                        Revenue:
+                                        Completed value:
                                         ${formatCurrency(product.revenue)}
                                     </span>
                                     `
@@ -2795,6 +2933,12 @@
                     ).toLowerCase();
 
 
+                const terminology =
+                    recordTerminology(
+                        platform
+                    );
+
+
                 const item =
                     document.createElement(
                         "div"
@@ -2854,7 +2998,7 @@
                         <span>
 
                             <small>
-                                Order
+                                ${terminology.singular === "project" ? "Project Number" : "Order Number"}
                             </small>
 
                             <strong>
@@ -2867,7 +3011,7 @@
                         <span>
 
                             <small>
-                                Product
+                                ${terminology.itemLabel}
                             </small>
 
                             <strong>
@@ -2880,7 +3024,7 @@
                         <span>
 
                             <small>
-                                Amount
+                                ${terminology.valueLabel}
                             </small>
 
                             <strong>
@@ -2893,10 +3037,10 @@
 
 
                     <a
-                        href="/${platform}/orders/view/${order.id}"
+                        href="${detailUrl(platform, order.id)}"
                         class="dashboard-drilldown-view-btn"
                     >
-                        View order
+                        View ${terminology.singular}
                         <span>
                             →
                         </span>
@@ -2954,6 +3098,21 @@
                 "dashboard-drilldown-badge"
             );
 
+        const titleElement =
+            document.getElementById(
+                "dashboard-order-drilldown-title"
+            );
+
+        const countLabelElement =
+            document.getElementById(
+                "dashboard-drilldown-count-label"
+            );
+
+        const valueLabelElement =
+            document.getElementById(
+                "dashboard-drilldown-value-label"
+            );
+
         const countElement =
             document.getElementById(
                 "dashboard-drilldown-count"
@@ -2978,6 +3137,36 @@
             document.getElementById(
                 "dashboard-drilldown-empty"
             );
+
+
+        const terminology =
+            recordTerminology(
+                platform
+            );
+
+
+        if (titleElement) {
+
+            titleElement.textContent =
+                terminology.detailTitle;
+
+        }
+
+
+        if (countLabelElement) {
+
+            countLabelElement.textContent =
+                terminology.countLabel;
+
+        }
+
+
+        if (valueLabelElement) {
+
+            valueLabelElement.textContent =
+                terminology.valueLabel;
+
+        }
 
 
         if (platformElement) {
@@ -3084,7 +3273,7 @@
             ) {
 
                 throw new Error(
-                    "Unable to retrieve dashboard orders."
+                    "Unable to retrieve dashboard activity."
                 );
 
             }

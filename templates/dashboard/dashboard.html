@@ -171,7 +171,7 @@ Dashboard - Order Management
 
                         {% if current_user.role == "admin" %}
 
-                            Total Orders
+                            Total Activity
 
                         {% else %}
 
@@ -376,7 +376,7 @@ Dashboard - Order Management
 
                         {% if current_user.role == "admin" %}
 
-                            Avg Order Value
+                            Avg Completed Value
 
                         {% else %}
 
@@ -431,12 +431,12 @@ Dashboard - Order Management
                 {% if current_user.role == "admin" %}
 
                     Select a metric to compare platform performance.
-                    Click any chart point to inspect the underlying orders.
+                    Click any chart point to inspect the underlying activity.
 
                 {% else %}
 
                     Select a metric to review your activity across both platforms.
-                    Click any chart point to inspect your orders.
+                    Click any chart point to inspect your orders and projects.
 
                 {% endif %}
 
@@ -457,7 +457,7 @@ Dashboard - Order Management
                 class="dashboard-metric-btn"
                 data-metric="total"
             >
-                Orders
+                Activity
             </button>
 
 
@@ -561,7 +561,7 @@ Dashboard - Order Management
 
 
                         <a
-                            href="/swiggy/orders"
+                            href="{% if current_user.role == 'client' %}/swiggy/my-orders{% else %}/swiggy/orders{% endif %}"
                             class="dashboard-view-link"
                         >
                             View →
@@ -755,7 +755,7 @@ Dashboard - Order Management
 
 
                     <div class="dashboard-chart-hint">
-                        Click a date to inspect combined orders
+                        Click a date to inspect combined activity
                     </div>
 
                 </div>
@@ -809,7 +809,7 @@ Dashboard - Order Management
 
 
                         <a
-                            href="/insights/orders"
+                            href="{% if current_user.role == 'client' %}/insights/my-projects{% else %}/insights/orders{% endif %}"
                             class="dashboard-view-link"
                         >
                             View →
@@ -861,7 +861,7 @@ Dashboard - Order Management
 
 
                     <div class="dashboard-chart-hint">
-                        Click a point to view orders
+                        Click a point to view projects
                     </div>
 
                 </div>
@@ -1118,7 +1118,7 @@ Dashboard - Order Management
                     class="dashboard-product-btn active"
                     data-product-metric="orders"
                 >
-                    Orders
+                    Usage
                 </button>
 
 
@@ -1127,7 +1127,7 @@ Dashboard - Order Management
                     class="dashboard-product-btn"
                     data-product-metric="revenue"
                 >
-                    Revenue
+                    Completed Value
                 </button>
 
             </div>
@@ -1188,7 +1188,7 @@ Dashboard - Order Management
                 id="dashboard-order-drilldown-title"
                 class="dashboard-drilldown-title"
             >
-                Order Details
+                Activity Details
             </h2>
 
         </div>
@@ -1255,8 +1255,11 @@ Dashboard - Order Management
 
                 <div class="dashboard-drilldown-stat">
 
-                    <div class="dashboard-drilldown-stat-label">
-                        Orders
+                    <div
+                        id="dashboard-drilldown-count-label"
+                        class="dashboard-drilldown-stat-label"
+                    >
+                        Records
                     </div>
 
                     <div
@@ -1272,8 +1275,11 @@ Dashboard - Order Management
 
                 <div class="dashboard-drilldown-stat">
 
-                    <div class="dashboard-drilldown-stat-label">
-                        Amount
+                    <div
+                        id="dashboard-drilldown-value-label"
+                        class="dashboard-drilldown-stat-label"
+                    >
+                        Completed Value
                     </div>
 
                     <div
@@ -1302,7 +1308,7 @@ Dashboard - Order Management
             </div>
 
             <span>
-                Loading orders...
+                Loading activity...
             </span>
 
         </div>
@@ -1317,7 +1323,7 @@ Dashboard - Order Management
             <div
                 class="alert alert-danger mb-0 w-100"
             >
-                Unable to load orders for this chart point.
+                Unable to load activity for this chart point.
             </div>
 
         </div>
@@ -1334,11 +1340,11 @@ Dashboard - Order Management
             </div>
 
             <strong>
-                No orders found
+                No activity found
             </strong>
 
             <span>
-                No orders contributed to this chart point.
+                No orders or projects contributed to this chart point.
             </span>
 
         </div>

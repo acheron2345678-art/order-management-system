@@ -27,12 +27,12 @@ VALID_DRILLDOWN_METRICS = {
 
 
 METRIC_LABELS = {
-    "total": "Orders",
+    "total": "Activity",
     "pending": "Pending",
     "processing": "Processing",
     "completed": "Completed",
     "cancelled": "Cancelled",
-    "amount": "Revenue",
+    "amount": "Completed Value",
 }
 
 

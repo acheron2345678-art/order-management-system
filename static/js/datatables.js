@@ -59,6 +59,27 @@ document.addEventListener(
             "Orders";
 
 
+        const isInsights =
+            platformName
+                .trim()
+                .toLowerCase()
+            ===
+            "insights";
+
+
+        const recordTitle =
+            isInsights
+                ?
+                "Projects"
+                :
+                "Orders";
+
+
+        const recordPlural =
+            recordTitle
+                .toLowerCase();
+
+
         const exportBaseFilename =
             table.dataset.exportFilename
             ||
@@ -125,13 +146,13 @@ document.addEventListener(
                                     "Export Excel",
 
                                 title:
-                                    `${platformName} Orders`,
+                                    `${platformName} ${recordTitle}`,
 
                                 filename:
                                     exportFilename,
 
                                 sheetName:
-                                    "Orders",
+                                    recordTitle,
 
                                 className:
                                     "btn btn-success",
@@ -178,8 +199,6 @@ document.addEventListener(
                                     // =================================
                                     // SECURITY
                                     // =================================
-                                    // Prevent user supplied cell values
-                                    // from becoming Excel formulas.
 
                                     escapeExcelFormula:
                                         true,
@@ -222,8 +241,6 @@ document.addEventListener(
                                             // =========================
                                             // CLIENT COLUMN
                                             // =========================
-                                            // Preserve username and email
-                                            // as readable information.
 
                                             if (
                                                 column
@@ -267,9 +284,6 @@ document.addEventListener(
                                             // =========================
                                             // AMOUNT COLUMN
                                             // =========================
-                                            // Use displayed value so the
-                                            // exported table matches what
-                                            // the admin sees.
 
                                             if (
                                                 column
@@ -504,27 +518,27 @@ document.addEventListener(
 
 
                         searchPlaceholder:
-                            "Search these orders...",
+                            `Search these ${recordPlural}...`,
 
 
                         lengthMenu:
-                            "Show _MENU_ orders",
+                            `Show _MENU_ ${recordPlural}`,
 
 
                         info:
-                            "Showing _START_ to _END_ of _TOTAL_ orders",
+                            `Showing _START_ to _END_ of _TOTAL_ ${recordPlural}`,
 
 
                         infoEmpty:
-                            "Showing 0 to 0 of 0 orders",
+                            `Showing 0 to 0 of 0 ${recordPlural}`,
 
 
                         emptyTable:
-                            "No orders found",
+                            `No ${recordPlural} found`,
 
 
                         zeroRecords:
-                            "No matching orders found",
+                            `No matching ${recordPlural} found`,
 
 
                         paginate: {

@@ -16,6 +16,60 @@
     }
 
 
+    function detailUrl(
+        platform,
+        id
+    ) {
+
+        const role =
+            document.body
+                ?.dataset
+                ?.userRole
+            ||
+            "";
+
+
+        if (
+            role
+            ===
+            "client"
+        ) {
+
+            if (
+                platform
+                ===
+                "swiggy"
+            ) {
+
+                return (
+                    `/swiggy/my-orders/${id}`
+                );
+
+            }
+
+
+            if (
+                platform
+                ===
+                "insights"
+            ) {
+
+                return (
+                    `/insights/my-projects/${id}`
+                );
+
+            }
+
+        }
+
+
+        return (
+            `/${platform}/orders/view/${id}`
+        );
+
+    }
+
+
     function hideResults(results) {
 
         results.innerHTML = "";
@@ -42,7 +96,7 @@
         ) {
 
             resultsElement.innerHTML =
-                '<div class="search-empty">No orders found</div>';
+                '<div class="search-empty">No orders or projects found</div>';
 
             resultsElement.classList.add(
                 "show"
@@ -85,7 +139,10 @@
 
 
                     item.href =
-                        `/${platform}/orders/view/${order.id}`;
+                        detailUrl(
+                            platform,
+                            order.id
+                        );
 
 
                     const productName =
@@ -100,6 +157,16 @@
                         productName
                             ? ` · ${productName}`
                             : "";
+
+
+                    const recordLabel =
+                        platform
+                        ===
+                        "insights"
+                            ?
+                            "Project"
+                            :
+                            "Order";
 
 
                     const clientUsername =
@@ -156,6 +223,7 @@
 
                             <small>
 
+                                ${recordLabel}:
                                 ${escapeHtml(
                                     order.order_number
                                 )}

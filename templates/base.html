@@ -126,7 +126,11 @@
 
 
 
-<body>
+<body
+    {% if current_user is defined and current_user %}
+        data-user-role="{{ current_user.role }}"
+    {% endif %}
+>
 
 
 <!-- ========================================= -->
@@ -667,7 +671,7 @@
                             id="global-search"
                             class="form-control border-start-0 ps-0"
                             type="search"
-                            placeholder="Search client, customer, order number, product, status, date or amount..."
+                            placeholder="Search client, customer or company, order or project number, product or service, status, date or value..."
                             autocomplete="off"
                             aria-label="Search all orders and projects"
                         >
@@ -1231,17 +1235,17 @@
 
 
 <script
-    src="/static/js/search.js?v=4"
+    src="/static/js/search.js?v=5"
 ></script>
 
 
 <script
-    src="/static/js/datatables.js?v=5"
+    src="/static/js/datatables.js?v=6"
 ></script>
 
 
 <script
-    src="/static/js/dashboard.js?v=5"
+    src="/static/js/dashboard.js?v=6"
 ></script>
 
 
