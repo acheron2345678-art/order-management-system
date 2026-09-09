@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Catalog Management - Order Management
+Catalog - Order Management
 {% endblock %}
 
 
@@ -51,7 +51,7 @@ Catalog Management - Order Management
 
 
         <h1 class="h2 fw-bold mb-1">
-            Catalog Management
+            Catalog
         </h1>
 
 
@@ -75,7 +75,7 @@ Catalog Management - Order Management
 
 
 <!-- ========================================= -->
-<!-- SUMMARY -->
+<!-- CATALOG SUMMARY -->
 <!-- ========================================= -->
 
 <div class="row g-3 mb-4">
@@ -116,7 +116,7 @@ Catalog Management - Order Management
                                 mb-1
                             "
                         >
-                            Swiggy
+                            Swiggy Products
                         </div>
 
 
@@ -126,7 +126,7 @@ Catalog Management - Order Management
 
 
                         <div class="text-body-secondary small">
-                            Products
+                            Catalog products
                         </div>
 
                     </div>
@@ -148,6 +148,7 @@ Catalog Management - Order Management
                         </span>
 
                         <br>
+
 
                         <span
                             class="
@@ -208,7 +209,7 @@ Catalog Management - Order Management
                                 mb-1
                             "
                         >
-                            Insights
+                            Insights Services
                         </div>
 
 
@@ -218,7 +219,7 @@ Catalog Management - Order Management
 
 
                         <div class="text-body-secondary small">
-                            Services
+                            Available services
                         </div>
 
                     </div>
@@ -240,6 +241,7 @@ Catalog Management - Order Management
                         </span>
 
                         <br>
+
 
                         <span
                             class="
@@ -299,8 +301,9 @@ Catalog Management - Order Management
                     id="catalog-search"
                     type="search"
                     class="form-control"
-                    placeholder="Search catalog by name or description..."
+                    placeholder="Search products and services by name or description..."
                     autocomplete="off"
+                    aria-label="Search catalog"
                 >
 
             </div>
@@ -311,7 +314,7 @@ Catalog Management - Order Management
                 type="button"
                 class="btn btn-outline-secondary"
             >
-                Clear
+                Clear Search
             </button>
 
         </div>
@@ -409,21 +412,26 @@ Catalog Management - Order Management
                             Product
                         </th>
 
+
                         <th>
                             Price
                         </th>
+
 
                         <th>
                             Inventory
                         </th>
 
+
                         <th>
                             Reorder Level
                         </th>
 
+
                         <th>
-                            Status
+                            Catalog Status
                         </th>
+
 
                         <th
                             class="
@@ -445,6 +453,7 @@ Catalog Management - Order Management
 
                     <tr
                         class="catalog-row"
+
                         data-search="{{ (
                             product.product_name
                             ~ ' '
@@ -482,7 +491,7 @@ Catalog Management - Order Management
 
                                 {% else %}
 
-                                    No description
+                                    No description available
 
                                 {% endif %}
 
@@ -508,7 +517,7 @@ Catalog Management - Order Management
 
 
 
-                        <!-- STOCK -->
+                        <!-- INVENTORY -->
 
                         <td>
 
@@ -556,7 +565,7 @@ Catalog Management - Order Management
                                 "
                             >
                                 {{ product.stock_quantity }}
-                                available
+                                Available
                             </span>
 
                             {% endif %}
@@ -565,7 +574,7 @@ Catalog Management - Order Management
 
 
 
-                        <!-- REORDER -->
+                        <!-- REORDER LEVEL -->
 
                         <td>
                             {{ product.reorder_level }}
@@ -666,6 +675,7 @@ Catalog Management - Order Management
                                     method="post"
                                     action="/products/{{ product.id }}/deactivate"
                                     class="d-inline"
+
                                     onsubmit="
                                         return confirm(
                                             'Deactivate this Swiggy product?'
@@ -741,13 +751,14 @@ Catalog Management - Order Management
         >
 
             <h3 class="h5 fw-bold">
-                No Swiggy products
+                No Swiggy products yet
             </h3>
 
 
             <p class="text-body-secondary mb-3">
                 Add your first Swiggy product
-                to begin managing inventory.
+                to begin managing inventory
+                and storefront availability.
             </p>
 
 
@@ -755,7 +766,7 @@ Catalog Management - Order Management
                 href="/products/add"
                 class="btn btn-primary"
             >
-                Add Product
+                Add Swiggy Product
             </a>
 
         </div>
@@ -856,17 +867,21 @@ Catalog Management - Order Management
                             Service
                         </th>
 
+
                         <th>
                             Project Value
                         </th>
 
-                        <th>
-                            Inventory
-                        </th>
 
                         <th>
-                            Status
+                            Service Model
                         </th>
+
+
+                        <th>
+                            Catalog Status
+                        </th>
+
 
                         <th
                             class="
@@ -888,6 +903,7 @@ Catalog Management - Order Management
 
                     <tr
                         class="catalog-row"
+
                         data-search="{{ (
                             service.product_name
                             ~ ' '
@@ -925,7 +941,7 @@ Catalog Management - Order Management
 
                                 {% else %}
 
-                                    No description
+                                    No description available
 
                                 {% endif %}
 
@@ -935,7 +951,7 @@ Catalog Management - Order Management
 
 
 
-                        <!-- VALUE -->
+                        <!-- PROJECT VALUE -->
 
                         <td>
 
@@ -951,19 +967,19 @@ Catalog Management - Order Management
 
 
 
-                        <!-- INVENTORY -->
+                        <!-- SERVICE MODEL -->
 
                         <td>
 
                             <span
                                 class="
                                     badge
-                                    bg-body-tertiary
-                                    text-body
+                                    bg-info-subtle
+                                    text-info-emphasis
                                     border
                                 "
                             >
-                                Not Applicable
+                                Project-Based
                             </span>
 
                         </td>
@@ -1051,6 +1067,7 @@ Catalog Management - Order Management
                                     method="post"
                                     action="/products/{{ service.id }}/deactivate"
                                     class="d-inline"
+
                                     onsubmit="
                                         return confirm(
                                             'Deactivate this Insights service?'
@@ -1126,7 +1143,7 @@ Catalog Management - Order Management
         >
 
             <h3 class="h5 fw-bold">
-                No Insights services
+                No Insights services yet
             </h3>
 
 
@@ -1140,7 +1157,7 @@ Catalog Management - Order Management
                 href="/products/add"
                 class="btn btn-primary"
             >
-                Add Service
+                Add Insights Service
             </a>
 
         </div>
@@ -1183,7 +1200,8 @@ Catalog Management - Order Management
 
 
         <p class="text-body-secondary mb-0">
-            Try another product or service name.
+            Try a different product,
+            service or description.
         </p>
 
     </div>

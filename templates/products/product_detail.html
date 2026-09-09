@@ -2,7 +2,7 @@
 
 
 {% block title %}
-{{ product.product_name }} - Catalog
+{{ product.product_name }} - Catalog - Order Management
 {% endblock %}
 
 
@@ -34,6 +34,7 @@
             class="
                 d-flex
                 align-items-center
+                flex-wrap
                 gap-2
                 mb-2
             "
@@ -64,6 +65,7 @@
                 Swiggy Product
             </span>
 
+
             {% elif item_platform == "insights" %}
 
             <span
@@ -80,6 +82,7 @@
             {% endif %}
 
 
+
             {% if product.is_active %}
 
             <span
@@ -92,6 +95,7 @@
             >
                 Active
             </span>
+
 
             {% else %}
 
@@ -121,22 +125,23 @@
             {% if item_platform == "swiggy" %}
 
                 Review product information,
-                pricing and inventory.
+                pricing, inventory and availability.
 
             {% elif item_platform == "insights" %}
 
-                Review service information
-                and project pricing.
+                Review service information,
+                project value and availability.
 
             {% else %}
 
-                Review catalog information.
+                Review catalog item information.
 
             {% endif %}
 
         </p>
 
     </div>
+
 
 
     <div
@@ -159,7 +164,15 @@
             href="/products/{{ product.id }}/edit"
             class="btn btn-primary"
         >
-            Edit
+
+            {% if item_platform == "swiggy" %}
+                Edit Product
+            {% elif item_platform == "insights" %}
+                Edit Service
+            {% else %}
+                Edit Item
+            {% endif %}
+
         </a>
 
     </div>
@@ -176,14 +189,14 @@
 
 
     <!-- ===================================== -->
-    <!-- LEFT -->
+    <!-- LEFT COLUMN -->
     <!-- ===================================== -->
 
     <div class="col-xl-8">
 
 
         <!-- ================================= -->
-        <!-- BASIC INFORMATION -->
+        <!-- ITEM INFORMATION -->
         <!-- ================================= -->
 
         <div
@@ -206,7 +219,21 @@
                         mb-1
                     "
                 >
-                    Catalog Information
+
+                    {% if item_platform == "swiggy" %}
+
+                        Product Information
+
+                    {% elif item_platform == "insights" %}
+
+                        Service Information
+
+                    {% else %}
+
+                        Catalog Information
+
+                    {% endif %}
+
                 </div>
 
 
@@ -222,7 +249,7 @@
 
                     {% else %}
 
-                        Details
+                        Item Details
 
                     {% endif %}
 
@@ -247,8 +274,10 @@
 
                             {% if item_platform == "swiggy" %}
                                 Product Name
-                            {% else %}
+                            {% elif item_platform == "insights" %}
                                 Service Name
+                            {% else %}
+                                Item Name
                             {% endif %}
 
                         </div>
@@ -299,7 +328,7 @@
 
 
 
-                    <!-- PRICE -->
+                    <!-- PRICE / VALUE -->
 
                     <div class="col-md-6">
 
@@ -313,8 +342,10 @@
 
                             {% if item_platform == "swiggy" %}
                                 Product Price
+                            {% elif item_platform == "insights" %}
+                                Project Value
                             {% else %}
-                                Service Price
+                                Price
                             {% endif %}
 
                         </div>
@@ -413,6 +444,7 @@
                             text-body-secondary
                             mb-0
                         "
+
                         style="
                             white-space: pre-wrap;
                             line-height: 1.8;
@@ -480,7 +512,7 @@
                 <div class="row g-4">
 
 
-                    <!-- STOCK -->
+                    <!-- STOCK QUANTITY -->
 
                     <div class="col-md-4">
 
@@ -503,7 +535,7 @@
 
 
 
-                    <!-- REORDER -->
+                    <!-- REORDER LEVEL -->
 
                     <div class="col-md-4">
 
@@ -526,7 +558,7 @@
 
 
 
-                    <!-- AVAILABILITY -->
+                    <!-- INVENTORY STATUS -->
 
                     <div class="col-md-4">
 
@@ -624,6 +656,7 @@
                             {% if product.last_restocked %}
 
                                 Last restocked:
+
                                 {{
                                     product.last_restocked.strftime(
                                         "%d %b %Y %I:%M %p"
@@ -656,12 +689,12 @@
         </div>
 
 
+
+        <!-- ================================= -->
+        <!-- INSIGHTS SERVICE MODEL -->
+        <!-- ================================= -->
+
         {% elif item_platform == "insights" %}
-
-
-        <!-- ================================= -->
-        <!-- INSIGHTS SERVICE INFO -->
-        <!-- ================================= -->
 
         <div
             class="
@@ -697,8 +730,8 @@
                         mb-0
                     "
                 >
-                    Insights services are requested as
-                    individual projects. Inventory,
+                    This Insights service is requested
+                    as an individual project. Inventory,
                     stock quantities, reorder levels and
                     restocking do not apply.
                 </p>
@@ -715,7 +748,7 @@
 
 
     <!-- ===================================== -->
-    <!-- RIGHT -->
+    <!-- RIGHT COLUMN -->
     <!-- ===================================== -->
 
     <div class="col-xl-4">
@@ -769,7 +802,7 @@
 
 
 
-                <!-- ID -->
+                <!-- CATALOG ID -->
 
                 <div
                     class="
@@ -860,7 +893,7 @@
 
 
 
-                <!-- INVENTORY -->
+                <!-- BUSINESS MODEL -->
 
                 <div
                     class="
@@ -873,20 +906,24 @@
                 >
 
                     <span class="text-body-secondary">
-                        Inventory
+
+                        {% if item_platform == "swiggy" %}
+                            Inventory
+                        {% else %}
+                            Service Model
+                        {% endif %}
+
                     </span>
 
 
                     <strong>
 
                         {% if item_platform == "swiggy" %}
-
                             Managed
-
+                        {% elif item_platform == "insights" %}
+                            Project-Based
                         {% else %}
-
-                            Not Applicable
-
+                            —
                         {% endif %}
 
                     </strong>
@@ -895,7 +932,7 @@
 
 
 
-                <!-- PRICE -->
+                <!-- PRICE / VALUE -->
 
                 <div
                     class="
@@ -909,9 +946,11 @@
                     <span class="text-body-secondary">
 
                         {% if item_platform == "swiggy" %}
-                            Price
-                        {% else %}
+                            Product Price
+                        {% elif item_platform == "insights" %}
                             Project Value
+                        {% else %}
+                            Price
                         {% endif %}
 
                     </span>
@@ -951,7 +990,15 @@
             <div class="card-body p-4">
 
                 <h2 class="h6 fw-bold mb-2">
-                    Catalog Management
+
+                    {% if item_platform == "swiggy" %}
+                        Product Management
+                    {% elif item_platform == "insights" %}
+                        Service Management
+                    {% else %}
+                        Catalog Management
+                    {% endif %}
+
                 </h2>
 
 
@@ -965,13 +1012,17 @@
 
                     {% if item_platform == "swiggy" %}
 
-                        Manage pricing, inventory and
-                        storefront availability.
+                        Manage pricing, inventory
+                        and storefront availability.
+
+                    {% elif item_platform == "insights" %}
+
+                        Manage service details,
+                        project value and availability.
 
                     {% else %}
 
-                        Manage service details, pricing
-                        and storefront availability.
+                        Manage this catalog item.
 
                     {% endif %}
 
@@ -983,12 +1034,13 @@
                     href="/products/{{ product.id }}/edit"
                     class="btn btn-primary w-100"
                 >
-                    Edit
 
                     {% if item_platform == "swiggy" %}
-                        Product
+                        Edit Product
+                    {% elif item_platform == "insights" %}
+                        Edit Service
                     {% else %}
-                        Service
+                        Edit Item
                     {% endif %}
 
                 </a>
@@ -1019,9 +1071,10 @@
                     method="post"
                     action="/products/{{ product.id }}/deactivate"
                     class="mt-2"
+
                     onsubmit="
                         return confirm(
-                            'Deactivate this catalog item?'
+                            '{% if item_platform == "swiggy" %}Deactivate this Swiggy product?{% else %}Deactivate this Insights service?{% endif %}'
                         );
                     "
                 >
@@ -1034,12 +1087,13 @@
                             w-100
                         "
                     >
-                        Deactivate
 
                         {% if item_platform == "swiggy" %}
-                            Product
+                            Deactivate Product
+                        {% elif item_platform == "insights" %}
+                            Deactivate Service
                         {% else %}
-                            Service
+                            Deactivate Item
                         {% endif %}
 
                     </button>
@@ -1063,12 +1117,13 @@
                             w-100
                         "
                     >
-                        Activate
 
                         {% if item_platform == "swiggy" %}
-                            Product
+                            Activate Product
+                        {% elif item_platform == "insights" %}
+                            Activate Service
                         {% else %}
-                            Service
+                            Activate Item
                         {% endif %}
 
                     </button>
