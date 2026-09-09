@@ -69,6 +69,11 @@
         href="/static/css/swiggy.css?v=6"
     >
 
+    <link
+        rel="stylesheet"
+        href="/static/css/swiggy-restaurants.css?v=1"
+    >
+
 
     {% block head %}
     {% endblock %}
@@ -163,6 +168,17 @@
 
 
                 <a
+                    href="/swiggy/restaurants"
+                    class="
+                        {% if request.url.path.startswith('/swiggy/restaurants') %}
+                        active
+                        {% endif %}
+                    "
+                >
+                    Restaurants
+                </a>
+
+                <a
                     href="/swiggy/products"
                     class="
                         {% if request.url.path.startswith('/swiggy/products') %}
@@ -170,7 +186,7 @@
                         {% endif %}
                     "
                 >
-                    Browse Products
+                    Dishes
                 </a>
 
 
@@ -239,9 +255,9 @@
                 <input
                     type="search"
                     name="q"
-                    placeholder="Search products..."
+                    placeholder="Search dishes..."
                     autocomplete="off"
-                    aria-label="Search Swiggy products"
+                    aria-label="Search Swiggy dishes"
                 >
 
             </form>
@@ -536,7 +552,7 @@
                     class="form-control"
                     type="search"
                     name="q"
-                    placeholder="Search products..."
+                    placeholder="Search dishes..."
                     autocomplete="off"
                 >
 
@@ -556,8 +572,12 @@
                 </a>
 
 
+                <a href="/swiggy/restaurants">
+                    Restaurants
+                </a>
+
                 <a href="/swiggy/products">
-                    Browse Products
+                    Dishes
                 </a>
 
 
@@ -767,8 +787,12 @@
                 <div class="sw-footer-links">
 
 
+                    <a href="/swiggy/restaurants">
+                        Restaurants
+                    </a>
+
                     <a href="/swiggy/products">
-                        Browse Products
+                        Dishes
                     </a>
 
 

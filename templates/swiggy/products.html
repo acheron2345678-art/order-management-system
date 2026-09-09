@@ -1,285 +1,188 @@
 {% extends "swiggy/base.html" %}
 
 {% block title %}
-Swiggy | Browse Products
+{% if selected_restaurant %}
+Swiggy | {{ selected_restaurant.name }}
+{% else %}
+Swiggy | Browse Dishes
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
-
 <section class="sw-section">
+    <div class="container-fluid sw-content-width px-3 px-md-4">
 
-    <div
-        class="container-fluid sw-content-width px-3 px-md-4"
-    >
-
-        <div class="sw-page-header">
-
+        {% if selected_restaurant %}
+        <div class="sw-restaurant-menu-banner">
             <div>
+                <a href="/swiggy/restaurants" class="sw-back-link">← All Restaurants</a>
+                <span class="sw-eyebrow">RESTAURANT MENU</span>
+                <h1>{{ selected_restaurant.name }}</h1>
+                <p>{{ selected_restaurant.description or "Browse the dishes currently available from this restaurant." }}</p>
 
-                <span class="sw-eyebrow">
-                    SWIGGY PRODUCTS
-                </span>
+                <div class="sw-restaurant-menu-meta">
+                    <span class="sw-restaurant-rating">★ {{ "%.1f"|format(selected_restaurant.rating) }}</span>
+                    <span>{{ selected_restaurant.delivery_min_minutes }}-{{ selected_restaurant.delivery_max_minutes }} min</span>
+                    <span>{{ selected_restaurant.cuisines }}</span>
+                    {% if selected_restaurant.location %}
+                    <span>{{ selected_restaurant.location }}</span>
+                    {% endif %}
+                </div>
 
-                <h1>
-                    Browse Products
-                </h1>
-
-                <p>
-                    Browse active Swiggy products currently available to order.
-                </p>
-
+                {% if selected_restaurant.offer_text %}
+                <div class="sw-menu-offer-chip">{{ selected_restaurant.offer_text }}</div>
+                {% endif %}
             </div>
 
-
-            {% if current_user and current_user.role == "client" %}
-
-            <a
-                href="/swiggy/cart"
-                class="btn btn-primary sw-primary-action"
-            >
-                View Cart
-
-                {% if cart_count is defined and cart_count > 0 %}
-
-                <span class="sw-button-count">
-                    {{ cart_count }}
-                </span>
-
+            <div class="sw-restaurant-menu-mark">
+                {% if selected_restaurant.image_url %}
+                <img src="{{ selected_restaurant.image_url }}" alt="{{ selected_restaurant.name }}">
+                {% else %}
+                <span>{{ selected_restaurant.name[0]|upper }}</span>
                 {% endif %}
-
-            </a>
-
-            {% endif %}
-
+            </div>
         </div>
+        {% else %}
+        <div class="sw-page-header">
+            <div>
+                <span class="sw-eyebrow">SWIGGY DISHES</span>
+                <h1>Browse all dishes</h1>
+                <p>Explore active dishes across all currently available restaurants.</p>
+            </div>
 
+            <a href="/swiggy/restaurants" class="btn btn-outline-secondary">
+                Browse Restaurants
+            </a>
+        </div>
+        {% endif %}
 
         <div class="sw-menu-toolbar">
+            <form method="get" action="/swiggy/products" class="sw-menu-search">
+                <span aria-hidden="true">⌕</span>
 
-            <form
-                method="get"
-                action="/swiggy/products"
-                class="sw-menu-search"
-            >
-
-                <span aria-hidden="true">
-                    ⌕
-                </span>
+                {% if selected_restaurant %}
+                <input type="hidden" name="restaurant" value="{{ selected_restaurant.id }}">
+                {% endif %}
 
                 <input
                     type="search"
                     name="q"
                     value="{{ search_query }}"
-                    placeholder="Search products..."
+                    placeholder="{% if selected_restaurant %}Search this restaurant's dishes...{% else %}Search dishes or categories...{% endif %}"
                     autocomplete="off"
                 >
 
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    Search
-                </button>
-
+                <button type="submit" class="btn btn-primary">Search</button>
             </form>
 
-
             <div class="sw-menu-result-count">
-
-                <strong>
-                    {{ products|length }}
-                </strong>
-
-                <span>
-                    product{% if products|length != 1 %}s{% endif %}
-                </span>
-
+                <strong>{{ products|length }}</strong>
+                <span>dish{% if products|length != 1 %}es{% endif %}</span>
 
                 {% if search_query %}
-
-                <a href="/swiggy/products">
+                <a href="/swiggy/products{% if selected_restaurant %}?restaurant={{ selected_restaurant.id }}{% endif %}">
                     Clear
                 </a>
-
                 {% endif %}
-
             </div>
-
         </div>
 
-
         {% if products %}
-
         <div class="sw-product-grid">
-
             {% for product in products %}
-
             <article class="sw-product-card">
-
-                <a
-                    href="/swiggy/products/{{ product.id }}"
-                    class="sw-product-visual"
-                >
-
+                <a href="/swiggy/products/{{ product.id }}" class="sw-product-visual">
                     {% if product.image_url %}
-
-                    <img
-                        src="{{ product.image_url }}"
-                        alt="{{ product.product_name }}"
-                    >
-
+                    <img src="{{ product.image_url }}" alt="{{ product.product_name }}">
                     {% else %}
-
-                    <span>
-                        {{ product.product_name[0]|upper }}
-                    </span>
-
+                    <span>{{ product.product_name[0]|upper }}</span>
                     {% endif %}
-
                 </a>
 
-
                 <div class="sw-product-body">
-
                     <div class="sw-product-meta">
-
-                        <span class="sw-product-platform">
-                            Swiggy
-                        </span>
-
-
-                        {% if product.stock_quantity > 0 %}
-
-                        <span class="sw-stock available">
-                            {{ product.stock_quantity }} available
-                        </span>
-
+                        {% if product.is_bestseller %}
+                        <span class="sw-bestseller-badge">★ Bestseller</span>
                         {% else %}
-
-                        <span class="sw-stock unavailable">
-                            Sold out
-                        </span>
-
+                        <span class="sw-product-platform">{{ product.menu_category or "Menu" }}</span>
                         {% endif %}
 
+                        {% if product.stock_quantity > 0 %}
+                        <span class="sw-stock available">{{ product.stock_quantity }} available</span>
+                        {% else %}
+                        <span class="sw-stock unavailable">Sold out</span>
+                        {% endif %}
                     </div>
 
-
-                    <a
-                        href="/swiggy/products/{{ product.id }}"
-                        class="sw-product-title"
-                    >
+                    <a href="/swiggy/products/{{ product.id }}" class="sw-product-title">
                         {{ product.product_name }}
                     </a>
 
+                    {% if product.restaurant and not selected_restaurant %}
+                    <a
+                        href="/swiggy/products?restaurant={{ product.restaurant.id }}"
+                        class="sw-product-restaurant-link"
+                    >
+                        {{ product.restaurant.name }}
+                    </a>
+                    {% endif %}
 
-                    <p>
-                        {{ product.description or "Ready to order." }}
-                    </p>
-
+                    <p>{{ product.description or "Ready to order." }}</p>
 
                     <div class="sw-product-footer">
-
-                        <strong>
-                            ₹{{ "%.2f"|format(product.price) }}
-                        </strong>
-
-
+                        <strong>₹{{ "%.2f"|format(product.price) }}</strong>
                         <div class="sw-product-actions">
-
-                            <a
-                                href="/swiggy/products/{{ product.id }}"
-                                class="btn btn-outline-secondary btn-sm"
-                            >
-                                Product Details
+                            <a href="/swiggy/products/{{ product.id }}" class="btn btn-outline-secondary btn-sm">
+                                Details
                             </a>
 
-
                             {% if current_user and current_user.role == "client" and product.stock_quantity > 0 %}
-
                             <form
                                 method="post"
                                 action="/swiggy/cart/add/{{ product.id }}"
                                 class="sw-inline-form"
                                 data-loading-form
                             >
-
-                                <input
-                                    type="hidden"
-                                    name="quantity"
-                                    value="1"
-                                >
-
+                                <input type="hidden" name="quantity" value="1">
                                 <button
                                     type="submit"
                                     class="btn btn-primary btn-sm sw-add-btn"
                                     data-loading-text="Adding..."
                                 >
-                                    Add to Cart
+                                    Add
                                 </button>
-
                             </form>
-
                             {% endif %}
-
                         </div>
-
                     </div>
-
                 </div>
-
             </article>
-
             {% endfor %}
-
         </div>
-
         {% else %}
-
         <div class="sw-empty-state">
-
-            <span class="sw-empty-state-icon">
-                ⌕
-            </span>
-
-            <h3>
-                No products found
-            </h3>
-
+            <span class="sw-empty-state-icon">⌕</span>
+            <h3>No dishes found</h3>
             <p>
-
                 {% if search_query %}
-
-                No products matched “{{ search_query }}”.
-
+                    No dishes matched “{{ search_query }}”{% if selected_restaurant %} in {{ selected_restaurant.name }}{% endif %}.
+                {% elif selected_restaurant %}
+                    {{ selected_restaurant.name }} does not currently have active dishes.
                 {% else %}
-
-                No active Swiggy products are currently available.
-
+                    No active Swiggy dishes are currently available.
                 {% endif %}
-
             </p>
 
-
-            {% if search_query %}
-
-            <a
-                href="/swiggy/products"
-                class="btn btn-primary"
-            >
-                Browse All Products
-            </a>
-
+            {% if selected_restaurant %}
+            <a href="/swiggy/restaurants" class="btn btn-primary">Choose Another Restaurant</a>
+            {% else %}
+            <a href="/swiggy/restaurants" class="btn btn-primary">Browse Restaurants</a>
             {% endif %}
-
         </div>
-
         {% endif %}
 
     </div>
-
 </section>
-
 
 {% endblock %}

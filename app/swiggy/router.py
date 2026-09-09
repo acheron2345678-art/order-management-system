@@ -58,8 +58,11 @@ from app.swiggy.service import (
     get_swiggy_cart,
     get_swiggy_cart_count,
     get_swiggy_cart_details,
+    get_swiggy_menu_categories,
     get_swiggy_product,
     get_swiggy_products,
+    get_swiggy_restaurant,
+    get_swiggy_restaurants,
 )
 
 from app.users.models import (
@@ -122,13 +125,26 @@ def swiggy_home(
         get_current_user
     ),
 ):
+    featured_restaurants = (
+        get_swiggy_restaurants(
+            db=db,
+            limit=6,
+        )
+    )
+
+    menu_categories = (
+        get_swiggy_menu_categories(
+            db=db,
+            limit=8,
+        )
+    )
+
     featured_products = (
         get_swiggy_products(
             db=db,
             limit=4,
         )
     )
-
 
     cart_count = (
         get_cart_count_for_user(
@@ -137,22 +153,60 @@ def swiggy_home(
         )
     )
 
-
     return templates.TemplateResponse(
         request=request,
         name="swiggy/home.html",
         context={
-            "request":
-                request,
+            "request": request,
+            "current_user": current_user,
+            "featured_restaurants": featured_restaurants,
+            "menu_categories": menu_categories,
+            "featured_products": featured_products,
+            "cart_count": cart_count,
+        },
+    )
 
-            "current_user":
-                current_user,
 
-            "featured_products":
-                featured_products,
+# =========================================================
+# RESTAURANTS
+# =========================================================
 
-            "cart_count":
-                cart_count,
+@router.get(
+    "/restaurants",
+    response_class=HTMLResponse,
+)
+def swiggy_restaurants_page(
+    request: Request,
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    current_user: User | None = Depends(
+        get_current_user
+    ),
+):
+    restaurants = (
+        get_swiggy_restaurants(
+            db=db
+        )
+    )
+
+    cart_count = (
+        get_cart_count_for_user(
+            db=db,
+            current_user=current_user,
+        )
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="swiggy/restaurants.html",
+        context={
+            "request": request,
+            "current_user": current_user,
+            "restaurants": restaurants,
+            "cart_count": cart_count,
         },
     )
 
@@ -172,6 +226,11 @@ def swiggy_products_page(
         default=""
     ),
 
+    restaurant: int | None = Query(
+        default=None,
+        ge=1,
+    ),
+
     db: Session = Depends(
         get_db
     ),
@@ -180,18 +239,31 @@ def swiggy_products_page(
         get_current_user
     ),
 ):
-    search_query = (
-        q.strip()
-    )
+    search_query = (q or "").strip()
 
+    selected_restaurant = None
+
+    if restaurant is not None:
+        selected_restaurant = (
+            get_swiggy_restaurant(
+                db=db,
+                restaurant_id=restaurant,
+            )
+        )
+
+        if selected_restaurant is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Swiggy restaurant not found",
+            )
 
     products = (
         get_swiggy_products(
             db=db,
             search_query=search_query,
+            restaurant_id=restaurant,
         )
     )
-
 
     cart_count = (
         get_cart_count_for_user(
@@ -200,25 +272,16 @@ def swiggy_products_page(
         )
     )
 
-
     return templates.TemplateResponse(
         request=request,
         name="swiggy/products.html",
         context={
-            "request":
-                request,
-
-            "current_user":
-                current_user,
-
-            "products":
-                products,
-
-            "search_query":
-                search_query,
-
-            "cart_count":
-                cart_count,
+            "request": request,
+            "current_user": current_user,
+            "products": products,
+            "search_query": search_query,
+            "selected_restaurant": selected_restaurant,
+            "cart_count": cart_count,
         },
     )
 

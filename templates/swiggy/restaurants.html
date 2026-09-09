@@ -1,0 +1,98 @@
+{% extends "swiggy/base.html" %}
+
+{% block title %}
+Swiggy | Restaurants
+{% endblock %}
+
+{% block content %}
+
+<section class="sw-section">
+    <div class="container-fluid sw-content-width px-3 px-md-4">
+        <div class="sw-page-header">
+            <div>
+                <span class="sw-eyebrow">RESTAURANT DISCOVERY</span>
+                <h1>Restaurants with online food delivery</h1>
+                <p>Browse active restaurants and open a restaurant to see its currently available dishes.</p>
+            </div>
+
+            {% if current_user and current_user.role == "client" %}
+            <a href="/swiggy/cart" class="btn btn-primary sw-primary-action">
+                View Cart
+                {% if cart_count is defined and cart_count > 0 %}
+                <span class="sw-button-count">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="sw-restaurant-list-toolbar">
+            <div>
+                <strong>{{ restaurants|length }}</strong>
+                <span>restaurant{% if restaurants|length != 1 %}s{% endif %} available</span>
+            </div>
+            <a href="/swiggy/products" class="btn btn-outline-secondary btn-sm">Browse Dishes Instead</a>
+        </div>
+
+        {% if restaurants %}
+        <div class="sw-restaurant-grid sw-restaurant-grid-large">
+            {% for card in restaurants %}
+            {% set restaurant = card.restaurant %}
+            <article class="sw-restaurant-card">
+                <a
+                    href="/swiggy/products?restaurant={{ restaurant.id }}"
+                    class="sw-restaurant-visual"
+                >
+                    {% if restaurant.image_url %}
+                    <img src="{{ restaurant.image_url }}" alt="{{ restaurant.name }}">
+                    {% else %}
+                    <div class="sw-restaurant-placeholder">
+                        <span>{{ restaurant.name[0]|upper }}</span>
+                        <small>{{ restaurant.cuisines }}</small>
+                    </div>
+                    {% endif %}
+
+                    {% if restaurant.offer_text %}
+                    <span class="sw-restaurant-offer">{{ restaurant.offer_text }}</span>
+                    {% endif %}
+                </a>
+
+                <div class="sw-restaurant-card-body">
+                    <div class="sw-restaurant-title-row">
+                        <a href="/swiggy/products?restaurant={{ restaurant.id }}">
+                            {{ restaurant.name }}
+                        </a>
+                        <span class="sw-restaurant-rating">★ {{ "%.1f"|format(restaurant.rating) }}</span>
+                    </div>
+
+                    <div class="sw-restaurant-delivery">
+                        {{ restaurant.delivery_min_minutes }}-{{ restaurant.delivery_max_minutes }} min
+                        · {{ card.dish_count }} dish{% if card.dish_count != 1 %}es{% endif %}
+                    </div>
+
+                    <p class="sw-restaurant-cuisines">{{ restaurant.cuisines }}</p>
+
+                    <div class="sw-restaurant-card-footer">
+                        <span>{{ restaurant.location or "Chennai" }}</span>
+                        <span>From ₹{{ "%.0f"|format(card.starting_price) }}</span>
+                    </div>
+
+                    {% if card.bestseller_count > 0 %}
+                    <div class="sw-restaurant-bestseller-line">
+                        🔥 {{ card.bestseller_count }} bestseller{% if card.bestseller_count != 1 %}s{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="sw-empty-state">
+            <span class="sw-empty-state-icon">🍴</span>
+            <h3>No restaurants are currently available</h3>
+            <p>Active restaurants appear here once they have at least one active Swiggy dish.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
