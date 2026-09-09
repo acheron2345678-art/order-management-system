@@ -4,19 +4,22 @@
 Your Cart | Swiggy
 {% endblock %}
 
-{% block content %}
+{% block head %}
+<link
+    rel="stylesheet"
+    href="/static/css/swiggy-cart.css?v=1"
+>
+{% endblock %}
 
+{% block content %}
 
 <section class="sw-section">
 
-    <div
-        class="container-fluid sw-content-width px-3 px-md-4"
-    >
+    <div class="container-fluid sw-content-width px-3 px-md-4">
 
         <div class="sw-page-header">
 
             <div>
-
                 <span class="sw-eyebrow">
                     YOUR CART
                 </span>
@@ -26,24 +29,41 @@ Your Cart | Swiggy
                 </h1>
 
                 <p>
-                    Review products, update quantities or continue to checkout.
+                    Your Swiggy cart can contain dishes from one restaurant at a time.
                 </p>
-
             </div>
 
-
+            {% if cart["restaurant"] %}
             <a
-                href="/swiggy/products"
+                href="/swiggy/restaurants/{{ cart['restaurant'].id }}"
                 class="btn btn-outline-secondary"
             >
-                + Add More Products
+                + Add More From {{ cart["restaurant"].name }}
             </a>
+            {% else %}
+            <a
+                href="/swiggy/restaurants"
+                class="btn btn-outline-secondary"
+            >
+                Browse Restaurants
+            </a>
+            {% endif %}
 
         </div>
 
 
-        {% if error %}
+        {% if switched %}
+        <div
+            class="alert alert-success sw-alert"
+            role="alert"
+            data-auto-dismiss-alert
+        >
+            Your previous cart was cleared and a new restaurant order was started.
+        </div>
+        {% endif %}
 
+
+        {% if error %}
         <div
             class="alert alert-danger sw-alert"
             role="alert"
@@ -51,11 +71,71 @@ Your Cart | Swiggy
         >
             {{ error }}
         </div>
+        {% endif %}
 
+
+        {% if cart["has_restaurant_conflict"] %}
+        <div class="alert alert-warning sw-alert" role="alert">
+            <strong>Your cart contains dishes from more than one restaurant.</strong>
+            This can happen with cart data created before the one-restaurant rule.
+            Remove items until only one restaurant remains, or clear the cart and start again.
+        </div>
         {% endif %}
 
 
         {% if cart["items"] %}
+
+        {% if cart["restaurant"] %}
+        <section class="sw-cart-restaurant-card mb-4">
+
+            <div class="sw-cart-restaurant-main">
+
+                <div class="sw-cart-restaurant-mark">
+                    {{ cart["restaurant"].name[0]|upper }}
+                </div>
+
+                <div>
+                    <span class="sw-eyebrow">
+                        ORDERING FROM
+                    </span>
+
+                    <h2>
+                        {{ cart["restaurant"].name }}
+                    </h2>
+
+                    <p>
+                        {{ cart["restaurant"].cuisines }}
+                    </p>
+
+                    <div class="sw-cart-restaurant-meta">
+                        <span>
+                            ★ {{ "%.1f"|format(cart["restaurant"].rating) }}
+                        </span>
+
+                        <span>
+                            {{ cart["restaurant"].delivery_min_minutes }}–{{ cart["restaurant"].delivery_max_minutes }} min
+                        </span>
+
+                        {% if cart["restaurant"].location %}
+                        <span>
+                            {{ cart["restaurant"].location }}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+            <a
+                href="/swiggy/restaurants/{{ cart['restaurant'].id }}"
+                class="btn btn-outline-secondary"
+            >
+                View Menu
+            </a>
+
+        </section>
+        {% endif %}
+
 
         <div class="sw-cart-layout">
 
@@ -71,18 +151,14 @@ Your Cart | Swiggy
                     >
 
                         {% if item["product"].image_url %}
-
                         <img
                             src="{{ item['product'].image_url }}"
                             alt="{{ item['product'].product_name }}"
                         >
-
                         {% else %}
-
                         <span>
                             {{ item["product"].product_name[0]|upper }}
                         </span>
-
                         {% endif %}
 
                     </a>
@@ -90,10 +166,15 @@ Your Cart | Swiggy
 
                     <div class="sw-cart-item-copy">
 
+                        {% if item["product"].menu_category %}
+                        <span class="sw-product-platform">
+                            {{ item["product"].menu_category }}
+                        </span>
+                        {% else %}
                         <span class="sw-product-platform">
                             Swiggy
                         </span>
-
+                        {% endif %}
 
                         <a
                             href="/swiggy/products/{{ item['product'].id }}"
@@ -102,18 +183,14 @@ Your Cart | Swiggy
                             {{ item["product"].product_name }}
                         </a>
 
-
                         <span class="sw-cart-unit-price">
                             Unit Price: ₹{{ "%.2f"|format(item["unit_price"]) }}
                         </span>
 
-
                         {% if not item["is_available"] %}
-
                         <small class="sw-item-warning">
                             Only {{ item["available_stock"] }} currently available.
                         </small>
-
                         {% endif %}
 
                     </div>
@@ -130,12 +207,10 @@ Your Cart | Swiggy
                             Quantity
                         </label>
 
-
                         <div
                             class="sw-quantity-stepper sw-quantity-stepper-small"
                             data-quantity-stepper
                         >
-
                             <button
                                 type="button"
                                 data-qty-decrease
@@ -143,7 +218,6 @@ Your Cart | Swiggy
                             >
                                 −
                             </button>
-
 
                             <input
                                 type="number"
@@ -154,7 +228,6 @@ Your Cart | Swiggy
                                 required
                             >
 
-
                             <button
                                 type="button"
                                 data-qty-increase
@@ -162,9 +235,7 @@ Your Cart | Swiggy
                             >
                                 +
                             </button>
-
                         </div>
-
 
                         <button
                             type="submit"
@@ -187,13 +258,11 @@ Your Cart | Swiggy
                             ₹{{ "%.2f"|format(item["line_total"]) }}
                         </strong>
 
-
                         <form
                             method="post"
                             action="/swiggy/cart/remove/{{ item['product'].id }}"
                             data-loading-form
                         >
-
                             <button
                                 type="submit"
                                 class="btn btn-link sw-remove-btn"
@@ -201,7 +270,6 @@ Your Cart | Swiggy
                             >
                                 Remove
                             </button>
-
                         </form>
 
                     </div>
@@ -219,59 +287,59 @@ Your Cart | Swiggy
                     ORDER SUMMARY
                 </span>
 
+                {% if cart["restaurant"] %}
+                <div class="sw-summary-restaurant">
+                    <span>
+                        Restaurant
+                    </span>
+                    <strong>
+                        {{ cart["restaurant"].name }}
+                    </strong>
+                </div>
+                {% endif %}
 
                 <h2>
                     Order Summary
                 </h2>
 
-
                 <div class="sw-summary-row">
-
                     <span>
                         Items
                     </span>
-
                     <strong>
                         {{ cart["item_count"] }}
                     </strong>
-
                 </div>
 
-
-                <div class="sw-summary-divider">
-                </div>
-
+                <div class="sw-summary-divider"></div>
 
                 <div class="sw-summary-row sw-summary-total">
-
                     <span>
                         Order Total
                     </span>
-
                     <strong>
                         ₹{{ "%.2f"|format(cart["total"]) }}
                     </strong>
-
                 </div>
 
+                {% if cart["has_restaurant_conflict"] %}
+                <div class="alert alert-warning mt-3 mb-0">
+                    Checkout is disabled until the cart contains dishes from only one restaurant.
+                </div>
 
-                {% if cart["has_stock_errors"] %}
-
+                {% elif cart["has_stock_errors"] %}
                 <div class="alert alert-warning mt-3 mb-0">
                     Fix unavailable quantities before checkout.
                 </div>
 
                 {% else %}
-
                 <a
                     href="/swiggy/checkout"
                     class="btn btn-primary sw-primary-action sw-full-btn mt-3"
                 >
                     Proceed to Checkout
                 </a>
-
                 {% endif %}
-
 
                 <form
                     method="post"
@@ -279,7 +347,6 @@ Your Cart | Swiggy
                     class="mt-2"
                     data-loading-form
                 >
-
                     <button
                         type="submit"
                         class="btn btn-outline-secondary sw-full-btn"
@@ -287,7 +354,6 @@ Your Cart | Swiggy
                     >
                         Clear Cart
                     </button>
-
                 </form>
 
             </aside>
@@ -307,14 +373,14 @@ Your Cart | Swiggy
             </h3>
 
             <p>
-                Browse products and add them to your cart to get started.
+                Choose a restaurant and add dishes to start your order.
             </p>
 
             <a
-                href="/swiggy/products"
+                href="/swiggy/restaurants"
                 class="btn btn-primary"
             >
-                Browse Products
+                Browse Restaurants
             </a>
 
         </div>
@@ -324,6 +390,5 @@ Your Cart | Swiggy
     </div>
 
 </section>
-
 
 {% endblock %}

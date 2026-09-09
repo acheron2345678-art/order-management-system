@@ -15,6 +15,7 @@ from app.orders.order_item_service import (
 
 from app.products.models import (
     Product,
+    Restaurant,
 )
 
 from app.products.service import (
@@ -136,6 +137,7 @@ def create_cart_orders(
     try:
 
         prepared_items = []
+        restaurant_ids = set()
 
 
         # =====================================
@@ -149,10 +151,20 @@ def create_cart_orders(
 
             product = (
                 db.query(Product)
+                .join(
+                    Restaurant,
+                    Restaurant.id
+                    ==
+                    Product.restaurant_id,
+                )
                 .filter(
                     Product.id
                     ==
-                    product_id
+                    product_id,
+
+                    Restaurant.is_active.is_(
+                        True
+                    ),
                 )
                 .with_for_update()
                 .first()
@@ -179,6 +191,29 @@ def create_cart_orders(
                     "Only Swiggy products "
                     "can be purchased from "
                     "the Swiggy cart."
+                )
+
+
+            if product.restaurant_id is None:
+
+                raise ValueError(
+                    "Every Swiggy dish must belong "
+                    "to a restaurant before checkout."
+                )
+
+
+            restaurant_ids.add(
+                int(
+                    product.restaurant_id
+                )
+            )
+
+
+            if len(restaurant_ids) > 1:
+
+                raise ValueError(
+                    "Your cart can contain items "
+                    "from only one restaurant."
                 )
 
 

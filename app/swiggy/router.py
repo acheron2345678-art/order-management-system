@@ -1,4 +1,3 @@
-
 from datetime import date
 
 from fastapi import (
@@ -47,12 +46,13 @@ from app.products.cart_checkout_service import (
 )
 
 from app.products.cart_service import (
-    add_to_cart,
     remove_from_cart,
     set_cart_quantity,
 )
 
 from app.swiggy.service import (
+    RestaurantCartConflict,
+    add_swiggy_product_to_cart,
     clear_swiggy_cart,
     get_client_swiggy_order,
     get_client_swiggy_orders,
@@ -66,6 +66,7 @@ from app.swiggy.service import (
     get_swiggy_restaurant_menu,
     get_swiggy_restaurants,
     search_swiggy_catalog,
+    switch_swiggy_cart_to_product,
 )
 
 from app.users.models import (
@@ -479,6 +480,10 @@ def swiggy_product_detail(
 def swiggy_cart_page(
     request: Request,
 
+    switched: bool = Query(
+        default=False
+    ),
+
     db: Session = Depends(
         get_db
     ),
@@ -487,34 +492,21 @@ def swiggy_cart_page(
         require_client
     ),
 ):
-    cart = (
-        get_swiggy_cart_details(
-            db=db,
-            user_id=current_user.id,
-        )
+    cart = get_swiggy_cart_details(
+        db=db,
+        user_id=current_user.id,
     )
-
 
     return templates.TemplateResponse(
         request=request,
         name="swiggy/cart.html",
         context={
-            "request":
-                request,
-
-            "current_user":
-                current_user,
-
-            "cart":
-                cart,
-
-            "cart_count":
-                cart[
-                    "item_count"
-                ],
-
-            "error":
-                None,
+            "request": request,
+            "current_user": current_user,
+            "cart": cart,
+            "cart_count": cart["item_count"],
+            "error": None,
+            "switched": switched,
         },
     )
 
@@ -524,9 +516,11 @@ def swiggy_cart_page(
 # =========================================================
 
 @router.post(
-    "/cart/add/{product_id}"
+    "/cart/add/{product_id}",
+    response_class=HTMLResponse,
 )
 def swiggy_add_to_cart(
+    request: Request,
     product_id: int,
 
     quantity: int = Form(
@@ -541,90 +535,97 @@ def swiggy_add_to_cart(
         require_client
     ),
 ):
-    product = (
-        get_swiggy_product(
-            db=db,
-            product_id=product_id,
-        )
+    product = get_swiggy_product(
+        db=db,
+        product_id=product_id,
     )
 
-
     if product is None:
-
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Swiggy product not found"
-            ),
+            detail="Swiggy product not found",
         )
 
-
-    if quantity <= 0:
-
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "Quantity must be "
-                "greater than 0"
-            ),
+    try:
+        add_swiggy_product_to_cart(
+            db=db,
+            user_id=current_user.id,
+            product_id=product_id,
+            quantity=quantity,
         )
 
-
-    cart = (
-        get_swiggy_cart(
+    except RestaurantCartConflict:
+        cart = get_swiggy_cart_details(
             db=db,
             user_id=current_user.id,
         )
-    )
 
-
-    current_quantity = int(
-        cart.get(
-            product_id,
-            cart.get(
-                str(product_id),
-                0,
-            ),
+        return templates.TemplateResponse(
+            request=request,
+            name="swiggy/cart_switch.html",
+            context={
+                "request": request,
+                "current_user": current_user,
+                "cart": cart,
+                "cart_count": cart["item_count"],
+                "current_restaurant": cart["restaurant"],
+                "target_product": product,
+                "target_restaurant": product.restaurant,
+                "quantity": quantity,
+            },
+            status_code=409,
         )
-        or
-        0
-    )
 
-
-    requested_quantity = (
-        current_quantity
-        +
-        quantity
-    )
-
-
-    if (
-        requested_quantity
-        >
-        product.stock_quantity
-    ):
-
+    except ValueError as error:
         raise HTTPException(
             status_code=400,
-            detail=(
-                f"Only "
-                f"{product.stock_quantity} "
-                "units are currently "
-                "available"
-            ),
-        )
-
-
-    add_to_cart(
-        db=db,
-        user_id=current_user.id,
-        product_id=product_id,
-        quantity=quantity,
-    )
-
+            detail=str(error),
+        ) from error
 
     return RedirectResponse(
         url="/swiggy/cart",
+        status_code=303,
+    )
+
+
+# =========================================================
+# SWITCH CART RESTAURANT
+# =========================================================
+
+@router.post(
+    "/cart/switch/{product_id}"
+)
+def swiggy_switch_cart_restaurant(
+    product_id: int,
+
+    quantity: int = Form(
+        1
+    ),
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    current_user: User = Depends(
+        require_client
+    ),
+):
+    try:
+        switch_swiggy_cart_to_product(
+            db=db,
+            user_id=current_user.id,
+            product_id=product_id,
+            quantity=quantity,
+        )
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    return RedirectResponse(
+        url="/swiggy/cart?switched=1",
         status_code=303,
     )
 
@@ -845,6 +846,14 @@ def swiggy_checkout_page(
 
 
     if cart["has_stock_errors"]:
+
+        return RedirectResponse(
+            url="/swiggy/cart",
+            status_code=303,
+        )
+
+
+    if cart["has_restaurant_conflict"]:
 
         return RedirectResponse(
             url="/swiggy/cart",
@@ -1167,6 +1176,14 @@ def swiggy_checkout_submit(
         return return_checkout_error(
             "One or more products are "
             "no longer available."
+        )
+
+
+    if cart["has_restaurant_conflict"]:
+
+        return return_checkout_error(
+            "Your cart can contain items "
+            "from only one restaurant."
         )
 
 

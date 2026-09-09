@@ -1,0 +1,151 @@
+{% extends "swiggy/base.html" %}
+
+{% block title %}
+Start a New Cart | Swiggy
+{% endblock %}
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="/static/css/swiggy-cart.css?v=1"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="sw-section">
+
+    <div class="container-fluid sw-content-width px-3 px-md-4">
+
+        <div class="sw-switch-shell">
+
+            <div class="sw-switch-card">
+
+                <span class="sw-eyebrow">
+                    DIFFERENT RESTAURANT
+                </span>
+
+                <h1>
+                    Start a new cart?
+                </h1>
+
+                <p class="sw-switch-intro">
+                    Swiggy orders can contain dishes from only one restaurant at a time.
+                </p>
+
+
+                {% if current_restaurant %}
+                <div class="sw-switch-current">
+                    <span>
+                        Current cart
+                    </span>
+                    <strong>
+                        {{ current_restaurant.name }}
+                    </strong>
+                    <small>
+                        {{ cart["item_count"] }} item{% if cart["item_count"] != 1 %}s{% endif %}
+                        · ₹{{ "%.2f"|format(cart["total"]) }}
+                    </small>
+                </div>
+                {% else %}
+                <div class="sw-switch-current sw-switch-current-warning">
+                    <span>
+                        Current cart
+                    </span>
+                    <strong>
+                        Multiple restaurants detected
+                    </strong>
+                    <small>
+                        Starting a new cart will clear the existing Swiggy cart.
+                    </small>
+                </div>
+                {% endif %}
+
+
+                <div class="sw-switch-arrow" aria-hidden="true">
+                    ↓
+                </div>
+
+
+                <div class="sw-switch-target">
+
+                    <div class="sw-switch-product-visual">
+                        {% if target_product.image_url %}
+                        <img
+                            src="{{ target_product.image_url }}"
+                            alt="{{ target_product.product_name }}"
+                        >
+                        {% else %}
+                        <span>
+                            {{ target_product.product_name[0]|upper }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="sw-switch-target-copy">
+                        <span>
+                            New restaurant
+                        </span>
+
+                        <strong class="sw-switch-restaurant-name">
+                            {{ target_restaurant.name }}
+                        </strong>
+
+                        <div class="sw-switch-product-name">
+                            {{ target_product.product_name }}
+                        </div>
+
+                        <small>
+                            Quantity {{ quantity }}
+                            · ₹{{ "%.2f"|format(target_product.price) }} each
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="sw-switch-warning">
+                    If you continue, every item currently in your Swiggy cart will be removed.
+                </div>
+
+
+                <div class="sw-switch-actions">
+
+                    <a
+                        href="/swiggy/cart"
+                        class="btn btn-outline-secondary"
+                    >
+                        Keep Current Cart
+                    </a>
+
+                    <form
+                        method="post"
+                        action="/swiggy/cart/switch/{{ target_product.id }}"
+                        data-loading-form
+                    >
+                        <input
+                            type="hidden"
+                            name="quantity"
+                            value="{{ quantity }}"
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            data-loading-text="Starting new cart..."
+                        >
+                            Clear Cart & Add Dish
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

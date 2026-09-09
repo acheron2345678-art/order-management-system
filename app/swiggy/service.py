@@ -417,10 +417,87 @@ def get_swiggy_product(
     )
 
 
+class RestaurantCartConflict(ValueError):
+    def __init__(
+        self,
+        current_restaurant_ids: set[int],
+        target_restaurant_id: int,
+    ):
+        self.current_restaurant_ids = set(
+            current_restaurant_ids
+        )
+        self.target_restaurant_id = (
+            target_restaurant_id
+        )
+
+        super().__init__(
+            "Your cart already contains items "
+            "from another restaurant."
+        )
+
+
+def _get_locked_swiggy_product(
+    db: Session,
+    product_id: int,
+):
+    product_id = validate_positive_id(
+        product_id,
+        "Product ID",
+    )
+
+    return (
+        db.query(Product)
+        .join(
+            Restaurant,
+            Restaurant.id == Product.restaurant_id,
+        )
+        .filter(
+            Product.id == product_id,
+            Product.is_active.is_(True),
+            Product.platform.ilike(PLATFORM),
+            Restaurant.is_active.is_(True),
+        )
+        .with_for_update()
+        .first()
+    )
+
+
+def _get_locked_swiggy_cart_rows(
+    db: Session,
+    user_id: int,
+):
+    user_id = validate_positive_id(
+        user_id,
+        "User ID",
+    )
+
+    return (
+        db.query(
+            CartItem,
+            Product.restaurant_id,
+        )
+        .join(
+            Product,
+            Product.id == CartItem.product_id,
+        )
+        .filter(
+            CartItem.user_id == user_id,
+            Product.platform.ilike(PLATFORM),
+        )
+        .with_for_update()
+        .all()
+    )
+
+
 def get_swiggy_cart(
     db: Session,
     user_id: int,
 ):
+    user_id = validate_positive_id(
+        user_id,
+        "User ID",
+    )
+
     rows = (
         db.query(CartItem)
         .join(Product, Product.id == CartItem.product_id)
@@ -461,13 +538,18 @@ def get_swiggy_cart_details(
         user_id=user_id,
     )
 
+    empty_result = {
+        "items": [],
+        "total": Decimal("0.00"),
+        "item_count": 0,
+        "has_stock_errors": False,
+        "restaurant": None,
+        "restaurant_ids": set(),
+        "has_restaurant_conflict": False,
+    }
+
     if not cart:
-        return {
-            "items": [],
-            "total": Decimal("0.00"),
-            "item_count": 0,
-            "has_stock_errors": False,
-        }
+        return empty_result
 
     product_ids = list(cart.keys())
 
@@ -490,6 +572,9 @@ def get_swiggy_cart_details(
     total = Decimal("0.00")
     item_count = 0
     has_stock_errors = False
+    has_missing_restaurant = False
+    restaurant_ids = set()
+    restaurant = None
 
     for product_id, quantity in cart.items():
         product = product_map.get(product_id)
@@ -497,6 +582,16 @@ def get_swiggy_cart_details(
         if product is None:
             has_stock_errors = True
             continue
+
+        if product.restaurant_id is None:
+            has_missing_restaurant = True
+        else:
+            restaurant_ids.add(
+                int(product.restaurant_id)
+            )
+
+        if restaurant is None and product.restaurant is not None:
+            restaurant = product.restaurant
 
         unit_price = Decimal(str(product.price)).quantize(
             MONEY_PLACES,
@@ -541,13 +636,16 @@ def get_swiggy_cart_details(
         rounding=ROUND_HALF_UP,
     )
 
+    has_restaurant_conflict = (
+        has_missing_restaurant
+        or len(restaurant_ids) > 1
+    )
+
+    if has_restaurant_conflict:
+        restaurant = None
+
     items.sort(
         key=lambda item: (
-            (
-                item["product"].restaurant.name.lower()
-                if item["product"].restaurant
-                else ""
-            ),
             item["product"].product_name.lower(),
         )
     )
@@ -557,13 +655,217 @@ def get_swiggy_cart_details(
         "total": total,
         "item_count": item_count,
         "has_stock_errors": has_stock_errors,
+        "restaurant": restaurant,
+        "restaurant_ids": restaurant_ids,
+        "has_restaurant_conflict": has_restaurant_conflict,
     }
+
+
+def add_swiggy_product_to_cart(
+    db: Session,
+    user_id: int,
+    product_id: int,
+    quantity: int,
+):
+    user_id = validate_positive_id(
+        user_id,
+        "User ID",
+    )
+
+    product_id = validate_positive_id(
+        product_id,
+        "Product ID",
+    )
+
+    try:
+        quantity = int(quantity)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            "Quantity must be a valid integer."
+        ) from exc
+
+    if quantity <= 0:
+        raise ValueError(
+            "Quantity must be greater than zero."
+        )
+
+    try:
+        product = _get_locked_swiggy_product(
+            db=db,
+            product_id=product_id,
+        )
+
+        if product is None:
+            raise ValueError(
+                "Swiggy product is unavailable."
+            )
+
+        if product.restaurant_id is None:
+            raise ValueError(
+                "This dish is not assigned to a restaurant."
+            )
+
+        cart_rows = _get_locked_swiggy_cart_rows(
+            db=db,
+            user_id=user_id,
+        )
+
+        restaurant_ids = {
+            int(restaurant_id)
+            for _, restaurant_id in cart_rows
+            if restaurant_id is not None
+        }
+
+        has_legacy_item = any(
+            restaurant_id is None
+            for _, restaurant_id in cart_rows
+        )
+
+        if (
+            has_legacy_item
+            or len(restaurant_ids) > 1
+            or (
+                restaurant_ids
+                and int(product.restaurant_id)
+                not in restaurant_ids
+            )
+        ):
+            raise RestaurantCartConflict(
+                current_restaurant_ids=restaurant_ids,
+                target_restaurant_id=int(product.restaurant_id),
+            )
+
+        cart_item = None
+
+        for row, _ in cart_rows:
+            if row.product_id == product.id:
+                cart_item = row
+                break
+
+        current_quantity = (
+            int(cart_item.quantity)
+            if cart_item is not None
+            else 0
+        )
+
+        requested_quantity = (
+            current_quantity + quantity
+        )
+
+        if requested_quantity > product.stock_quantity:
+            raise ValueError(
+                f"Only {product.stock_quantity} units of "
+                f"{product.product_name} are currently available."
+            )
+
+        if cart_item is None:
+            cart_item = CartItem(
+                user_id=user_id,
+                product_id=product.id,
+                quantity=quantity,
+            )
+            db.add(cart_item)
+        else:
+            cart_item.quantity = requested_quantity
+
+        db.commit()
+        db.refresh(cart_item)
+
+        return cart_item
+
+    except RestaurantCartConflict:
+        db.rollback()
+        raise
+
+    except Exception:
+        db.rollback()
+        raise
+
+
+def switch_swiggy_cart_to_product(
+    db: Session,
+    user_id: int,
+    product_id: int,
+    quantity: int,
+):
+    user_id = validate_positive_id(
+        user_id,
+        "User ID",
+    )
+
+    product_id = validate_positive_id(
+        product_id,
+        "Product ID",
+    )
+
+    try:
+        quantity = int(quantity)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            "Quantity must be a valid integer."
+        ) from exc
+
+    if quantity <= 0:
+        raise ValueError(
+            "Quantity must be greater than zero."
+        )
+
+    try:
+        product = _get_locked_swiggy_product(
+            db=db,
+            product_id=product_id,
+        )
+
+        if product is None:
+            raise ValueError(
+                "Swiggy product is unavailable."
+            )
+
+        if product.restaurant_id is None:
+            raise ValueError(
+                "This dish is not assigned to a restaurant."
+            )
+
+        if quantity > product.stock_quantity:
+            raise ValueError(
+                f"Only {product.stock_quantity} units of "
+                f"{product.product_name} are currently available."
+            )
+
+        cart_rows = _get_locked_swiggy_cart_rows(
+            db=db,
+            user_id=user_id,
+        )
+
+        for row, _ in cart_rows:
+            db.delete(row)
+
+        cart_item = CartItem(
+            user_id=user_id,
+            product_id=product.id,
+            quantity=quantity,
+        )
+
+        db.add(cart_item)
+        db.commit()
+        db.refresh(cart_item)
+
+        return cart_item
+
+    except Exception:
+        db.rollback()
+        raise
 
 
 def clear_swiggy_cart(
     db: Session,
     user_id: int,
 ):
+    user_id = validate_positive_id(
+        user_id,
+        "User ID",
+    )
+
     rows = (
         db.query(CartItem)
         .join(Product, Product.id == CartItem.product_id)
@@ -579,7 +881,6 @@ def clear_swiggy_cart(
 
     db.commit()
     return len(rows)
-
 
 def get_client_swiggy_orders(
     db: Session,
