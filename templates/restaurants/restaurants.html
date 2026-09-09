@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}
+Restaurants - Order Management
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge bg-warning-subtle text-warning-emphasis border">
+                Swiggy
+            </span>
+            <span class="text-body-secondary small">
+                Restaurant Management
+            </span>
+        </div>
+
+        <h1 class="h2 fw-bold mb-1">
+            Restaurants
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Manage restaurant profiles used to organise the Swiggy catalogue.
+        </p>
+    </div>
+
+    <a
+        href="/admin/restaurants/add"
+        class="btn btn-primary"
+    >
+        + Add Restaurant
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-body-secondary small mb-1">
+                    Active Restaurants
+                </div>
+                <div class="fs-3 fw-bold">
+                    {{ active_count }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-body-secondary small mb-1">
+                    Inactive Restaurants
+                </div>
+                <div class="fs-3 fw-bold">
+                    {{ inactive_count }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-body-secondary small mb-1">
+                    Assigned Swiggy Dishes
+                </div>
+                <div class="fs-3 fw-bold">
+                    {{ total_dishes }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Restaurant</th>
+                        <th>Cuisines</th>
+                        <th>Rating</th>
+                        <th>Delivery</th>
+                        <th>Dishes</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for restaurant in restaurants %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-semibold">
+                                {{ restaurant.name }}
+                            </div>
+
+                            {% if restaurant.location %}
+                            <div class="small text-body-secondary">
+                                {{ restaurant.location }}
+                            </div>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <span class="small">
+                                {{ restaurant.cuisines }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="fw-semibold">
+                                ★ {{ restaurant.rating }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="small">
+                                {{ restaurant.delivery_min_minutes }}–{{ restaurant.delivery_max_minutes }} min
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge text-bg-secondary">
+                                {{ restaurant.products | length }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {% if restaurant.is_active %}
+                            <span class="badge bg-success-subtle text-success-emphasis border">
+                                Active
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis border">
+                                Inactive
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                <a
+                                    href="/admin/restaurants/{{ restaurant.id }}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    View
+                                </a>
+
+                                <a
+                                    href="/admin/restaurants/{{ restaurant.id }}/edit"
+                                    class="btn btn-sm btn-outline-secondary"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    method="post"
+                                    action="/admin/restaurants/{{ restaurant.id }}/toggle"
+                                    class="d-inline"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="btn btn-sm {% if restaurant.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+                                    >
+                                        {% if restaurant.is_active %}
+                                            Disable
+                                        {% else %}
+                                            Enable
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-body-secondary">
+                            No restaurants have been created yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

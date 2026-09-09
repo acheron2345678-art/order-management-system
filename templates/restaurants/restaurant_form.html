@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ 'Add Restaurant' if action == 'add' else 'Edit Restaurant' }} - Order Management
+{% endblock %}
+
+{% block content %}
+
+{% set entered_name = form_data.name if form_data else (restaurant.name if restaurant else '') %}
+{% set entered_description = form_data.description if form_data else (restaurant.description if restaurant and restaurant.description else '') %}
+{% set entered_cuisines = form_data.cuisines if form_data else (restaurant.cuisines if restaurant else 'Multi-cuisine') %}
+{% set entered_rating = form_data.rating if form_data else (restaurant.rating if restaurant else '4.0') %}
+{% set entered_delivery_min = form_data.delivery_min_minutes if form_data else (restaurant.delivery_min_minutes if restaurant else 20) %}
+{% set entered_delivery_max = form_data.delivery_max_minutes if form_data else (restaurant.delivery_max_minutes if restaurant else 30) %}
+{% set entered_location = form_data.location if form_data else (restaurant.location if restaurant and restaurant.location else '') %}
+{% set entered_offer = form_data.offer_text if form_data else (restaurant.offer_text if restaurant and restaurant.offer_text else '') %}
+{% set entered_image_url = form_data.image_url if form_data else (restaurant.image_url if restaurant and restaurant.image_url else '') %}
+
+<div class="row justify-content-center">
+    <div class="col-xl-9 col-xxl-8">
+        <div class="d-flex align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-warning-subtle text-warning-emphasis border">
+                        Swiggy
+                    </span>
+                    <span class="text-body-secondary small">
+                        Restaurant Management
+                    </span>
+                </div>
+
+                <h1 class="h2 fw-bold mb-1">
+                    {% if action == "add" %}
+                        Add Restaurant
+                    {% else %}
+                        Edit Restaurant
+                    {% endif %}
+                </h1>
+
+                <p class="text-body-secondary mb-0">
+                    Restaurant details organise discovery and menus; they do not restrict which dishes can be assigned.
+                </p>
+            </div>
+
+            <a
+                href="/admin/restaurants"
+                class="btn btn-outline-secondary"
+            >
+                ← Back
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <form
+                    method="post"
+                    action="{% if action == 'add' %}/admin/restaurants/add{% else %}/admin/restaurants/{{ restaurant.id }}/edit{% endif %}"
+                >
+                    <div class="row g-4">
+                        <div class="col-md-7">
+                            <label for="name" class="form-label">
+                                Restaurant Name
+                            </label>
+                            <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_name }}"
+                                maxlength="120"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-md-5">
+                            <label for="rating" class="form-label">
+                                Rating
+                            </label>
+                            <input
+                                id="rating"
+                                name="rating"
+                                type="number"
+                                class="form-control"
+                                value="{{ entered_rating }}"
+                                min="1"
+                                max="5"
+                                step="0.1"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12">
+                            <label for="cuisines" class="form-label">
+                                Cuisines
+                            </label>
+                            <input
+                                id="cuisines"
+                                name="cuisines"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_cuisines }}"
+                                maxlength="255"
+                                placeholder="Biryani, North Indian, Kebabs"
+                                required
+                            >
+                            <div class="form-text">
+                                Descriptive only. This does not limit the dishes the restaurant can contain.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="description" class="form-label">
+                                Description
+                            </label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="3"
+                                maxlength="500"
+                                placeholder="Short description shown in restaurant discovery."
+                            >{{ entered_description }}</textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">
+                                Location
+                            </label>
+                            <input
+                                id="location"
+                                name="location"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_location }}"
+                                maxlength="150"
+                                placeholder="Anna Nagar, Chennai"
+                            >
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="offer_text" class="form-label">
+                                Offer Text
+                            </label>
+                            <input
+                                id="offer_text"
+                                name="offer_text"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_offer }}"
+                                maxlength="150"
+                                placeholder="20% OFF up to ₹100"
+                            >
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="delivery_min_minutes" class="form-label">
+                                Minimum Delivery Time
+                            </label>
+                            <div class="input-group">
+                                <input
+                                    id="delivery_min_minutes"
+                                    name="delivery_min_minutes"
+                                    type="number"
+                                    class="form-control"
+                                    value="{{ entered_delivery_min }}"
+                                    min="1"
+                                    max="240"
+                                    required
+                                >
+                                <span class="input-group-text">min</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="delivery_max_minutes" class="form-label">
+                                Maximum Delivery Time
+                            </label>
+                            <div class="input-group">
+                                <input
+                                    id="delivery_max_minutes"
+                                    name="delivery_max_minutes"
+                                    type="number"
+                                    class="form-control"
+                                    value="{{ entered_delivery_max }}"
+                                    min="1"
+                                    max="240"
+                                    required
+                                >
+                                <span class="input-group-text">min</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="image_url" class="form-label">
+                                Image URL
+                            </label>
+                            <input
+                                id="image_url"
+                                name="image_url"
+                                type="url"
+                                class="form-control"
+                                value="{{ entered_image_url }}"
+                                maxlength="500"
+                                placeholder="https://..."
+                            >
+                            <div class="form-text">
+                                Optional. We will use this more prominently when the Swiggy discovery interface is redesigned in 10D.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-info py-2 small" role="alert">
+                        Categories and cuisines are organisational metadata only. Admins will be able to assign any Swiggy dish to any restaurant in 10C.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a
+                            href="/admin/restaurants"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            {% if action == "add" %}
+                                Create Restaurant
+                            {% else %}
+                                Save Changes
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
