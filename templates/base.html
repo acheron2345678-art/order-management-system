@@ -129,6 +129,40 @@
 <body>
 
 
+<!-- ========================================= -->
+<!-- CURRENT APPLICATION -->
+<!-- ========================================= -->
+
+{% set current_path = request.url.path %}
+
+
+{% set is_swiggy_app =
+    current_path == "/swiggy"
+    or current_path.startswith("/swiggy/products")
+    or current_path.startswith("/swiggy/cart")
+    or current_path.startswith("/swiggy/checkout")
+    or current_path.startswith("/swiggy/order-success")
+    or current_path.startswith("/swiggy/my-orders")
+%}
+
+
+{% set is_insights_app =
+    current_path == "/insights"
+    or current_path.startswith("/insights/services")
+    or current_path.startswith("/insights/checkout")
+    or current_path.startswith("/insights/order-success")
+    or current_path.startswith("/insights/my-projects")
+%}
+
+
+{% set is_om_app =
+    not is_swiggy_app
+    and
+    not is_insights_app
+%}
+
+
+
 <div
     class="app-shell d-flex min-vh-100"
 >
@@ -163,7 +197,7 @@
 
 
                 <small class="brand-subtitle">
-                    OrderTask Manager
+                    Operations Console
                 </small>
 
             </span>
@@ -271,9 +305,20 @@
                 </span>
 
 
-                <strong>
-                    Order Management
-                </strong>
+                <span>
+
+                    <strong class="d-block">
+                        Order Management
+                    </strong>
+
+
+                    <small
+                        class="text-body-secondary"
+                    >
+                        Operations Console
+                    </small>
+
+                </span>
 
             </a>
 
@@ -303,96 +348,183 @@
 
 
 
+            <!-- ================================= -->
+            <!-- MOBILE APP SWITCHER -->
+            <!-- ================================= -->
+
             <div class="mt-4">
 
+
                 <div class="sidebar-section-label">
-                    Switch Application
+                    Applications
                 </div>
 
 
                 <nav
-                    class="nav nav-pills flex-column gap-1"
+                    class="d-grid gap-1"
                 >
 
 
+                    <!-- ORDER MANAGEMENT -->
+
                     <a
                         href="/home"
-                        class="nav-link sidebar-link active"
+                        class="
+                            sidebar-link
+                            text-decoration-none
+                            {% if is_om_app %}
+                                active
+                            {% endif %}
+                        "
+                        {% if is_om_app %}
+                            aria-current="page"
+                        {% endif %}
                     >
 
                         <span
-                            class="brand-mark"
-                            style="
-                                width: 30px;
-                                height: 30px;
-                                border-radius: 9px;
-                                font-size: 0.65rem;
-                                box-shadow: none;
+                            class="
+                                om-mobile-app-icon
+                                om-app-icon-management
                             "
                         >
                             OM
                         </span>
 
 
-                        <span>
-                            Order Management
+                        <span class="flex-grow-1">
+
+                            <strong class="d-block">
+                                Order Management
+                            </strong>
+
+                            <small
+                                class="text-body-secondary"
+                            >
+                                Operations & administration
+                            </small>
+
                         </span>
+
+
+                        {% if is_om_app %}
+
+                        <span
+                            aria-hidden="true"
+                        >
+                            ✓
+                        </span>
+
+                        {% endif %}
 
                     </a>
 
 
 
+                    <!-- SWIGGY -->
+
                     <a
                         href="/swiggy"
-                        class="nav-link sidebar-link"
+                        class="
+                            sidebar-link
+                            text-decoration-none
+                            {% if is_swiggy_app %}
+                                active
+                            {% endif %}
+                        "
+                        {% if is_swiggy_app %}
+                            aria-current="page"
+                        {% endif %}
                     >
 
                         <span
-                            class="platform-dot platform-swiggy"
+                            class="
+                                om-mobile-app-icon
+                                om-app-icon-swiggy
+                            "
                         >
                             S
                         </span>
 
 
                         <span class="flex-grow-1">
-                            Swiggy
+
+                            <strong class="d-block">
+                                Swiggy
+                            </strong>
+
+                            <small
+                                class="text-body-secondary"
+                            >
+                                Food ordering
+                            </small>
+
                         </span>
 
+
+                        {% if is_swiggy_app %}
 
                         <span
-                            class="text-body-secondary"
                             aria-hidden="true"
                         >
-                            ↗
+                            ✓
                         </span>
+
+                        {% endif %}
 
                     </a>
 
 
 
+                    <!-- INSIGHTS -->
+
                     <a
                         href="/insights"
-                        class="nav-link sidebar-link"
+                        class="
+                            sidebar-link
+                            text-decoration-none
+                            {% if is_insights_app %}
+                                active
+                            {% endif %}
+                        "
+                        {% if is_insights_app %}
+                            aria-current="page"
+                        {% endif %}
                     >
 
                         <span
-                            class="platform-dot platform-insights"
+                            class="
+                                om-mobile-app-icon
+                                om-app-icon-insights
+                            "
                         >
                             I
                         </span>
 
 
                         <span class="flex-grow-1">
-                            Insights
+
+                            <strong class="d-block">
+                                Insights
+                            </strong>
+
+                            <small
+                                class="text-body-secondary"
+                            >
+                                Analytics services
+                            </small>
+
                         </span>
 
+
+                        {% if is_insights_app %}
 
                         <span
-                            class="text-body-secondary"
                             aria-hidden="true"
                         >
-                            ↗
+                            ✓
                         </span>
+
+                        {% endif %}
 
                     </a>
 
@@ -497,7 +629,9 @@
             >
 
 
-                <!-- MOBILE BUTTON -->
+                <!-- ================================= -->
+                <!-- MOBILE MENU BUTTON -->
+                <!-- ================================= -->
 
                 <button
                     class="btn btn-outline-secondary d-lg-none flex-shrink-0"
@@ -512,7 +646,9 @@
 
 
 
-                <!-- SEARCH -->
+                <!-- ================================= -->
+                <!-- GLOBAL SEARCH -->
+                <!-- ================================= -->
 
                 <div
                     class="global-search position-relative flex-grow-1"
@@ -533,7 +669,7 @@
                             type="search"
                             placeholder="Search client, customer, order number, product, status, date or amount..."
                             autocomplete="off"
-                            aria-label="Search all orders"
+                            aria-label="Search all orders and projects"
                         >
 
                     </div>
@@ -550,32 +686,41 @@
 
 
 
-                <!-- ========================================= -->
+                <!-- ================================= -->
                 <!-- TOPBAR ACTIONS -->
-                <!-- ========================================= -->
+                <!-- ================================= -->
 
                 <div
-                    class="d-flex align-items-center gap-2 flex-shrink-0"
+                    class="
+                        om-topbar-actions
+                        d-flex
+                        align-items-center
+                        gap-2
+                        flex-shrink-0
+                    "
                 >
 
 
-                    <!-- USER -->
+                    <!-- ============================= -->
+                    <!-- CURRENT USER -->
+                    <!-- ============================= -->
 
                     {% if current_user is defined and current_user %}
 
 
                     <div
-                        class="d-none d-xl-flex align-items-center gap-2 border rounded-3 px-2 py-1 bg-body flex-shrink-0"
+                        class="
+                            om-topbar-user
+                            d-none
+                            d-xl-flex
+                            align-items-center
+                        "
                         title="{{ current_user.username }}"
                     >
 
 
                         <span
-                            class="user-avatar"
-                            style="
-                                width: 34px;
-                                height: 34px;
-                            "
+                            class="om-topbar-user-avatar"
                         >
 
                             {{ current_user.username[0]|upper }}
@@ -583,35 +728,24 @@
                         </span>
 
 
-                        <div
-                            class="d-flex flex-column"
-                            style="
-                                line-height: 1.15;
-                                min-width: 90px;
-                            "
+                        <span
+                            class="om-topbar-user-copy"
                         >
 
-                            <strong
-                                class="text-truncate"
-                                style="
-                                    max-width: 130px;
-                                    font-size: 0.78rem;
-                                "
-                            >
+                            <strong>
+
                                 {{ current_user.username }}
+
                             </strong>
 
 
-                            <small
-                                class="text-body-secondary"
-                                style="
-                                    font-size: 0.65rem;
-                                "
-                            >
+                            <small>
+
                                 {{ current_user.role|capitalize }}
+
                             </small>
 
-                        </div>
+                        </span>
 
                     </div>
 
@@ -620,9 +754,9 @@
 
 
 
-                    <!-- ========================================= -->
+                    <!-- ================================= -->
                     <!-- APP SWITCHER -->
-                    <!-- ========================================= -->
+                    <!-- ================================= -->
 
                     <div
                         class="dropdown flex-shrink-0"
@@ -630,75 +764,114 @@
 
 
                         <button
-                            class="btn btn-outline-secondary dropdown-toggle"
+                            class="
+                                btn
+                                btn-outline-secondary
+                                dropdown-toggle
+                                om-app-switcher
+                            "
                             type="button"
                             id="omAppsDropdown"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
+                            aria-label="Switch application"
                         >
-                            Apps
+
+                            <span
+                                class="d-none d-sm-inline"
+                            >
+                                Apps
+                            </span>
+
+
+                            <span
+                                class="d-sm-none"
+                                aria-hidden="true"
+                            >
+                                ▦
+                            </span>
+
                         </button>
 
 
 
                         <ul
-                            class="dropdown-menu dropdown-menu-end shadow"
-                            aria-labelledby="omAppsDropdown"
-                            style="
-                                min-width: 280px;
+                            class="
+                                dropdown-menu
+                                dropdown-menu-end
+                                shadow
+                                om-app-menu
                             "
+                            aria-labelledby="omAppsDropdown"
                         >
 
 
                             <li>
 
                                 <h6 class="dropdown-header">
-                                    Switch Application
+                                    Applications
                                 </h6>
 
                             </li>
 
 
 
+                            <!-- ========================= -->
                             <!-- ORDER MANAGEMENT -->
+                            <!-- ========================= -->
 
                             <li>
 
                                 <a
                                     href="/home"
-                                    class="dropdown-item active d-flex align-items-center gap-3 py-2"
+                                    class="
+                                        dropdown-item
+                                        om-app-item
+                                        {% if is_om_app %}
+                                            active
+                                        {% endif %}
+                                    "
+                                    {% if is_om_app %}
+                                        aria-current="page"
+                                    {% endif %}
                                 >
 
                                     <span
-                                        class="brand-mark"
-                                        style="
-                                            width: 36px;
-                                            height: 36px;
-                                            border-radius: 10px;
-                                            font-size: 0.68rem;
-                                            box-shadow: none;
+                                        class="
+                                            om-app-icon
+                                            om-app-icon-management
                                         "
                                     >
                                         OM
                                     </span>
 
 
-                                    <span>
+                                    <span
+                                        class="flex-grow-1 min-w-0"
+                                    >
 
-                                        <strong
-                                            class="d-block"
-                                        >
+                                        <strong class="d-block">
                                             Order Management
                                         </strong>
 
 
-                                        <small
-                                            class="text-body-secondary"
-                                        >
-                                            Operations & management
+                                        <small class="d-block">
+                                            Operations & administration
                                         </small>
 
                                     </span>
+
+
+                                    {% if is_om_app %}
+
+                                    <span
+                                        class="ms-auto"
+                                        aria-hidden="true"
+                                    >
+                                        ✓
+                                    </span>
+
+                                    {% endif %}
 
                                 </a>
 
@@ -712,43 +885,62 @@
 
 
 
+                            <!-- ========================= -->
                             <!-- SWIGGY -->
+                            <!-- ========================= -->
 
                             <li>
 
                                 <a
                                     href="/swiggy"
-                                    class="dropdown-item d-flex align-items-center gap-3 py-2"
+                                    class="
+                                        dropdown-item
+                                        om-app-item
+                                        {% if is_swiggy_app %}
+                                            active
+                                        {% endif %}
+                                    "
+                                    {% if is_swiggy_app %}
+                                        aria-current="page"
+                                    {% endif %}
                                 >
 
                                     <span
-                                        class="platform-dot platform-swiggy"
-                                        style="
-                                            width: 36px;
-                                            height: 36px;
-                                            border-radius: 10px;
+                                        class="
+                                            om-app-icon
+                                            om-app-icon-swiggy
                                         "
                                     >
                                         S
                                     </span>
 
 
-                                    <span>
+                                    <span
+                                        class="flex-grow-1 min-w-0"
+                                    >
 
-                                        <strong
-                                            class="d-block"
-                                        >
+                                        <strong class="d-block">
                                             Swiggy
                                         </strong>
 
 
-                                        <small
-                                            class="text-body-secondary"
-                                        >
-                                            Product storefront
+                                        <small class="d-block">
+                                            Food ordering
                                         </small>
 
                                     </span>
+
+
+                                    {% if is_swiggy_app %}
+
+                                    <span
+                                        class="ms-auto"
+                                        aria-hidden="true"
+                                    >
+                                        ✓
+                                    </span>
+
+                                    {% endif %}
 
                                 </a>
 
@@ -756,43 +948,62 @@
 
 
 
+                            <!-- ========================= -->
                             <!-- INSIGHTS -->
+                            <!-- ========================= -->
 
                             <li>
 
                                 <a
                                     href="/insights"
-                                    class="dropdown-item d-flex align-items-center gap-3 py-2"
+                                    class="
+                                        dropdown-item
+                                        om-app-item
+                                        {% if is_insights_app %}
+                                            active
+                                        {% endif %}
+                                    "
+                                    {% if is_insights_app %}
+                                        aria-current="page"
+                                    {% endif %}
                                 >
 
                                     <span
-                                        class="platform-dot platform-insights"
-                                        style="
-                                            width: 36px;
-                                            height: 36px;
-                                            border-radius: 10px;
+                                        class="
+                                            om-app-icon
+                                            om-app-icon-insights
                                         "
                                     >
                                         I
                                     </span>
 
 
-                                    <span>
+                                    <span
+                                        class="flex-grow-1 min-w-0"
+                                    >
 
-                                        <strong
-                                            class="d-block"
-                                        >
+                                        <strong class="d-block">
                                             Insights
                                         </strong>
 
 
-                                        <small
-                                            class="text-body-secondary"
-                                        >
+                                        <small class="d-block">
                                             Analytics services
                                         </small>
 
                                     </span>
+
+
+                                    {% if is_insights_app %}
+
+                                    <span
+                                        class="ms-auto"
+                                        aria-hidden="true"
+                                    >
+                                        ✓
+                                    </span>
+
+                                    {% endif %}
 
                                 </a>
 
@@ -805,12 +1016,19 @@
 
 
 
+                    <!-- ================================= -->
                     <!-- THEME -->
+                    <!-- ================================= -->
 
                     <button
                         id="theme-toggle"
                         type="button"
-                        class="btn btn-outline-secondary theme-toggle flex-shrink-0"
+                        class="
+                            btn
+                            btn-outline-secondary
+                            theme-toggle
+                            flex-shrink-0
+                        "
                         aria-label="Switch theme"
                         title="Switch theme"
                     >
@@ -826,7 +1044,9 @@
 
 
 
+                    <!-- ================================= -->
                     <!-- LOGOUT -->
+                    <!-- ================================= -->
 
                     {% if current_user is defined and current_user %}
 

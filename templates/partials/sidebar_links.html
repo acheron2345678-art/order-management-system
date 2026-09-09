@@ -1,16 +1,16 @@
 {% set current_path = request.url.path %}
 
 
-<nav class="d-flex flex-column gap-1">
+<!-- ===================================================== -->
+<!-- MAIN -->
+<!-- ===================================================== -->
+
+<div class="sidebar-section-label">
+    Main
+</div>
 
 
-    <!-- ========================================= -->
-    <!-- MAIN -->
-    <!-- ========================================= -->
-
-    <div class="sidebar-section-label">
-        Main
-    </div>
+<nav class="d-grid gap-1 mb-4">
 
 
     <!-- HOME -->
@@ -37,7 +37,6 @@
     </a>
 
 
-
     <!-- DASHBOARD -->
 
     <a
@@ -62,346 +61,371 @@
     </a>
 
 
-
-    <!-- ========================================= -->
-    <!-- ADMIN NAVIGATION -->
-    <!-- ========================================= -->
-
-    {% if
-        current_user is defined
-        and
-        current_user
-        and
-        current_user.role == "admin"
-    %}
-
-
-    <div class="sidebar-section-label mt-4">
-        Management
-    </div>
-
-
-
-    <!-- CATALOG -->
-
-    <a
-        href="/products"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/products') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span class="sidebar-icon">
-            ▦
-        </span>
-
-        <span>
-            Catalog
-        </span>
-
-    </a>
-
-
-
-    <!-- SWIGGY ORDERS -->
-
-    <a
-        href="/swiggy/orders"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/swiggy/orders') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span
-            class="
-                platform-dot
-                platform-swiggy
-            "
-        >
-            S
-        </span>
-
-        <span>
-            Swiggy Orders
-        </span>
-
-    </a>
-
-
-
-    <!-- INSIGHTS PROJECTS -->
-
-    <a
-        href="/insights/orders"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/insights/orders') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span
-            class="
-                platform-dot
-                platform-insights
-            "
-        >
-            I
-        </span>
-
-        <span>
-            Insights Projects
-        </span>
-
-    </a>
-
-
-
-    <!-- USER MANAGEMENT -->
-
-    <a
-        href="/admin/users"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/admin/users') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span class="sidebar-icon">
-            ♙
-        </span>
-
-        <span>
-            Users
-        </span>
-
-    </a>
-
-
-    {% endif %}
-
-
-
-    <!-- ========================================= -->
-    <!-- CLIENT NAVIGATION -->
-    <!-- ========================================= -->
-
-    {% if
-        current_user is defined
-        and
-        current_user
-        and
-        current_user.role == "client"
-    %}
-
-
-    <div class="sidebar-section-label mt-4">
-        My Activity
-    </div>
-
-
-
-    <!-- SWIGGY STORE -->
-
-    <a
-        href="/swiggy"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if
-                current_path == '/swiggy'
-                or
-                current_path.startswith('/swiggy/products')
-                or
-                current_path.startswith('/swiggy/cart')
-                or
-                current_path.startswith('/swiggy/checkout')
-                or
-                current_path.startswith('/swiggy/order-success')
-            %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span
-            class="
-                platform-dot
-                platform-swiggy
-            "
-        >
-            S
-        </span>
-
-        <span>
-            Swiggy
-        </span>
-
-    </a>
-
-
-
-    <!-- MY SWIGGY ORDERS -->
-
-    <a
-        href="/swiggy/my-orders"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/swiggy/my-orders') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span class="sidebar-icon">
-            ▤
-        </span>
-
-        <span>
-            My Swiggy Orders
-        </span>
-
-    </a>
-
-
-
-    <!-- INSIGHTS -->
-
-    <a
-        href="/insights"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if
-                current_path == '/insights'
-                or
-                current_path.startswith('/insights/services')
-                or
-                current_path.startswith('/insights/checkout')
-                or
-                current_path.startswith('/insights/order-success')
-            %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span
-            class="
-                platform-dot
-                platform-insights
-            "
-        >
-            I
-        </span>
-
-        <span>
-            Insights
-        </span>
-
-    </a>
-
-
-
-    <!-- MY INSIGHTS PROJECTS -->
-
-    <a
-        href="/insights/my-projects"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/insights/my-projects') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span class="sidebar-icon">
-            ◇
-        </span>
-
-        <span>
-            My Projects
-        </span>
-
-    </a>
-
-
-
-    <!-- PURCHASE HISTORY -->
-
-    <a
-        href="/my-purchases"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/my-purchases') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span class="sidebar-icon">
-            ◷
-        </span>
-
-        <span>
-            My Purchases
-        </span>
-
-    </a>
-
-
-
-    <!-- ========================================= -->
-    <!-- ACCOUNT -->
-    <!-- ========================================= -->
-
-    <div class="sidebar-section-label mt-4">
-        Account
-    </div>
-
-
-
-    <!-- MY PROFILE -->
-
-    <a
-        href="/profile"
-        class="
-            sidebar-link
-            text-decoration-none
-            {% if current_path.startswith('/profile') %}
-                active
-            {% endif %}
-        "
-    >
-
-        <span class="sidebar-icon">
-            ◎
-        </span>
-
-        <span>
-            My Profile
-        </span>
-
-    </a>
-
-
-    {% endif %}
-
-
 </nav>
+
+
+
+{% if current_user is defined and current_user %}
+
+
+    <!-- ================================================= -->
+    <!-- ADMIN NAVIGATION -->
+    <!-- ================================================= -->
+
+    {% if current_user.role == "admin" %}
+
+
+        <div class="sidebar-section-label">
+            Management
+        </div>
+
+
+        <nav class="d-grid gap-1 mb-4">
+
+
+            <!-- CATALOG -->
+
+            <a
+                href="/products"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/products') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="sidebar-icon">
+                    ◇
+                </span>
+
+                <span>
+                    Catalog
+                </span>
+
+            </a>
+
+
+
+            <!-- SWIGGY ORDERS -->
+
+            <a
+                href="/swiggy/orders"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/swiggy/orders') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span
+                    class="
+                        platform-dot
+                        platform-swiggy
+                    "
+                >
+                    S
+                </span>
+
+                <span>
+                    Swiggy Orders
+                </span>
+
+            </a>
+
+
+
+            <!-- INSIGHTS PROJECTS -->
+
+            <a
+                href="/insights/orders"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/insights/orders') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span
+                    class="
+                        platform-dot
+                        platform-insights
+                    "
+                >
+                    I
+                </span>
+
+                <span>
+                    Insights Projects
+                </span>
+
+            </a>
+
+
+
+            <!-- USERS -->
+
+            <a
+                href="/admin/users"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/admin/users') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="sidebar-icon">
+                    ◎
+                </span>
+
+                <span>
+                    Users
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+
+    <!-- ================================================= -->
+    <!-- CLIENT NAVIGATION -->
+    <!-- ================================================= -->
+
+    {% elif current_user.role == "client" %}
+
+
+        <!-- ============================================= -->
+        <!-- SWIGGY -->
+        <!-- ============================================= -->
+
+        <div class="sidebar-section-label">
+            Swiggy
+        </div>
+
+
+        <nav class="d-grid gap-1 mb-4">
+
+
+            <!-- BROWSE SWIGGY -->
+
+            <a
+                href="/swiggy"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if
+                        current_path == '/swiggy'
+                        or
+                        current_path.startswith('/swiggy/products')
+                        or
+                        current_path.startswith('/swiggy/cart')
+                        or
+                        current_path.startswith('/swiggy/checkout')
+                        or
+                        current_path.startswith('/swiggy/order-success')
+                    %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span
+                    class="
+                        platform-dot
+                        platform-swiggy
+                    "
+                >
+                    S
+                </span>
+
+                <span>
+                    Browse Swiggy
+                </span>
+
+            </a>
+
+
+
+            <!-- MY SWIGGY ORDERS -->
+
+            <a
+                href="/swiggy/my-orders"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/swiggy/my-orders') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="sidebar-icon">
+                    ≡
+                </span>
+
+                <span>
+                    My Swiggy Orders
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+
+        <!-- ============================================= -->
+        <!-- INSIGHTS -->
+        <!-- ============================================= -->
+
+        <div class="sidebar-section-label">
+            Insights
+        </div>
+
+
+        <nav class="d-grid gap-1 mb-4">
+
+
+            <!-- BROWSE INSIGHTS -->
+
+            <a
+                href="/insights"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if
+                        current_path == '/insights'
+                        or
+                        current_path.startswith('/insights/services')
+                        or
+                        current_path.startswith('/insights/checkout')
+                        or
+                        current_path.startswith('/insights/order-success')
+                    %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span
+                    class="
+                        platform-dot
+                        platform-insights
+                    "
+                >
+                    I
+                </span>
+
+                <span>
+                    Browse Insights
+                </span>
+
+            </a>
+
+
+
+            <!-- MY PROJECTS -->
+
+            <a
+                href="/insights/my-projects"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/insights/my-projects') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="sidebar-icon">
+                    ◈
+                </span>
+
+                <span>
+                    My Projects
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+
+        <!-- ============================================= -->
+        <!-- ACCOUNT -->
+        <!-- ============================================= -->
+
+        <div class="sidebar-section-label">
+            Account
+        </div>
+
+
+        <nav class="d-grid gap-1">
+
+
+            <!-- MY PURCHASES -->
+
+            <a
+                href="/my-purchases"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/my-purchases') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="sidebar-icon">
+                    ▣
+                </span>
+
+                <span>
+                    My Purchases
+                </span>
+
+            </a>
+
+
+
+            <!-- MY PROFILE -->
+
+            <a
+                href="/profile"
+                class="
+                    sidebar-link
+                    text-decoration-none
+                    {% if current_path.startswith('/profile') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="sidebar-icon">
+                    ○
+                </span>
+
+                <span>
+                    My Profile
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+    {% endif %}
+
+
+{% endif %}
