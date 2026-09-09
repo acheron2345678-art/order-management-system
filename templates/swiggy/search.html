@@ -1,0 +1,393 @@
+{% extends "swiggy/base.html" %}
+
+{% block title %}
+Swiggy | Search
+{% endblock %}
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="/static/css/swiggy-search.css?v=1"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="sw-section sw-search-page">
+
+    <div class="container-fluid sw-content-width px-3 px-md-4">
+
+        <div class="sw-search-hero">
+
+            <div>
+                <span class="sw-eyebrow">SEARCH</span>
+
+                <h1>
+                    Find restaurants and dishes
+                </h1>
+
+                <p>
+                    Search restaurant names, cuisines, locations,
+                    dish names, descriptions and menu categories.
+                </p>
+            </div>
+
+            <form
+                method="get"
+                action="/swiggy/search"
+                class="sw-global-search-form"
+            >
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ search_query }}"
+                    maxlength="100"
+                    placeholder="Search restaurants or dishes..."
+                    autocomplete="off"
+                    aria-label="Search Swiggy restaurants or dishes"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary sw-primary-action"
+                >
+                    Search
+                </button>
+            </form>
+
+        </div>
+
+
+        {% if search_query %}
+
+        <div class="sw-search-summary">
+            <div>
+                <strong>
+                    {{ total_count }}
+                </strong>
+
+                <span>
+                    result{% if total_count != 1 %}s{% endif %}
+                    for
+                    <b>“{{ search_query }}”</b>
+                </span>
+            </div>
+
+            <div class="sw-search-summary-breakdown">
+                <span>
+                    {{ restaurant_count }} restaurant{% if restaurant_count != 1 %}s{% endif %}
+                </span>
+
+                <span>
+                    {{ dish_count }} dish{% if dish_count != 1 %}es{% endif %}
+                </span>
+            </div>
+        </div>
+
+
+        {% if total_count > 0 %}
+
+            {% if restaurant_results %}
+            <section class="sw-search-result-section">
+
+                <div class="sw-section-header sw-section-header-row">
+                    <div>
+                        <span class="sw-eyebrow">RESTAURANTS</span>
+                        <h2>Restaurant matches</h2>
+                        <p>
+                            Matches based on restaurant name, cuisine,
+                            description and location.
+                        </p>
+                    </div>
+
+                    <span class="sw-result-count-pill">
+                        {{ restaurant_count }} found
+                    </span>
+                </div>
+
+                <div class="sw-restaurant-grid sw-search-restaurant-grid">
+
+                    {% for card in restaurant_results %}
+                    {% set restaurant = card.restaurant %}
+
+                    <article class="sw-restaurant-card">
+
+                        <a
+                            href="/swiggy/restaurants/{{ restaurant.id }}"
+                            class="sw-restaurant-visual"
+                        >
+                            {% if restaurant.image_url %}
+                            <img
+                                src="{{ restaurant.image_url }}"
+                                alt="{{ restaurant.name }}"
+                            >
+                            {% else %}
+                            <div class="sw-restaurant-placeholder">
+                                <span>
+                                    {{ restaurant.name[0]|upper }}
+                                </span>
+
+                                <small>
+                                    {{ restaurant.cuisines }}
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            {% if restaurant.offer_text %}
+                            <span class="sw-restaurant-offer">
+                                {{ restaurant.offer_text }}
+                            </span>
+                            {% endif %}
+                        </a>
+
+                        <div class="sw-restaurant-card-body">
+
+                            <div class="sw-restaurant-title-row">
+                                <a href="/swiggy/restaurants/{{ restaurant.id }}">
+                                    {{ restaurant.name }}
+                                </a>
+
+                                <span class="sw-restaurant-rating">
+                                    ★ {{ "%.1f"|format(restaurant.rating) }}
+                                </span>
+                            </div>
+
+                            <div class="sw-restaurant-delivery">
+                                {{ restaurant.delivery_min_minutes }}-{{ restaurant.delivery_max_minutes }} min
+                                · {{ card.dish_count }} dish{% if card.dish_count != 1 %}es{% endif %}
+                            </div>
+
+                            <p class="sw-restaurant-cuisines">
+                                {{ restaurant.cuisines }}
+                            </p>
+
+                            <div class="sw-restaurant-card-footer">
+                                <span>
+                                    {{ restaurant.location or "Chennai" }}
+                                </span>
+
+                                <span>
+                                    From ₹{{ "%.0f"|format(card.starting_price) }}
+                                </span>
+                            </div>
+
+                            {% if card.bestseller_count > 0 %}
+                            <div class="sw-restaurant-bestseller-line">
+                                🔥 {{ card.bestseller_count }} bestseller{% if card.bestseller_count != 1 %}s{% endif %}
+                            </div>
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+                    {% endfor %}
+
+                </div>
+
+            </section>
+            {% endif %}
+
+
+            {% if dish_results %}
+            <section class="sw-search-result-section">
+
+                <div class="sw-section-header sw-section-header-row">
+                    <div>
+                        <span class="sw-eyebrow">DISHES</span>
+                        <h2>Dish matches</h2>
+                        <p>
+                            Matching dishes remain linked to the restaurant
+                            that serves them.
+                        </p>
+                    </div>
+
+                    <span class="sw-result-count-pill">
+                        {{ dish_count }} found
+                    </span>
+                </div>
+
+                <div class="sw-search-dish-grid">
+
+                    {% for product in dish_results %}
+                    <article class="sw-search-dish-card">
+
+                        <a
+                            href="/swiggy/products/{{ product.id }}"
+                            class="sw-search-dish-visual"
+                        >
+                            {% if product.image_url %}
+                            <img
+                                src="{{ product.image_url }}"
+                                alt="{{ product.product_name }}"
+                            >
+                            {% else %}
+                            <span class="sw-search-dish-placeholder">
+                                {{ product.product_name[0]|upper }}
+                            </span>
+                            {% endif %}
+                        </a>
+
+                        <div class="sw-search-dish-body">
+
+                            <div class="sw-search-dish-badges">
+                                {% if product.is_bestseller %}
+                                <span class="sw-bestseller-badge">
+                                    ★ Bestseller
+                                </span>
+                                {% else %}
+                                <span class="sw-search-category-badge">
+                                    {{ product.menu_category or "Menu" }}
+                                </span>
+                                {% endif %}
+
+                                {% if product.stock_quantity > 0 %}
+                                <span class="sw-stock available">
+                                    Available
+                                </span>
+                                {% else %}
+                                <span class="sw-stock unavailable">
+                                    Sold out
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <a
+                                href="/swiggy/products/{{ product.id }}"
+                                class="sw-search-dish-title"
+                            >
+                                {{ product.product_name }}
+                            </a>
+
+                            {% if product.restaurant %}
+                            <a
+                                href="/swiggy/restaurants/{{ product.restaurant.id }}"
+                                class="sw-search-restaurant-link"
+                            >
+                                {{ product.restaurant.name }}
+                            </a>
+                            {% endif %}
+
+                            <strong class="sw-search-dish-price">
+                                ₹{{ "%.2f"|format(product.price) }}
+                            </strong>
+
+                            <p class="sw-search-dish-description">
+                                {{ product.description or "Ready to order." }}
+                            </p>
+
+                            <div class="sw-search-dish-actions">
+
+                                <a
+                                    href="/swiggy/products/{{ product.id }}"
+                                    class="btn btn-outline-secondary btn-sm"
+                                >
+                                    View
+                                </a>
+
+                                {% if current_user and current_user.role == "client" %}
+
+                                    {% if product.stock_quantity > 0 %}
+                                    <form
+                                        method="post"
+                                        action="/swiggy/cart/add/{{ product.id }}"
+                                    >
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary btn-sm sw-primary-action"
+                                        >
+                                            ADD
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary btn-sm"
+                                        disabled
+                                    >
+                                        Sold out
+                                    </button>
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                    {% endfor %}
+
+                </div>
+
+            </section>
+            {% endif %}
+
+        {% else %}
+
+            <div class="sw-empty-state sw-search-empty-state">
+                <span class="sw-empty-state-icon">⌕</span>
+                <h3>No matching restaurants or dishes</h3>
+                <p>
+                    Try a restaurant name, cuisine, dish name or menu category.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2 justify-content-center mt-3">
+                    <a
+                        href="/swiggy/restaurants"
+                        class="btn btn-outline-secondary"
+                    >
+                        Browse Restaurants
+                    </a>
+
+                    <a
+                        href="/swiggy/products"
+                        class="btn btn-primary sw-primary-action"
+                    >
+                        Browse All Dishes
+                    </a>
+                </div>
+            </div>
+
+        {% endif %}
+
+
+        {% else %}
+
+        <div class="sw-search-start-state">
+            <span>⌕</span>
+            <h2>What are you looking for?</h2>
+            <p>
+                Search for something like
+                <strong>Biryani</strong>,
+                <strong>Burger Junction</strong>,
+                <strong>South Indian</strong>
+                or
+                <strong>Chef Specials</strong>.
+            </p>
+
+            <div class="d-flex flex-wrap gap-2 justify-content-center mt-3">
+                <a
+                    href="/swiggy/restaurants"
+                    class="btn btn-outline-secondary"
+                >
+                    Explore Restaurants
+                </a>
+
+                <a
+                    href="/swiggy/products"
+                    class="btn btn-primary sw-primary-action"
+                >
+                    Browse Dishes
+                </a>
+            </div>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

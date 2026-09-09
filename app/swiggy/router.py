@@ -1,3 +1,4 @@
+
 from datetime import date
 
 from fastapi import (
@@ -64,6 +65,7 @@ from app.swiggy.service import (
     get_swiggy_restaurant,
     get_swiggy_restaurant_menu,
     get_swiggy_restaurants,
+    search_swiggy_catalog,
 )
 
 from app.users.models import (
@@ -163,6 +165,57 @@ def swiggy_home(
             "featured_restaurants": featured_restaurants,
             "menu_categories": menu_categories,
             "featured_products": featured_products,
+            "cart_count": cart_count,
+        },
+    )
+
+
+# =========================================================
+# GLOBAL SEARCH
+# =========================================================
+
+@router.get(
+    "/search",
+    response_class=HTMLResponse,
+)
+def swiggy_search_page(
+    request: Request,
+
+    q: str = Query(
+        default="",
+        max_length=100,
+    ),
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    current_user: User | None = Depends(
+        get_current_user
+    ),
+):
+    results = search_swiggy_catalog(
+        db=db,
+        search_query=q,
+    )
+
+    cart_count = get_cart_count_for_user(
+        db=db,
+        current_user=current_user,
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="swiggy/search.html",
+        context={
+            "request": request,
+            "current_user": current_user,
+            "search_query": results["query"],
+            "restaurant_results": results["restaurants"],
+            "dish_results": results["dishes"],
+            "restaurant_count": results["restaurant_count"],
+            "dish_count": results["dish_count"],
+            "total_count": results["total_count"],
             "cart_count": cart_count,
         },
     )

@@ -17,14 +17,14 @@ Swiggy | Restaurants & Food
                     Restaurant cuisines and menu categories help organize the catalogue without restricting what can be sold.
                 </p>
 
-                <form method="get" action="/swiggy/products" class="sw-discovery-search">
+                <form method="get" action="/swiggy/search" class="sw-discovery-search">
                     <span aria-hidden="true">⌕</span>
                     <input
                         type="search"
                         name="q"
-                        placeholder="Search dishes or menu categories..."
+                        placeholder="Search restaurants, cuisines or dishes..."
                         autocomplete="off"
-                        aria-label="Search Swiggy dishes"
+                        aria-label="Search Swiggy restaurants or dishes"
                     >
                     <button type="submit" class="btn btn-primary sw-primary-action">
                         Search
@@ -100,7 +100,7 @@ Swiggy | Restaurants & Food
         <div class="sw-food-category-scroller">
             {% for category in menu_categories %}
             <a
-                href="/swiggy/products?q={{ category.name|urlencode }}"
+                href="/swiggy/search?q={{ category.name|urlencode }}"
                 class="sw-food-category-pill"
             >
                 <span class="sw-food-category-icon">{{ category.icon }}</span>

@@ -85,25 +85,10 @@ def get_swiggy_menu_categories(
     return categories
 
 
-def get_swiggy_restaurants(
-    db: Session,
-    limit: int | None = None,
-):
-    restaurants = (
-        db.query(Restaurant)
-        .options(
-            selectinload(Restaurant.products)
-        )
-        .filter(
-            Restaurant.is_active.is_(True)
-        )
-        .order_by(
-            Restaurant.rating.desc(),
-            Restaurant.name.asc(),
-        )
-        .all()
-    )
 
+def _build_restaurant_cards(
+    restaurants,
+):
     cards = []
 
     for restaurant in restaurants:
@@ -137,6 +122,123 @@ def get_swiggy_restaurants(
                 "starting_price": min(prices),
             }
         )
+
+    return cards
+
+
+def search_swiggy_catalog(
+    db: Session,
+    search_query: str,
+    restaurant_limit: int = 8,
+    dish_limit: int = 24,
+):
+    search_query = (search_query or "").strip()
+
+    if len(search_query) > 100:
+        raise ValueError(
+            "Search query cannot exceed 100 characters."
+        )
+
+    if not search_query:
+        return {
+            "query": "",
+            "restaurants": [],
+            "dishes": [],
+            "restaurant_count": 0,
+            "dish_count": 0,
+            "total_count": 0,
+        }
+
+    pattern = f"%{search_query}%"
+
+    restaurant_rows = (
+        db.query(Restaurant)
+        .options(
+            selectinload(Restaurant.products)
+        )
+        .filter(
+            Restaurant.is_active.is_(True),
+            or_(
+                Restaurant.name.ilike(pattern),
+                Restaurant.cuisines.ilike(pattern),
+                Restaurant.location.ilike(pattern),
+                Restaurant.description.ilike(pattern),
+            ),
+        )
+        .order_by(
+            Restaurant.rating.desc(),
+            Restaurant.name.asc(),
+        )
+        .all()
+    )
+
+    restaurant_cards = _build_restaurant_cards(
+        restaurant_rows
+    )
+
+    if restaurant_limit is not None:
+        restaurant_cards = restaurant_cards[:restaurant_limit]
+
+    dishes = (
+        db.query(Product)
+        .options(
+            selectinload(Product.restaurant)
+        )
+        .join(
+            Restaurant,
+            Restaurant.id == Product.restaurant_id,
+        )
+        .filter(
+            Product.is_active.is_(True),
+            Product.platform.ilike(PLATFORM),
+            Restaurant.is_active.is_(True),
+            or_(
+                Product.product_name.ilike(pattern),
+                Product.description.ilike(pattern),
+                Product.menu_category.ilike(pattern),
+                Restaurant.name.ilike(pattern),
+                Restaurant.cuisines.ilike(pattern),
+            ),
+        )
+        .order_by(
+            Product.is_bestseller.desc(),
+            Product.product_name.asc(),
+        )
+        .limit(dish_limit)
+        .all()
+    )
+
+    return {
+        "query": search_query,
+        "restaurants": restaurant_cards,
+        "dishes": dishes,
+        "restaurant_count": len(restaurant_cards),
+        "dish_count": len(dishes),
+        "total_count": len(restaurant_cards) + len(dishes),
+    }
+
+def get_swiggy_restaurants(
+    db: Session,
+    limit: int | None = None,
+):
+    restaurants = (
+        db.query(Restaurant)
+        .options(
+            selectinload(Restaurant.products)
+        )
+        .filter(
+            Restaurant.is_active.is_(True)
+        )
+        .order_by(
+            Restaurant.rating.desc(),
+            Restaurant.name.asc(),
+        )
+        .all()
+    )
+
+    cards = _build_restaurant_cards(
+        restaurants
+    )
 
     if limit is not None:
         cards = cards[:limit]
