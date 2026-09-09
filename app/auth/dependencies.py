@@ -17,14 +17,18 @@ from app.auth.jwt import (
     decode_access_token,
 )
 
+from app.auth.refresh_service import (
+    get_refresh_token_record,
+    is_refresh_token_active,
+    touch_refresh_token,
+)
+
 from app.core.config import (
     JWT_ACCESS_COOKIE_NAME,
     JWT_REFRESH_COOKIE_NAME,
 )
 
 from app.database import get_db
-
-from app.auth.refresh_service import get_refresh_token_record,is_refresh_token_active,touch_refresh_token
 
 from app.users.models import User
 
@@ -58,6 +62,7 @@ def get_user_from_token(
     )
 
     try:
+
         user_id = int(
             user_id
         )
@@ -66,18 +71,23 @@ def get_user_from_token(
         TypeError,
         ValueError,
     ):
+
         return None
+
 
     user = get_user_by_id(
         db,
         user_id,
     )
 
+
     if not user:
         return None
 
+
     if not user.is_active:
         return None
+
 
     return user
 
@@ -94,25 +104,32 @@ def get_current_user(
         )
     )
 
+
     if not access_token:
         return None
+
 
     payload = decode_access_token(
         access_token
     )
 
+
     if not payload:
         return None
+
 
     user_id = payload.get(
         "sub"
     )
 
+
     session_id = payload.get(
         "sid"
     )
 
+
     try:
+
         user_id = int(
             user_id
         )
@@ -121,18 +138,23 @@ def get_current_user(
         TypeError,
         ValueError,
     ):
+
         return None
+
 
     if not session_id:
         return None
+
 
     record = get_refresh_token_record(
         db=db,
         token_id=session_id,
     )
 
+
     if not record:
         return None
+
 
     if (
         record.user_id
@@ -141,21 +163,25 @@ def get_current_user(
     ):
         return None
 
+
     if not is_refresh_token_active(
         record
     ):
         return None
+
 
     user = get_user_by_id(
         db,
         user_id,
     )
 
+
     if (
         not user
         or not user.is_active
     ):
         return None
+
 
     return user
 
@@ -172,11 +198,17 @@ def require_authenticated_user(
         )
     )
 
+
+    # =========================================
+    # VALID ACCESS TOKEN
+    # =========================================
+
     if access_token:
 
         payload = decode_access_token(
             access_token
         )
+
 
         if payload:
 
@@ -184,11 +216,14 @@ def require_authenticated_user(
                 "sub"
             )
 
+
             session_id = payload.get(
                 "sid"
             )
 
+
             try:
+
                 user_id = int(
                     user_id
                 )
@@ -197,6 +232,7 @@ def require_authenticated_user(
                 TypeError,
                 ValueError,
             ):
+
                 user_id = None
 
 
@@ -245,8 +281,13 @@ def require_authenticated_user(
                             record=record,
                         )
 
+
                         return user
 
+
+    # =========================================
+    # ACCESS TOKEN EXPIRED
+    # =========================================
 
     refresh_token = (
         request.cookies.get(
@@ -254,11 +295,13 @@ def require_authenticated_user(
         )
     )
 
+
     if refresh_token:
 
         requested_url = (
             request.url.path
         )
+
 
         if request.url.query:
 
@@ -268,21 +311,35 @@ def require_authenticated_user(
                 request.url.query
             )
 
+
         encoded_next = quote(
             requested_url,
             safe="",
         )
 
+
+        # IMPORTANT:
+        #
+        # This GET page does NOT refresh tokens.
+        #
+        # It displays a secure session renewal
+        # screen. The actual refresh is performed
+        # using POST /auth/refresh.
+
         raise HTTPException(
             status_code=303,
             headers={
                 "Location": (
-                    "/auth/refresh"
+                    "/auth/session"
                     f"?next={encoded_next}"
                 )
             },
         )
 
+
+    # =========================================
+    # NO SESSION
+    # =========================================
 
     raise HTTPException(
         status_code=303,
@@ -298,12 +355,17 @@ def require_admin(
         require_authenticated_user
     ),
 ):
-    if current_user.role != "admin":
+    if (
+        current_user.role
+        !=
+        "admin"
+    ):
 
         raise HTTPException(
             status_code=403,
             detail="Admin access required",
         )
+
 
     return current_user
 
@@ -313,12 +375,17 @@ def require_client(
         require_authenticated_user
     ),
 ):
-    if current_user.role != "client":
+    if (
+        current_user.role
+        !=
+        "client"
+    ):
 
         raise HTTPException(
             status_code=403,
             detail="Client access required",
         )
+
 
     return current_user
 
@@ -344,10 +411,12 @@ def get_current_api_user(
             },
         )
 
+
     user = get_user_from_token(
         db=db,
         token=token,
     )
+
 
     if not user:
 
@@ -364,6 +433,7 @@ def get_current_api_user(
             },
         )
 
+
     return user
 
 
@@ -372,12 +442,17 @@ def require_admin_api(
         get_current_api_user
     ),
 ):
-    if current_user.role != "admin":
+    if (
+        current_user.role
+        !=
+        "admin"
+    ):
 
         raise HTTPException(
             status_code=403,
             detail="Admin access required",
         )
+
 
     return current_user
 
@@ -387,11 +462,16 @@ def require_client_api(
         get_current_api_user
     ),
 ):
-    if current_user.role != "client":
+    if (
+        current_user.role
+        !=
+        "client"
+    ):
 
         raise HTTPException(
             status_code=403,
             detail="Client access required",
         )
+
 
     return current_user

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+
+    <title>
+        Continue Session - Order Management
+    </title>
+
+
+    <script>
+
+        (() => {
+
+            const savedTheme =
+                localStorage.getItem(
+                    "theme"
+                )
+                ||
+                "light";
+
+
+            document.documentElement.setAttribute(
+                "data-bs-theme",
+                savedTheme
+            );
+
+        })();
+
+    </script>
+
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css?v=9"
+    >
+
+</head>
+
+
+<body>
+
+
+<div
+    class="
+        min-vh-100
+        d-flex
+        align-items-center
+        justify-content-center
+        p-3
+    "
+>
+
+
+    <div
+        class="
+            card
+            border-0
+            shadow-sm
+            w-100
+        "
+        style="
+            max-width: 480px;
+        "
+    >
+
+
+        <div
+            class="
+                card-body
+                p-4
+                p-md-5
+                text-center
+            "
+        >
+
+
+            <!-- ================================= -->
+            <!-- BRAND -->
+            <!-- ================================= -->
+
+            <div
+                class="
+                    brand-mark
+                    mx-auto
+                    mb-4
+                "
+                style="
+                    width: 56px;
+                    height: 56px;
+                "
+            >
+                OM
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- HEADING -->
+            <!-- ================================= -->
+
+            <div
+                class="
+                    small
+                    text-body-secondary
+                    text-uppercase
+                    fw-semibold
+                    mb-2
+                "
+            >
+                Session Security
+            </div>
+
+
+            <h1
+                class="
+                    h3
+                    fw-bold
+                    mb-3
+                "
+            >
+                Continue your session
+            </h1>
+
+
+            <p
+                class="
+                    text-body-secondary
+                    mb-4
+                "
+            >
+                Your short-lived access session has
+                expired. Your secure sign-in session
+                is still valid. Continue to renew
+                access and return to your page.
+            </p>
+
+
+
+            <!-- ================================= -->
+            <!-- CONTINUE SESSION -->
+            <!-- ================================= -->
+
+            <form
+                method="post"
+                action="{{ refresh_action }}"
+                id="session-refresh-form"
+            >
+
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+
+                <button
+                    type="submit"
+                    class="
+                        btn
+                        btn-primary
+                        w-100
+                    "
+                    id="session-refresh-button"
+                >
+                    Continue Session
+                </button>
+
+            </form>
+
+
+
+            <!-- ================================= -->
+            <!-- SIGN IN AGAIN -->
+            <!-- ================================= -->
+
+            <form
+                method="post"
+                action="/logout"
+                class="mt-2"
+            >
+
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+
+                <button
+                    type="submit"
+                    class="
+                        btn
+                        btn-outline-secondary
+                        w-100
+                    "
+                >
+                    Sign In Again
+                </button>
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+
+            const form =
+                document.getElementById(
+                    "session-refresh-form"
+                );
+
+
+            const button =
+                document.getElementById(
+                    "session-refresh-button"
+                );
+
+
+            if (
+                !form
+                ||
+                !button
+            ) {
+
+                return;
+
+            }
+
+
+            form.addEventListener(
+                "submit",
+                () => {
+
+                    button.disabled =
+                        true;
+
+
+                    button.textContent =
+                        "Renewing Session...";
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

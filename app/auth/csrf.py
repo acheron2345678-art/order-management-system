@@ -1,71 +1,183 @@
 import secrets
 
-from fastapi import HTTPException,Request,status
+from fastapi import (
+    HTTPException,
+    Request,
+    status,
+)
 
-from app.core.config import CSRF_COOKIE_NAME,CSRF_HEADER_NAME
+from app.core.config import (
+    CSRF_COOKIE_NAME,
+    CSRF_HEADER_NAME,
+)
 
-SAFE_METHODS={
+
+SAFE_METHODS = {
     "GET",
     "HEAD",
-    "OPTIONS"
+    "OPTIONS",
 }
 
-CSRF_EXEMPT_PATHS={
+
+CSRF_EXEMPT_PATHS = {
     "/login",
-    "/api/auth/token"
+    "/api/auth/token",
 }
+
 
 def create_csrf_token():
     return secrets.token_urlsafe(32)
 
-async def validate_csrf(request:Request):
-    method=request.method.upper()
+
+def _uses_bearer_auth(
+    request: Request,
+):
+    authorization = (
+        request.headers.get(
+            "authorization",
+            "",
+        )
+        .strip()
+    )
+
+    return authorization.lower().startswith(
+        "bearer "
+    )
+
+
+async def validate_csrf(
+    request: Request,
+):
+    method = request.method.upper()
 
     if method in SAFE_METHODS:
         return
 
-    path=request.url.path
+    path = request.url.path
 
     if path in CSRF_EXEMPT_PATHS:
         return
 
-    if path.startswith("/api"):
+
+    # =========================================
+    # BEARER API AUTH
+    # =========================================
+
+    # API requests using an Authorization:
+    # Bearer token do not depend on browser
+    # authentication cookies, so browser CSRF
+    # protection is not required for them.
+
+    if _uses_bearer_auth(
+        request
+    ):
         return
 
-    cookie_token=request.cookies.get(CSRF_COOKIE_NAME)
+
+    # =========================================
+    # COOKIE TOKEN
+    # =========================================
+
+    cookie_token = (
+        request.cookies.get(
+            CSRF_COOKIE_NAME
+        )
+    )
 
     if not cookie_token:
-        raise HTTPException(status_code=403,detail="CSRF token missing")
 
-    submitted_token=request.headers.get(CSRF_HEADER_NAME)
+        raise HTTPException(
+            status_code=(
+                status.HTTP_403_FORBIDDEN
+            ),
+            detail="CSRF token missing",
+        )
+
+
+    # =========================================
+    # HEADER TOKEN
+    # =========================================
+
+    submitted_token = (
+        request.headers.get(
+            CSRF_HEADER_NAME
+        )
+    )
+
+
+    # =========================================
+    # FORM TOKEN
+    # =========================================
 
     if not submitted_token:
-        content_type=request.headers.get("content-type","")
 
-    if (
-        "application/x-www-form-urlencoded"
-        in content_type
-        or 
-        "multipart/form-data"
-        in content_type
-    ):
+        content_type = (
+            request.headers.get(
+                "content-type",
+                "",
+            )
+            .lower()
+        )
 
-        form=await request.form()
 
-        submitted_token=form.get("csrf_token")
+        if (
+            "application/x-www-form-urlencoded"
+            in content_type
+            or
+            "multipart/form-data"
+            in content_type
+        ):
 
+            form = await request.form()
+
+            submitted_token = (
+                form.get(
+                    "csrf_token"
+                )
+            )
+
+
+    # =========================================
+    # TOKEN REQUIRED
+    # =========================================
 
     if not submitted_token:
-        raise HTTPException(status_code=403,detail="CSRF token missing")
+
+        raise HTTPException(
+            status_code=(
+                status.HTTP_403_FORBIDDEN
+            ),
+            detail="CSRF token missing",
+        )
+
+
+    # =========================================
+    # CONSTANT-TIME COMPARISON
+    # =========================================
 
     try:
-        valid=secrets.compare_digest(
-            str(cookie_token),
-            str(submitted_token)
+
+        valid = (
+            secrets.compare_digest(
+                str(
+                    cookie_token
+                ),
+                str(
+                    submitted_token
+                ),
+            )
         )
 
     except TypeError:
-        valid=False
+
+        valid = False
+
 
     if not valid:
-        raise HTTPException(status_code=403,detail="Invalid CSRF token")
+
+        raise HTTPException(
+            status_code=(
+                status.HTTP_403_FORBIDDEN
+            ),
+            detail="Invalid CSRF token",
+        )
