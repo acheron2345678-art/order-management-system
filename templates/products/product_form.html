@@ -522,6 +522,157 @@ Edit {{ product.product_name }}
 
 
         <!-- ================================= -->
+        <!-- SWIGGY MENU PLACEMENT -->
+        <!-- ================================= -->
+
+        <div
+            id="swiggy-menu-section"
+            class="card border-0 shadow-sm mb-4"
+        >
+
+            <div class="card-body p-4 p-lg-5">
+
+                <div
+                    class="small text-body-secondary text-uppercase fw-semibold mb-1"
+                >
+                    Swiggy Restaurant Menu
+                </div>
+
+                <h2 class="h5 fw-bold mb-2">
+                    Restaurant Placement
+                </h2>
+
+                <p class="text-body-secondary small mb-4">
+                    Choose where this dish appears. Restaurant cuisine and
+                    menu category are organisational details only; they do
+                    not restrict which dishes can be added.
+                </p>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="restaurant_id"
+                            class="form-label fw-semibold"
+                        >
+                            Restaurant
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            id="restaurant_id"
+                            name="restaurant_id"
+                            class="form-select"
+                        >
+                            <option value="">
+                                Select a restaurant
+                            </option>
+
+                            {% for restaurant in restaurants %}
+
+                            <option
+                                value="{{ restaurant.id }}"
+                                {% if restaurant_id|string == restaurant.id|string %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ restaurant.name }}
+                                {% if not restaurant.is_active %}
+                                    — Inactive
+                                {% endif %}
+                            </option>
+
+                            {% endfor %}
+                        </select>
+
+                        <div class="form-text">
+                            Restaurants are managed from the dedicated
+                            Restaurant Management page.
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="menu_category"
+                            class="form-label fw-semibold"
+                        >
+                            Menu Category
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input
+                            id="menu_category"
+                            type="text"
+                            name="menu_category"
+                            class="form-control"
+                            value="{{ menu_category }}"
+                            maxlength="100"
+                            list="menu-category-suggestions"
+                            placeholder="e.g. Burgers, Biryani, Starters"
+                        >
+
+                        <datalist id="menu-category-suggestions">
+                            <option value="Recommended"></option>
+                            <option value="Bestsellers"></option>
+                            <option value="Burgers"></option>
+                            <option value="Biryani"></option>
+                            <option value="Pizzas"></option>
+                            <option value="Starters"></option>
+                            <option value="Main Course"></option>
+                            <option value="South Indian"></option>
+                            <option value="Wraps & Rolls"></option>
+                            <option value="Pasta"></option>
+                            <option value="Desserts"></option>
+                            <option value="Beverages"></option>
+                        </datalist>
+
+                        <div class="form-text">
+                            You can type any category. Suggestions are
+                            provided only for convenience.
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="form-check form-switch">
+                            <input
+                                id="is_bestseller"
+                                type="checkbox"
+                                name="is_bestseller"
+                                class="form-check-input"
+                                value="true"
+                                {% if is_bestseller %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <label
+                                for="is_bestseller"
+                                class="form-check-label fw-semibold"
+                            >
+                                Mark as bestseller
+                            </label>
+                        </div>
+
+                        <div class="form-text">
+                            Bestseller is a display badge only. It does not
+                            change availability, pricing or ordering rules.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
         <!-- SWIGGY INVENTORY -->
         <!-- ================================= -->
 
@@ -1060,6 +1211,26 @@ document.addEventListener(
                 "inventory-section"
             );
 
+        const swiggyMenuSection =
+            document.getElementById(
+                "swiggy-menu-section"
+            );
+
+        const restaurantInput =
+            document.getElementById(
+                "restaurant_id"
+            );
+
+        const menuCategoryInput =
+            document.getElementById(
+                "menu_category"
+            );
+
+        const bestsellerInput =
+            document.getElementById(
+                "is_bestseller"
+            );
+
         const stockInput =
             document.getElementById(
                 "stock_quantity"
@@ -1130,6 +1301,46 @@ document.addEventListener(
                     isInsights
                     ? "none"
                     : "";
+
+            }
+
+
+            if (swiggyMenuSection) {
+
+                swiggyMenuSection.style.display =
+                    isInsights
+                    ? "none"
+                    : "";
+
+            }
+
+
+            if (restaurantInput) {
+
+                restaurantInput.disabled =
+                    isInsights;
+
+                restaurantInput.required =
+                    !isInsights;
+
+            }
+
+
+            if (menuCategoryInput) {
+
+                menuCategoryInput.disabled =
+                    isInsights;
+
+                menuCategoryInput.required =
+                    !isInsights;
+
+            }
+
+
+            if (bestsellerInput) {
+
+                bestsellerInput.disabled =
+                    isInsights;
 
             }
 

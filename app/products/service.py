@@ -1,16 +1,14 @@
 from datetime import datetime
-
 from decimal import Decimal
-
 from uuid import uuid4
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.orders.models import (
     InsightsOrders,
     SwiggyOrders,
 )
-
 from app.orders.validation import (
     clean_optional_text,
     clean_required_text,
@@ -19,10 +17,7 @@ from app.orders.validation import (
     validate_positive_id,
     validate_positive_money,
 )
-
-from app.products.models import (
-    Product,
-)
+from app.products.models import Product, Restaurant
 
 
 ORDER_NUMBER_ATTEMPTS = 20
@@ -32,15 +27,11 @@ def get_products(
     db: Session,
     active_only: bool = True,
 ):
-    query = db.query(
-        Product
-    )
+    query = db.query(Product)
 
     if active_only:
         query = query.filter(
-            Product.is_active.is_(
-                True
-            )
+            Product.is_active.is_(True)
         )
 
     return query.order_by(
@@ -58,13 +49,9 @@ def get_product(
     )
 
     return (
-        db.query(
-            Product
-        )
+        db.query(Product)
         .filter(
-            Product.id
-            ==
-            product_id
+            Product.id == product_id
         )
         .first()
     )
@@ -78,20 +65,16 @@ def create_product(
     platform: str,
     image_url: str | None = None,
 ):
-    product_name = (
-        clean_required_text(
-            product_name,
-            "Product name",
-            max_length=100,
-        )
+    product_name = clean_required_text(
+        product_name,
+        "Product name",
+        max_length=100,
     )
 
-    description = (
-        clean_optional_text(
-            description,
-            "Description",
-            max_length=255,
-        )
+    description = clean_optional_text(
+        description,
+        "Description",
+        max_length=255,
     )
 
     price = normalize_product_price(
@@ -117,15 +100,9 @@ def create_product(
         is_active=True,
     )
 
-    db.add(
-        product
-    )
-
+    db.add(product)
     db.commit()
-
-    db.refresh(
-        product
-    )
+    db.refresh(product)
 
     return product
 
@@ -149,44 +126,34 @@ def update_product(
         return None
 
     if product_name is not None:
-        product.product_name = (
-            clean_required_text(
-                product_name,
-                "Product name",
-                max_length=100,
-            )
+        product.product_name = clean_required_text(
+            product_name,
+            "Product name",
+            max_length=100,
         )
 
     if description is not None:
-        product.description = (
-            clean_optional_text(
-                description,
-                "Description",
-                max_length=255,
-            )
+        product.description = clean_optional_text(
+            description,
+            "Description",
+            max_length=255,
         )
 
     if price is not None:
-        product.price = (
-            normalize_product_price(
-                price
-            )
+        product.price = normalize_product_price(
+            price
         )
 
     if platform is not None:
-        product.platform = (
-            normalize_platform(
-                platform
-            )
+        product.platform = normalize_platform(
+            platform
         )
 
     if image_url is not None:
-        product.image_url = (
-            clean_optional_text(
-                image_url,
-                "Image URL",
-                max_length=500,
-            )
+        product.image_url = clean_optional_text(
+            image_url,
+            "Image URL",
+            max_length=500,
         )
 
     if is_active is not None:
@@ -195,10 +162,7 @@ def update_product(
         )
 
     db.commit()
-
-    db.refresh(
-        product
-    )
+    db.refresh(product)
 
     return product
 
@@ -214,7 +178,6 @@ def generate_order_number(
     if platform == "swiggy":
         prefix = "SW"
         model = SwiggyOrders
-
     else:
         prefix = "IN"
         model = InsightsOrders
@@ -223,18 +186,13 @@ def generate_order_number(
         ORDER_NUMBER_ATTEMPTS
     ):
         order_number = (
-            f"{prefix}"
-            f"{uuid4().hex[:8].upper()}"
+            f"{prefix}{uuid4().hex[:8].upper()}"
         )
 
         existing_order = (
-            db.query(
-                model
-            )
+            db.query(model)
             .filter(
-                model.order_number
-                ==
-                order_number
+                model.order_number == order_number
             )
             .first()
         )
@@ -243,8 +201,7 @@ def generate_order_number(
             return order_number
 
     raise RuntimeError(
-        "Unable to generate "
-        "a unique order number."
+        "Unable to generate a unique order number."
     )
 
 
@@ -260,23 +217,17 @@ def create_checkout_order(
         "Client ID",
     )
 
-    customer_name = (
-        clean_required_text(
-            customer_name,
-            "Customer name",
-            max_length=100,
-        )
+    customer_name = clean_required_text(
+        customer_name,
+        "Customer name",
+        max_length=100,
     )
 
     try:
         locked_product = (
-            db.query(
-                Product
-            )
+            db.query(Product)
             .filter(
-                Product.id
-                ==
-                validate_positive_id(
+                Product.id == validate_positive_id(
                     product.id,
                     "Product ID",
                 )
@@ -295,10 +246,7 @@ def create_checkout_order(
                 "Product is currently unavailable"
             )
 
-        if (
-            locked_product.stock_quantity
-            <= 0
-        ):
+        if locked_product.stock_quantity <= 0:
             raise ValueError(
                 "Product is out of stock"
             )
@@ -309,7 +257,6 @@ def create_checkout_order(
 
         if platform == "swiggy":
             model = SwiggyOrders
-
         else:
             model = InsightsOrders
 
@@ -317,58 +264,28 @@ def create_checkout_order(
             locked_product.price
         )
 
-        order_number = (
-            generate_order_number(
-                db,
-                platform,
-            )
+        order_number = generate_order_number(
+            db,
+            platform,
         )
 
         new_order = model(
             customer_name=customer_name,
-
             order_number=order_number,
-
-            product_id=(
-                locked_product.id
-            ),
-
-            product_name=(
-                locked_product.product_name
-            ),
-
-            amount=float(
-                amount
-            ),
-
+            product_id=locked_product.id,
+            product_name=locked_product.product_name,
+            amount=float(amount),
             status="pending",
-
-            order_date=(
-                order_date
-            ),
-
-            client_id=(
-                client_id
-            ),
+            order_date=order_date,
+            client_id=client_id,
         )
 
-        locked_product.stock_quantity -= (
-            1
-        )
+        locked_product.stock_quantity -= 1
 
-        db.add(
-            new_order
-        )
-
+        db.add(new_order)
         db.commit()
-
-        db.refresh(
-            new_order
-        )
-
-        db.refresh(
-            locked_product
-        )
+        db.refresh(new_order)
+        db.refresh(locked_product)
 
         return new_order
 
@@ -386,17 +303,10 @@ def get_products_from_platform(
     )
 
     return (
-        db.query(
-            Product
-        )
+        db.query(Product)
         .filter(
-            Product.is_active.is_(
-                True
-            ),
-
-            Product.platform.ilike(
-                platform
-            ),
+            Product.is_active.is_(True),
+            Product.platform.ilike(platform),
         )
         .order_by(
             Product.product_name.asc()
@@ -420,21 +330,11 @@ def get_product_for_platform(
     )
 
     return (
-        db.query(
-            Product
-        )
+        db.query(Product)
         .filter(
-            Product.id
-            ==
-            product_id,
-
-            Product.is_active.is_(
-                True
-            ),
-
-            Product.platform.ilike(
-                platform
-            ),
+            Product.id == product_id,
+            Product.is_active.is_(True),
+            Product.platform.ilike(platform),
         )
         .first()
     )
@@ -457,13 +357,9 @@ def restock_product(
 
     try:
         product = (
-            db.query(
-                Product
-            )
+            db.query(Product)
             .filter(
-                Product.id
-                ==
-                product_id
+                Product.id == product_id
             )
             .with_for_update()
             .first()
@@ -474,20 +370,11 @@ def restock_product(
                 "Product not found"
             )
 
-        product.stock_quantity += (
-            quantity
-        )
-
-        product.last_restocked = (
-            datetime.now()
-        )
+        product.stock_quantity += quantity
+        product.last_restocked = datetime.now()
 
         db.commit()
-
-        db.refresh(
-            product
-        )
-
+        db.refresh(product)
         return product
 
     except Exception:
@@ -500,60 +387,42 @@ def bulk_restock_products(
     product_ids: list[int],
     quantities: list[int],
 ):
-    if (
-        len(product_ids)
-        !=
-        len(quantities)
-    ):
+    if len(product_ids) != len(quantities):
         raise ValueError(
             "Invalid inventory data"
         )
 
     restock_data = {}
 
-    for (
-        product_id,
-        quantity,
-    ) in zip(
+    for product_id, quantity in zip(
         product_ids,
         quantities,
     ):
-        product_id = (
-            validate_positive_id(
-                product_id,
-                "Product ID",
-            )
+        product_id = validate_positive_id(
+            product_id,
+            "Product ID",
         )
 
-        quantity = (
-            validate_non_negative_integer(
-                quantity,
-                "Restock quantity",
-            )
+        quantity = validate_non_negative_integer(
+            quantity,
+            "Restock quantity",
         )
 
         if quantity > 0:
-            restock_data[
-                product_id
-            ] = quantity
+            restock_data[product_id] = quantity
 
     if not restock_data:
         raise ValueError(
-            "Enter a quantity for "
-            "at least one product"
+            "Enter a quantity for at least one product"
         )
 
     try:
-        product_ids_to_update = (
-            sorted(
-                restock_data.keys()
-            )
+        product_ids_to_update = sorted(
+            restock_data.keys()
         )
 
         products = (
-            db.query(
-                Product
-            )
+            db.query(Product)
             .filter(
                 Product.id.in_(
                     product_ids_to_update
@@ -566,41 +435,26 @@ def bulk_restock_products(
             .all()
         )
 
-        if (
-            len(products)
-            !=
-            len(
-                product_ids_to_update
-            )
+        if len(products) != len(
+            product_ids_to_update
         ):
             raise ValueError(
-                "One or more products "
-                "were not found"
+                "One or more products were not found"
             )
 
-        restock_time = (
-            datetime.now()
-        )
+        restock_time = datetime.now()
 
         for product in products:
             quantity = restock_data[
                 product.id
             ]
-
-            product.stock_quantity += (
-                quantity
-            )
-
-            product.last_restocked = (
-                restock_time
-            )
+            product.stock_quantity += quantity
+            product.last_restocked = restock_time
 
         db.commit()
 
         for product in products:
-            db.refresh(
-                product
-            )
+            db.refresh(product)
 
         return products
 
@@ -631,9 +485,7 @@ def get_admin_catalog_products(
     platform: str | None = None,
     include_inactive: bool = True,
 ):
-    query = db.query(
-        Product
-    )
+    query = db.query(Product)
 
     if platform:
         platform = normalize_platform(
@@ -641,16 +493,12 @@ def get_admin_catalog_products(
         )
 
         query = query.filter(
-            Product.platform.ilike(
-                platform
-            )
+            Product.platform.ilike(platform)
         )
 
     if not include_inactive:
         query = query.filter(
-            Product.is_active.is_(
-                True
-            )
+            Product.is_active.is_(True)
         )
 
     return (
@@ -673,47 +521,116 @@ def get_admin_product(
     )
 
     return (
-        db.query(
-            Product
-        )
+        db.query(Product)
         .filter(
-            Product.id
-            ==
-            product_id
+            Product.id == product_id
         )
         .first()
     )
 
 
-def create_catalog_item(
+def _get_restaurant_for_catalog_assignment(
     db: Session,
-
-    product_name: str,
-
-    description: str,
-
-    price,
-
-    platform: str,
-
-    stock_quantity: int = 0,
-
-    reorder_level: int = 5,
-):
-    product_name = (
-        clean_required_text(
-            product_name,
-            "Name",
-            max_length=100,
-        )
+    restaurant_id,
+) -> Restaurant:
+    restaurant_id = validate_positive_id(
+        restaurant_id,
+        "Restaurant",
     )
 
-    description = (
-        clean_optional_text(
-            description,
-            "Description",
-            max_length=255,
+    restaurant = (
+        db.query(Restaurant)
+        .filter(
+            Restaurant.id == restaurant_id
         )
+        .first()
+    )
+
+    if restaurant is None:
+        raise ValueError(
+            "Selected restaurant was not found."
+        )
+
+    return restaurant
+
+
+def _validate_swiggy_menu_placement(
+    db: Session,
+    *,
+    restaurant_id,
+    menu_category: str | None,
+    is_bestseller: bool,
+):
+    restaurant = _get_restaurant_for_catalog_assignment(
+        db,
+        restaurant_id,
+    )
+
+    category = clean_required_text(
+        menu_category,
+        "Menu category",
+        max_length=100,
+    )
+
+    return (
+        restaurant,
+        category,
+        bool(is_bestseller),
+    )
+
+
+def _catalog_item_name_exists(
+    db: Session,
+    *,
+    product_name: str,
+    platform: str,
+    restaurant_id: int | None = None,
+    exclude_product_id: int | None = None,
+) -> bool:
+    query = db.query(Product).filter(
+        func.lower(Product.product_name)
+        ==
+        product_name.lower(),
+        Product.platform.ilike(
+            platform
+        ),
+    )
+
+    if platform == "swiggy":
+        query = query.filter(
+            Product.restaurant_id == restaurant_id
+        )
+
+    if exclude_product_id is not None:
+        query = query.filter(
+            Product.id != exclude_product_id
+        )
+
+    return query.first() is not None
+
+
+def create_catalog_item(
+    db: Session,
+    product_name: str,
+    description: str,
+    price,
+    platform: str,
+    stock_quantity: int = 0,
+    reorder_level: int = 5,
+    restaurant_id=None,
+    menu_category: str | None = None,
+    is_bestseller: bool = False,
+):
+    product_name = clean_required_text(
+        product_name,
+        "Name",
+        max_length=100,
+    )
+
+    description = clean_optional_text(
+        description,
+        "Description",
+        max_length=255,
     )
 
     platform = normalize_platform(
@@ -724,156 +641,104 @@ def create_catalog_item(
         price
     )
 
-    existing = (
-        db.query(
-            Product
-        )
-        .filter(
-            Product.product_name.ilike(
-                product_name
-            ),
-
-            Product.platform.ilike(
-                platform
-            ),
-        )
-        .first()
-    )
-
-    if existing:
-        raise ValueError(
-            "A catalog item with this "
-            "name already exists on "
-            "this platform."
-        )
+    assigned_restaurant = None
+    cleaned_menu_category = None
+    bestseller = False
 
     if platform == "swiggy":
-        stock_quantity = (
-            validate_non_negative_integer(
-                stock_quantity,
-                "Stock quantity",
-            )
+        (
+            assigned_restaurant,
+            cleaned_menu_category,
+            bestseller,
+        ) = _validate_swiggy_menu_placement(
+            db,
+            restaurant_id=restaurant_id,
+            menu_category=menu_category,
+            is_bestseller=is_bestseller,
         )
 
-        reorder_level = (
-            validate_non_negative_integer(
-                reorder_level,
-                "Reorder level",
-            )
+        stock_quantity = validate_non_negative_integer(
+            stock_quantity,
+            "Stock quantity",
+        )
+
+        reorder_level = validate_non_negative_integer(
+            reorder_level,
+            "Reorder level",
         )
 
     else:
         stock_quantity = 0
         reorder_level = 0
 
+    if _catalog_item_name_exists(
+        db,
+        product_name=product_name,
+        platform=platform,
+        restaurant_id=(
+            assigned_restaurant.id
+            if assigned_restaurant
+            else None
+        ),
+    ):
+        if platform == "swiggy":
+            raise ValueError(
+                "This restaurant already has a dish with this name."
+            )
+
+        raise ValueError(
+            "A catalog item with this name already exists on this platform."
+        )
+
     product = Product(
         product_name=product_name,
-
         description=description,
-
         price=price,
-
         platform=platform,
-
         is_active=True,
-
-        stock_quantity=(
-            stock_quantity
+        stock_quantity=stock_quantity,
+        reorder_level=reorder_level,
+        restaurant_id=(
+            assigned_restaurant.id
+            if assigned_restaurant
+            else None
         ),
-
-        reorder_level=(
-            reorder_level
-        ),
+        menu_category=cleaned_menu_category,
+        is_bestseller=bestseller,
     )
 
-    db.add(
-        product
-    )
-
+    db.add(product)
     db.commit()
-
-    db.refresh(
-        product
-    )
+    db.refresh(product)
 
     return product
 
 
 def update_catalog_item(
     db: Session,
-
     product: Product,
-
     product_name: str,
-
     description: str,
-
     price,
-
-    stock_quantity: (
-        int | None
-    ) = None,
-
-    reorder_level: (
-        int | None
-    ) = None,
+    stock_quantity: int | None = None,
+    reorder_level: int | None = None,
+    restaurant_id=None,
+    menu_category: str | None = None,
+    is_bestseller: bool = False,
 ):
-    product_name = (
-        clean_required_text(
-            product_name,
-            "Name",
-            max_length=100,
-        )
+    product_name = clean_required_text(
+        product_name,
+        "Name",
+        max_length=100,
     )
 
-    description = (
-        clean_optional_text(
-            description,
-            "Description",
-            max_length=255,
-        )
+    description = clean_optional_text(
+        description,
+        "Description",
+        max_length=255,
     )
 
     price = normalize_product_price(
-        price
-    )
-
-    duplicate = (
-        db.query(
-            Product
-        )
-        .filter(
-            Product.id
-            !=
-            product.id,
-
-            Product.product_name.ilike(
-                product_name
-            ),
-
-            Product.platform.ilike(
-                product.platform
-            ),
-        )
-        .first()
-    )
-
-    if duplicate:
-        raise ValueError(
-            "Another catalog item with "
-            "this name already exists "
-            "on this platform."
-        )
-
-    product.product_name = (
-        product_name
-    )
-
-    product.description = (
-        description
-    )
-
-    product.price = (
         price
     )
 
@@ -881,40 +746,79 @@ def update_catalog_item(
         product.platform
     )
 
+    assigned_restaurant = None
+    cleaned_menu_category = None
+    bestseller = False
+
     if platform == "swiggy":
-        if stock_quantity is None:
-            stock_quantity = (
-                product.stock_quantity
-            )
-
-        if reorder_level is None:
-            reorder_level = (
-                product.reorder_level
-            )
-
-        product.stock_quantity = (
-            validate_non_negative_integer(
-                stock_quantity,
-                "Stock quantity",
-            )
+        (
+            assigned_restaurant,
+            cleaned_menu_category,
+            bestseller,
+        ) = _validate_swiggy_menu_placement(
+            db,
+            restaurant_id=restaurant_id,
+            menu_category=menu_category,
+            is_bestseller=is_bestseller,
         )
 
-        product.reorder_level = (
-            validate_non_negative_integer(
-                reorder_level,
-                "Reorder level",
-            )
+        if stock_quantity is None:
+            stock_quantity = product.stock_quantity
+
+        if reorder_level is None:
+            reorder_level = product.reorder_level
+
+        stock_quantity = validate_non_negative_integer(
+            stock_quantity,
+            "Stock quantity",
+        )
+
+        reorder_level = validate_non_negative_integer(
+            reorder_level,
+            "Reorder level",
         )
 
     else:
-        product.stock_quantity = 0
-        product.reorder_level = 0
+        stock_quantity = 0
+        reorder_level = 0
+
+    if _catalog_item_name_exists(
+        db,
+        product_name=product_name,
+        platform=platform,
+        restaurant_id=(
+            assigned_restaurant.id
+            if assigned_restaurant
+            else None
+        ),
+        exclude_product_id=product.id,
+    ):
+        if platform == "swiggy":
+            raise ValueError(
+                "This restaurant already has another dish with this name."
+            )
+
+        raise ValueError(
+            "Another catalog item with this name already exists on this platform."
+        )
+
+    product.product_name = product_name
+    product.description = description
+    product.price = price
+    product.stock_quantity = stock_quantity
+    product.reorder_level = reorder_level
+
+    if platform == "swiggy":
+        product.restaurant_id = assigned_restaurant.id
+        product.menu_category = cleaned_menu_category
+        product.is_bestseller = bestseller
+    else:
+        product.restaurant_id = None
+        product.menu_category = None
+        product.is_bestseller = False
 
     db.commit()
-
-    db.refresh(
-        product
-    )
+    db.refresh(product)
 
     return product
 
@@ -929,9 +833,6 @@ def set_catalog_item_active_state(
     )
 
     db.commit()
-
-    db.refresh(
-        product
-    )
+    db.refresh(product)
 
     return product

@@ -328,6 +328,86 @@
 
 
 
+                    {% if item_platform == "swiggy" %}
+
+                    <!-- RESTAURANT -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="small text-body-secondary mb-1"
+                        >
+                            Restaurant
+                        </div>
+
+                        {% if product.restaurant %}
+
+                        <a
+                            href="/admin/restaurants/{{ product.restaurant.id }}"
+                            class="fw-semibold text-decoration-none"
+                        >
+                            {{ product.restaurant.name }}
+                        </a>
+
+                        {% else %}
+
+                        <span class="text-body-secondary">
+                            Not assigned
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- MENU CATEGORY -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="small text-body-secondary mb-1"
+                        >
+                            Menu Category
+                        </div>
+
+                        <div class="fw-semibold">
+                            {{ product.menu_category or "Not assigned" }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- BESTSELLER -->
+
+                    <div class="col-md-6">
+
+                        <div
+                            class="small text-body-secondary mb-2"
+                        >
+                            Menu Badge
+                        </div>
+
+                        {% if product.is_bestseller %}
+
+                        <span
+                            class="badge bg-warning-subtle text-warning-emphasis border"
+                        >
+                            Bestseller
+                        </span>
+
+                        {% else %}
+
+                        <span class="text-body-secondary">
+                            Standard item
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endif %}
+
+
                     <!-- PRICE / VALUE -->
 
                     <div class="col-md-6">
