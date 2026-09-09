@@ -1,16 +1,28 @@
+import logging
+
 from fastapi import (
     Depends,
     FastAPI,
     Request,
 )
 
+from fastapi.exceptions import (
+    RequestValidationError,
+)
+
 from fastapi.responses import (
     HTMLResponse,
+    JSONResponse,
     RedirectResponse,
 )
 
 from fastapi.staticfiles import (
     StaticFiles,
+)
+
+from sqlalchemy.exc import (
+    IntegrityError,
+    SQLAlchemyError,
 )
 
 from starlette.middleware.trustedhost import (
@@ -41,6 +53,10 @@ from app.core import (
 
 from app.core.config import (
     ALLOWED_HOSTS,
+)
+
+from app.core.redirects import (
+    RedirectTargetValidationMiddleware,
 )
 
 from app.core.security_headers import (
@@ -80,12 +96,17 @@ from app.users.models import (
     User,
 )
 
+from app.users.profile_router import (
+    router as profile_router,
+)
+
 from app.users.router import (
     router as users_router,
 )
 
-from app.users.profile_router import (
-    router as profile_router,
+
+logger = logging.getLogger(
+    "order_management"
 )
 
 
@@ -100,12 +121,193 @@ app = FastAPI(
 
 
 # =========================================
+# SAFE ERROR RESPONSES
+# =========================================
+
+def safe_error_response(
+    request: Request,
+    status_code: int,
+    message: str,
+):
+    accepts_html = (
+        "text/html"
+        in request.headers.get(
+            "accept",
+            "",
+        ).lower()
+    )
+
+    if accepts_html:
+        return templates.TemplateResponse(
+            request=request,
+
+            name="errors/error.html",
+
+            context={
+                "request":
+                    request,
+
+                "status_code":
+                    status_code,
+
+                "message":
+                    message,
+            },
+
+            status_code=(
+                status_code
+            ),
+        )
+
+    return JSONResponse(
+        status_code=(
+            status_code
+        ),
+
+        content={
+            "detail":
+                message
+        },
+    )
+
+
+@app.exception_handler(
+    RequestValidationError
+)
+async def request_validation_error_handler(
+    request: Request,
+    exc: RequestValidationError,
+):
+    logger.warning(
+        "Malformed request rejected: %s %s",
+        request.method,
+        request.url.path,
+    )
+
+    return safe_error_response(
+        request=request,
+
+        status_code=422,
+
+        message=(
+            "The request contains "
+            "invalid or malformed values."
+        ),
+    )
+
+
+@app.exception_handler(
+    ValueError
+)
+async def value_error_handler(
+    request: Request,
+    exc: ValueError,
+):
+    return safe_error_response(
+        request=request,
+
+        status_code=400,
+
+        message=(
+            "The request contains "
+            "invalid values."
+        ),
+    )
+
+
+@app.exception_handler(
+    IntegrityError
+)
+async def integrity_error_handler(
+    request: Request,
+    exc: IntegrityError,
+):
+    logger.exception(
+        "Database integrity error "
+        "while handling %s %s",
+        request.method,
+        request.url.path,
+    )
+
+    return safe_error_response(
+        request=request,
+
+        status_code=409,
+
+        message=(
+            "The request conflicts "
+            "with existing data. "
+            "Please review the submitted "
+            "values and try again."
+        ),
+    )
+
+
+@app.exception_handler(
+    SQLAlchemyError
+)
+async def sqlalchemy_error_handler(
+    request: Request,
+    exc: SQLAlchemyError,
+):
+    logger.exception(
+        "Database operation failed "
+        "while handling %s %s",
+        request.method,
+        request.url.path,
+    )
+
+    return safe_error_response(
+        request=request,
+
+        status_code=500,
+
+        message=(
+            "A database operation could "
+            "not be completed. "
+            "Please try again."
+        ),
+    )
+
+
+@app.exception_handler(
+    Exception
+)
+async def unexpected_error_handler(
+    request: Request,
+    exc: Exception,
+):
+    logger.exception(
+        "Unexpected application error "
+        "while handling %s %s",
+        request.method,
+        request.url.path,
+    )
+
+    return safe_error_response(
+        request=request,
+
+        status_code=500,
+
+        message=(
+            "The request could not be "
+            "completed. Please try again."
+        ),
+    )
+
+
+# =========================================
 # SECURITY MIDDLEWARE
 # =========================================
 
 app.add_middleware(
     TrustedHostMiddleware,
     allowed_hosts=ALLOWED_HOSTS,
+)
+
+
+app.add_middleware(
+    RedirectTargetValidationMiddleware,
 )
 
 
@@ -120,9 +322,11 @@ app.add_middleware(
 
 app.mount(
     "/static",
+
     StaticFiles(
         directory=STATIC_DIR
     ),
+
     name="static",
 )
 
@@ -202,15 +406,21 @@ def root():
 )
 def home(
     request: Request,
+
     current_user: User = Depends(
         require_authenticated_user
     ),
 ):
     return templates.TemplateResponse(
         request=request,
+
         name="home.html",
+
         context={
-            "request": request,
-            "current_user": current_user,
+            "request":
+                request,
+
+            "current_user":
+                current_user,
         },
     )

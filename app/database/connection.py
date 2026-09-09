@@ -18,13 +18,14 @@ SessionLocal = sessionmaker(
 
 
 def get_db():
-
     db = SessionLocal()
 
     try:
-
         yield db
 
-    finally:
+    except Exception:
+        db.rollback()
+        raise
 
+    finally:
         db.close()

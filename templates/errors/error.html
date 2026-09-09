@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ status_code }} - Order Management
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7 col-xl-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4 p-md-5 text-center">
+
+                    <div class="display-6 fw-semibold mb-3">
+                        {{ status_code }}
+                    </div>
+
+                    <h1 class="h4 mb-3">
+                        Request could not be completed
+                    </h1>
+
+                    <p class="text-body-secondary mb-4">
+                        {{ message }}
+                    </p>
+
+                    <a
+                        href="/home"
+                        class="btn btn-primary"
+                    >
+                        Return Home
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

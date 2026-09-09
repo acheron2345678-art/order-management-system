@@ -5,7 +5,17 @@ from decimal import (
 
 from sqlalchemy.orm import Session
 
-from app.orders.models import OrderItem
+from app.orders.models import (
+    OrderItem,
+)
+
+from app.orders.validation import (
+    clean_required_text,
+    validate_platform,
+    validate_positive_id,
+    validate_positive_money,
+    validate_positive_quantity,
+)
 
 
 MONEY_PLACES = Decimal(
@@ -16,31 +26,17 @@ MONEY_PLACES = Decimal(
 def normalize_platform(
     platform: str,
 ):
-    platform = (
+    return validate_platform(
         platform
-        .strip()
-        .lower()
     )
-
-    if platform not in {
-        "swiggy",
-        "insights",
-    }:
-        raise ValueError(
-            "Invalid order platform"
-        )
-
-    return platform
 
 
 def normalize_price(
     value,
 ):
-    return Decimal(
-        str(value)
-    ).quantize(
-        MONEY_PLACES,
-        rounding=ROUND_HALF_UP,
+    return validate_positive_money(
+        value,
+        "Unit price",
     )
 
 
@@ -57,19 +53,27 @@ def create_order_item(
         platform
     )
 
-    if quantity <= 0:
-        raise ValueError(
-            "Quantity must be greater than 0"
-        )
-
-    product_name = (
-        product_name.strip()
+    order_id = validate_positive_id(
+        order_id,
+        "Order ID",
     )
 
-    if not product_name:
-        raise ValueError(
-            "Product name is required"
+    product_id = validate_positive_id(
+        product_id,
+        "Product ID",
+    )
+
+    quantity = (
+        validate_positive_quantity(
+            quantity
         )
+    )
+
+    product_name = clean_required_text(
+        product_name,
+        "Product name",
+        max_length=255,
+    )
 
     price = normalize_price(
         unit_price
@@ -83,6 +87,11 @@ def create_order_item(
         MONEY_PLACES,
         rounding=ROUND_HALF_UP,
     )
+
+    if line_total <= 0:
+        raise ValueError(
+            "Line total must be greater than zero."
+        )
 
     item = OrderItem(
         platform=platform,
@@ -110,6 +119,11 @@ def get_order_items(
 ):
     platform = normalize_platform(
         platform
+    )
+
+    order_id = validate_positive_id(
+        order_id,
+        "Order ID",
     )
 
     return (
@@ -148,7 +162,6 @@ def calculate_order_total(
     )
 
     for item in items:
-
         total += Decimal(
             str(
                 item.line_total
@@ -168,6 +181,11 @@ def delete_order_items(
 ):
     platform = normalize_platform(
         platform
+    )
+
+    order_id = validate_positive_id(
+        order_id,
+        "Order ID",
     )
 
     deleted_count = (
@@ -201,11 +219,17 @@ def replace_order_items(
 ):
     if not items:
         raise ValueError(
-            "An order must contain at least one product"
+            "An order must contain "
+            "at least one product"
         )
 
     platform = normalize_platform(
         platform
+    )
+
+    order_id = validate_positive_id(
+        order_id,
+        "Order ID",
     )
 
     delete_order_items(
@@ -217,20 +241,25 @@ def replace_order_items(
     created_items = []
 
     for item_data in items:
-
         item = create_order_item(
             db=db,
+
             platform=platform,
+
             order_id=order_id,
+
             product_id=item_data[
                 "product_id"
             ],
+
             product_name=item_data[
                 "product_name"
             ],
+
             unit_price=item_data[
                 "unit_price"
             ],
+
             quantity=item_data[
                 "quantity"
             ],
@@ -245,7 +274,6 @@ def replace_order_items(
     )
 
     for item in created_items:
-
         total += Decimal(
             str(
                 item.line_total
@@ -256,6 +284,11 @@ def replace_order_items(
         MONEY_PLACES,
         rounding=ROUND_HALF_UP,
     )
+
+    if total <= 0:
+        raise ValueError(
+            "Order total must be greater than zero."
+        )
 
     return (
         created_items,

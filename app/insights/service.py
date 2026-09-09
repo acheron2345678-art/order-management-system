@@ -21,6 +21,8 @@ from app.orders.validation import (
     clean_optional_text,
     clean_required_text,
     validate_not_in_past,
+    validate_positive_id,
+    validate_positive_money,
 )
 
 from app.products.models import (
@@ -34,7 +36,6 @@ from app.products.service import (
 
 PLATFORM = "insights"
 
-
 MONEY_PLACES = Decimal(
     "0.01"
 )
@@ -43,8 +44,9 @@ MONEY_PLACES = Decimal(
 def normalize_money(
     value,
 ):
-    return Decimal(
-        str(value)
+    return validate_positive_money(
+        value,
+        "Price",
     ).quantize(
         MONEY_PLACES,
         rounding=ROUND_HALF_UP,
@@ -61,7 +63,9 @@ def get_insights_services(
             Product
         )
         .filter(
-            Product.is_active == True,
+            Product.is_active.is_(
+                True
+            ),
 
             Product.platform.ilike(
                 PLATFORM
@@ -70,8 +74,8 @@ def get_insights_services(
     )
 
     search_query = (
-        search_query.strip()
-    )
+        search_query or ""
+    ).strip()
 
     if search_query:
         pattern = (
@@ -95,6 +99,11 @@ def get_insights_services(
     )
 
     if limit is not None:
+        if limit <= 0:
+            raise ValueError(
+                "Limit must be greater than zero."
+            )
+
         query = query.limit(
             limit
         )
@@ -107,6 +116,11 @@ def get_insights_service(
     product_id: int,
     active_only: bool = True,
 ):
+    product_id = validate_positive_id(
+        product_id,
+        "Service ID",
+    )
+
     query = (
         db.query(
             Product
@@ -124,9 +138,9 @@ def get_insights_service(
 
     if active_only:
         query = query.filter(
-            Product.is_active
-            ==
-            True
+            Product.is_active.is_(
+                True
+            )
         )
 
     return query.first()
@@ -136,8 +150,12 @@ def validate_project_form_fields(
     customer_name: str,
     project_brief: str,
     business_goal: str,
-    preferred_completion_date: date | None,
-    additional_notes: str | None,
+    preferred_completion_date: (
+        date | None
+    ),
+    additional_notes: (
+        str | None
+    ),
 ):
     cleaned_customer_name = (
         clean_required_text(
@@ -212,6 +230,16 @@ def create_insights_project(
         str | None
     ) = None,
 ):
+    service_id = validate_positive_id(
+        service_id,
+        "Service ID",
+    )
+
+    client_id = validate_positive_id(
+        client_id,
+        "Client ID",
+    )
+
     (
         customer_name,
         project_brief,
@@ -370,14 +398,8 @@ def create_insights_project(
 
         return project
 
-    except ValueError:
-        db.rollback()
-
-        raise
-
     except Exception:
         db.rollback()
-
         raise
 
 
@@ -385,6 +407,11 @@ def get_client_insights_projects(
     db: Session,
     client_id: int,
 ):
+    client_id = validate_positive_id(
+        client_id,
+        "Client ID",
+    )
+
     return (
         db.query(
             InsightsOrders
@@ -406,6 +433,16 @@ def get_client_insights_project(
     client_id: int,
     order_id: int,
 ):
+    client_id = validate_positive_id(
+        client_id,
+        "Client ID",
+    )
+
+    order_id = validate_positive_id(
+        order_id,
+        "Order ID",
+    )
+
     return (
         db.query(
             InsightsOrders

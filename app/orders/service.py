@@ -1,5 +1,6 @@
+from datetime import date
+
 from app.core.config import (
-    ORDER_STATUSES,
     ORDER_STATUS_TRANSITIONS,
 )
 
@@ -8,6 +9,10 @@ from app.orders import repository
 from app.orders.validation import (
     clean_required_text,
     parse_required_date,
+    validate_order_number,
+    validate_positive_id,
+    validate_positive_money,
+    validate_status,
 )
 
 
@@ -15,11 +20,11 @@ def validate_status_transition(
     current_status: str,
     new_status: str,
 ):
-    validate_status(
+    current_status = validate_status(
         current_status
     )
 
-    validate_status(
+    new_status = validate_status(
         new_status
     )
 
@@ -58,17 +63,6 @@ def parse_order_date(
     )
 
 
-def validate_status(
-    status: str,
-):
-    if status not in ORDER_STATUSES:
-        raise ValueError(
-            "Invalid order status"
-        )
-
-    return status
-
-
 def validate_order_form_fields(
     customer_name,
     order_number,
@@ -83,10 +77,8 @@ def validate_order_form_fields(
     )
 
     cleaned_order_number = (
-        clean_required_text(
-            order_number,
-            "Order number",
-            max_length=50,
+        validate_order_number(
+            order_number
         )
     )
 
@@ -110,6 +102,19 @@ def get_order(
     order_id: int,
     client_id: int | None = None,
 ):
+    order_id = validate_positive_id(
+        order_id,
+        "Order ID",
+    )
+
+    if client_id is not None:
+        client_id = (
+            validate_positive_id(
+                client_id,
+                "Client ID",
+            )
+        )
+
     return repository.get_order_by_id(
         db,
         model,
@@ -129,10 +134,27 @@ def get_orders(
         order_date
     )
 
+    normalized_status = None
+
+    if status:
+        normalized_status = (
+            validate_status(
+                status
+            )
+        )
+
+    if client_id is not None:
+        client_id = (
+            validate_positive_id(
+                client_id,
+                "Client ID",
+            )
+        )
+
     orders = repository.get_orders(
         db,
         model,
-        status,
+        normalized_status,
         parsed_date,
         client_id=client_id,
     )
@@ -148,6 +170,14 @@ def get_all_orders(
     model,
     client_id: int | None = None,
 ):
+    if client_id is not None:
+        client_id = (
+            validate_positive_id(
+                client_id,
+                "Client ID",
+            )
+        )
+
     return repository.get_all_orders(
         db,
         model,
@@ -175,30 +205,45 @@ def create_order(
         order_date,
     )
 
+    if repository.order_number_exists(
+        db,
+        model,
+        cleaned_order_number,
+    ):
+        raise ValueError(
+            "Order number already exists."
+        )
+
+    amount = validate_positive_money(
+        amount,
+        "Amount",
+    )
+
+    client_id = validate_positive_id(
+        client_id,
+        "Client ID",
+    )
+
     order_data = {
-        "customer_name": (
-            cleaned_customer_name
-        ),
+        "customer_name":
+            cleaned_customer_name,
 
-        "order_number": (
-            cleaned_order_number
-        ),
+        "order_number":
+            cleaned_order_number,
 
-        "amount": float(
-            amount
-        ),
+        "amount":
+            float(amount),
 
-        "status": validate_status(
-            status
-        ),
+        "status":
+            validate_status(
+                status
+            ),
 
-        "order_date": (
-            parsed_order_date
-        ),
+        "order_date":
+            parsed_order_date,
 
-        "client_id": (
-            client_id
-        ),
+        "client_id":
+            client_id,
     }
 
     return repository.create_order(
@@ -228,33 +273,47 @@ def update_order(
         order_date,
     )
 
+    if repository.order_number_exists(
+        db,
+        type(order),
+        cleaned_order_number,
+        exclude_order_id=order.id,
+    ):
+        raise ValueError(
+            "Order number already exists."
+        )
+
+    amount = validate_positive_money(
+        amount,
+        "Amount",
+    )
+
+    client_id = validate_positive_id(
+        client_id,
+        "Client ID",
+    )
+
     order_data = {
-        "customer_name": (
-            cleaned_customer_name
-        ),
+        "customer_name":
+            cleaned_customer_name,
 
-        "order_number": (
-            cleaned_order_number
-        ),
+        "order_number":
+            cleaned_order_number,
 
-        "amount": float(
-            amount
-        ),
+        "amount":
+            float(amount),
 
-        "status": (
+        "status":
             validate_status_transition(
                 order.status,
                 status,
-            )
-        ),
+            ),
 
-        "order_date": (
-            parsed_order_date
-        ),
+        "order_date":
+            parsed_order_date,
 
-        "client_id": (
-            client_id
-        ),
+        "client_id":
+            client_id,
     }
 
     return repository.update_order(
