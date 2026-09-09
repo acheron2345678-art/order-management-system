@@ -13,8 +13,6 @@ from fastapi.responses import (
     RedirectResponse,
 )
 
-from pwdlib import PasswordHash
-
 from sqlalchemy.orm import Session
 
 from app.auth.dependencies import (
@@ -23,20 +21,22 @@ from app.auth.dependencies import (
 
 from app.core import templates
 
-from app.database import (
-    get_db,
+from app.core.config import (
+    CSRF_COOKIE_NAME,
+    JWT_ACCESS_COOKIE_NAME,
+    JWT_REFRESH_COOKIE_NAME,
 )
 
-from app.users.models import (
-    User,
-)
+from app.database import get_db
+
+from app.users.models import User
 
 from app.users.service import (
     create_user,
-)
-
-from app.utils.email_rules import (
-    require_gmail_address,
+    get_user_by_id,
+    get_users,
+    set_user_active_status,
+    update_user,
 )
 
 
@@ -46,20 +46,57 @@ router = APIRouter(
 )
 
 
-password_hash = (
-    PasswordHash.recommended()
-)
-
-
 VALID_ROLES = {
     "admin",
     "client",
 }
 
 
-# =========================================================
-# USER LIST
-# =========================================================
+def render_user_form(
+    *,
+    request: Request,
+    current_user: User,
+    action: str,
+    user: User | None,
+    error: str | None = None,
+    form_data: dict | None = None,
+    status_code: int = 200,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="users/user_form.html",
+        context={
+            "request": request,
+            "current_user": current_user,
+            "action": action,
+            "user": user,
+            "error": error,
+            "form_data": form_data,
+        },
+        status_code=status_code,
+    )
+
+
+def clear_session_cookies(
+    response: RedirectResponse,
+):
+    response.delete_cookie(
+        key=JWT_ACCESS_COOKIE_NAME,
+        path="/",
+    )
+
+    response.delete_cookie(
+        key=JWT_REFRESH_COOKIE_NAME,
+        path="/",
+    )
+
+    response.delete_cookie(
+        key=CSRF_COOKIE_NAME,
+        path="/",
+    )
+
+    return response
+
 
 @router.get(
     "",
@@ -67,43 +104,23 @@ VALID_ROLES = {
 )
 def users_page(
     request: Request,
-
     db: Session = Depends(
         get_db
     ),
-
     current_user: User = Depends(
         require_admin
     ),
 ):
-    users = (
-        db.query(User)
-        .order_by(
-            User.id.desc()
-        )
-        .all()
-    )
-
-
     return templates.TemplateResponse(
         request=request,
         name="users/users.html",
         context={
-            "request":
-                request,
-
-            "current_user":
-                current_user,
-
-            "users":
-                users,
+            "request": request,
+            "current_user": current_user,
+            "users": get_users(db),
         },
     )
 
-
-# =========================================================
-# ADD USER PAGE
-# =========================================================
 
 @router.get(
     "/add",
@@ -111,39 +128,17 @@ def users_page(
 )
 def add_user_page(
     request: Request,
-
     current_user: User = Depends(
         require_admin
     ),
 ):
-    return templates.TemplateResponse(
+    return render_user_form(
         request=request,
-        name="users/user_form.html",
-        context={
-            "request":
-                request,
-
-            "current_user":
-                current_user,
-
-            "action":
-                "add",
-
-            "user":
-                None,
-
-            "error":
-                None,
-
-            "form_data":
-                None,
-        },
+        current_user=current_user,
+        action="add",
+        user=None,
     )
 
-
-# =========================================================
-# ADD USER
-# =========================================================
 
 @router.post(
     "/add",
@@ -151,209 +146,37 @@ def add_user_page(
 )
 def add_user(
     request: Request,
-
-    username: str = Form(
-        ...
-    ),
-
-    email: str = Form(
-        ...
-    ),
-
-    password: str = Form(
-        ...
-    ),
-
-    role: str = Form(
-        ...
-    ),
-
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    role: str = Form(...),
     db: Session = Depends(
         get_db
     ),
-
     current_user: User = Depends(
         require_admin
     ),
 ):
-    username = (
-        username.strip()
-    )
+    username = username.strip()
+    email = email.strip().lower()
+    role = role.strip().lower()
 
-    email = (
-        email.strip().lower()
-    )
-
-    role = (
-        role.strip().lower()
-    )
-
-
-    # =========================================
-    # BASIC VALIDATION
-    # =========================================
-
-    if not username:
-
-        return templates.TemplateResponse(
-            request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "add",
-
-                "user":
-                    None,
-
-                "error":
-                    "Username is required.",
-
-                "form_data":
-                    {
-                        "username":
-                            username,
-
-                        "email":
-                            email,
-
-                        "role":
-                            role,
-                    },
-            },
-            status_code=400,
-        )
-
-
-    if not password:
-
-        return templates.TemplateResponse(
-            request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "add",
-
-                "user":
-                    None,
-
-                "error":
-                    "Password is required.",
-
-                "form_data":
-                    {
-                        "username":
-                            username,
-
-                        "email":
-                            email,
-
-                        "role":
-                            role,
-                    },
-            },
-            status_code=400,
-        )
-
+    form_data = {
+        "username": username,
+        "email": email,
+        "role": role,
+    }
 
     if role not in VALID_ROLES:
-
-        return templates.TemplateResponse(
+        return render_user_form(
             request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "add",
-
-                "user":
-                    None,
-
-                "error":
-                    "Invalid user role.",
-
-                "form_data":
-                    {
-                        "username":
-                            username,
-
-                        "email":
-                            email,
-
-                        "role":
-                            role,
-                    },
-            },
+            current_user=current_user,
+            action="add",
+            user=None,
+            error="Invalid user role.",
+            form_data=form_data,
             status_code=400,
         )
-
-
-    # =========================================
-    # GMAIL VALIDATION
-    # =========================================
-
-    try:
-
-        email = require_gmail_address(
-            email
-        )
-
-    except ValueError as error:
-
-        return templates.TemplateResponse(
-            request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "add",
-
-                "user":
-                    None,
-
-                "error":
-                    str(error),
-
-                "form_data":
-                    {
-                        "username":
-                            username,
-
-                        "email":
-                            email,
-
-                        "role":
-                            role,
-                    },
-            },
-            status_code=400,
-        )
-
-
-    # =========================================
-    # CREATE USER DATA
-    # =========================================
 
     user_data = SimpleNamespace(
         username=username,
@@ -362,65 +185,28 @@ def add_user(
         role=role,
     )
 
-
-    # =========================================
-    # CREATE USER
-    # =========================================
-
     try:
-
         create_user(
             db,
             user_data,
         )
 
-
     except ValueError as error:
-
-        return templates.TemplateResponse(
+        return render_user_form(
             request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "add",
-
-                "user":
-                    None,
-
-                "error":
-                    str(error),
-
-                "form_data":
-                    {
-                        "username":
-                            username,
-
-                        "email":
-                            email,
-
-                        "role":
-                            role,
-                    },
-            },
+            current_user=current_user,
+            action="add",
+            user=None,
+            error=str(error),
+            form_data=form_data,
             status_code=400,
         )
-
 
     return RedirectResponse(
         url="/admin/users",
         status_code=303,
     )
 
-
-# =========================================================
-# EDIT USER PAGE
-# =========================================================
 
 @router.get(
     "/{user_id}/edit",
@@ -428,62 +214,32 @@ def add_user(
 )
 def edit_user_page(
     user_id: int,
-
     request: Request,
-
     db: Session = Depends(
         get_db
     ),
-
     current_user: User = Depends(
         require_admin
     ),
 ):
-    user = (
-        db.query(User)
-        .filter(
-            User.id == user_id
-        )
-        .first()
+    user = get_user_by_id(
+        db,
+        user_id,
     )
 
-
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found",
         )
 
-
-    return templates.TemplateResponse(
+    return render_user_form(
         request=request,
-        name="users/user_form.html",
-        context={
-            "request":
-                request,
-
-            "current_user":
-                current_user,
-
-            "action":
-                "edit",
-
-            "user":
-                user,
-
-            "error":
-                None,
-
-            "form_data":
-                None,
-        },
+        current_user=current_user,
+        action="edit",
+        user=user,
     )
 
-
-# =========================================================
-# EDIT USER
-# =========================================================
 
 @router.post(
     "/{user_id}/edit",
@@ -491,310 +247,107 @@ def edit_user_page(
 )
 def edit_user(
     user_id: int,
-
     request: Request,
-
-    username: str = Form(
-        ...
-    ),
-
-    email: str = Form(
-        ...
-    ),
-
-    role: str = Form(
-        ...
-    ),
-
-    password: str = Form(
-        ""
-    ),
-
+    username: str = Form(...),
+    email: str = Form(...),
+    role: str = Form(...),
+    password: str = Form(""),
     db: Session = Depends(
         get_db
     ),
-
     current_user: User = Depends(
         require_admin
     ),
 ):
-    user = (
-        db.query(User)
-        .filter(
-            User.id == user_id
-        )
-        .first()
+    user = get_user_by_id(
+        db,
+        user_id,
     )
 
-
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found",
         )
 
-
-    username = (
-        username.strip()
-    )
-
-    email = (
-        email.strip().lower()
-    )
-
-    role = (
-        role.strip().lower()
-    )
-
-    password = (
-        password.strip()
-    )
-
+    username = username.strip()
+    email = email.strip().lower()
+    role = role.strip().lower()
 
     form_data = {
-        "username":
-            username,
-
-        "email":
-            email,
-
-        "role":
-            role,
+        "username": username,
+        "email": email,
+        "role": role,
     }
 
-
-    # =========================================
-    # VALIDATION
-    # =========================================
-
-    if not username:
-
-        return templates.TemplateResponse(
-            request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "edit",
-
-                "user":
-                    user,
-
-                "error":
-                    "Username is required.",
-
-                "form_data":
-                    form_data,
-            },
-            status_code=400,
-        )
-
-
     if role not in VALID_ROLES:
-
-        return templates.TemplateResponse(
+        return render_user_form(
             request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "edit",
-
-                "user":
-                    user,
-
-                "error":
-                    "Invalid user role.",
-
-                "form_data":
-                    form_data,
-            },
+            current_user=current_user,
+            action="edit",
+            user=user,
+            error="Invalid user role.",
+            form_data=form_data,
             status_code=400,
         )
 
+    if (
+        user.id == current_user.id
+        and role != current_user.role
+    ):
+        return render_user_form(
+            request=request,
+            current_user=current_user,
+            action="edit",
+            user=user,
+            error=(
+                "You cannot change your own administrator role."
+            ),
+            form_data=form_data,
+            status_code=400,
+        )
 
-    # =========================================
-    # GMAIL VALIDATION
-    # =========================================
+    password_changed = bool(
+        password
+    )
 
     try:
-
-        email = require_gmail_address(
-            email
+        update_user(
+            db=db,
+            user=user,
+            username=username,
+            email=email,
+            role=role,
+            new_password=(
+                password
+                if password_changed
+                else None
+            ),
         )
 
     except ValueError as error:
-
-        return templates.TemplateResponse(
+        return render_user_form(
             request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "edit",
-
-                "user":
-                    user,
-
-                "error":
-                    str(error),
-
-                "form_data":
-                    form_data,
-            },
+            current_user=current_user,
+            action="edit",
+            user=user,
+            error=str(error),
+            form_data=form_data,
             status_code=400,
         )
 
-
-    # =========================================
-    # DUPLICATE USERNAME
-    # =========================================
-
-    duplicate_username = (
-        db.query(User)
-        .filter(
-            User.username
-            == username,
-
-            User.id
-            !=
-            user.id,
-        )
-        .first()
-    )
-
-
-    if duplicate_username:
-
-        return templates.TemplateResponse(
-            request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "edit",
-
-                "user":
-                    user,
-
-                "error":
-                    "Username already exists.",
-
-                "form_data":
-                    form_data,
-            },
-            status_code=400,
+    if (
+        user.id == current_user.id
+        and password_changed
+    ):
+        response = RedirectResponse(
+            url="/login",
+            status_code=303,
         )
 
-
-    # =========================================
-    # DUPLICATE EMAIL
-    # =========================================
-
-    duplicate_email = (
-        db.query(User)
-        .filter(
-            User.email
-            == email,
-
-            User.id
-            !=
-            user.id,
+        return clear_session_cookies(
+            response
         )
-        .first()
-    )
-
-
-    if duplicate_email:
-
-        return templates.TemplateResponse(
-            request=request,
-            name="users/user_form.html",
-            context={
-                "request":
-                    request,
-
-                "current_user":
-                    current_user,
-
-                "action":
-                    "edit",
-
-                "user":
-                    user,
-
-                "error":
-                    "Email address already exists.",
-
-                "form_data":
-                    form_data,
-            },
-            status_code=400,
-        )
-
-
-    # =========================================
-    # UPDATE
-    # =========================================
-
-    user.username = (
-        username
-    )
-
-    user.email = (
-        email
-    )
-
-    user.role = (
-        role
-    )
-
-
-    if password:
-
-        user.password_hash = (
-            password_hash.hash(
-                password
-            )
-        )
-
-
-    try:
-
-        db.commit()
-
-        db.refresh(
-            user
-        )
-
-
-    except Exception:
-
-        db.rollback()
-
-        raise
-
 
     return RedirectResponse(
         url="/admin/users",
@@ -802,75 +355,51 @@ def edit_user(
     )
 
 
-# =========================================================
-# ACTIVATE / DEACTIVATE USER
-# =========================================================
-
 @router.post(
     "/{user_id}/toggle"
 )
 def toggle_user(
     user_id: int,
-
     db: Session = Depends(
         get_db
     ),
-
     current_user: User = Depends(
         require_admin
     ),
 ):
-    user = (
-        db.query(User)
-        .filter(
-            User.id == user_id
-        )
-        .first()
+    user = get_user_by_id(
+        db,
+        user_id,
     )
 
-
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found",
         )
 
-
-    # Prevent admin from disabling
-    # the account currently being used.
-
     if user.id == current_user.id:
-
         raise HTTPException(
             status_code=400,
             detail=(
-                "You cannot deactivate "
-                "your own account."
+                "You cannot disable your own account."
             ),
         )
 
-
-    user.is_active = (
-        not user.is_active
-    )
-
-
     try:
-
-        db.commit()
-
-        db.refresh(
-            user
+        set_user_active_status(
+            db=db,
+            user=user,
+            is_active=(
+                not user.is_active
+            ),
         )
 
-
-    except Exception:
-
-        db.rollback()
-
-        raise
-
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
 
     return RedirectResponse(
         url="/admin/users",

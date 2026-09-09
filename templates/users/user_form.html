@@ -2,19 +2,46 @@
 
 
 {% block title %}
-
-{{ 'Add User' if action == 'add' else 'Edit User' }}
-- Order Management
-
+{{ 'Add User' if action == 'add' else 'Edit User' }} - Order Management
 {% endblock %}
 
 
 {% block content %}
 
+{% set entered_username =
+    form_data.username
+    if form_data
+    else (
+        user.username
+        if user
+        else ''
+    )
+%}
+
+{% set entered_email =
+    form_data.email
+    if form_data
+    else (
+        user.email
+        if user
+        else ''
+    )
+%}
+
+{% set entered_role =
+    form_data.role
+    if form_data
+    else (
+        user.role
+        if user
+        else 'client'
+    )
+%}
+
+
 <div class="row justify-content-center">
 
     <div class="col-xl-8 col-xxl-7">
-
 
         <div
             class="d-flex align-items-center justify-content-between gap-3 mb-4"
@@ -23,36 +50,22 @@
             <div>
 
                 <h1 class="h2 fw-bold mb-1">
-
                     {% if action == "add" %}
-
                         Add User
-
                     {% else %}
-
                         Edit User
-
                     {% endif %}
-
                 </h1>
 
-
                 <p class="text-body-secondary mb-0">
-
                     {% if action == "add" %}
-
                         Create an administrator or client account.
-
                     {% else %}
-
-                        Update the selected user account.
-
+                        Update account identity, role or password.
                     {% endif %}
-
                 </p>
 
             </div>
-
 
             <a
                 href="/admin/users"
@@ -67,7 +80,6 @@
         <div class="card border-0 shadow-sm">
 
             <div class="card-body p-4 p-md-5">
-
 
                 {% if error %}
 
@@ -88,7 +100,6 @@
 
                     <div class="row g-4">
 
-
                         <div class="col-md-6">
 
                             <label
@@ -98,14 +109,14 @@
                                 Username
                             </label>
 
-
                             <input
                                 id="username"
                                 name="username"
                                 type="text"
                                 class="form-control"
-                                value="{% if action == 'add' %}{{ form_username or '' }}{% else %}{{ user.username }}{% endif %}"
+                                value="{{ entered_username }}"
                                 maxlength="100"
+                                autocomplete="username"
                                 required
                             >
 
@@ -118,19 +129,23 @@
                                 for="email"
                                 class="form-label"
                             >
-                                Email
+                                Gmail Address
                             </label>
-
 
                             <input
                                 id="email"
                                 name="email"
                                 type="email"
                                 class="form-control"
-                                value="{% if action == 'add' %}{{ form_email or '' }}{% else %}{{ user.email }}{% endif %}"
+                                value="{{ entered_email }}"
                                 maxlength="255"
+                                autocomplete="email"
                                 required
                             >
+
+                            <div class="form-text">
+                                Only Gmail or Googlemail accounts are supported.
+                            </div>
 
                         </div>
 
@@ -144,6 +159,32 @@
                                 Role
                             </label>
 
+                            {% if
+                                action == "edit"
+                                and user.id == current_user.id
+                            %}
+
+                            <input
+                                type="hidden"
+                                name="role"
+                                value="{{ user.role }}"
+                            >
+
+                            <select
+                                id="role"
+                                class="form-select"
+                                disabled
+                            >
+                                <option selected>
+                                    Administrator
+                                </option>
+                            </select>
+
+                            <div class="form-text">
+                                You cannot change your own administrator role.
+                            </div>
+
+                            {% else %}
 
                             <select
                                 id="role"
@@ -152,42 +193,30 @@
                                 required
                             >
 
-                                {% set selected_role =
-                                    form_role
-                                    if action == 'add' and form_role
-                                    else (
-                                        user.role
-                                        if user
-                                        else 'client'
-                                    )
-                                %}
-
-
                                 <option
                                     value="client"
-                                    {% if selected_role == "client" %}
+                                    {% if entered_role == "client" %}
                                     selected
                                     {% endif %}
                                 >
                                     Client
                                 </option>
 
-
                                 <option
                                     value="admin"
-                                    {% if selected_role == "admin" %}
+                                    {% if entered_role == "admin" %}
                                     selected
                                     {% endif %}
                                 >
-                                    Admin
+                                    Administrator
                                 </option>
 
                             </select>
 
+                            {% endif %}
+
                         </div>
 
-
-                        {% if action == "add" %}
 
                         <div class="col-md-6">
 
@@ -195,29 +224,45 @@
                                 for="password"
                                 class="form-label"
                             >
-                                Password
+                                {% if action == "add" %}
+                                    Password
+                                {% else %}
+                                    New Password
+                                {% endif %}
                             </label>
-
 
                             <input
                                 id="password"
                                 name="password"
                                 type="password"
                                 class="form-control"
-                                minlength="6"
+                                minlength="12"
+                                maxlength="128"
                                 autocomplete="new-password"
+                                {% if action == "add" %}
                                 required
+                                {% endif %}
                             >
 
-
                             <div class="form-text">
-                                Minimum 6 characters.
+                                Use 12–128 characters. A longer passphrase is recommended.
+                                {% if action == "edit" %}
+                                    Leave blank to keep the current password.
+                                {% endif %}
                             </div>
 
+                            {% if
+                                action == "edit"
+                                and user.id == current_user.id
+                            %}
+
+                            <div class="form-text text-warning-emphasis">
+                                Changing your own password signs you out of all sessions.
+                            </div>
+
+                            {% endif %}
+
                         </div>
-
-                        {% endif %}
-
 
                     </div>
 
@@ -225,9 +270,24 @@
                     <hr class="my-4">
 
 
+                    {% if
+                        action == "edit"
+                        and user.role == "admin"
+                        and user.is_active
+                    %}
+
                     <div
-                        class="d-flex justify-content-end gap-2"
+                        class="alert alert-info py-2 small"
+                        role="alert"
                     >
+                        The application will not allow the last active administrator
+                        to be disabled or changed to a client account.
+                    </div>
+
+                    {% endif %}
+
+
+                    <div class="d-flex justify-content-end gap-2">
 
                         <a
                             href="/admin/users"
@@ -236,22 +296,15 @@
                             Cancel
                         </a>
 
-
                         <button
                             type="submit"
                             class="btn btn-primary"
                         >
-
                             {% if action == "add" %}
-
                                 Create User
-
                             {% else %}
-
                                 Save Changes
-
                             {% endif %}
-
                         </button>
 
                     </div>
