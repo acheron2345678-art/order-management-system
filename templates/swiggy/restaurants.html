@@ -39,7 +39,7 @@ Swiggy | Restaurants
             {% set restaurant = card.restaurant %}
             <article class="sw-restaurant-card">
                 <a
-                    href="/swiggy/products?restaurant={{ restaurant.id }}"
+                    href="/swiggy/restaurants/{{ restaurant.id }}"
                     class="sw-restaurant-visual"
                 >
                     {% if restaurant.image_url %}
@@ -58,7 +58,7 @@ Swiggy | Restaurants
 
                 <div class="sw-restaurant-card-body">
                     <div class="sw-restaurant-title-row">
-                        <a href="/swiggy/products?restaurant={{ restaurant.id }}">
+                        <a href="/swiggy/restaurants/{{ restaurant.id }}">
                             {{ restaurant.name }}
                         </a>
                         <span class="sw-restaurant-rating">★ {{ "%.1f"|format(restaurant.rating) }}</span>

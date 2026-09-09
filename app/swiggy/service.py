@@ -217,6 +217,79 @@ def get_swiggy_products(
     return query.all()
 
 
+
+def _menu_anchor(value: str) -> str:
+    cleaned = []
+    previous_dash = False
+
+    for character in (value or "").strip().lower():
+        if character.isalnum():
+            cleaned.append(character)
+            previous_dash = False
+        elif not previous_dash:
+            cleaned.append("-")
+            previous_dash = True
+
+    anchor = "".join(cleaned).strip("-")
+    return anchor or "menu"
+
+
+def get_swiggy_restaurant_menu(
+    db: Session,
+    restaurant_id: int,
+    search_query: str = "",
+):
+    restaurant = get_swiggy_restaurant(
+        db=db,
+        restaurant_id=restaurant_id,
+    )
+
+    if restaurant is None:
+        return None
+
+    products = get_swiggy_products(
+        db=db,
+        search_query=search_query,
+        restaurant_id=restaurant.id,
+    )
+
+    recommended_products = [
+        product
+        for product in products
+        if bool(product.is_bestseller)
+    ]
+
+    if not recommended_products and not search_query and products:
+        recommended_products = products[: min(4, len(products))]
+
+    category_map = {}
+
+    for product in products:
+        category_name = (product.menu_category or "Other").strip() or "Other"
+
+        if category_name not in category_map:
+            category_map[category_name] = []
+
+        category_map[category_name].append(product)
+
+    category_groups = [
+        {
+            "name": category_name,
+            "anchor": _menu_anchor(category_name),
+            "products": category_products,
+        }
+        for category_name, category_products in category_map.items()
+    ]
+
+    return {
+        "restaurant": restaurant,
+        "products": products,
+        "recommended_products": recommended_products,
+        "category_groups": category_groups,
+        "dish_count": len(products),
+        "search_query": (search_query or "").strip(),
+    }
+
 def get_swiggy_product(
     db: Session,
     product_id: int,

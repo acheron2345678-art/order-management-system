@@ -62,6 +62,7 @@ from app.swiggy.service import (
     get_swiggy_product,
     get_swiggy_products,
     get_swiggy_restaurant,
+    get_swiggy_restaurant_menu,
     get_swiggy_restaurants,
 )
 
@@ -206,6 +207,66 @@ def swiggy_restaurants_page(
             "request": request,
             "current_user": current_user,
             "restaurants": restaurants,
+            "cart_count": cart_count,
+        },
+    )
+
+
+# =========================================================
+# RESTAURANT MENU
+# =========================================================
+
+@router.get(
+    "/restaurants/{restaurant_id}",
+    response_class=HTMLResponse,
+)
+def swiggy_restaurant_menu_page(
+    request: Request,
+    restaurant_id: int,
+
+    q: str = Query(
+        default=""
+    ),
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    current_user: User | None = Depends(
+        get_current_user
+    ),
+):
+    search_query = (q or "").strip()
+
+    menu = get_swiggy_restaurant_menu(
+        db=db,
+        restaurant_id=restaurant_id,
+        search_query=search_query,
+    )
+
+    if menu is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Swiggy restaurant not found",
+        )
+
+    cart_count = get_cart_count_for_user(
+        db=db,
+        current_user=current_user,
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="swiggy/restaurant_menu.html",
+        context={
+            "request": request,
+            "current_user": current_user,
+            "restaurant": menu["restaurant"],
+            "recommended_products": menu["recommended_products"],
+            "category_groups": menu["category_groups"],
+            "products": menu["products"],
+            "dish_count": menu["dish_count"],
+            "search_query": menu["search_query"],
             "cart_count": cart_count,
         },
     )

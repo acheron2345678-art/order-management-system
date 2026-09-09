@@ -121,7 +121,7 @@ Swiggy | Browse Dishes
 
                     {% if product.restaurant and not selected_restaurant %}
                     <a
-                        href="/swiggy/products?restaurant={{ product.restaurant.id }}"
+                        href="/swiggy/restaurants/{{ product.restaurant.id }}"
                         class="sw-product-restaurant-link"
                     >
                         {{ product.restaurant.name }}

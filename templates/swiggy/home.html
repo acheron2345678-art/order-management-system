@@ -63,7 +63,7 @@ Swiggy | Restaurants & Food
                 {% set top_card = featured_restaurants[0] %}
                 {% set top_restaurant = top_card.restaurant %}
                 <a
-                    href="/swiggy/products?restaurant={{ top_restaurant.id }}"
+                    href="/swiggy/restaurants/{{ top_restaurant.id }}"
                     class="sw-discovery-quick-link"
                 >
                     <span class="sw-discovery-quick-mark">
@@ -132,7 +132,7 @@ Swiggy | Restaurants & Food
             {% set restaurant = card.restaurant %}
             <article class="sw-restaurant-card">
                 <a
-                    href="/swiggy/products?restaurant={{ restaurant.id }}"
+                    href="/swiggy/restaurants/{{ restaurant.id }}"
                     class="sw-restaurant-visual"
                 >
                     {% if restaurant.image_url %}
@@ -151,7 +151,7 @@ Swiggy | Restaurants & Food
 
                 <div class="sw-restaurant-card-body">
                     <div class="sw-restaurant-title-row">
-                        <a href="/swiggy/products?restaurant={{ restaurant.id }}">
+                        <a href="/swiggy/restaurants/{{ restaurant.id }}">
                             {{ restaurant.name }}
                         </a>
                         <span class="sw-restaurant-rating">★ {{ "%.1f"|format(restaurant.rating) }}</span>
@@ -226,7 +226,7 @@ Swiggy | Restaurants & Food
 
                     {% if product.restaurant %}
                     <a
-                        href="/swiggy/products?restaurant={{ product.restaurant.id }}"
+                        href="/swiggy/restaurants/{{ product.restaurant.id }}"
                         class="sw-product-restaurant-link"
                     >
                         {{ product.restaurant.name }}
