@@ -76,7 +76,7 @@
                                 <p
                                     class="text-body-secondary mb-0"
                                 >
-                                    Ordered on
+                                    Order Date:
                                     {{ order.order_date.strftime('%d %b %Y') }}
                                 </p>
 
@@ -293,7 +293,7 @@
                              ===================================== -->
 
                         <h2 class="h6 fw-bold mb-3">
-                            Order Items
+                            Products
                         </h2>
 
 
@@ -333,7 +333,7 @@
                                         Quantity:
                                         {{ item.quantity }}
 
-                                        ×
+                                        · Unit Price:
 
                                         ₹{{ "%.2f"|format(item.unit_price) }}
 
@@ -365,8 +365,7 @@
 
                         <div class="alert alert-secondary mb-0">
 
-                            No individual item information is available
-                            for this order.
+                            Product details are unavailable for this older order.
 
                         </div>
 
@@ -407,7 +406,7 @@
                         <h2
                             class="h5 fw-bold mt-2 mb-4"
                         >
-                            Details
+                            Order Details
                         </h2>
 
 
@@ -484,7 +483,7 @@
                             <span
                                 class="text-body-secondary"
                             >
-                                Status
+                                Order Status
                             </span>
 
 
@@ -507,7 +506,7 @@
                         >
 
                             <span class="fw-semibold">
-                                Total
+                                Order Total
                             </span>
 
 
@@ -530,7 +529,7 @@
                                 href="/swiggy/products"
                                 class="btn btn-primary sw-primary-action"
                             >
-                                Order Again
+                                Browse More Products
                             </a>
 
 

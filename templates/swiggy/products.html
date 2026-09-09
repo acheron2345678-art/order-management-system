@@ -1,7 +1,7 @@
 {% extends "swiggy/base.html" %}
 
 {% block title %}
-Swiggy | Menu
+Swiggy | Browse Products
 {% endblock %}
 
 {% block content %}
@@ -18,15 +18,15 @@ Swiggy | Menu
             <div>
 
                 <span class="sw-eyebrow">
-                    SWIGGY MENU
+                    SWIGGY PRODUCTS
                 </span>
 
                 <h1>
-                    Choose your next order
+                    Browse Products
                 </h1>
 
                 <p>
-                    Browse every active Swiggy product currently available.
+                    Browse active Swiggy products currently available to order.
                 </p>
 
             </div>
@@ -92,7 +92,7 @@ Swiggy | Menu
                 </strong>
 
                 <span>
-                    item{% if products|length != 1 %}s{% endif %}
+                    product{% if products|length != 1 %}s{% endif %}
                 </span>
 
 
@@ -192,7 +192,7 @@ Swiggy | Menu
                                 href="/swiggy/products/{{ product.id }}"
                                 class="btn btn-outline-secondary btn-sm"
                             >
-                                View Product
+                                Product Details
                             </a>
 
 
@@ -268,7 +268,7 @@ Swiggy | Menu
                 href="/swiggy/products"
                 class="btn btn-primary"
             >
-                Show all products
+                Browse All Products
             </a>
 
             {% endif %}

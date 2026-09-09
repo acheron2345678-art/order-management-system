@@ -1,7 +1,7 @@
 {% extends "swiggy/base.html" %}
 
 {% block title %}
-Swiggy | Home
+Swiggy | Food Ordering
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@ Swiggy | Home
             <div class="sw-hero-copy">
 
                 <span class="sw-eyebrow">
-                    SWIGGY STOREFRONT
+                    SWIGGY
                 </span>
 
 
@@ -29,9 +29,9 @@ Swiggy | Home
 
 
                 <p>
-                    Browse the menu, manage your cart and place orders
-                    through a storefront connected directly to the same
-                    Order Management system.
+                    Browse products, manage your cart and place orders
+                    through a food-ordering experience connected directly
+                    to the Order Management system.
                 </p>
 
 
@@ -41,7 +41,7 @@ Swiggy | Home
                         href="/swiggy/products"
                         class="btn btn-primary sw-primary-action"
                     >
-                        Browse Menu
+                        Browse Products
                     </a>
 
 
@@ -130,7 +130,7 @@ Swiggy | Home
                     <div class="sw-quick-product-copy">
 
                         <small>
-                            Featured item
+                            Featured product
                         </small>
 
                         <strong>
@@ -426,7 +426,7 @@ Swiggy | Home
                 href="/swiggy/products"
                 class="btn btn-outline-secondary"
             >
-                View full menu
+                Browse All Products
             </a>
 
         </div>
@@ -515,7 +515,7 @@ Swiggy | Home
                                 href="/swiggy/products/{{ product.id }}"
                                 class="btn btn-outline-secondary btn-sm"
                             >
-                                View
+                                Product Details
                             </a>
 
 
@@ -539,7 +539,7 @@ Swiggy | Home
                                     class="btn btn-primary btn-sm sw-add-btn"
                                     data-loading-text="Adding..."
                                 >
-                                    Add
+                                    Add to Cart
                                 </button>
 
                             </form>
