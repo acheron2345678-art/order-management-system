@@ -7,13 +7,20 @@
 
 {% block content %}
 
+{% set is_legacy_order = not order_items %}
+
+
+<!-- ========================================= -->
+<!-- PAGE HEADER -->
+<!-- ========================================= -->
+
 <div
-    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+    class="d-flex flex-column flex-lg-row align-items-lg-start justify-content-between gap-3 mb-4"
 >
 
     <div>
 
-        <div class="d-flex align-items-center gap-2 mb-1">
+        <div class="d-flex align-items-center gap-2 mb-2">
 
             <span
                 class="platform-dot platform-{{ platform_url }}"
@@ -21,23 +28,27 @@
                 {{ 'S' if platform_url == 'swiggy' else 'I' }}
             </span>
 
-            <h1 class="h2 fw-bold mb-0">
-                Order Details
-            </h1>
+            <span
+                class="small text-body-secondary text-uppercase fw-semibold"
+            >
+                {{ platform }}
+            </span>
 
         </div>
 
+        <h1 class="h2 fw-bold mb-1">
+            {% if platform_url == "swiggy" %}
+                Swiggy Order Details
+            {% else %}
+                Order Details
+            {% endif %}
+        </h1>
 
         <p class="text-body-secondary mb-0">
-
-            {{ platform }}
-
-            <span class="mx-1">
-                •
-            </span>
-
             {{ order.order_number }}
-
+            <span class="mx-1">•</span>
+            Review order information, client details,
+            workflow and activity history.
         </p>
 
     </div>
@@ -82,12 +93,60 @@
 </div>
 
 
+<!-- ========================================= -->
+<!-- LEGACY ORDER NOTICE -->
+<!-- ========================================= -->
+
+{% if is_legacy_order %}
+
+<div
+    class="alert alert-secondary border shadow-sm mb-4"
+    role="alert"
+>
+
+    <div class="d-flex gap-3 align-items-start">
+
+        <div
+            class="quick-icon bg-body text-body-secondary flex-shrink-0"
+        >
+            i
+        </div>
+
+        <div>
+
+            <strong class="d-block mb-1">
+                Legacy Order
+            </strong>
+
+            <div class="small">
+                This order was created before detailed
+                product-line information was stored.
+                The original order summary is preserved
+                below whenever that information is available.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
 
 <div class="row g-4">
 
 
+    <!-- ===================================== -->
+    <!-- LEFT COLUMN -->
+    <!-- ===================================== -->
+
     <div class="col-xl-8">
 
+
+        <!-- ================================= -->
+        <!-- ORDER CONTENTS -->
+        <!-- ================================= -->
 
         <div class="card border-0 shadow-sm mb-4">
 
@@ -101,13 +160,19 @@
 
                     <div>
 
+                        <div
+                            class="small text-body-secondary text-uppercase fw-semibold mb-1"
+                        >
+                            Order Contents
+                        </div>
+
                         <h2 class="h5 fw-bold mb-1">
                             Purchased Products
                         </h2>
 
                         <p class="small text-body-secondary mb-0">
-                            Products and quantities included
-                            in this order.
+                            Products, quantities and values
+                            captured for this order.
                         </p>
 
                     </div>
@@ -116,11 +181,14 @@
                     {% if order_items %}
 
                     <span class="badge text-bg-primary">
-
                         {{ order_items|length }}
-
                         product{% if order_items|length != 1 %}s{% endif %}
+                    </span>
 
+                    {% else %}
+
+                    <span class="badge bg-body-tertiary text-body border">
+                        Legacy
                     </span>
 
                     {% endif %}
@@ -130,12 +198,9 @@
             </div>
 
 
-
             <div class="card-body p-0">
 
-
                 {% if order_items %}
-
 
                     {% for item in order_items %}
 
@@ -145,12 +210,9 @@
 
                         <div class="row g-3 align-items-center">
 
-
                             <div class="col-md-5">
 
-                                <div
-                                    class="d-flex align-items-center gap-3"
-                                >
+                                <div class="d-flex align-items-center gap-3">
 
                                     <div
                                         class="quick-icon bg-primary-subtle text-primary flex-shrink-0"
@@ -158,19 +220,13 @@
                                         ◇
                                     </div>
 
-
                                     <div class="min-w-0">
 
-                                        <div
-                                            class="fw-bold text-truncate"
-                                        >
+                                        <div class="fw-bold text-truncate">
                                             {{ item.product_name }}
                                         </div>
 
-
-                                        <div
-                                            class="small text-body-secondary"
-                                        >
+                                        <div class="small text-body-secondary">
                                             Product ID:
                                             {{ item.product_id }}
                                         </div>
@@ -182,12 +238,9 @@
                             </div>
 
 
-
                             <div class="col-4 col-md-2">
 
-                                <div
-                                    class="small text-body-secondary mb-1"
-                                >
+                                <div class="small text-body-secondary mb-1">
                                     Unit Price
                                 </div>
 
@@ -198,12 +251,9 @@
                             </div>
 
 
-
                             <div class="col-4 col-md-2">
 
-                                <div
-                                    class="small text-body-secondary mb-1"
-                                >
+                                <div class="small text-body-secondary mb-1">
                                     Quantity
                                 </div>
 
@@ -214,25 +264,17 @@
                             </div>
 
 
+                            <div class="col-4 col-md-3 text-end">
 
-                            <div
-                                class="col-4 col-md-3 text-end"
-                            >
-
-                                <div
-                                    class="small text-body-secondary mb-1"
-                                >
+                                <div class="small text-body-secondary mb-1">
                                     Total
                                 </div>
 
-                                <div
-                                    class="h5 fw-bold text-primary mb-0"
-                                >
+                                <div class="h5 fw-bold text-primary mb-0">
                                     ₹{{ "{:,.2f}".format(item.line_total) }}
                                 </div>
 
                             </div>
-
 
                         </div>
 
@@ -241,10 +283,7 @@
                     {% endfor %}
 
 
-
-                    <div
-                        class="p-3 p-md-4 border-top bg-body-tertiary"
-                    >
+                    <div class="p-3 p-md-4 border-top bg-body-tertiary">
 
                         <div
                             class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
@@ -256,38 +295,25 @@
                                     Order Total
                                 </div>
 
-
-                                <div
-                                    class="small text-body-secondary"
-                                >
+                                <div class="small text-body-secondary">
 
                                     {% set ns = namespace(total_quantity=0) %}
 
                                     {% for item in order_items %}
-
                                         {% set ns.total_quantity = ns.total_quantity + item.quantity %}
-
                                     {% endfor %}
 
-
                                     {{ ns.total_quantity }}
-
                                     item{% if ns.total_quantity != 1 %}s{% endif %}
-
                                     across
-
                                     {{ order_items|length }}
-
                                     product{% if order_items|length != 1 %}s{% endif %}
 
                                 </div>
 
                             </div>
 
-
-                            <div
-                                class="h3 fw-bold text-primary mb-0"
-                            >
+                            <div class="h3 fw-bold text-primary mb-0">
                                 ₹{{ "{:,.2f}".format(order.amount) }}
                             </div>
 
@@ -295,61 +321,64 @@
 
                     </div>
 
-
-
                 {% else %}
-
 
                 <div class="p-4">
 
-                    <div
-                        class="alert alert-secondary mb-0"
-                        role="alert"
-                    >
+                    <div class="border rounded-3 p-3 p-md-4 bg-body-tertiary">
 
-                        <strong class="d-block mb-1">
-                            Legacy Order
-                        </strong>
-
-
-                        {% if order.product_name and order.product_name != "Multiple Products" %}
-
-                        <div>
-                            Product:
-                            <strong>
-                                {{ order.product_name }}
-                            </strong>
+                        <div
+                            class="small text-body-secondary text-uppercase fw-semibold mb-2"
+                        >
+                            Available Legacy Information
                         </div>
 
+                        <div class="row g-3">
 
-                        <div class="mt-1">
-                            Amount:
-                            <strong>
-                                ₹{{ "{:,.2f}".format(order.amount) }}
-                            </strong>
+                            <div class="col-md-7">
+
+                                <div class="detail-label">
+                                    Product
+                                </div>
+
+                                <div class="detail-value">
+                                    {% if order.product_name and order.product_name != "Multiple Products" %}
+                                        {{ order.product_name }}
+                                    {% else %}
+                                        Product details unavailable
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-5">
+
+                                <div class="detail-label">
+                                    Order Value
+                                </div>
+
+                                <div class="h5 fw-bold text-primary mb-0">
+                                    ₹{{ "{:,.2f}".format(order.amount) }}
+                                </div>
+
+                            </div>
+
                         </div>
-
-
-                        {% else %}
-
-                        Product-level information is not
-                        available for this older order.
-
-                        {% endif %}
 
                     </div>
 
                 </div>
 
-
                 {% endif %}
-
 
             </div>
 
         </div>
 
 
+        <!-- ================================= -->
+        <!-- ACTIVITY TIMELINE -->
+        <!-- ================================= -->
 
         {% include "orders/_history_timeline.html" %}
 
@@ -357,9 +386,16 @@
     </div>
 
 
+    <!-- ===================================== -->
+    <!-- RIGHT COLUMN -->
+    <!-- ===================================== -->
 
     <div class="col-xl-4">
 
+
+        <!-- ================================= -->
+        <!-- ORDER INFORMATION -->
+        <!-- ================================= -->
 
         <div class="card border-0 shadow-sm mb-4">
 
@@ -367,138 +403,135 @@
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
 
+                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
+                    Summary
+                </div>
+
                 <h2 class="h5 fw-bold mb-0">
                     Order Information
                 </h2>
 
             </div>
 
-
             <div class="card-body p-4">
 
-
                 <div class="mb-4">
-
                     <div class="detail-label">
                         Order Number
                     </div>
-
                     <div class="detail-value">
                         {{ order.order_number }}
                     </div>
-
                 </div>
 
-
-
                 <div class="mb-4">
-
                     <div class="detail-label">
                         Platform
                     </div>
-
-                    <div
-                        class="d-flex align-items-center gap-2"
-                    >
-
+                    <div class="d-flex align-items-center gap-2">
                         <span
                             class="platform-dot platform-{{ platform_url }}"
                         >
                             {{ 'S' if platform_url == 'swiggy' else 'I' }}
                         </span>
-
                         <strong>
                             {{ platform }}
                         </strong>
-
                     </div>
-
                 </div>
 
-
-
                 <div class="mb-4">
-
-                    <div class="detail-label">
-                        Customer
-                    </div>
-
-                    <div class="detail-value">
-                        {{ order.customer_name }}
-                    </div>
-
-                </div>
-
-
-
-                <div class="mb-4">
-
-                    <div class="detail-label">
-                        Status
-                    </div>
-
-                    <div>
-
-                        <span
-                            class="status-badge status-{{ order.status }}"
-                        >
-                            {{ order.status|capitalize }}
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="mb-4">
-
                     <div class="detail-label">
                         Order Date
                     </div>
-
                     <div class="detail-value">
-
                         {% if order.order_date %}
-
                             {{ order.order_date.strftime("%d %b %Y") }}
-
                         {% else %}
-
-                            —
-
+                            Not available
                         {% endif %}
-
                     </div>
-
                 </div>
-
-
 
                 <div>
-
                     <div class="detail-label">
-                        Total Amount
+                        Order Value
                     </div>
-
-                    <div
-                        class="h3 fw-bold text-primary mb-0"
-                    >
+                    <div class="h3 fw-bold text-primary mb-0">
                         ₹{{ "{:,.2f}".format(order.amount) }}
                     </div>
-
                 </div>
-
 
             </div>
 
         </div>
 
 
+        <!-- ================================= -->
+        <!-- CLIENT INFORMATION -->
+        <!-- ================================= -->
 
-        <!-- ========================================= -->
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div
+                class="card-header bg-body border-bottom p-3 p-md-4"
+            >
+
+                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
+                    Client
+                </div>
+
+                <h2 class="h5 fw-bold mb-0">
+                    Client Information
+                </h2>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <div class="detail-label">
+                        Customer
+                    </div>
+                    <div class="detail-value">
+                        {{ order.customer_name }}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="detail-label">
+                        Account
+                    </div>
+                    <div class="detail-value">
+                        {% if client %}
+                            {{ client.username }}
+                        {% else %}
+                            Unassigned
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="detail-label">
+                        Email
+                    </div>
+                    <div class="detail-value text-break">
+                        {% if client %}
+                            {{ client.email }}
+                        {% else %}
+                            Not available
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
         <!-- SWIGGY DELIVERY DETAILS -->
-        <!-- ========================================= -->
+        <!-- ================================= -->
 
         {% if platform_url == "swiggy" %}
 
@@ -518,13 +551,20 @@
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
+
+                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
+                    Fulfilment
+                </div>
+
                 <h2 class="h5 fw-bold mb-1">
                     Delivery Details
                 </h2>
 
                 <p class="small text-body-secondary mb-0">
-                    Delivery information captured when this order was placed.
+                    Delivery snapshot captured when this
+                    order was placed.
                 </p>
+
             </div>
 
             <div class="card-body p-4">
@@ -535,7 +575,6 @@
                     <div class="detail-label">
                         Deliver To
                     </div>
-
                     <div class="detail-value">
                         {{ order.delivery_name or order.customer_name }}
                     </div>
@@ -545,9 +584,8 @@
                     <div class="detail-label">
                         Phone
                     </div>
-
                     <div class="detail-value">
-                        {{ order.delivery_phone or "—" }}
+                        {{ order.delivery_phone or "Not available" }}
                     </div>
                 </div>
 
@@ -559,35 +597,22 @@
                     <div class="detail-value lh-lg">
 
                         {% if order.delivery_address_line1 %}
-                        <div>
-                            {{ order.delivery_address_line1 }}
-                        </div>
+                        <div>{{ order.delivery_address_line1 }}</div>
                         {% endif %}
 
                         {% if order.delivery_address_line2 %}
-                        <div>
-                            {{ order.delivery_address_line2 }}
-                        </div>
+                        <div>{{ order.delivery_address_line2 }}</div>
                         {% endif %}
 
-                        {% if
-                            order.delivery_city
-                            or order.delivery_state
-                            or order.delivery_postal_code
-                        %}
+                        {% if order.delivery_city or order.delivery_state or order.delivery_postal_code %}
                         <div>
                             {% if order.delivery_city %}
                                 {{ order.delivery_city }}
                             {% endif %}
-
-                            {% if order.delivery_city and order.delivery_state %}
-                                ,
-                            {% endif %}
-
+                            {% if order.delivery_city and order.delivery_state %}, {% endif %}
                             {% if order.delivery_state %}
                                 {{ order.delivery_state }}
                             {% endif %}
-
                             {% if order.delivery_postal_code %}
                                 {{ order.delivery_postal_code }}
                             {% endif %}
@@ -595,12 +620,11 @@
                         {% endif %}
 
                         {% if order.delivery_country %}
-                        <div>
-                            {{ order.delivery_country }}
-                        </div>
+                        <div>{{ order.delivery_country }}</div>
                         {% endif %}
 
                     </div>
+
                 </div>
 
                 {% else %}
@@ -609,9 +633,9 @@
                     <strong class="d-block mb-1">
                         Delivery details unavailable
                     </strong>
-
                     <div class="small">
-                        This order was created before delivery details were stored.
+                        This older order was created before
+                        permanent delivery snapshots were stored.
                     </div>
                 </div>
 
@@ -624,22 +648,28 @@
         {% endif %}
 
 
-        <!-- ========================================= -->
+        <!-- ================================= -->
         <!-- STATUS WORKFLOW -->
-        <!-- ========================================= -->
+        <!-- ================================= -->
 
         <div class="card border-0 shadow-sm mb-4">
 
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
+
+                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
+                    Workflow
+                </div>
+
                 <h2 class="h5 fw-bold mb-1">
-                    Status Workflow
+                    Order Status Workflow
                 </h2>
 
                 <p class="small text-body-secondary mb-0">
                     Current order stage and valid next statuses.
                 </p>
+
             </div>
 
             <div class="card-body p-4">
@@ -648,10 +678,7 @@
                     <div class="detail-label mb-2">
                         Current Status
                     </div>
-
-                    <span
-                        class="status-badge status-{{ order.status }}"
-                    >
+                    <span class="status-badge status-{{ order.status }}">
                         {{ order.status|capitalize }}
                     </span>
                 </div>
@@ -661,7 +688,7 @@
                 <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
 
                     <span
-                        class="badge {% if order.status in ['pending', 'processing', 'completed'] %}text-bg-primary{% else %}text-bg-light border text-body{% endif %}"
+                        class="badge {% if order.status in ['pending', 'processing', 'completed'] %}text-bg-primary{% else %}bg-body-tertiary text-body border{% endif %}"
                     >
                         1. Pending
                     </span>
@@ -669,7 +696,7 @@
                     <span class="text-body-secondary">→</span>
 
                     <span
-                        class="badge {% if order.status in ['processing', 'completed'] %}text-bg-info{% else %}text-bg-light border text-body{% endif %}"
+                        class="badge {% if order.status in ['processing', 'completed'] %}text-bg-info{% else %}bg-body-tertiary text-body border{% endif %}"
                     >
                         2. Processing
                     </span>
@@ -677,13 +704,7 @@
                     <span class="text-body-secondary">→</span>
 
                     <span
-                        class="
-                            badge
-                            workflow-completed-step
-                            {% if order.status == 'completed' %}
-                                active
-                            {% endif %}
-                        "
+                        class="badge workflow-completed-step {% if order.status == 'completed' %}active{% endif %}"
                     >
                         3. Completed
                     </span>
@@ -735,7 +756,10 @@
                         </div>
 
                         <div class="small text-body-secondary mt-2">
-                            Select the new status on the edit page. The existing validation, audit history and client email notification will still be used.
+                            Status changes continue through the
+                            existing edit flow so validation,
+                            audit history and client email
+                            notifications remain unchanged.
                         </div>
 
                     </div>
@@ -746,9 +770,11 @@
                         class="alert {% if order.status == 'completed' %}alert-success{% else %}alert-secondary{% endif %} mb-0"
                     >
                         {% if order.status == "completed" %}
-                            This order is complete. No further status changes are available.
+                            This order is complete. No further
+                            status changes are available.
                         {% elif order.status == "cancelled" %}
-                            This order has been cancelled. No further status changes are available.
+                            This order has been cancelled. No
+                            further status changes are available.
                         {% else %}
                             No further status changes are available.
                         {% endif %}
@@ -763,6 +789,10 @@
         </div>
 
 
+        <!-- ================================= -->
+        <!-- ADMIN ACTIONS -->
+        <!-- ================================= -->
+
         {% if current_user.role == "admin" %}
 
         <div class="card border-0 shadow-sm">
@@ -770,13 +800,13 @@
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
-
+                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
+                    Management
+                </div>
                 <h2 class="h5 fw-bold mb-0">
                     Admin Actions
                 </h2>
-
             </div>
-
 
             <div class="card-body p-4">
 
@@ -789,20 +819,17 @@
                         Edit Order
                     </a>
 
-
                     <form
                         method="post"
                         action="/{{ platform_url }}/orders/delete/{{ order.id }}"
                         onsubmit="return confirm('Are you sure you want to delete this order?');"
                     >
-
                         <button
                             type="submit"
                             class="btn btn-outline-danger w-100"
                         >
                             Delete Order
                         </button>
-
                     </form>
 
                 </div>
