@@ -1,0 +1,332 @@
+/* =========================================
+   SWIGGY MERCHANT PREVIEW MODE
+   ========================================= */
+
+
+/* =========================================
+   TOP PREVIEW STATUS
+   ========================================= */
+
+.sw-preview-nav-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        7px
+        11px;
+
+    border:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    border-radius: 999px;
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+    font-size: 0.8rem;
+
+    font-weight: 700;
+
+}
+
+
+.sw-preview-nav-dot {
+
+    width: 7px;
+
+    height: 7px;
+
+    flex:
+        0
+        0
+        7px;
+
+    border-radius: 50%;
+
+    background:
+        var(--bs-primary);
+
+}
+
+
+.sw-merchant-console-link {
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================
+   PREVIEW BANNER
+   ========================================= */
+
+.sw-merchant-preview-banner {
+
+    position: relative;
+
+    z-index: 90;
+
+    border-bottom:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+}
+
+
+.sw-merchant-preview-banner-inner {
+
+    min-height: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding:
+        10px
+        0;
+
+}
+
+
+.sw-merchant-preview-banner-copy {
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.sw-merchant-preview-banner-copy
+strong,
+
+.sw-merchant-preview-banner-copy
+small {
+
+    display: block;
+
+}
+
+
+.sw-merchant-preview-banner-copy
+strong {
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+    font-size: 0.9rem;
+
+}
+
+
+.sw-merchant-preview-banner-copy
+small {
+
+    margin-top: 2px;
+
+    color:
+        var(--bs-secondary-color);
+
+    font-size: 0.8rem;
+
+}
+
+
+.sw-merchant-preview-icon {
+
+    width: 36px;
+
+    height: 36px;
+
+    flex:
+        0
+        0
+        36px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    background:
+        var(--bs-body-bg);
+
+    font-size: 1rem;
+
+}
+
+
+.sw-preview-return-button {
+
+    flex:
+        0
+        0
+        auto;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================
+   MAIN PREVIEW AREA
+   ========================================= */
+
+.sw-main-merchant-preview {
+
+    position: relative;
+
+}
+
+
+/*
+   Merchant preview is read-only.
+
+   The application's backend still remains
+   the actual security boundary:
+   cart, checkout and My Orders routes
+   require the client role.
+
+   These styles only provide the visual
+   preview-mode experience.
+*/
+
+
+.sw-main-merchant-preview
+form[action*="/cart/add"] {
+
+    display: none !important;
+
+}
+
+
+.sw-main-merchant-preview
+a[href="/swiggy/cart"],
+
+.sw-main-merchant-preview
+a[href^="/swiggy/checkout"],
+
+.sw-main-merchant-preview
+a[href="/swiggy/my-orders"] {
+
+    display: none !important;
+
+}
+
+
+/* =========================================
+   MOBILE NOTICE
+   ========================================= */
+
+.sw-mobile-preview-notice {
+
+    display: grid;
+
+    gap: 4px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    border-radius: 13px;
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+}
+
+
+.sw-mobile-preview-notice
+strong {
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+}
+
+
+.sw-mobile-preview-notice
+small {
+
+    color:
+        var(--bs-secondary-color);
+
+}
+
+
+/* =========================================
+   DARK MODE
+   ========================================= */
+
+[data-bs-theme="dark"]
+.sw-merchant-preview-banner {
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+}
+
+
+[data-bs-theme="dark"]
+.sw-merchant-preview-icon {
+
+    background:
+        var(--bs-body-bg);
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (
+    max-width: 767px
+) {
+
+    .sw-merchant-preview-banner-inner {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap: 10px;
+
+        padding:
+            12px
+            0;
+
+    }
+
+
+    .sw-preview-return-button {
+
+        width: 100%;
+
+    }
+
+}

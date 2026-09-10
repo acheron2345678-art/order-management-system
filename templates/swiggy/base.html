@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
 
 <head>
 
@@ -11,9 +15,11 @@
     >
 
     <title>
+
         {% block title %}
         Swiggy
         {% endblock %}
+
     </title>
 
 
@@ -26,7 +32,9 @@
         (() => {
 
             const savedTheme =
-                localStorage.getItem("theme")
+                localStorage.getItem(
+                    "theme"
+                )
                 ||
                 "light";
 
@@ -69,9 +77,16 @@
         href="/static/css/swiggy.css?v=6"
     >
 
+
     <link
         rel="stylesheet"
         href="/static/css/swiggy-restaurants.css?v=1"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="/static/css/swiggy-merchant-preview.css?v=1"
     >
 
 
@@ -84,6 +99,21 @@
 <body>
 
 
+{% set user =
+    current_user
+    if current_user is defined
+    else none
+%}
+
+
+{% set merchant_preview =
+    user
+    and
+    user.role == "merchant"
+%}
+
+
+
 <div class="sw-app-shell min-vh-100">
 
 
@@ -92,11 +122,22 @@
          ========================================= -->
 
     <header
-        class="sw-app-topbar sticky-top border-bottom bg-body"
+        class="
+            sw-app-topbar
+            sticky-top
+            border-bottom
+            bg-body
+        "
     >
 
+
         <div
-            class="container-fluid sw-topbar-inner px-3 px-md-4"
+            class="
+                container-fluid
+                sw-topbar-inner
+                px-3
+                px-md-4
+            "
         >
 
 
@@ -105,7 +146,12 @@
                  ===================================== -->
 
             <button
-                class="btn btn-outline-secondary d-lg-none sw-mobile-menu-btn"
+                class="
+                    btn
+                    btn-outline-secondary
+                    d-lg-none
+                    sw-mobile-menu-btn
+                "
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#swMobileNav"
@@ -122,9 +168,19 @@
                  ===================================== -->
 
             <a
-                href="/swiggy"
-                class="sw-brand text-decoration-none"
+                href="
+                    {% if merchant_preview %}
+                        /merchant
+                    {% else %}
+                        /swiggy
+                    {% endif %}
+                "
+                class="
+                    sw-brand
+                    text-decoration-none
+                "
             >
+
 
                 <span class="sw-brand-mark">
                     S
@@ -133,13 +189,15 @@
 
                 <span class="sw-brand-copy">
 
+
                     <strong class="d-block">
                         Swiggy
                     </strong>
 
+
                     <small>
 
-                        {% if current_user and current_user.role == "merchant" %}
+                        {% if merchant_preview %}
 
                             Merchant Preview
 
@@ -151,7 +209,9 @@
 
                     </small>
 
+
                 </span>
+
 
             </a>
 
@@ -161,8 +221,59 @@
                  DESKTOP NAVIGATION
                  ===================================== -->
 
+            {% if merchant_preview %}
+
+
+            <!-- =====================================
+                 MERCHANT PREVIEW NAVIGATION
+                 ===================================== -->
+
             <nav
-                class="sw-desktop-nav d-none d-lg-flex"
+                class="
+                    sw-desktop-nav
+                    d-none
+                    d-lg-flex
+                    align-items-center
+                "
+                aria-label="Merchant preview navigation"
+            >
+
+
+                <span class="sw-preview-nav-status">
+
+                    <span class="sw-preview-nav-dot">
+                    </span>
+
+                    Read-only Preview
+
+                </span>
+
+
+
+                <a
+                    href="/merchant"
+                    class="sw-merchant-console-link"
+                >
+                    Merchant Console
+                </a>
+
+
+            </nav>
+
+
+            {% else %}
+
+
+            <!-- =====================================
+                 NORMAL SWIGGY NAVIGATION
+                 ===================================== -->
+
+            <nav
+                class="
+                    sw-desktop-nav
+                    d-none
+                    d-lg-flex
+                "
                 aria-label="Swiggy navigation"
             >
 
@@ -181,6 +292,7 @@
                 </a>
 
 
+
                 <!-- RESTAURANTS -->
 
                 <a
@@ -193,6 +305,7 @@
                 >
                     Restaurants
                 </a>
+
 
 
                 <!-- DISHES -->
@@ -211,10 +324,10 @@
 
 
                 <!-- =================================
-                     CLIENT-ONLY LINKS
+                     CLIENT LINKS
                      ================================= -->
 
-                {% if current_user and current_user.role == "client" %}
+                {% if user and user.role == "client" %}
 
 
                 <!-- CART -->
@@ -223,7 +336,12 @@
                     href="/swiggy/cart"
                     class="
                         sw-nav-cart
-                        {% if request.url.path.startswith('/swiggy/cart') or request.url.path.startswith('/swiggy/checkout') %}
+
+                        {% if
+                            request.url.path.startswith('/swiggy/cart')
+                            or
+                            request.url.path.startswith('/swiggy/checkout')
+                        %}
                         active
                         {% endif %}
                     "
@@ -240,6 +358,7 @@
 
                     {% endif %}
 
+
                 </a>
 
 
@@ -249,7 +368,11 @@
                 <a
                     href="/swiggy/my-orders"
                     class="
-                        {% if request.url.path.startswith('/swiggy/my-orders') or request.url.path.startswith('/swiggy/order-success') %}
+                        {% if
+                            request.url.path.startswith('/swiggy/my-orders')
+                            or
+                            request.url.path.startswith('/swiggy/order-success')
+                        %}
                         active
                         {% endif %}
                     "
@@ -261,26 +384,10 @@
                 {% endif %}
 
 
-
-                <!-- =================================
-                     MERCHANT-ONLY LINK
-                     ================================= -->
-
-                {% if current_user and current_user.role == "merchant" %}
-
-
-                <a
-                    href="/merchant"
-                    class="sw-merchant-console-link"
-                >
-                    Merchant Console
-                </a>
-
-
-                {% endif %}
-
-
             </nav>
+
+
+            {% endif %}
 
 
 
@@ -288,11 +395,19 @@
                  SEARCH
                  ===================================== -->
 
+            {% if not merchant_preview %}
+
+
             <form
                 method="get"
                 action="/swiggy/search"
-                class="sw-topbar-search d-none d-md-flex"
+                class="
+                    sw-topbar-search
+                    d-none
+                    d-md-flex
+                "
             >
+
 
                 <span aria-hidden="true">
                     ⌕
@@ -307,7 +422,11 @@
                     aria-label="Search Swiggy restaurants or dishes"
                 >
 
+
             </form>
+
+
+            {% endif %}
 
 
 
@@ -322,29 +441,38 @@
                      USER
                      ================================= -->
 
-                {% if current_user %}
+                {% if user %}
 
 
                 <div
-                    class="sw-user-pill d-none d-xl-flex"
+                    class="
+                        sw-user-pill
+                        d-none
+                        d-xl-flex
+                    "
                 >
 
+
                     <span class="sw-user-avatar">
-                        {{ current_user.username[0]|upper }}
+                        {{ user.username[0]|upper }}
                     </span>
 
 
                     <span>
 
+
                         <strong>
-                            {{ current_user.username }}
+                            {{ user.username }}
                         </strong>
 
+
                         <small>
-                            {{ current_user.role|capitalize }}
+                            {{ user.role|capitalize }}
                         </small>
 
+
                     </span>
+
 
                 </div>
 
@@ -361,7 +489,11 @@
 
 
                     <button
-                        class="btn btn-outline-secondary dropdown-toggle"
+                        class="
+                            btn
+                            btn-outline-secondary
+                            dropdown-toggle
+                        "
                         type="button"
                         id="swAppsDropdown"
                         data-bs-toggle="dropdown"
@@ -371,18 +503,23 @@
                     </button>
 
 
+
                     <ul
-                        class="dropdown-menu dropdown-menu-end shadow-sm"
+                        class="
+                            dropdown-menu
+                            dropdown-menu-end
+                            shadow-sm
+                        "
                         aria-labelledby="swAppsDropdown"
                     >
 
 
-                        <!-- =================================
-                             MERCHANT APP SWITCHER
-                             ================================= -->
+                        {% if merchant_preview %}
 
-                        {% if current_user and current_user.role == "merchant" %}
 
+                        <!-- =============================
+                             MERCHANT APPS
+                             ============================= -->
 
                         <li>
 
@@ -394,9 +531,8 @@
 
 
 
-                        <!-- MERCHANT CONSOLE -->
-
                         <li>
+
 
                             <a
                                 href="/merchant"
@@ -411,6 +547,7 @@
 
                             </a>
 
+
                         </li>
 
 
@@ -423,13 +560,15 @@
 
 
 
-                        <!-- SWIGGY PREVIEW -->
-
                         <li>
 
-                            <a
-                                href="/swiggy"
-                                class="dropdown-item active"
+
+                            <span
+                                class="
+                                    dropdown-item
+                                    active
+                                    disabled
+                                "
                             >
 
                                 <span class="me-2 fw-bold">
@@ -438,18 +577,18 @@
 
                                 Swiggy Preview
 
-                            </a>
+                            </span>
+
 
                         </li>
 
 
-
-                        <!-- =================================
-                             NORMAL ADMIN / CLIENT SWITCHER
-                             ================================= -->
-
                         {% else %}
 
+
+                        <!-- =============================
+                             NORMAL APPLICATION SWITCHER
+                             ============================= -->
 
                         <li>
 
@@ -465,6 +604,7 @@
 
                         <li>
 
+
                             <a
                                 href="/home"
                                 class="dropdown-item"
@@ -477,6 +617,7 @@
                                 Order Management
 
                             </a>
+
 
                         </li>
 
@@ -494,9 +635,13 @@
 
                         <li>
 
+
                             <a
                                 href="/swiggy"
-                                class="dropdown-item active"
+                                class="
+                                    dropdown-item
+                                    active
+                                "
                             >
 
                                 <span class="me-2 fw-bold">
@@ -507,6 +652,7 @@
 
                             </a>
 
+
                         </li>
 
 
@@ -514,6 +660,7 @@
                         <!-- INSIGHTS -->
 
                         <li>
+
 
                             <a
                                 href="/insights"
@@ -527,6 +674,7 @@
                                 Insights
 
                             </a>
+
 
                         </li>
 
@@ -548,7 +696,11 @@
                 <button
                     id="theme-toggle"
                     type="button"
-                    class="btn btn-outline-secondary sw-theme-toggle"
+                    class="
+                        btn
+                        btn-outline-secondary
+                        sw-theme-toggle
+                    "
                     aria-label="Switch theme"
                     title="Switch theme"
                 >
@@ -568,7 +720,7 @@
                      LOGIN / LOGOUT
                      ================================= -->
 
-                {% if current_user %}
+                {% if user %}
 
 
                 <form
@@ -577,12 +729,14 @@
                     class="d-none d-sm-block"
                 >
 
+
                     <button
                         type="submit"
                         class="btn btn-outline-secondary"
                     >
                         Logout
                     </button>
+
 
                 </form>
 
@@ -592,7 +746,11 @@
 
                 <a
                     href="/login"
-                    class="btn btn-primary sw-login-btn"
+                    class="
+                        btn
+                        btn-primary
+                        sw-login-btn
+                    "
                 >
                     Login
                 </a>
@@ -612,29 +770,122 @@
 
 
     <!-- =========================================
+         MERCHANT PREVIEW BANNER
+         ========================================= -->
+
+    {% if merchant_preview %}
+
+
+    <div class="sw-merchant-preview-banner">
+
+
+        <div
+            class="
+                container-fluid
+                sw-content-width
+                px-3
+                px-md-4
+            "
+        >
+
+
+            <div class="sw-merchant-preview-banner-inner">
+
+
+                <div class="sw-merchant-preview-banner-copy">
+
+
+                    <span class="sw-merchant-preview-icon">
+                        👁
+                    </span>
+
+
+                    <div>
+
+
+                        <strong>
+                            Merchant Preview Mode
+                        </strong>
+
+
+                        <small>
+
+                            You are viewing Swiggy as a
+                            restaurant Merchant.
+
+                            Ordering controls are disabled.
+
+                        </small>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <a
+                    href="/merchant"
+                    class="
+                        btn
+                        btn-sm
+                        btn-outline-primary
+                        sw-preview-return-button
+                    "
+                >
+                    Return to Merchant Console
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- =========================================
          MOBILE NAVIGATION
          ========================================= -->
 
     <div
-        class="offcanvas offcanvas-start"
+        class="
+            offcanvas
+            offcanvas-start
+        "
         tabindex="-1"
         id="swMobileNav"
         aria-labelledby="swMobileNavLabel"
     >
 
 
-        <!-- =====================================
-             MOBILE HEADER
-             ===================================== -->
+        <!-- MOBILE HEADER -->
 
         <div class="offcanvas-header border-bottom">
 
 
             <a
-                href="/swiggy"
-                class="sw-brand text-decoration-none"
+                href="
+                    {% if merchant_preview %}
+                        /merchant
+                    {% else %}
+                        /swiggy
+                    {% endif %}
+                "
+                class="
+                    sw-brand
+                    text-decoration-none
+                "
                 id="swMobileNavLabel"
             >
+
 
                 <span class="sw-brand-mark">
                     S
@@ -643,13 +894,15 @@
 
                 <span class="sw-brand-copy">
 
+
                     <strong class="d-block">
                         Swiggy
                     </strong>
 
+
                     <small>
 
-                        {% if current_user and current_user.role == "merchant" %}
+                        {% if merchant_preview %}
 
                             Merchant Preview
 
@@ -661,9 +914,12 @@
 
                     </small>
 
+
                 </span>
 
+
             </a>
+
 
 
             <button
@@ -679,22 +935,77 @@
 
 
 
-        <!-- =====================================
-             MOBILE BODY
-             ===================================== -->
+        <!-- MOBILE BODY -->
 
-        <div class="offcanvas-body d-flex flex-column">
+        <div
+            class="
+                offcanvas-body
+                d-flex
+                flex-column
+            "
+        >
 
 
-            <!-- =================================
-                 MOBILE SEARCH
-                 ================================= -->
+            {% if merchant_preview %}
+
+
+            <!-- =====================================
+                 MERCHANT MOBILE PREVIEW
+                 ===================================== -->
+
+            <div class="sw-mobile-preview-notice">
+
+
+                <strong>
+                    Merchant Preview Mode
+                </strong>
+
+
+                <small>
+
+                    Swiggy is read-only while
+                    signed in as a Merchant.
+
+                </small>
+
+
+            </div>
+
+
+
+            <nav class="sw-mobile-nav mt-3">
+
+
+                <a href="/merchant">
+
+                    <span class="fw-bold">
+                        M
+                    </span>
+
+                    Merchant Console
+
+                </a>
+
+
+            </nav>
+
+
+            {% else %}
+
+
+            <!-- =====================================
+                 NORMAL MOBILE SEARCH
+                 ===================================== -->
 
             <form
                 method="get"
                 action="/swiggy/search"
-                class="sw-mobile-search mb-4"
+                class="
+                    sw-mobile-search
+                    mb-4
+                "
             >
+
 
                 <input
                     class="form-control"
@@ -704,34 +1015,27 @@
                     autocomplete="off"
                 >
 
+
             </form>
 
 
 
             <!-- =====================================
-                 SWIGGY NAVIGATION
+                 NORMAL MOBILE NAV
                  ===================================== -->
 
             <nav class="sw-mobile-nav">
 
-
-                <!-- HOME -->
 
                 <a href="/swiggy">
                     Home
                 </a>
 
 
-
-                <!-- RESTAURANTS -->
-
                 <a href="/swiggy/restaurants">
                     Restaurants
                 </a>
 
-
-
-                <!-- DISHES -->
 
                 <a href="/swiggy/products">
                     Dishes
@@ -739,16 +1043,11 @@
 
 
 
-                <!-- =================================
-                     CLIENT ONLY
-                     ================================= -->
+                {% if user and user.role == "client" %}
 
-                {% if current_user and current_user.role == "client" %}
-
-
-                <!-- CART -->
 
                 <a href="/swiggy/cart">
+
 
                     Cart
 
@@ -761,11 +1060,10 @@
 
                     {% endif %}
 
+
                 </a>
 
 
-
-                <!-- ORDERS -->
 
                 <a href="/swiggy/my-orders">
                     My Orders
@@ -780,7 +1078,7 @@
 
 
             <!-- =====================================
-                 APPLICATION SWITCHER
+                 SWITCH APPLICATION
                  ===================================== -->
 
             <div
@@ -793,122 +1091,53 @@
                     mb-2
                 "
             >
-
-                {% if current_user and current_user.role == "merchant" %}
-
-                    Merchant
-
-                {% else %}
-
-                    Switch Application
-
-                {% endif %}
-
+                Switch Application
             </div>
 
 
 
-            <!-- =================================
-                 MERCHANT APPLICATION LINKS
-                 ================================= -->
-
-            {% if current_user and current_user.role == "merchant" %}
-
-
             <nav class="sw-mobile-nav">
 
-
-                <!-- MERCHANT CONSOLE -->
-
-                <a href="/merchant">
-
-                    <span class="fw-bold">
-                        M
-                    </span>
-
-                    <span>
-                        Merchant Console
-                    </span>
-
-                    <span class="ms-auto">
-                        ↗
-                    </span>
-
-                </a>
-
-
-
-                <!-- SWIGGY -->
-
-                <a
-                    href="/swiggy"
-                    class="active"
-                >
-
-                    <span class="fw-bold">
-                        S
-                    </span>
-
-                    <span>
-                        Swiggy Preview
-                    </span>
-
-                    <span class="ms-auto">
-                        ✓
-                    </span>
-
-                </a>
-
-
-            </nav>
-
-
-
-            <!-- =================================
-                 ADMIN / CLIENT APPLICATION LINKS
-                 ================================= -->
-
-            {% else %}
-
-
-            <nav class="sw-mobile-nav">
-
-
-                <!-- ORDER MANAGEMENT -->
 
                 <a href="/home">
+
 
                     <span class="fw-bold">
                         OM
                     </span>
 
+
                     <span>
                         Order Management
                     </span>
 
+
                     <span class="ms-auto">
                         ↗
                     </span>
+
 
                 </a>
 
 
 
-                <!-- INSIGHTS -->
-
                 <a href="/insights">
+
 
                     <span class="fw-bold">
                         I
                     </span>
 
+
                     <span>
                         Insights
                     </span>
 
+
                     <span class="ms-auto">
                         ↗
                     </span>
+
 
                 </a>
 
@@ -927,26 +1156,36 @@
             <div class="mt-auto pt-4">
 
 
-                {% if current_user %}
+                {% if user %}
 
 
-                <div class="sw-mobile-user mb-3">
+                <div
+                    class="
+                        sw-mobile-user
+                        mb-3
+                    "
+                >
 
 
                     <span class="sw-user-avatar">
-                        {{ current_user.username[0]|upper }}
+
+                        {{ user.username[0]|upper }}
+
                     </span>
 
 
                     <span>
 
+
                         <strong class="d-block">
-                            {{ current_user.username }}
+                            {{ user.username }}
                         </strong>
 
+
                         <small>
-                            {{ current_user.role|capitalize }}
+                            {{ user.role|capitalize }}
                         </small>
+
 
                     </span>
 
@@ -955,14 +1194,17 @@
 
 
 
-                <!-- MERCHANT RETURN -->
-
-                {% if current_user.role == "merchant" %}
+                {% if merchant_preview %}
 
 
                 <a
                     href="/merchant"
-                    class="btn btn-outline-primary w-100 mb-2"
+                    class="
+                        btn
+                        btn-outline-primary
+                        w-100
+                        mb-2
+                    "
                 >
                     Merchant Console
                 </a>
@@ -972,19 +1214,23 @@
 
 
 
-                <!-- LOGOUT -->
-
                 <form
                     method="post"
                     action="/logout"
                 >
 
+
                     <button
                         type="submit"
-                        class="btn btn-outline-secondary w-100"
+                        class="
+                            btn
+                            btn-outline-secondary
+                            w-100
+                        "
                     >
                         Logout
                     </button>
+
 
                 </form>
 
@@ -994,7 +1240,12 @@
 
                 <a
                     href="/login"
-                    class="btn btn-primary w-100 sw-login-btn"
+                    class="
+                        btn
+                        btn-primary
+                        w-100
+                        sw-login-btn
+                    "
                 >
                     Login
                 </a>
@@ -1014,10 +1265,18 @@
 
 
     <!-- =========================================
-         PAGE CONTENT
+         CONTENT
          ========================================= -->
 
-    <main class="sw-main">
+    <main
+        class="
+            sw-main
+
+            {% if merchant_preview %}
+            sw-main-merchant-preview
+            {% endif %}
+        "
+    >
 
         {% block content %}
         {% endblock %}
@@ -1034,42 +1293,59 @@
 
 
         <div
-            class="container-fluid sw-content-width px-3 px-md-4 py-4"
+            class="
+                container-fluid
+                sw-content-width
+                px-3
+                px-md-4
+                py-4
+            "
         >
 
 
             <div class="sw-footer-inner">
 
 
-                <!-- FOOTER BRAND -->
-
                 <div>
+
 
                     <strong>
                         Swiggy
                     </strong>
 
+
                     <small>
 
-                        {% if current_user and current_user.role == "merchant" %}
+                        {% if merchant_preview %}
 
-                            Restaurant preview powered by Order Management.
+                            Read-only Merchant storefront preview.
 
                         {% else %}
 
-                            Food ordering powered by Order Management.
+                            Food ordering powered by
+                            Order Management.
 
                         {% endif %}
 
                     </small>
 
+
                 </div>
 
 
 
-                <!-- FOOTER LINKS -->
-
                 <div class="sw-footer-links">
+
+
+                    {% if merchant_preview %}
+
+
+                    <a href="/merchant">
+                        Merchant Console
+                    </a>
+
+
+                    {% else %}
 
 
                     <a href="/swiggy/restaurants">
@@ -1083,9 +1359,7 @@
 
 
 
-                    <!-- CLIENT -->
-
-                    {% if current_user and current_user.role == "client" %}
+                    {% if user and user.role == "client" %}
 
 
                     <a href="/swiggy/my-orders">
@@ -1095,21 +1369,6 @@
 
                     {% endif %}
 
-
-
-                    <!-- MERCHANT -->
-
-                    {% if current_user and current_user.role == "merchant" %}
-
-
-                    <a href="/merchant">
-                        Merchant Console
-                    </a>
-
-
-                    <!-- ADMIN / CLIENT / PUBLIC -->
-
-                    {% else %}
 
 
                     <a href="/insights">
@@ -1145,7 +1404,7 @@
      INACTIVITY MODAL
      ========================================= -->
 
-{% if current_user %}
+{% if user %}
 
 
 <div
@@ -1173,6 +1432,7 @@
         <p>
 
             You have been logged out due to inactivity.
+
             Please log in again to continue.
 
         </p>
@@ -1201,22 +1461,15 @@
      JAVASCRIPT
      ========================================= -->
 
-
-<!-- JQUERY -->
-
 <script
     src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
 ></script>
 
 
-<!-- BOOTSTRAP -->
-
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 ></script>
 
-
-<!-- DATATABLES -->
 
 <script
     src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"
@@ -1228,16 +1481,12 @@
 ></script>
 
 
-<!-- THEME -->
-
 <script
     src="/static/js/theme.js?v=3"
 ></script>
 
 
-<!-- AUTHENTICATED SESSION SCRIPTS -->
-
-{% if current_user %}
+{% if user %}
 
 
 <script
@@ -1252,8 +1501,6 @@
 
 {% endif %}
 
-
-<!-- SWIGGY -->
 
 <script
     src="/static/js/swiggy.js?v=3"

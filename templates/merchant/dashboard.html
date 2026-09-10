@@ -37,7 +37,7 @@
             <p>
 
                 Review your restaurant's Swiggy
-                profile, menu and inventory health.
+                profile, menu, inventory and orders.
 
                 Your Merchant account is restricted
                 to this restaurant.
@@ -76,14 +76,24 @@
             </a>
 
 
+            <a
+                href="/merchant/orders"
+                class="btn btn-outline-secondary"
+            >
+                Orders
+            </a>
+
+
             {% if restaurant.is_active %}
+
 
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
                 class="btn btn-primary"
             >
-                Preview Restaurant
+                Preview on Swiggy
             </a>
+
 
             {% endif %}
 
@@ -158,7 +168,7 @@
 
 
     <!-- ========================================= -->
-    <!-- METRICS -->
+    <!-- MENU / INVENTORY METRICS -->
     <!-- ========================================= -->
 
     <div class="merchant-metric-grid">
@@ -166,53 +176,68 @@
 
         <article class="merchant-metric-card">
 
+
             <span>
                 Total Menu Items
             </span>
+
 
             <strong>
                 {{ summary.total_items }}
             </strong>
 
+
             <small>
-                Swiggy dishes registered to this restaurant
+
+                Swiggy dishes registered
+                to this restaurant
+
             </small>
+
 
         </article>
 
 
 
         <article class="merchant-metric-card">
+
 
             <span>
                 Active Items
             </span>
 
+
             <strong>
                 {{ summary.active_items }}
             </strong>
+
 
             <small>
                 Currently enabled menu items
             </small>
 
+
         </article>
 
 
 
         <article class="merchant-metric-card">
+
 
             <span>
                 Menu Categories
             </span>
 
+
             <strong>
                 {{ summary.category_count }}
             </strong>
 
+
             <small>
                 Categories currently used by your menu
             </small>
+
 
         </article>
 
@@ -220,17 +245,21 @@
 
         <article class="merchant-metric-card">
 
+
             <span>
                 Bestsellers
             </span>
+
 
             <strong>
                 {{ summary.bestseller_items }}
             </strong>
 
+
             <small>
-                Items currently marked as bestseller
+                Items marked as bestseller
             </small>
+
 
         </article>
 
@@ -243,17 +272,21 @@
             "
         >
 
+
             <span>
                 Low Stock
             </span>
+
 
             <strong>
                 {{ summary.low_stock_items }}
             </strong>
 
+
             <small>
                 At or below reorder level
             </small>
+
 
         </article>
 
@@ -266,17 +299,21 @@
             "
         >
 
+
             <span>
                 Out of Stock
             </span>
+
 
             <strong>
                 {{ summary.out_of_stock_items }}
             </strong>
 
+
             <small>
                 Items with no stock remaining
             </small>
+
 
         </article>
 
@@ -292,7 +329,9 @@
     <div class="merchant-dashboard-grid">
 
 
+        <!-- ===================================== -->
         <!-- RESTAURANT INFORMATION -->
+        <!-- ===================================== -->
 
         <article class="merchant-panel">
 
@@ -302,15 +341,19 @@
 
                 <div>
 
+
                     <span class="merchant-eyebrow">
                         PUBLIC PROFILE
                     </span>
+
 
                     <h2>
                         Restaurant Information
                     </h2>
 
+
                 </div>
+
 
 
                 <a
@@ -334,41 +377,54 @@
 
                 <div>
 
+
                     <dt>
                         Restaurant
                     </dt>
+
 
                     <dd>
                         {{ restaurant.name }}
                     </dd>
 
+
                 </div>
 
 
 
                 <div>
+
 
                     <dt>
                         Cuisines
                     </dt>
 
+
                     <dd>
+
                         {{ restaurant.cuisines or "Not configured" }}
+
                     </dd>
+
 
                 </div>
 
 
 
                 <div>
+
 
                     <dt>
                         Location
                     </dt>
 
+
                     <dd>
+
                         {{ restaurant.location or "Not configured" }}
+
                     </dd>
+
 
                 </div>
 
@@ -376,9 +432,11 @@
 
                 <div>
 
+
                     <dt>
                         Delivery Window
                     </dt>
+
 
                     <dd>
 
@@ -389,15 +447,18 @@
 
                     </dd>
 
+
                 </div>
 
 
 
                 <div>
 
+
                     <dt>
                         Rating
                     </dt>
+
 
                     <dd>
 
@@ -413,19 +474,25 @@
 
                     </dd>
 
+
                 </div>
 
 
 
                 <div>
 
+
                     <dt>
                         Offer
                     </dt>
 
+
                     <dd>
+
                         {{ restaurant.offer_text or "No active offer" }}
+
                     </dd>
+
 
                 </div>
 
@@ -437,7 +504,9 @@
 
 
 
-        <!-- ACCESS -->
+        <!-- ===================================== -->
+        <!-- PERMISSIONS -->
+        <!-- ===================================== -->
 
         <article class="merchant-panel">
 
@@ -447,13 +516,16 @@
 
                 <div>
 
+
                     <span class="merchant-eyebrow">
                         MERCHANT ACCESS
                     </span>
 
+
                     <h2>
                         Your Permission Boundary
                     </h2>
+
 
                 </div>
 
@@ -467,21 +539,30 @@
 
                 <div class="allowed">
 
+
                     <span>
                         ✓
                     </span>
 
+
                     <p>
+
 
                         <strong>
                             Restaurant Profile
                         </strong>
 
+
                         <small>
-                            Manage your own restaurant information.
+
+                            Manage your restaurant's
+                            public information.
+
                         </small>
 
+
                     </p>
+
 
                 </div>
 
@@ -489,21 +570,30 @@
 
                 <div class="allowed">
 
+
                     <span>
                         ✓
                     </span>
 
+
                     <p>
+
 
                         <strong>
                             Menu
                         </strong>
 
+
                         <small>
-                            Add and manage your own dishes.
+
+                            Add and manage dishes
+                            belonging to your restaurant.
+
                         </small>
 
+
                     </p>
+
 
                 </div>
 
@@ -511,22 +601,30 @@
 
                 <div class="allowed">
 
+
                     <span>
                         ✓
                     </span>
 
+
                     <p>
+
 
                         <strong>
                             Inventory
                         </strong>
 
+
                         <small>
-                            Monitor stock, restock dishes and
-                            configure low-stock thresholds.
+
+                            Monitor stock and restock
+                            your restaurant's dishes.
+
                         </small>
 
+
                     </p>
+
 
                 </div>
 
@@ -534,22 +632,61 @@
 
                 <div class="allowed">
 
+
                     <span>
                         ✓
                     </span>
 
+
                     <p>
+
+
+                        <strong>
+                            Restaurant Orders
+                        </strong>
+
+
+                        <small>
+
+                            Process only orders permanently
+                            assigned to your restaurant.
+
+                        </small>
+
+
+                    </p>
+
+
+                </div>
+
+
+
+                <div class="allowed">
+
+
+                    <span>
+                        ✓
+                    </span>
+
+
+                    <p>
+
 
                         <strong>
                             Swiggy Preview
                         </strong>
 
+
                         <small>
-                            Verify how your restaurant appears
-                            to customers.
+
+                            View your customer-facing
+                            restaurant page in read-only mode.
+
                         </small>
 
+
                     </p>
+
 
                 </div>
 
@@ -557,44 +694,92 @@
 
                 <div class="blocked">
 
+
                     <span>
                         ×
                     </span>
 
+
                     <p>
+
+
+                        <strong>
+                            Customer Ordering
+                        </strong>
+
+
+                        <small>
+
+                            Merchant accounts cannot
+                            add to cart or checkout.
+
+                        </small>
+
+
+                    </p>
+
+
+                </div>
+
+
+
+                <div class="blocked">
+
+
+                    <span>
+                        ×
+                    </span>
+
+
+                    <p>
+
+
+                        <strong>
+                            Other Restaurants
+                        </strong>
+
+
+                        <small>
+
+                            Merchant management privileges
+                            apply only to your assigned restaurant.
+
+                        </small>
+
+
+                    </p>
+
+
+                </div>
+
+
+
+                <div class="blocked">
+
+
+                    <span>
+                        ×
+                    </span>
+
+
+                    <p>
+
 
                         <strong>
                             Admin Areas
                         </strong>
 
+
                         <small>
-                            No global administration access.
+
+                            No global administration
+                            or user-management privileges.
+
                         </small>
+
 
                     </p>
 
-                </div>
-
-
-
-                <div class="blocked">
-
-                    <span>
-                        ×
-                    </span>
-
-                    <p>
-
-                        <strong>
-                            Client Areas
-                        </strong>
-
-                        <small>
-                            No cart, checkout, My Orders
-                            or Insights project access.
-                        </small>
-
-                    </p>
 
                 </div>
 
@@ -610,7 +795,7 @@
 
 
     <!-- ========================================= -->
-    <!-- MANAGEMENT -->
+    <!-- MANAGEMENT TOOLS -->
     <!-- ========================================= -->
 
     <article class="merchant-next-panel">
@@ -620,22 +805,23 @@
 
 
             <span class="merchant-eyebrow">
-                RESTAURANT MANAGEMENT
+                MERCHANT WORKSPACE
             </span>
 
 
             <h2>
-                Merchant management tools
+                Restaurant management tools
             </h2>
 
 
             <p>
 
-                Restaurant profile, menu and inventory
-                management are now available.
+                Profile, menu, inventory and restaurant
+                order management are available.
 
-                Restaurant-specific order management
-                is the next step.
+                Use Swiggy Preview to verify the
+                customer-facing result without entering
+                the client ordering workflow.
 
             </p>
 
@@ -665,15 +851,32 @@
 
             <a
                 href="/merchant/inventory"
-                class="btn btn-primary"
+                class="btn btn-outline-primary"
             >
                 Inventory
             </a>
 
 
-            <span>
+            <a
+                href="/merchant/orders"
+                class="btn btn-outline-primary"
+            >
                 Orders
-            </span>
+            </a>
+
+
+            {% if restaurant.is_active %}
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+                class="btn btn-primary"
+            >
+                Preview on Swiggy
+            </a>
+
+
+            {% endif %}
 
 
         </div>
