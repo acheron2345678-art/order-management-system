@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        {% block title %}
+
+        Merchant Console
+
+        {% endblock %}
+
+    </title>
+
+
+    <script>
+
+        (() => {
+
+            const savedTheme =
+                localStorage.getItem(
+                    "theme"
+                )
+                ||
+                "light";
+
+            document.documentElement.setAttribute(
+                "data-bs-theme",
+                savedTheme
+            );
+
+        })();
+
+    </script>
+
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="/static/css/merchant.css?v=1"
+    >
+
+
+    {% block head %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+{% set current_path = request.url.path %}
+
+
+<div class="merchant-shell">
+
+
+    <!-- ===================================== -->
+    <!-- DESKTOP SIDEBAR -->
+    <!-- ===================================== -->
+
+    <aside
+        class="
+            merchant-sidebar
+            d-none
+            d-lg-flex
+        "
+    >
+
+
+        <a
+            href="/merchant"
+            class="
+                merchant-brand
+                text-decoration-none
+            "
+        >
+
+
+            <span class="merchant-brand-mark">
+                M
+            </span>
+
+
+            <span>
+
+                <strong>
+                    Merchant Console
+                </strong>
+
+                <small>
+                    {{ restaurant.name }}
+                </small>
+
+            </span>
+
+
+        </a>
+
+
+
+        <div class="merchant-nav-label">
+            Restaurant
+        </div>
+
+
+        <nav class="merchant-nav">
+
+
+            <a
+                href="/merchant"
+                class="
+                    {% if current_path == '/merchant' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span>
+                    ◫
+                </span>
+
+                Dashboard
+
+            </a>
+
+
+
+            <a href="/swiggy">
+
+                <span>
+                    S
+                </span>
+
+                Swiggy Overview
+
+            </a>
+
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+            >
+
+                <span>
+                    ↗
+                </span>
+
+                Preview Restaurant
+
+            </a>
+
+
+        </nav>
+
+
+
+        <!-- ================================= -->
+        <!-- UPCOMING MANAGEMENT -->
+        <!-- ================================= -->
+
+        <div class="merchant-nav-label mt-4">
+            Management
+        </div>
+
+
+        <div class="merchant-coming-list">
+
+
+            <div>
+
+                <span>
+                    ○
+                </span>
+
+                Restaurant Profile
+
+                <small>
+                    Next
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ≡
+                </span>
+
+                Menu
+
+                <small>
+                    Next
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ▣
+                </span>
+
+                Inventory
+
+                <small>
+                    Next
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ◇
+                </span>
+
+                Orders
+
+                <small>
+                    Next
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="merchant-sidebar-spacer">
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- USER -->
+        <!-- ================================= -->
+
+        <div class="merchant-sidebar-user">
+
+
+            <div class="merchant-user-row">
+
+
+                <span class="merchant-user-avatar">
+
+                    {{ current_user.username[0]|upper }}
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        {{ current_user.username }}
+                    </strong>
+
+                    <small>
+                        Merchant
+                    </small>
+
+                </span>
+
+
+            </div>
+
+
+
+            <form
+                method="post"
+                action="/logout"
+            >
+
+                <button
+                    type="submit"
+                    class="
+                        btn
+                        btn-outline-secondary
+                        btn-sm
+                        w-100
+                    "
+                >
+                    Logout
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- ===================================== -->
+    <!-- MAIN -->
+    <!-- ===================================== -->
+
+    <main class="merchant-main">
+
+
+        <!-- TOPBAR -->
+
+        <header
+            class="
+                merchant-topbar
+                sticky-top
+            "
+        >
+
+
+            <div class="merchant-topbar-inner">
+
+
+                <!-- MOBILE MENU -->
+
+                <button
+                    class="
+                        btn
+                        btn-outline-secondary
+                        d-lg-none
+                    "
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#merchantMobileNav"
+                    aria-controls="merchantMobileNav"
+                >
+                    ☰
+                </button>
+
+
+
+                <div class="merchant-topbar-title">
+
+                    <small>
+                        Merchant Account
+                    </small>
+
+                    <strong>
+                        {{ restaurant.name }}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="merchant-topbar-actions">
+
+
+                    <a
+                        href="/swiggy/restaurants/{{ restaurant.id }}"
+                        class="
+                            btn
+                            btn-outline-primary
+                            d-none
+                            d-md-inline-flex
+                        "
+                    >
+                        Preview Restaurant
+                    </a>
+
+
+
+                    <button
+                        id="theme-toggle"
+                        type="button"
+                        class="
+                            btn
+                            btn-outline-secondary
+                        "
+                        aria-label="Switch theme"
+                        title="Switch theme"
+                    >
+
+                        <span id="theme-icon">
+                            ☾
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <div class="merchant-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- MOBILE NAVIGATION -->
+<!-- ========================================= -->
+
+<div
+    class="
+        offcanvas
+        offcanvas-start
+    "
+    tabindex="-1"
+    id="merchantMobileNav"
+    aria-labelledby="merchantMobileNavLabel"
+>
+
+
+    <div class="offcanvas-header border-bottom">
+
+
+        <div id="merchantMobileNavLabel">
+
+            <strong class="d-block">
+                Merchant Console
+            </strong>
+
+            <small class="text-body-secondary">
+                {{ restaurant.name }}
+            </small>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+        >
+        </button>
+
+
+    </div>
+
+
+
+    <div
+        class="
+            offcanvas-body
+            d-flex
+            flex-column
+        "
+    >
+
+
+        <nav class="merchant-mobile-nav">
+
+
+            <a href="/merchant">
+                Dashboard
+            </a>
+
+
+            <a href="/swiggy">
+                Swiggy Overview
+            </a>
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+            >
+                Preview Restaurant
+            </a>
+
+
+        </nav>
+
+
+
+        <div class="merchant-mobile-lock mt-4">
+
+            <strong>
+                Restaurant assignment locked
+            </strong>
+
+            <small>
+
+                Only an administrator can move
+                this account to another restaurant.
+
+            </small>
+
+        </div>
+
+
+
+        <div class="mt-auto pt-4">
+
+
+            <div
+                class="
+                    merchant-user-row
+                    mb-3
+                "
+            >
+
+
+                <span class="merchant-user-avatar">
+
+                    {{ current_user.username[0]|upper }}
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        {{ current_user.username }}
+                    </strong>
+
+                    <small>
+                        Merchant
+                    </small>
+
+                </span>
+
+
+            </div>
+
+
+
+            <form
+                method="post"
+                action="/logout"
+            >
+
+                <button
+                    type="submit"
+                    class="
+                        btn
+                        btn-outline-secondary
+                        w-100
+                    "
+                >
+                    Logout
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+<!-- Required for POST /logout -->
+
+<script
+    src="/static/js/csrf.js?v=1"
+></script>
+
+
+
+<script>
+
+    (() => {
+
+
+        const root =
+            document.documentElement;
+
+
+        const themeButton =
+            document.getElementById(
+                "theme-toggle"
+            );
+
+
+        const themeIcon =
+            document.getElementById(
+                "theme-icon"
+            );
+
+
+
+        function updateThemeIcon() {
+
+
+            const dark =
+                root.getAttribute(
+                    "data-bs-theme"
+                )
+                ===
+                "dark";
+
+
+            if (themeIcon) {
+
+                themeIcon.textContent =
+                    dark
+                        ? "☀"
+                        : "☾";
+
+            }
+
+
+        }
+
+
+
+        if (themeButton) {
+
+
+            themeButton.addEventListener(
+                "click",
+                () => {
+
+
+                    const nextTheme =
+                        root.getAttribute(
+                            "data-bs-theme"
+                        )
+                        ===
+                        "dark"
+                            ? "light"
+                            : "dark";
+
+
+                    root.setAttribute(
+                        "data-bs-theme",
+                        nextTheme
+                    );
+
+
+                    localStorage.setItem(
+                        "theme",
+                        nextTheme
+                    );
+
+
+                    updateThemeIcon();
+
+
+                }
+            );
+
+
+        }
+
+
+        updateThemeIcon();
+
+
+    })();
+
+</script>
+
+
+{% block scripts %}
+{% endblock %}
+
+
+</body>
+
+</html>

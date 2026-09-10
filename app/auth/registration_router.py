@@ -96,11 +96,7 @@ def _authenticated_destination(
         ==
         "merchant"
     ):
-
-        # Until the merchant dashboard is
-        # built in the next steps, send them
-        # to the Swiggy storefront preview.
-        return "/swiggy"
+        return "/merchant"
 
     return "/home"
 

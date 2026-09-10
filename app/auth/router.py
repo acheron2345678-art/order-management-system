@@ -89,11 +89,7 @@ def get_login_destination(
     user,
 ):
     if user.role == "merchant":
-
-        # Temporary destination until
-        # the Merchant Dashboard is
-        # added in 11E.
-        return "/swiggy"
+        return "/merchant"
 
     return "/home"
 

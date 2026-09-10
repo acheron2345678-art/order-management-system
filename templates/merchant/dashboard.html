@@ -1,0 +1,604 @@
+{% extends "merchant/base.html" %}
+
+
+{% block title %}
+
+{{ restaurant.name }} | Merchant Console
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="merchant-page">
+
+
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
+
+    <div class="merchant-page-header">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                RESTAURANT OVERVIEW
+            </span>
+
+
+            <h1>
+                {{ restaurant.name }}
+            </h1>
+
+
+            <p>
+
+                Review your restaurant's current
+                Swiggy setup and menu health.
+
+                Management controls remain limited
+                to this restaurant.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="merchant-header-actions">
+
+
+            <a
+                href="/swiggy"
+                class="
+                    btn
+                    btn-outline-secondary
+                "
+            >
+                Swiggy Overview
+            </a>
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+                class="btn btn-primary"
+            >
+                Preview Restaurant
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- STATUS -->
+    <!-- ========================================= -->
+
+    <div class="merchant-status-banner">
+
+
+        <div>
+
+
+            <span
+                class="
+                    merchant-status-dot
+
+                    {% if restaurant.is_active %}
+                        active
+                    {% else %}
+                        inactive
+                    {% endif %}
+                "
+            >
+            </span>
+
+
+            <span>
+                Restaurant status
+            </span>
+
+
+            <strong>
+
+                {% if restaurant.is_active %}
+
+                    Active
+
+                {% else %}
+
+                    Inactive
+
+                {% endif %}
+
+            </strong>
+
+
+        </div>
+
+
+
+        <small>
+
+            Restaurant assignment is locked
+            to this Merchant account.
+
+            Only an administrator can reassign it.
+
+        </small>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- METRICS -->
+    <!-- ========================================= -->
+
+    <div class="merchant-metric-grid">
+
+
+        <article class="merchant-metric-card">
+
+            <span>
+                Total Menu Items
+            </span>
+
+            <strong>
+                {{ summary.total_items }}
+            </strong>
+
+            <small>
+                Swiggy dishes registered to this restaurant
+            </small>
+
+        </article>
+
+
+
+        <article class="merchant-metric-card">
+
+            <span>
+                Active Items
+            </span>
+
+            <strong>
+                {{ summary.active_items }}
+            </strong>
+
+            <small>
+                Currently enabled menu items
+            </small>
+
+        </article>
+
+
+
+        <article class="merchant-metric-card">
+
+            <span>
+                Menu Categories
+            </span>
+
+            <strong>
+                {{ summary.category_count }}
+            </strong>
+
+            <small>
+                Categories currently used by your menu
+            </small>
+
+        </article>
+
+
+
+        <article class="merchant-metric-card">
+
+            <span>
+                Bestsellers
+            </span>
+
+            <strong>
+                {{ summary.bestseller_items }}
+            </strong>
+
+            <small>
+                Items currently marked as bestseller
+            </small>
+
+        </article>
+
+
+
+        <article
+            class="
+                merchant-metric-card
+                merchant-metric-warning
+            "
+        >
+
+            <span>
+                Low Stock
+            </span>
+
+            <strong>
+                {{ summary.low_stock_items }}
+            </strong>
+
+            <small>
+                At or below reorder level
+            </small>
+
+        </article>
+
+
+
+        <article
+            class="
+                merchant-metric-card
+                merchant-metric-danger
+            "
+        >
+
+            <span>
+                Out of Stock
+            </span>
+
+            <strong>
+                {{ summary.out_of_stock_items }}
+            </strong>
+
+            <small>
+                Items with no stock remaining
+            </small>
+
+        </article>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- DETAILS -->
+    <!-- ========================================= -->
+
+    <div class="merchant-dashboard-grid">
+
+
+        <!-- RESTAURANT PROFILE -->
+
+        <article class="merchant-panel">
+
+
+            <div class="merchant-panel-header">
+
+
+                <div>
+
+                    <span class="merchant-eyebrow">
+                        PUBLIC PROFILE
+                    </span>
+
+                    <h2>
+                        Restaurant Information
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="/swiggy/restaurants/{{ restaurant.id }}"
+                    class="
+                        btn
+                        btn-sm
+                        btn-outline-primary
+                    "
+                >
+                    Preview
+                </a>
+
+
+            </div>
+
+
+
+            <dl class="merchant-detail-list">
+
+
+                <div>
+
+                    <dt>
+                        Restaurant
+                    </dt>
+
+                    <dd>
+                        {{ restaurant.name }}
+                    </dd>
+
+                </div>
+
+
+
+                <div>
+
+                    <dt>
+                        Cuisines
+                    </dt>
+
+                    <dd>
+
+                        {{ restaurant.cuisines or "Not configured" }}
+
+                    </dd>
+
+                </div>
+
+
+
+                <div>
+
+                    <dt>
+                        Location
+                    </dt>
+
+                    <dd>
+
+                        {{ restaurant.location or "Not configured" }}
+
+                    </dd>
+
+                </div>
+
+
+
+                <div>
+
+                    <dt>
+                        Delivery Window
+                    </dt>
+
+                    <dd>
+
+                        {{ restaurant.delivery_min_minutes }}
+                        -
+                        {{ restaurant.delivery_max_minutes }}
+                        min
+
+                    </dd>
+
+                </div>
+
+
+
+                <div>
+
+                    <dt>
+                        Rating
+                    </dt>
+
+                    <dd>
+
+                        {% if restaurant.rating is not none %}
+
+                            ★ {{ "%.1f"|format(restaurant.rating) }}
+
+                        {% else %}
+
+                            Not rated
+
+                        {% endif %}
+
+                    </dd>
+
+                </div>
+
+
+            </dl>
+
+
+        </article>
+
+
+
+        <!-- SECURITY BOUNDARY -->
+
+        <article class="merchant-panel">
+
+
+            <div class="merchant-panel-header">
+
+
+                <div>
+
+                    <span class="merchant-eyebrow">
+                        MERCHANT ACCESS
+                    </span>
+
+                    <h2>
+                        Your Permission Boundary
+                    </h2>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="merchant-permission-list">
+
+
+                <div class="allowed">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Your restaurant
+                        </strong>
+
+                        <small>
+                            Manage only this restaurant
+                            and its Swiggy catalogue.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="allowed">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Swiggy preview
+                        </strong>
+
+                        <small>
+                            View the storefront and verify
+                            your restaurant page.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="blocked">
+
+                    <span>
+                        ×
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Admin areas
+                        </strong>
+
+                        <small>
+                            No users, global catalogue
+                            or administration access.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="blocked">
+
+                    <span>
+                        ×
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Client areas
+                        </strong>
+
+                        <small>
+                            No cart, checkout, My Orders
+                            or Insights project access.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- NEXT -->
+    <!-- ========================================= -->
+
+    <article class="merchant-next-panel">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                NEXT MANAGEMENT TOOLS
+            </span>
+
+
+            <h2>
+                Restaurant controls are coming next
+            </h2>
+
+
+            <p>
+
+                The Merchant security boundary and dashboard
+                are now in place.
+
+                We can now safely add restaurant profile,
+                menu, inventory and order controls.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="merchant-next-actions">
+
+            <span>
+                Restaurant Profile
+            </span>
+
+            <span>
+                Menu
+            </span>
+
+            <span>
+                Inventory
+            </span>
+
+            <span>
+                Orders
+            </span>
+
+        </div>
+
+
+    </article>
+
+
+</section>
+
+
+{% endblock %}
