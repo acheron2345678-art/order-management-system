@@ -1,18 +1,14 @@
 {% extends "merchant/base.html" %}
 
-
 {% block title %}
 
 {{ restaurant.name }} | Merchant Console
 
 {% endblock %}
 
-
 {% block content %}
 
-
 <section class="merchant-page">
-
 
     <!-- ========================================= -->
     <!-- HEADER -->
@@ -20,19 +16,15 @@
 
     <div class="merchant-page-header">
 
-
         <div>
-
 
             <span class="merchant-eyebrow">
                 RESTAURANT OVERVIEW
             </span>
 
-
             <h1>
                 {{ restaurant.name }}
             </h1>
-
 
             <p>
 
@@ -44,13 +36,9 @@
 
             </p>
 
-
         </div>
 
-
-
         <div class="merchant-header-actions">
-
 
             <a
                 href="/merchant/profile"
@@ -59,14 +47,12 @@
                 Edit Restaurant
             </a>
 
-
             <a
                 href="/merchant/menu"
                 class="btn btn-outline-secondary"
             >
                 Manage Menu
             </a>
-
 
             <a
                 href="/merchant/inventory"
@@ -75,7 +61,6 @@
                 Inventory
             </a>
 
-
             <a
                 href="/merchant/orders"
                 class="btn btn-outline-secondary"
@@ -83,9 +68,7 @@
                 Orders
             </a>
 
-
             {% if restaurant.is_active %}
-
 
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -94,16 +77,11 @@
                 Preview on Swiggy
             </a>
 
-
             {% endif %}
-
 
         </div>
 
-
     </div>
-
-
 
     <!-- ========================================= -->
     <!-- STATUS -->
@@ -111,9 +89,7 @@
 
     <div class="merchant-status-banner">
 
-
         <div>
-
 
             <span
                 class="
@@ -128,11 +104,9 @@
             >
             </span>
 
-
             <span>
                 Restaurant status
             </span>
-
 
             <strong>
 
@@ -148,10 +122,7 @@
 
             </strong>
 
-
         </div>
-
-
 
         <small>
 
@@ -162,10 +133,133 @@
 
         </small>
 
-
     </div>
 
+    <!-- ========================================= -->
+    <!-- ORDER SUMMARY -->
+    <!-- ========================================= -->
 
+    <article class="merchant-panel mb-4">
+
+        <div class="merchant-panel-header">
+
+            <div>
+
+                <span class="merchant-eyebrow">
+                    ORDER SUMMARY
+                </span>
+
+                <h2>
+                    Restaurant Orders
+                </h2>
+
+            </div>
+
+            <a
+                href="/merchant/orders"
+                class="
+                    btn
+                    btn-sm
+                    btn-outline-primary
+                "
+            >
+                View All Orders
+            </a>
+
+        </div>
+
+        <div class="merchant-order-summary-grid">
+
+            <a
+                href="/merchant/orders"
+                class="merchant-order-summary-card"
+            >
+
+                <span>
+                    Total Orders
+                </span>
+
+                <strong>
+                    {{ summary.total_orders }}
+                </strong>
+
+            </a>
+
+            <a
+                href="/merchant/orders?status=pending"
+                class="merchant-order-summary-card"
+            >
+
+                <span>
+                    Pending
+                </span>
+
+                <strong>
+                    {{ summary.pending_orders }}
+                </strong>
+
+            </a>
+
+            <a
+                href="/merchant/orders?status=processing"
+                class="merchant-order-summary-card"
+            >
+
+                <span>
+                    Processing
+                </span>
+
+                <strong>
+                    {{ summary.processing_orders }}
+                </strong>
+
+            </a>
+
+            <a
+                href="/merchant/orders?status=completed"
+                class="merchant-order-summary-card"
+            >
+
+                <span>
+                    Completed
+                </span>
+
+                <strong>
+                    {{ summary.completed_orders }}
+                </strong>
+
+            </a>
+
+            <a
+                href="/merchant/orders?status=cancelled"
+                class="merchant-order-summary-card"
+            >
+
+                <span>
+                    Cancelled
+                </span>
+
+                <strong>
+                    {{ summary.cancelled_orders }}
+                </strong>
+
+            </a>
+
+            <article class="merchant-order-summary-card">
+
+                <span>
+                    Completed Revenue
+                </span>
+
+                <strong>
+                    ₹{{ "%.2f"|format(summary.completed_revenue) }}
+                </strong>
+
+            </article>
+
+        </div>
+
+    </article>
 
     <!-- ========================================= -->
     <!-- MENU / INVENTORY METRICS -->
@@ -173,19 +267,15 @@
 
     <div class="merchant-metric-grid">
 
-
         <article class="merchant-metric-card">
-
 
             <span>
                 Total Menu Items
             </span>
 
-
             <strong>
                 {{ summary.total_items }}
             </strong>
-
 
             <small>
 
@@ -194,76 +284,55 @@
 
             </small>
 
-
         </article>
 
-
-
         <article class="merchant-metric-card">
-
 
             <span>
                 Active Items
             </span>
 
-
             <strong>
                 {{ summary.active_items }}
             </strong>
-
 
             <small>
                 Currently enabled menu items
             </small>
 
-
         </article>
 
-
-
         <article class="merchant-metric-card">
-
 
             <span>
                 Menu Categories
             </span>
 
-
             <strong>
                 {{ summary.category_count }}
             </strong>
-
 
             <small>
                 Categories currently used by your menu
             </small>
 
-
         </article>
 
-
-
         <article class="merchant-metric-card">
-
 
             <span>
                 Bestsellers
             </span>
 
-
             <strong>
                 {{ summary.bestseller_items }}
             </strong>
-
 
             <small>
                 Items marked as bestseller
             </small>
 
-
         </article>
-
-
 
         <article
             class="
@@ -272,25 +341,19 @@
             "
         >
 
-
             <span>
                 Low Stock
             </span>
-
 
             <strong>
                 {{ summary.low_stock_items }}
             </strong>
 
-
             <small>
                 At or below reorder level
             </small>
 
-
         </article>
-
-
 
         <article
             class="
@@ -299,28 +362,21 @@
             "
         >
 
-
             <span>
                 Out of Stock
             </span>
-
 
             <strong>
                 {{ summary.out_of_stock_items }}
             </strong>
 
-
             <small>
                 Items with no stock remaining
             </small>
 
-
         </article>
 
-
     </div>
-
-
 
     <!-- ========================================= -->
     <!-- DETAILS -->
@@ -328,33 +384,25 @@
 
     <div class="merchant-dashboard-grid">
 
-
         <!-- ===================================== -->
         <!-- RESTAURANT INFORMATION -->
         <!-- ===================================== -->
 
         <article class="merchant-panel">
 
-
             <div class="merchant-panel-header">
 
-
                 <div>
-
 
                     <span class="merchant-eyebrow">
                         PUBLIC PROFILE
                     </span>
 
-
                     <h2>
                         Restaurant Information
                     </h2>
 
-
                 </div>
-
-
 
                 <a
                     href="/merchant/profile"
@@ -367,38 +415,27 @@
                     Edit Profile
                 </a>
 
-
             </div>
-
-
 
             <dl class="merchant-detail-list">
 
-
                 <div>
-
 
                     <dt>
                         Restaurant
                     </dt>
 
-
                     <dd>
                         {{ restaurant.name }}
                     </dd>
 
-
                 </div>
 
-
-
                 <div>
-
 
                     <dt>
                         Cuisines
                     </dt>
-
 
                     <dd>
 
@@ -406,18 +443,13 @@
 
                     </dd>
 
-
                 </div>
 
-
-
                 <div>
-
 
                     <dt>
                         Location
                     </dt>
-
 
                     <dd>
 
@@ -425,18 +457,13 @@
 
                     </dd>
 
-
                 </div>
 
-
-
                 <div>
-
 
                     <dt>
                         Delivery Window
                     </dt>
-
 
                     <dd>
 
@@ -447,18 +474,13 @@
 
                     </dd>
 
-
                 </div>
 
-
-
                 <div>
-
 
                     <dt>
                         Rating
                     </dt>
-
 
                     <dd>
 
@@ -474,18 +496,13 @@
 
                     </dd>
 
-
                 </div>
 
-
-
                 <div>
-
 
                     <dt>
                         Offer
                     </dt>
-
 
                     <dd>
 
@@ -493,16 +510,11 @@
 
                     </dd>
 
-
                 </div>
-
 
             </dl>
 
-
         </article>
-
-
 
         <!-- ===================================== -->
         <!-- PERMISSIONS -->
@@ -510,48 +522,35 @@
 
         <article class="merchant-panel">
 
-
             <div class="merchant-panel-header">
 
-
                 <div>
-
 
                     <span class="merchant-eyebrow">
                         MERCHANT ACCESS
                     </span>
 
-
                     <h2>
                         Your Permission Boundary
                     </h2>
 
-
                 </div>
-
 
             </div>
 
-
-
             <div class="merchant-permission-list">
 
-
                 <div class="allowed">
-
 
                     <span>
                         ✓
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Restaurant Profile
                         </strong>
-
 
                         <small>
 
@@ -560,29 +559,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="allowed">
-
 
                     <span>
                         ✓
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Menu
                         </strong>
-
 
                         <small>
 
@@ -591,29 +582,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="allowed">
-
 
                     <span>
                         ✓
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Inventory
                         </strong>
-
 
                         <small>
 
@@ -622,29 +605,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="allowed">
-
 
                     <span>
                         ✓
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Restaurant Orders
                         </strong>
-
 
                         <small>
 
@@ -653,29 +628,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="allowed">
-
 
                     <span>
                         ✓
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Swiggy Preview
                         </strong>
-
 
                         <small>
 
@@ -684,29 +651,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="blocked">
-
 
                     <span>
                         ×
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Customer Ordering
                         </strong>
-
 
                         <small>
 
@@ -715,29 +674,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="blocked">
-
 
                     <span>
                         ×
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Other Restaurants
                         </strong>
-
 
                         <small>
 
@@ -746,29 +697,21 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
-
                 <div class="blocked">
-
 
                     <span>
                         ×
                     </span>
 
-
                     <p>
-
 
                         <strong>
                             Admin Areas
                         </strong>
-
 
                         <small>
 
@@ -777,22 +720,15 @@
 
                         </small>
 
-
                     </p>
-
 
                 </div>
 
-
             </div>
-
 
         </article>
 
-
     </div>
-
-
 
     <!-- ========================================= -->
     <!-- MANAGEMENT TOOLS -->
@@ -800,19 +736,15 @@
 
     <article class="merchant-next-panel">
 
-
         <div>
-
 
             <span class="merchant-eyebrow">
                 MERCHANT WORKSPACE
             </span>
 
-
             <h2>
                 Restaurant management tools
             </h2>
-
 
             <p>
 
@@ -825,13 +757,9 @@
 
             </p>
 
-
         </div>
 
-
-
         <div class="merchant-next-actions">
-
 
             <a
                 href="/merchant/profile"
@@ -840,14 +768,12 @@
                 Profile
             </a>
 
-
             <a
                 href="/merchant/menu"
                 class="btn btn-outline-primary"
             >
                 Menu
             </a>
-
 
             <a
                 href="/merchant/inventory"
@@ -856,7 +782,6 @@
                 Inventory
             </a>
 
-
             <a
                 href="/merchant/orders"
                 class="btn btn-outline-primary"
@@ -864,9 +789,7 @@
                 Orders
             </a>
 
-
             {% if restaurant.is_active %}
-
 
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -875,17 +798,12 @@
                 Preview on Swiggy
             </a>
 
-
             {% endif %}
-
 
         </div>
 
-
     </article>
 
-
 </section>
-
 
 {% endblock %}
