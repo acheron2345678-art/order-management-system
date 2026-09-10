@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
 
 <head>
 
@@ -11,9 +15,13 @@
     >
 
     <title>
+
         {% block title %}
+
         Merchant Console
+
         {% endblock %}
+
     </title>
 
 
@@ -22,7 +30,9 @@
         (() => {
 
             const savedTheme =
-                localStorage.getItem("theme")
+                localStorage.getItem(
+                    "theme"
+                )
                 ||
                 "light";
 
@@ -44,7 +54,7 @@
 
     <link
         rel="stylesheet"
-        href="/static/css/merchant.css?v=3"
+        href="/static/css/merchant.css?v=4"
     >
 
 
@@ -63,6 +73,10 @@
 <div class="merchant-shell">
 
 
+    <!-- ========================================= -->
+    <!-- DESKTOP SIDEBAR -->
+    <!-- ========================================= -->
+
     <aside
         class="
             merchant-sidebar
@@ -71,6 +85,8 @@
         "
     >
 
+
+        <!-- BRAND -->
 
         <a
             href="/merchant"
@@ -101,6 +117,10 @@
 
 
 
+        <!-- ===================================== -->
+        <!-- RESTAURANT -->
+        <!-- ===================================== -->
+
         <div class="merchant-nav-label">
             Restaurant
         </div>
@@ -108,6 +128,8 @@
 
         <nav class="merchant-nav">
 
+
+            <!-- DASHBOARD -->
 
             <a
                 href="/merchant"
@@ -128,6 +150,8 @@
 
 
 
+            <!-- PROFILE -->
+
             <a
                 href="/merchant/profile"
                 class="
@@ -146,6 +170,8 @@
             </a>
 
 
+
+            <!-- MENU -->
 
             <a
                 href="/merchant/menu"
@@ -166,6 +192,29 @@
 
 
 
+            <!-- INVENTORY -->
+
+            <a
+                href="/merchant/inventory"
+                class="
+                    {% if current_path.startswith('/merchant/inventory') %}
+                    active
+                    {% endif %}
+                "
+            >
+
+                <span>
+                    ▣
+                </span>
+
+                Inventory
+
+            </a>
+
+
+
+            <!-- SWIGGY OVERVIEW -->
+
             <a href="/swiggy">
 
                 <span>
@@ -177,6 +226,8 @@
             </a>
 
 
+
+            <!-- PREVIEW -->
 
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -195,27 +246,16 @@
 
 
 
+        <!-- ===================================== -->
+        <!-- MANAGEMENT -->
+        <!-- ===================================== -->
+
         <div class="merchant-nav-label mt-4">
             Management
         </div>
 
 
         <div class="merchant-coming-list">
-
-
-            <div>
-
-                <span>
-                    ▣
-                </span>
-
-                Inventory
-
-                <small>
-                    Next
-                </small>
-
-            </div>
 
 
             <div>
@@ -241,6 +281,10 @@
         </div>
 
 
+
+        <!-- ===================================== -->
+        <!-- USER -->
+        <!-- ===================================== -->
 
         <div class="merchant-sidebar-user">
 
@@ -299,8 +343,14 @@
 
 
 
+    <!-- ========================================= -->
+    <!-- MAIN -->
+    <!-- ========================================= -->
+
     <main class="merchant-main">
 
+
+        <!-- TOPBAR -->
 
         <header
             class="
@@ -313,6 +363,8 @@
             <div class="merchant-topbar-inner">
 
 
+                <!-- MOBILE MENU -->
+
                 <button
                     class="
                         btn
@@ -323,11 +375,14 @@
                     data-bs-toggle="offcanvas"
                     data-bs-target="#merchantMobileNav"
                     aria-controls="merchantMobileNav"
+                    aria-label="Open Merchant navigation"
                 >
                     ☰
                 </button>
 
 
+
+                <!-- TITLE -->
 
                 <div class="merchant-topbar-title">
 
@@ -342,6 +397,8 @@
                 </div>
 
 
+
+                <!-- ACTIONS -->
 
                 <div class="merchant-topbar-actions">
 
@@ -367,7 +424,10 @@
                     <button
                         id="theme-toggle"
                         type="button"
-                        class="btn btn-outline-secondary"
+                        class="
+                            btn
+                            btn-outline-secondary
+                        "
                         aria-label="Switch theme"
                         title="Switch theme"
                     >
@@ -389,6 +449,8 @@
 
 
 
+        <!-- CONTENT -->
+
         <div class="merchant-content">
 
             {% block content %}
@@ -403,6 +465,10 @@
 </div>
 
 
+
+<!-- ========================================= -->
+<!-- MOBILE NAVIGATION -->
+<!-- ========================================= -->
 
 <div
     class="
@@ -471,6 +537,11 @@
             </a>
 
 
+            <a href="/merchant/inventory">
+                Inventory
+            </a>
+
+
             <a href="/swiggy">
                 Swiggy Overview
             </a>
@@ -486,6 +557,8 @@
         </nav>
 
 
+
+        <!-- LOCK NOTICE -->
 
         <div class="merchant-mobile-lock mt-4">
 
@@ -505,10 +578,17 @@
 
 
 
+        <!-- USER -->
+
         <div class="mt-auto pt-4">
 
 
-            <div class="merchant-user-row mb-3">
+            <div
+                class="
+                    merchant-user-row
+                    mb-3
+                "
+            >
 
 
                 <span class="merchant-user-avatar">
@@ -564,19 +644,33 @@
 
 
 
+<!-- ========================================= -->
+<!-- BOOTSTRAP -->
+<!-- ========================================= -->
+
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 ></script>
 
+
+<!-- ========================================= -->
+<!-- CSRF -->
+<!-- ========================================= -->
 
 <script
     src="/static/js/csrf.js?v=1"
 ></script>
 
 
+
+<!-- ========================================= -->
+<!-- THEME -->
+<!-- ========================================= -->
+
 <script>
 
     (() => {
+
 
         const root =
             document.documentElement;
@@ -594,7 +688,9 @@
             );
 
 
+
         function updateThemeIcon() {
+
 
             const dark =
                 root.getAttribute(
@@ -613,14 +709,18 @@
 
             }
 
+
         }
+
 
 
         if (themeButton) {
 
+
             themeButton.addEventListener(
                 "click",
                 () => {
+
 
                     const nextTheme =
                         root.getAttribute(
@@ -646,13 +746,16 @@
 
                     updateThemeIcon();
 
+
                 }
             );
+
 
         }
 
 
         updateThemeIcon();
+
 
     })();
 

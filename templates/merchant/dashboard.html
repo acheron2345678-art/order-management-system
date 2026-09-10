@@ -14,6 +14,10 @@
 <section class="merchant-page">
 
 
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
+
     <div class="merchant-page-header">
 
 
@@ -32,8 +36,8 @@
 
             <p>
 
-                Review your restaurant's current
-                Swiggy setup and menu health.
+                Review your restaurant's Swiggy
+                profile, menu and inventory health.
 
                 Your Merchant account is restricted
                 to this restaurant.
@@ -65,10 +69,10 @@
 
 
             <a
-                href="/swiggy"
+                href="/merchant/inventory"
                 class="btn btn-outline-secondary"
             >
-                Swiggy Overview
+                Inventory
             </a>
 
 
@@ -90,6 +94,10 @@
     </div>
 
 
+
+    <!-- ========================================= -->
+    <!-- STATUS -->
+    <!-- ========================================= -->
 
     <div class="merchant-status-banner">
 
@@ -119,15 +127,20 @@
             <strong>
 
                 {% if restaurant.is_active %}
+
                     Active
+
                 {% else %}
+
                     Inactive
+
                 {% endif %}
 
             </strong>
 
 
         </div>
+
 
 
         <small>
@@ -143,6 +156,10 @@
     </div>
 
 
+
+    <!-- ========================================= -->
+    <!-- METRICS -->
+    <!-- ========================================= -->
 
     <div class="merchant-metric-grid">
 
@@ -268,8 +285,14 @@
 
 
 
+    <!-- ========================================= -->
+    <!-- DETAILS -->
+    <!-- ========================================= -->
+
     <div class="merchant-dashboard-grid">
 
+
+        <!-- RESTAURANT INFORMATION -->
 
         <article class="merchant-panel">
 
@@ -322,6 +345,7 @@
                 </div>
 
 
+
                 <div>
 
                     <dt>
@@ -335,6 +359,7 @@
                 </div>
 
 
+
                 <div>
 
                     <dt>
@@ -346,6 +371,7 @@
                     </dd>
 
                 </div>
+
 
 
                 <div>
@@ -364,6 +390,7 @@
                     </dd>
 
                 </div>
+
 
 
                 <div>
@@ -389,6 +416,7 @@
                 </div>
 
 
+
                 <div>
 
                     <dt>
@@ -408,6 +436,8 @@
         </article>
 
 
+
+        <!-- ACCESS -->
 
         <article class="merchant-panel">
 
@@ -444,34 +474,11 @@
                     <p>
 
                         <strong>
-                            Your Restaurant
-                        </strong>
-
-                        <small>
-                            Manage only your assigned restaurant.
-                        </small>
-
-                    </p>
-
-                </div>
-
-
-
-                <div class="allowed">
-
-                    <span>
-                        ✓
-                    </span>
-
-                    <p>
-
-                        <strong>
                             Restaurant Profile
                         </strong>
 
                         <small>
-                            Manage public restaurant information
-                            and availability.
+                            Manage your own restaurant information.
                         </small>
 
                     </p>
@@ -493,8 +500,30 @@
                         </strong>
 
                         <small>
-                            Add and manage dishes belonging
-                            only to this restaurant.
+                            Add and manage your own dishes.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="allowed">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Inventory
+                        </strong>
+
+                        <small>
+                            Monitor stock, restock dishes and
+                            configure low-stock thresholds.
                         </small>
 
                     </p>
@@ -516,8 +545,8 @@
                         </strong>
 
                         <small>
-                            View the storefront and verify
-                            your restaurant page.
+                            Verify how your restaurant appears
+                            to customers.
                         </small>
 
                     </p>
@@ -539,8 +568,7 @@
                         </strong>
 
                         <small>
-                            No user management, global catalogue
-                            or administrator access.
+                            No global administration access.
                         </small>
 
                     </p>
@@ -571,29 +599,6 @@
                 </div>
 
 
-
-                <div class="blocked">
-
-                    <span>
-                        ×
-                    </span>
-
-                    <p>
-
-                        <strong>
-                            Restaurant Assignment
-                        </strong>
-
-                        <small>
-                            Only an administrator can move
-                            this account to another restaurant.
-                        </small>
-
-                    </p>
-
-                </div>
-
-
             </div>
 
 
@@ -603,6 +608,10 @@
     </div>
 
 
+
+    <!-- ========================================= -->
+    <!-- MANAGEMENT -->
+    <!-- ========================================= -->
 
     <article class="merchant-next-panel">
 
@@ -616,17 +625,17 @@
 
 
             <h2>
-                Manage your restaurant
+                Merchant management tools
             </h2>
 
 
             <p>
 
-                Restaurant profile and menu management
-                are now active.
+                Restaurant profile, menu and inventory
+                management are now available.
 
-                Dedicated inventory and restaurant-order
-                tools will be added next.
+                Restaurant-specific order management
+                is the next step.
 
             </p>
 
@@ -642,21 +651,24 @@
                 href="/merchant/profile"
                 class="btn btn-outline-primary"
             >
-                Restaurant Profile
+                Profile
             </a>
 
 
             <a
                 href="/merchant/menu"
-                class="btn btn-primary"
+                class="btn btn-outline-primary"
             >
-                Manage Menu
+                Menu
             </a>
 
 
-            <span>
+            <a
+                href="/merchant/inventory"
+                class="btn btn-primary"
+            >
                 Inventory
-            </span>
+            </a>
 
 
             <span>

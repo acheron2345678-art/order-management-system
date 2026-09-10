@@ -1,0 +1,1119 @@
+{% extends "merchant/base.html" %}
+
+
+{% block title %}
+
+Inventory | {{ restaurant.name }}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="merchant-page">
+
+
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
+
+    <div class="merchant-page-header">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                INVENTORY MANAGEMENT
+            </span>
+
+
+            <h1>
+                Inventory
+            </h1>
+
+
+            <p>
+
+                Monitor and update stock for dishes
+                belonging to {{ restaurant.name }}.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="merchant-header-actions">
+
+
+            <a
+                href="/merchant/menu"
+                class="btn btn-outline-secondary"
+            >
+                Manage Menu
+            </a>
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+                class="btn btn-primary"
+            >
+                Preview Restaurant
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- MESSAGES -->
+    <!-- ========================================= -->
+
+    {% if error %}
+
+
+    <div
+        class="alert alert-danger"
+        role="alert"
+    >
+
+        {{ error }}
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    {% if request.query_params.get("restocked") %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Stock added successfully.
+        </strong>
+
+        Inventory has been updated.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    {% if request.query_params.get("adjusted") %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Inventory adjusted.
+        </strong>
+
+        The stock quantity and reorder level
+        have been saved.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    {% if request.query_params.get("bulk") %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Bulk restock completed.
+        </strong>
+
+        {{ request.query_params.get("bulk") }}
+        inventory item{% if request.query_params.get("bulk") != "1" %}s{% endif %}
+        updated.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- ========================================= -->
+    <!-- SUMMARY -->
+    <!-- ========================================= -->
+
+    <div class="merchant-inventory-summary-grid">
+
+
+        <article class="merchant-inventory-summary-card">
+
+            <span>
+                Menu Items
+            </span>
+
+            <strong>
+                {{ summary.total_products }}
+            </strong>
+
+            <small>
+                Inventory-tracked dishes
+            </small>
+
+        </article>
+
+
+
+        <article class="merchant-inventory-summary-card">
+
+            <span>
+                Total Units
+            </span>
+
+            <strong>
+                {{ summary.total_units }}
+            </strong>
+
+            <small>
+                Units currently available
+            </small>
+
+        </article>
+
+
+
+        <article class="merchant-inventory-summary-card">
+
+            <span>
+                Healthy Stock
+            </span>
+
+            <strong>
+                {{ summary.healthy_stock }}
+            </strong>
+
+            <small>
+                Above reorder level
+            </small>
+
+        </article>
+
+
+
+        <article
+            class="
+                merchant-inventory-summary-card
+                merchant-inventory-warning-card
+            "
+        >
+
+            <span>
+                Low Stock
+            </span>
+
+            <strong>
+                {{ summary.low_stock }}
+            </strong>
+
+            <small>
+                Reorder recommended
+            </small>
+
+        </article>
+
+
+
+        <article
+            class="
+                merchant-inventory-summary-card
+                merchant-inventory-danger-card
+            "
+        >
+
+            <span>
+                Out of Stock
+            </span>
+
+            <strong>
+                {{ summary.out_of_stock }}
+            </strong>
+
+            <small>
+                Unavailable to customers
+            </small>
+
+        </article>
+
+
+    </div>
+
+
+
+    {% if products %}
+
+
+    <!-- ========================================= -->
+    <!-- BULK RESTOCK -->
+    <!-- ========================================= -->
+
+    <details class="merchant-panel merchant-bulk-restock">
+
+
+        <summary class="merchant-bulk-restock-summary">
+
+
+            <div>
+
+
+                <span class="merchant-eyebrow">
+                    BULK ACTION
+                </span>
+
+
+                <strong>
+                    Bulk Restock
+                </strong>
+
+
+                <small>
+
+                    Add stock to several dishes
+                    in one operation.
+
+                </small>
+
+
+            </div>
+
+
+            <span class="merchant-bulk-chevron">
+                +
+            </span>
+
+
+        </summary>
+
+
+
+        <div class="merchant-bulk-restock-body">
+
+
+            <form
+                method="post"
+                action="/merchant/inventory/bulk-restock"
+            >
+
+
+                <div class="table-responsive">
+
+
+                    <table
+                        class="
+                            table
+                            align-middle
+                            mb-0
+                        "
+                    >
+
+
+                        <thead>
+
+
+                            <tr>
+
+                                <th>
+                                    Dish
+                                </th>
+
+                                <th>
+                                    Current Stock
+                                </th>
+
+                                <th>
+                                    Low Stock Level
+                                </th>
+
+                                <th style="width: 190px;">
+                                    Add Quantity
+                                </th>
+
+                            </tr>
+
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                            {% for product in products %}
+
+
+                            <tr>
+
+
+                                <td>
+
+
+                                    <strong class="d-block">
+                                        {{ product.product_name }}
+                                    </strong>
+
+
+                                    <small class="text-body-secondary">
+
+                                        {{ product.menu_category or "Uncategorised" }}
+
+                                    </small>
+
+
+                                </td>
+
+
+
+                                <td>
+
+                                    {{ product.stock_quantity }}
+
+                                </td>
+
+
+
+                                <td>
+
+                                    {{ product.reorder_level }}
+
+                                </td>
+
+
+
+                                <td>
+
+
+                                    <input
+                                        type="hidden"
+                                        name="product_ids"
+                                        value="{{ product.id }}"
+                                    >
+
+
+                                    <div class="input-group input-group-sm">
+
+
+                                        <span class="input-group-text">
+                                            +
+                                        </span>
+
+
+                                        <input
+                                            type="number"
+                                            name="quantities"
+                                            class="form-control"
+                                            value="0"
+                                            min="0"
+                                            step="1"
+                                            aria-label="Restock {{ product.product_name }}"
+                                        >
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-end
+                        mt-3
+                    "
+                >
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Apply Bulk Restock
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </details>
+
+
+
+    <!-- ========================================= -->
+    <!-- INVENTORY TABLE -->
+    <!-- ========================================= -->
+
+    <div class="merchant-panel mt-4">
+
+
+        <div class="merchant-inventory-toolbar">
+
+
+            <div>
+
+
+                <span class="merchant-eyebrow">
+                    {{ restaurant.name|upper }}
+                </span>
+
+
+                <h2>
+                    Stock Levels
+                </h2>
+
+
+            </div>
+
+
+
+            <div class="merchant-inventory-search">
+
+
+                <input
+                    id="merchant-inventory-search"
+                    type="search"
+                    class="form-control"
+                    placeholder="Search inventory..."
+                    autocomplete="off"
+                >
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="table-responsive">
+
+
+            <table
+                class="
+                    table
+                    align-middle
+                    merchant-inventory-table
+                    mb-0
+                "
+            >
+
+
+                <thead>
+
+
+                    <tr>
+
+                        <th>
+                            Dish
+                        </th>
+
+                        <th>
+                            Stock
+                        </th>
+
+                        <th>
+                            Reorder Level
+                        </th>
+
+                        <th>
+                            Health
+                        </th>
+
+                        <th>
+                            Last Restocked
+                        </th>
+
+                        <th>
+                            Quick Restock
+                        </th>
+
+                        <th>
+                            Adjustment
+                        </th>
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for product in products %}
+
+
+                    <tr
+                        data-inventory-row
+                        data-search-text="{{ (product.product_name ~ ' ' ~ (product.menu_category or '') ~ ' ' ~ (product.description or ''))|lower }}"
+                    >
+
+
+                        <!-- DISH -->
+
+                        <td>
+
+
+                            <div class="merchant-inventory-product">
+
+
+                                {% if product.image_url %}
+
+
+                                <img
+                                    src="{{ product.image_url }}"
+                                    alt="{{ product.product_name }}"
+                                    class="merchant-inventory-thumb"
+                                >
+
+
+                                {% else %}
+
+
+                                <div
+                                    class="
+                                        merchant-inventory-thumb
+                                        merchant-inventory-thumb-placeholder
+                                    "
+                                >
+                                    {{ product.product_name[0]|upper }}
+                                </div>
+
+
+                                {% endif %}
+
+
+
+                                <div>
+
+
+                                    <strong>
+                                        {{ product.product_name }}
+                                    </strong>
+
+
+                                    <small>
+
+                                        {{ product.menu_category or "Uncategorised" }}
+
+                                    </small>
+
+
+                                    {% if not product.is_active %}
+
+                                    <span
+                                        class="
+                                            badge
+                                            text-bg-secondary
+                                            mt-1
+                                        "
+                                    >
+                                        Menu item inactive
+                                    </span>
+
+                                    {% endif %}
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </td>
+
+
+
+                        <!-- STOCK -->
+
+                        <td>
+
+
+                            <strong class="merchant-stock-number">
+
+                                {{ product.stock_quantity }}
+
+                            </strong>
+
+
+                        </td>
+
+
+
+                        <!-- REORDER -->
+
+                        <td>
+
+                            {{ product.reorder_level }}
+
+                        </td>
+
+
+
+                        <!-- HEALTH -->
+
+                        <td>
+
+
+                            {% if product.stock_quantity <= 0 %}
+
+
+                            <span class="badge text-bg-danger">
+                                Out of Stock
+                            </span>
+
+
+                            {% elif product.stock_quantity <= product.reorder_level %}
+
+
+                            <span class="badge text-bg-warning">
+                                Low Stock
+                            </span>
+
+
+                            {% else %}
+
+
+                            <span class="badge text-bg-success">
+                                Healthy
+                            </span>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <!-- LAST RESTOCK -->
+
+                        <td>
+
+
+                            {% if product.last_restocked %}
+
+
+                            <span class="d-block">
+
+                                {{ product.last_restocked.strftime('%d %b %Y') }}
+
+                            </span>
+
+
+                            <small class="text-body-secondary">
+
+                                {{ product.last_restocked.strftime('%I:%M %p') }}
+
+                            </small>
+
+
+                            {% else %}
+
+
+                            <span class="text-body-secondary">
+                                Never
+                            </span>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <!-- QUICK RESTOCK -->
+
+                        <td>
+
+
+                            <form
+                                method="post"
+                                action="/merchant/inventory/{{ product.id }}/restock"
+                                class="merchant-inline-restock"
+                            >
+
+
+                                <div class="input-group input-group-sm">
+
+
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        class="form-control"
+                                        min="1"
+                                        step="1"
+                                        value="1"
+                                        required
+                                        aria-label="Restock quantity for {{ product.product_name }}"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-success"
+                                    >
+                                        + Add
+                                    </button>
+
+
+                                </div>
+
+
+                            </form>
+
+
+                        </td>
+
+
+
+                        <!-- EXACT ADJUSTMENT -->
+
+                        <td>
+
+
+                            <details class="merchant-stock-adjust">
+
+
+                                <summary>
+                                    Adjust
+                                </summary>
+
+
+                                <form
+                                    method="post"
+                                    action="/merchant/inventory/{{ product.id }}/adjust"
+                                    class="merchant-stock-adjust-form"
+                                >
+
+
+                                    <div>
+
+
+                                        <label
+                                            for="stock-{{ product.id }}"
+                                        >
+                                            Exact Stock
+                                        </label>
+
+
+                                        <input
+                                            id="stock-{{ product.id }}"
+                                            type="number"
+                                            name="stock_quantity"
+                                            class="form-control form-control-sm"
+                                            min="0"
+                                            step="1"
+                                            value="{{ product.stock_quantity }}"
+                                            required
+                                        >
+
+
+                                    </div>
+
+
+
+                                    <div>
+
+
+                                        <label
+                                            for="reorder-{{ product.id }}"
+                                        >
+                                            Reorder Level
+                                        </label>
+
+
+                                        <input
+                                            id="reorder-{{ product.id }}"
+                                            type="number"
+                                            name="reorder_level"
+                                            class="form-control form-control-sm"
+                                            min="0"
+                                            step="1"
+                                            value="{{ product.reorder_level }}"
+                                            required
+                                        >
+
+
+                                    </div>
+
+
+
+                                    <button
+                                        type="submit"
+                                        class="
+                                            btn
+                                            btn-primary
+                                            btn-sm
+                                            w-100
+                                        "
+                                    >
+                                        Save Adjustment
+                                    </button>
+
+
+                                </form>
+
+
+                            </details>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <!-- SEARCH EMPTY -->
+
+        <div
+            id="merchant-inventory-no-results"
+            class="
+                merchant-menu-empty
+                d-none
+            "
+        >
+
+
+            <h3>
+                No matching inventory items
+            </h3>
+
+
+            <p>
+
+                Try searching with another
+                dish name or category.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    {% else %}
+
+
+    <!-- ========================================= -->
+    <!-- EMPTY INVENTORY -->
+    <!-- ========================================= -->
+
+    <div class="merchant-panel">
+
+
+        <div class="merchant-menu-empty">
+
+
+            <div class="merchant-menu-empty-icon">
+                ▣
+            </div>
+
+
+            <h3>
+                No inventory yet
+            </h3>
+
+
+            <p>
+
+                Add dishes to your restaurant menu
+                before managing inventory.
+
+            </p>
+
+
+            <a
+                href="/merchant/menu/add"
+                class="btn btn-primary"
+            >
+                Add First Dish
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+    (() => {
+
+
+        const searchInput =
+            document.getElementById(
+                "merchant-inventory-search"
+            );
+
+
+        const rows =
+            Array.from(
+                document.querySelectorAll(
+                    "[data-inventory-row]"
+                )
+            );
+
+
+        const noResults =
+            document.getElementById(
+                "merchant-inventory-no-results"
+            );
+
+
+        if (
+            !searchInput
+            ||
+            !rows.length
+        ) {
+
+            return;
+
+        }
+
+
+        searchInput.addEventListener(
+            "input",
+            () => {
+
+
+                const query =
+                    searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+                let visibleCount = 0;
+
+
+                rows.forEach(
+                    (row) => {
+
+
+                        const matches =
+                            !query
+                            ||
+                            row.dataset.searchText.includes(
+                                query
+                            );
+
+
+                        row.classList.toggle(
+                            "d-none",
+                            !matches
+                        );
+
+
+                        if (matches) {
+
+                            visibleCount += 1;
+
+                        }
+
+
+                    }
+                );
+
+
+                if (noResults) {
+
+                    noResults.classList.toggle(
+                        "d-none",
+                        visibleCount !== 0
+                    );
+
+                }
+
+
+            }
+        );
+
+
+    })();
+
+</script>
+
+
+{% endblock %}

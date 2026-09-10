@@ -44,6 +44,9 @@ from app.users.models import User
 from app.users.profile_router import router as profile_router
 from app.users.router import router as users_router
 from app.merchants.router import (router as merchant_router)
+from app.merchants.inventory_router import (
+    router as merchant_inventory_router,
+)
 
 
 logger = logging.getLogger(
@@ -247,6 +250,7 @@ app.include_router(swiggy_storefront_router)
 app.include_router(insights_storefront_router)
 app.include_router(profile_router)
 app.include_router(merchant_router)
+app.include_router(merchant_inventory_router)
 
 # =========================================
 # ROOT

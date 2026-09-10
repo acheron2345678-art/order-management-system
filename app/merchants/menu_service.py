@@ -149,6 +149,7 @@ def create_merchant_menu_item(
     reorder_level: int,
     menu_category: str,
     is_bestseller: bool,
+    image_url: str = "",
 ):
     restaurant_id = validate_positive_id(
         restaurant_id,
@@ -175,6 +176,7 @@ def create_merchant_menu_item(
         menu_category=menu_category,
 
         is_bestseller=is_bestseller,
+        image_url=image_url,
     )
 
 
@@ -190,6 +192,7 @@ def update_merchant_menu_item(
     reorder_level: int,
     menu_category: str,
     is_bestseller: bool,
+    image_url: str = "",
 ):
     product = get_merchant_menu_item(
         db=db,
@@ -200,6 +203,7 @@ def update_merchant_menu_item(
     )
 
     if product is None:
+
         return None
 
     return update_catalog_item(
@@ -217,14 +221,13 @@ def update_merchant_menu_item(
 
         reorder_level=reorder_level,
 
-        # IMPORTANT:
-        # Restaurant comes from the
-        # authenticated Merchant assignment.
         restaurant_id=restaurant_id,
 
         menu_category=menu_category,
 
         is_bestseller=is_bestseller,
+
+        image_url=image_url,
     )
 
 

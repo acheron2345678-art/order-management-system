@@ -421,26 +421,14 @@ def merchant_menu_form_context(
         if product is None:
 
             form_data = {
-                "product_name":
-                    "",
-
-                "description":
-                    "",
-
-                "price":
-                    "",
-
-                "stock_quantity":
-                    0,
-
-                "reorder_level":
-                    5,
-
-                "menu_category":
-                    "Recommended",
-
-                "is_bestseller":
-                    False,
+                "product_name": "",
+                "description": "",
+                "price": "",
+                "image_url": "",
+                "stock_quantity": 0,
+                "reorder_level": 5,
+                "menu_category": "Recommended",
+                "is_bestseller": False,
             }
 
         else:
@@ -450,12 +438,13 @@ def merchant_menu_form_context(
                     product.product_name,
 
                 "description":
-                    product.description
-                    or
-                    "",
+                    product.description or "",
 
                 "price":
                     product.price,
+
+                "image_url":
+                    product.image_url or "",
 
                 "stock_quantity":
                     product.stock_quantity,
@@ -642,6 +631,10 @@ def merchant_add_menu_item(
         False
     ),
 
+    image_url: str = Form(
+    ""
+    ),
+
     db: Session = Depends(
         get_db
     ),
@@ -693,6 +686,12 @@ def merchant_add_menu_item(
             bool(
                 is_bestseller
             ),
+        "image_url":
+            (
+                image_url
+                or
+                ""
+            ).strip(),
     }
 
     try:
@@ -844,6 +843,9 @@ def merchant_edit_menu_item(
     is_bestseller: bool = Form(
         False
     ),
+    image_url: str = Form(
+        ""
+    ),
 
     db: Session = Depends(
         get_db
@@ -916,6 +918,12 @@ def merchant_edit_menu_item(
             bool(
                 is_bestseller
             ),
+        "image_url":
+            (
+                image_url
+                or
+                ""
+            ).strip(),
     }
 
     try:

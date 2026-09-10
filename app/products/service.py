@@ -620,6 +620,7 @@ def create_catalog_item(
     restaurant_id=None,
     menu_category: str | None = None,
     is_bestseller: bool = False,
+    image_url: str | None = None,
 ):
     product_name = clean_required_text(
         product_name,
@@ -631,6 +632,12 @@ def create_catalog_item(
         description,
         "Description",
         max_length=255,
+    )
+
+    image_url = clean_optional_text(
+        image_url,
+        "Image URL",
+        max_length=500,
     )
 
     platform = normalize_platform(
@@ -646,6 +653,7 @@ def create_catalog_item(
     bestseller = False
 
     if platform == "swiggy":
+
         (
             assigned_restaurant,
             cleaned_menu_category,
@@ -657,17 +665,22 @@ def create_catalog_item(
             is_bestseller=is_bestseller,
         )
 
-        stock_quantity = validate_non_negative_integer(
-            stock_quantity,
-            "Stock quantity",
+        stock_quantity = (
+            validate_non_negative_integer(
+                stock_quantity,
+                "Stock quantity",
+            )
         )
 
-        reorder_level = validate_non_negative_integer(
-            reorder_level,
-            "Reorder level",
+        reorder_level = (
+            validate_non_negative_integer(
+                reorder_level,
+                "Reorder level",
+            )
         )
 
     else:
+
         stock_quantity = 0
         reorder_level = 0
 
@@ -681,7 +694,9 @@ def create_catalog_item(
             else None
         ),
     ):
+
         if platform == "swiggy":
+
             raise ValueError(
                 "This restaurant already has a dish with this name."
             )
@@ -695,6 +710,7 @@ def create_catalog_item(
         description=description,
         price=price,
         platform=platform,
+        image_url=image_url,
         is_active=True,
         stock_quantity=stock_quantity,
         reorder_level=reorder_level,
@@ -707,9 +723,15 @@ def create_catalog_item(
         is_bestseller=bestseller,
     )
 
-    db.add(product)
+    db.add(
+        product
+    )
+
     db.commit()
-    db.refresh(product)
+
+    db.refresh(
+        product
+    )
 
     return product
 
@@ -725,6 +747,7 @@ def update_catalog_item(
     restaurant_id=None,
     menu_category: str | None = None,
     is_bestseller: bool = False,
+    image_url: str | None = None,
 ):
     product_name = clean_required_text(
         product_name,
@@ -751,6 +774,7 @@ def update_catalog_item(
     bestseller = False
 
     if platform == "swiggy":
+
         (
             assigned_restaurant,
             cleaned_menu_category,
@@ -763,22 +787,33 @@ def update_catalog_item(
         )
 
         if stock_quantity is None:
-            stock_quantity = product.stock_quantity
+
+            stock_quantity = (
+                product.stock_quantity
+            )
 
         if reorder_level is None:
-            reorder_level = product.reorder_level
 
-        stock_quantity = validate_non_negative_integer(
-            stock_quantity,
-            "Stock quantity",
+            reorder_level = (
+                product.reorder_level
+            )
+
+        stock_quantity = (
+            validate_non_negative_integer(
+                stock_quantity,
+                "Stock quantity",
+            )
         )
 
-        reorder_level = validate_non_negative_integer(
-            reorder_level,
-            "Reorder level",
+        reorder_level = (
+            validate_non_negative_integer(
+                reorder_level,
+                "Reorder level",
+            )
         )
 
     else:
+
         stock_quantity = 0
         reorder_level = 0
 
@@ -793,7 +828,9 @@ def update_catalog_item(
         ),
         exclude_product_id=product.id,
     ):
+
         if platform == "swiggy":
+
             raise ValueError(
                 "This restaurant already has another dish with this name."
             )
@@ -802,23 +839,61 @@ def update_catalog_item(
             "Another catalog item with this name already exists on this platform."
         )
 
-    product.product_name = product_name
-    product.description = description
-    product.price = price
-    product.stock_quantity = stock_quantity
-    product.reorder_level = reorder_level
+    product.product_name = (
+        product_name
+    )
+
+    product.description = (
+        description
+    )
+
+    product.price = (
+        price
+    )
+
+    product.stock_quantity = (
+        stock_quantity
+    )
+
+    product.reorder_level = (
+        reorder_level
+    )
+
+    if image_url is not None:
+
+        product.image_url = (
+            clean_optional_text(
+                image_url,
+                "Image URL",
+                max_length=500,
+            )
+        )
 
     if platform == "swiggy":
-        product.restaurant_id = assigned_restaurant.id
-        product.menu_category = cleaned_menu_category
-        product.is_bestseller = bestseller
+
+        product.restaurant_id = (
+            assigned_restaurant.id
+        )
+
+        product.menu_category = (
+            cleaned_menu_category
+        )
+
+        product.is_bestseller = (
+            bestseller
+        )
+
     else:
+
         product.restaurant_id = None
         product.menu_category = None
         product.is_bestseller = False
 
     db.commit()
-    db.refresh(product)
+
+    db.refresh(
+        product
+    )
 
     return product
 
