@@ -19,7 +19,9 @@ from sqlalchemy.exc import (
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from app.auth.csrf import validate_csrf
-from app.auth.dependencies import require_authenticated_user
+from app.auth.dependencies import (
+    require_admin_or_client,
+)
 from app.auth.models import RefreshToken
 from app.auth.router import router as auth_router
 from app.core import (
@@ -271,7 +273,7 @@ def root():
 def home(
     request: Request,
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client
     ),
 ):
     return templates.TemplateResponse(

@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Merchant Registration - Order Management
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css?v=7"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/css/registration.css?v=3"
+    >
+
+
+    <script>
+
+        (() => {
+
+            const savedTheme =
+                localStorage.getItem("theme") || "light";
+
+            document.documentElement.setAttribute(
+                "data-bs-theme",
+                savedTheme
+            );
+
+        })();
+
+    </script>
+
+</head>
+
+
+<body class="registration-page">
+
+
+<div class="registration-shell">
+
+
+    <div class="registration-card shadow-lg">
+
+
+        <!-- ===================================== -->
+        <!-- LEFT PANEL -->
+        <!-- ===================================== -->
+
+        <div class="registration-side-panel">
+
+
+            <a
+                href="/login"
+                class="registration-brand text-decoration-none"
+            >
+
+                <span class="registration-brand-mark">
+                    OM
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Order Management
+                    </strong>
+
+                    <small>
+                        Merchant Registration
+                    </small>
+
+                </span>
+
+            </a>
+
+
+
+            <div class="registration-side-copy">
+
+
+                <span class="registration-eyebrow">
+                    MERCHANT ACCOUNT
+                </span>
+
+
+                <h1>
+                    Manage your restaurant from one secure account.
+                </h1>
+
+
+                <p>
+
+                    Claim an existing unregistered restaurant
+                    or create a new restaurant and manage its
+                    Swiggy presence.
+
+                </p>
+
+
+
+                <div class="registration-points">
+
+
+                    <div>
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            One merchant login controls only one restaurant.
+                        </p>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Each restaurant can have only one merchant login.
+                        </p>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Restaurant assignment can only be changed by an administrator.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- RIGHT PANEL -->
+        <!-- ===================================== -->
+
+        <div class="registration-form-panel">
+
+
+            <!-- TOP ACTIONS -->
+
+            <div class="registration-top-actions">
+
+
+                <a
+                    href="/login"
+                    class="btn btn-sm btn-outline-secondary"
+                >
+                    ← Sign In
+                </a>
+
+
+
+                <button
+                    type="button"
+                    id="theme-toggle"
+                    class="btn btn-sm btn-outline-secondary"
+                    aria-label="Switch theme"
+                >
+
+                    <span id="theme-icon">
+                        ☾
+                    </span>
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- FORM WRAPPER -->
+
+            <div
+                class="
+                    registration-form-wrapper
+                    merchant-registration-form
+                "
+            >
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="mb-4">
+
+
+                    <span
+                        class="registration-eyebrow text-primary"
+                    >
+                        CREATE MERCHANT ACCOUNT
+                    </span>
+
+
+                    <h2 class="mt-2 mb-2">
+                        Merchant Registration
+                    </h2>
+
+
+                    <p class="text-body-secondary mb-0">
+
+                        Create your login and attach
+                        exactly one restaurant.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- ERROR -->
+
+                {% if error %}
+
+
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                >
+
+                    {{ error }}
+
+                </div>
+
+
+                {% endif %}
+
+
+
+                <!-- ===================================== -->
+                <!-- REGISTRATION FORM -->
+                <!-- ===================================== -->
+
+                <form
+                    method="post"
+                    action="/register/merchant"
+                    id="merchant-registration-form"
+                    autocomplete="on"
+                >
+
+
+                    <!-- CSRF -->
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+
+
+                    <!-- ================================= -->
+                    <!-- STEP 1: MERCHANT ACCOUNT -->
+                    <!-- ================================= -->
+
+                    <div class="merchant-form-section">
+
+
+                        <div class="merchant-step-heading">
+
+
+                            <span class="merchant-step-number">
+                                1
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Merchant Account
+                                </strong>
+
+                                <small>
+                                    Create your sign-in credentials.
+                                </small>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="row g-3">
+
+
+                            <!-- USERNAME -->
+
+                            <div class="col-md-6">
+
+
+                                <label
+                                    for="username"
+                                    class="form-label fw-semibold"
+                                >
+                                    Username
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    class="form-control"
+                                    value="{{ form_data.get('username', '') }}"
+                                    maxlength="100"
+                                    autocomplete="username"
+                                    required
+                                >
+
+
+                            </div>
+
+
+
+                            <!-- EMAIL -->
+
+                            <div class="col-md-6">
+
+
+                                <label
+                                    for="email"
+                                    class="form-label fw-semibold"
+                                >
+                                    Gmail Address
+                                </label>
+
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control"
+                                    value="{{ form_data.get('email', '') }}"
+                                    maxlength="255"
+                                    placeholder="merchant@gmail.com"
+                                    autocomplete="email"
+                                    required
+                                >
+
+
+                            </div>
+
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="col-md-6">
+
+
+                                <label
+                                    for="password"
+                                    class="form-label fw-semibold"
+                                >
+                                    Password
+                                </label>
+
+
+                                <div class="input-group">
+
+
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        class="form-control"
+                                        minlength="12"
+                                        maxlength="128"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        data-password-toggle="password"
+                                    >
+                                        Show
+                                    </button>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div class="col-md-6">
+
+
+                                <label
+                                    for="confirm_password"
+                                    class="form-label fw-semibold"
+                                >
+                                    Confirm Password
+                                </label>
+
+
+                                <div class="input-group">
+
+
+                                    <input
+                                        type="password"
+                                        id="confirm_password"
+                                        name="confirm_password"
+                                        class="form-control"
+                                        minlength="12"
+                                        maxlength="128"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        data-password-toggle="confirm_password"
+                                    >
+                                        Show
+                                    </button>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ================================= -->
+                    <!-- STEP 2: RESTAURANT SETUP -->
+                    <!-- ================================= -->
+
+                    <div class="merchant-form-section mt-4">
+
+
+                        <div class="merchant-step-heading">
+
+
+                            <span class="merchant-step-number">
+                                2
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Restaurant Setup
+                                </strong>
+
+                                <small>
+                                    Claim an available restaurant or create one.
+                                </small>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- SETUP TYPE -->
+
+                        <div class="merchant-choice-grid">
+
+
+                            <!-- EXISTING -->
+
+                            <label class="merchant-choice-card">
+
+
+                                <input
+                                    type="radio"
+                                    name="setup_mode"
+                                    value="existing"
+                                    {% if form_data.get('setup_mode', 'existing') == 'existing' %}
+                                    checked
+                                    {% endif %}
+                                >
+
+
+                                <span>
+
+                                    <strong>
+                                        Existing Restaurant
+                                    </strong>
+
+                                    <small>
+
+                                        Choose an existing restaurant
+                                        that does not already have
+                                        a Merchant login.
+
+                                    </small>
+
+                                </span>
+
+
+                            </label>
+
+
+
+                            <!-- NEW -->
+
+                            <label class="merchant-choice-card">
+
+
+                                <input
+                                    type="radio"
+                                    name="setup_mode"
+                                    value="new"
+                                    {% if form_data.get('setup_mode') == 'new' %}
+                                    checked
+                                    {% endif %}
+                                >
+
+
+                                <span>
+
+                                    <strong>
+                                        Create New Restaurant
+                                    </strong>
+
+                                    <small>
+
+                                        Create a new restaurant profile
+                                        and register it to your account.
+
+                                    </small>
+
+                                </span>
+
+
+                            </label>
+
+
+                        </div>
+
+
+
+                        <!-- ================================= -->
+                        <!-- EXISTING RESTAURANT -->
+                        <!-- ================================= -->
+
+                        <div
+                            id="existing-restaurant-panel"
+                            class="merchant-setup-panel mt-3"
+                        >
+
+
+                            <label
+                                for="restaurant_id"
+                                class="form-label fw-semibold"
+                            >
+                                Available Restaurant
+                            </label>
+
+
+                            <select
+                                id="restaurant_id"
+                                name="restaurant_id"
+                                class="form-select"
+                            >
+
+
+                                <option value="">
+                                    Choose a restaurant
+                                </option>
+
+
+                                {% for restaurant in available_restaurants %}
+
+
+                                <option
+                                    value="{{ restaurant.id }}"
+                                    {% if form_data.get('restaurant_id')|string == restaurant.id|string %}
+                                    selected
+                                    {% endif %}
+                                >
+
+                                    {{ restaurant.name }}
+
+                                    {% if not restaurant.is_active %}
+                                        — Inactive
+                                    {% endif %}
+
+                                </option>
+
+
+                                {% endfor %}
+
+
+                            </select>
+
+
+
+                            {% if not available_restaurants %}
+
+
+                            <div class="alert alert-info mt-3 mb-0">
+
+                                There are currently no unregistered
+                                restaurants.
+
+                                Choose
+
+                                <strong>
+                                    Create New Restaurant
+                                </strong>
+
+                                instead.
+
+                            </div>
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <!-- ================================= -->
+                        <!-- NEW RESTAURANT -->
+                        <!-- ================================= -->
+
+                        <div
+                            id="new-restaurant-panel"
+                            class="merchant-setup-panel mt-3 d-none"
+                        >
+
+
+                            <div class="row g-3">
+
+
+                                <!-- RESTAURANT NAME -->
+
+                                <div class="col-md-6">
+
+
+                                    <label
+                                        for="restaurant_name"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Restaurant Name
+                                    </label>
+
+
+                                    <input
+                                        type="text"
+                                        id="restaurant_name"
+                                        name="restaurant_name"
+                                        class="form-control"
+                                        value="{{ form_data.get('restaurant_name', '') }}"
+                                        maxlength="120"
+                                    >
+
+
+                                </div>
+
+
+
+                                <!-- CUISINES -->
+
+                                <div class="col-md-6">
+
+
+                                    <label
+                                        for="cuisines"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Cuisines
+                                    </label>
+
+
+                                    <input
+                                        type="text"
+                                        id="cuisines"
+                                        name="cuisines"
+                                        class="form-control"
+                                        value="{{ form_data.get('cuisines', '') }}"
+                                        maxlength="255"
+                                        placeholder="Biryani, North Indian, Kebabs"
+                                    >
+
+
+                                </div>
+
+
+
+                                <!-- DESCRIPTION -->
+
+                                <div class="col-12">
+
+
+                                    <label
+                                        for="description"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Description
+                                    </label>
+
+
+                                    <textarea
+                                        id="description"
+                                        name="description"
+                                        class="form-control"
+                                        rows="3"
+                                        maxlength="500"
+                                        placeholder="Tell customers about your restaurant..."
+                                    >{{ form_data.get('description', '') }}</textarea>
+
+
+                                </div>
+
+
+
+                                <!-- LOCATION -->
+
+                                <div class="col-12">
+
+
+                                    <label
+                                        for="location"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Location
+                                    </label>
+
+
+                                    <input
+                                        type="text"
+                                        id="location"
+                                        name="location"
+                                        class="form-control"
+                                        value="{{ form_data.get('location', '') }}"
+                                        maxlength="150"
+                                        placeholder="Anna Nagar, Chennai"
+                                    >
+
+
+                                </div>
+
+
+
+                                <!-- ================================= -->
+                                <!-- DELIVERY TIME -->
+                                <!-- ================================= -->
+
+                                <div class="col-12">
+
+
+                                    <label
+                                        class="form-label fw-semibold mb-2"
+                                    >
+                                        Delivery Time
+                                    </label>
+
+
+                                    <div class="row g-3">
+
+
+                                        <!-- MIN DELIVERY -->
+
+                                        <div class="col-md-6">
+
+
+                                            <div class="merchant-delivery-field">
+
+
+                                                <label
+                                                    for="delivery_min_minutes"
+                                                    class="
+                                                        form-label
+                                                        text-body-secondary
+                                                        small
+                                                    "
+                                                >
+                                                    Minimum
+                                                </label>
+
+
+                                                <div class="input-group">
+
+
+                                                    <input
+                                                        type="number"
+                                                        id="delivery_min_minutes"
+                                                        name="delivery_min_minutes"
+                                                        class="form-control"
+                                                        min="1"
+                                                        max="240"
+                                                        value="{{ form_data.get('delivery_min_minutes', 20) }}"
+                                                        required
+                                                    >
+
+
+                                                    <span class="input-group-text">
+                                                        min
+                                                    </span>
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+
+                                        <!-- MAX DELIVERY -->
+
+                                        <div class="col-md-6">
+
+
+                                            <div class="merchant-delivery-field">
+
+
+                                                <label
+                                                    for="delivery_max_minutes"
+                                                    class="
+                                                        form-label
+                                                        text-body-secondary
+                                                        small
+                                                    "
+                                                >
+                                                    Maximum
+                                                </label>
+
+
+                                                <div class="input-group">
+
+
+                                                    <input
+                                                        type="number"
+                                                        id="delivery_max_minutes"
+                                                        name="delivery_max_minutes"
+                                                        class="form-control"
+                                                        min="1"
+                                                        max="240"
+                                                        value="{{ form_data.get('delivery_max_minutes', 30) }}"
+                                                        required
+                                                    >
+
+
+                                                    <span class="input-group-text">
+                                                        min
+                                                    </span>
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <small
+                                        class="
+                                            d-block
+                                            text-body-secondary
+                                            mt-2
+                                        "
+                                    >
+
+                                        Enter the estimated delivery
+                                        time range shown to customers.
+
+                                    </small>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ================================= -->
+                    <!-- OWNERSHIP NOTICE -->
+                    <!-- ================================= -->
+
+                    <div class="registration-security-note mt-4">
+
+
+                        <strong>
+                            Restaurant ownership is locked
+                        </strong>
+
+
+                        <span>
+
+                            After registration, you cannot switch
+                            your Merchant account to another restaurant.
+
+                            Only an administrator can change the
+                            restaurant assignment.
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <!-- ================================= -->
+                    <!-- SUBMIT -->
+                    <!-- ================================= -->
+
+                    <div class="d-grid mt-4">
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Create Merchant Account
+                        </button>
+
+
+                    </div>
+
+
+                </form>
+
+
+
+                <!-- LOGIN LINK -->
+
+                <div class="registration-login-link">
+
+                    Already have an account?
+
+                    <a href="/login">
+                        Sign in
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ===================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================== -->
+
+<script>
+
+    (() => {
+
+
+        const root =
+            document.documentElement;
+
+
+        const themeButton =
+            document.getElementById(
+                "theme-toggle"
+            );
+
+
+        const themeIcon =
+            document.getElementById(
+                "theme-icon"
+            );
+
+
+
+        // =====================================
+        // THEME
+        // =====================================
+
+        function updateThemeIcon() {
+
+
+            const dark =
+                root.getAttribute(
+                    "data-bs-theme"
+                )
+                ===
+                "dark";
+
+
+            if (themeIcon) {
+
+                themeIcon.textContent =
+                    dark
+                        ? "☀"
+                        : "☾";
+
+            }
+
+
+        }
+
+
+
+        if (themeButton) {
+
+
+            themeButton.addEventListener(
+                "click",
+                () => {
+
+
+                    const nextTheme =
+                        root.getAttribute(
+                            "data-bs-theme"
+                        )
+                        ===
+                        "dark"
+                            ? "light"
+                            : "dark";
+
+
+                    root.setAttribute(
+                        "data-bs-theme",
+                        nextTheme
+                    );
+
+
+                    localStorage.setItem(
+                        "theme",
+                        nextTheme
+                    );
+
+
+                    updateThemeIcon();
+
+
+                }
+            );
+
+
+        }
+
+
+
+        // =====================================
+        // PASSWORD TOGGLE
+        // =====================================
+
+        document
+            .querySelectorAll(
+                "[data-password-toggle]"
+            )
+            .forEach(
+                (button) => {
+
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+
+                            const input =
+                                document.getElementById(
+                                    button.dataset.passwordToggle
+                                );
+
+
+                            if (!input) {
+
+                                return;
+
+                            }
+
+
+                            const hidden =
+                                input.type
+                                ===
+                                "password";
+
+
+                            input.type =
+                                hidden
+                                    ? "text"
+                                    : "password";
+
+
+                            button.textContent =
+                                hidden
+                                    ? "Hide"
+                                    : "Show";
+
+
+                        }
+                    );
+
+
+                }
+            );
+
+
+
+        // =====================================
+        // RESTAURANT SETUP MODE
+        // =====================================
+
+        const existingPanel =
+            document.getElementById(
+                "existing-restaurant-panel"
+            );
+
+
+        const newPanel =
+            document.getElementById(
+                "new-restaurant-panel"
+            );
+
+
+        const restaurantSelect =
+            document.getElementById(
+                "restaurant_id"
+            );
+
+
+        const restaurantName =
+            document.getElementById(
+                "restaurant_name"
+            );
+
+
+        const cuisines =
+            document.getElementById(
+                "cuisines"
+            );
+
+
+
+        function updateRestaurantMode() {
+
+
+            const selected =
+                document.querySelector(
+                    "input[name='setup_mode']:checked"
+                );
+
+
+            const mode =
+                selected
+                    ? selected.value
+                    : "existing";
+
+
+            const existing =
+                mode === "existing";
+
+
+            if (existingPanel) {
+
+                existingPanel.classList.toggle(
+                    "d-none",
+                    !existing
+                );
+
+            }
+
+
+            if (newPanel) {
+
+                newPanel.classList.toggle(
+                    "d-none",
+                    existing
+                );
+
+            }
+
+
+            if (restaurantSelect) {
+
+                restaurantSelect.required =
+                    existing;
+
+            }
+
+
+            if (restaurantName) {
+
+                restaurantName.required =
+                    !existing;
+
+            }
+
+
+            if (cuisines) {
+
+                cuisines.required =
+                    !existing;
+
+            }
+
+
+        }
+
+
+
+        document
+            .querySelectorAll(
+                "input[name='setup_mode']"
+            )
+            .forEach(
+                (radio) => {
+
+
+                    radio.addEventListener(
+                        "change",
+                        updateRestaurantMode
+                    );
+
+
+                }
+            );
+
+
+
+        updateThemeIcon();
+
+        updateRestaurantMode();
+
+
+    })();
+
+</script>
+
+
+</body>
+
+</html>

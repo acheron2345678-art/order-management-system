@@ -126,7 +126,7 @@
 
                         Track Swiggy orders and Insights projects,
                         monitor performance and manage your workflow
-                        from one centralized dashboard.
+                        from one centralized platform.
 
                     </p>
 
@@ -148,11 +148,11 @@
                         <div>
 
                             <strong>
-                                Unified Dashboard
+                                Unified Management
                             </strong>
 
                             <span>
-                                View Swiggy orders and Insights projects together.
+                                Manage orders, projects and restaurant operations.
                             </span>
 
                         </div>
@@ -169,11 +169,11 @@
                         <div>
 
                             <strong>
-                                Performance Insights
+                                Swiggy Marketplace
                             </strong>
 
                             <span>
-                                Understand activity trends and performance.
+                                Browse restaurants, manage menus and place orders.
                             </span>
 
                         </div>
@@ -190,11 +190,11 @@
                         <div>
 
                             <strong>
-                                Secure Access
+                                Secure Role Access
                             </strong>
 
                             <span>
-                                Role-based access for admins,
+                                Dedicated access for admins,
                                 clients and merchants.
                             </span>
 
@@ -205,6 +205,7 @@
                 </div>
 
             </div>
+
 
 
             <!-- DECORATIVE SHAPES -->
@@ -251,7 +252,9 @@
             <div class="login-form-wrapper">
 
 
+                <!-- ========================================= -->
                 <!-- FORM HEADER -->
+                <!-- ========================================= -->
 
                 <div class="login-form-header">
 
@@ -282,6 +285,7 @@
 
                 {% if request.query_params.get("registered") == "client" %}
 
+
                 <div
                     class="alert alert-success login-alert"
                     role="alert"
@@ -295,7 +299,10 @@
 
                         <div>
 
-                            Client account created successfully.
+                            <strong class="d-block">
+                                Client account created successfully.
+                            </strong>
+
                             Sign in to continue.
 
                         </div>
@@ -304,15 +311,49 @@
 
                 </div>
 
+
+                {% elif request.query_params.get("registered") == "merchant" %}
+
+
+                <div
+                    class="alert alert-success login-alert"
+                    role="alert"
+                >
+
+                    <div class="d-flex align-items-start gap-2">
+
+                        <span class="fw-bold">
+                            ✓
+                        </span>
+
+                        <div>
+
+                            <strong class="d-block">
+                                Merchant registration completed successfully.
+                            </strong>
+
+                            Your restaurant has been linked to your
+                            Merchant account.
+
+                            Sign in to continue.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
                 {% endif %}
 
 
 
                 <!-- ========================================= -->
-                <!-- ERROR -->
+                <!-- LOGIN ERROR -->
                 <!-- ========================================= -->
 
                 {% if error %}
+
 
                 <div
                     class="alert alert-danger login-alert"
@@ -333,6 +374,7 @@
 
                 </div>
 
+
                 {% endif %}
 
 
@@ -345,6 +387,7 @@
                     method="post"
                     action="/login"
                     class="login-form"
+                    autocomplete="on"
                 >
 
 
@@ -429,7 +472,7 @@
 
 
 
-                    <!-- LOGIN BUTTON -->
+                    <!-- SIGN IN BUTTON -->
 
                     <div class="d-grid mt-4">
 
@@ -447,6 +490,7 @@
                         </button>
 
                     </div>
+
 
                 </form>
 
@@ -469,8 +513,8 @@
 
                         <small class="text-body-secondary">
 
-                            Choose the type of account
-                            you want to create.
+                            Choose the account type
+                            that matches how you use the platform.
 
                         </small>
 
@@ -482,7 +526,7 @@
                     <div class="d-grid gap-2">
 
 
-                        <!-- CLIENT REGISTRATION -->
+                        <!-- CLIENT -->
 
                         <a
                             href="/register/client"
@@ -495,48 +539,185 @@
 
 
 
-                        <!--
-                            MERCHANT REGISTRATION
+                        <!-- MERCHANT -->
 
-                            This becomes active in Phase 11C
-                            after MerchantRestaurant ownership
-                            and merchant onboarding are wired.
-                        -->
-
-                        <button
-                            type="button"
+                        <a
+                            href="/register/merchant"
                             class="btn btn-outline-secondary"
-                            disabled
-                            aria-disabled="true"
-                            title="Merchant registration will be enabled next"
                         >
 
                             Register as Merchant
 
-                            <span
-                                class="badge text-bg-secondary ms-2"
-                            >
-                                Next
-                            </span>
-
-                        </button>
+                        </a>
 
 
                     </div>
 
 
 
+                    <!-- ========================================= -->
                     <!-- ADMIN SECURITY NOTICE -->
+                    <!-- ========================================= -->
 
-                    <div class="text-center mt-3">
+                    <div
+                        class="
+                            mt-3
+                            p-3
+                            rounded-3
+                            border
+                            bg-body-tertiary
+                        "
+                    >
 
 
-                        <small class="text-body-secondary">
+                        <div
+                            class="
+                                d-flex
+                                align-items-start
+                                gap-2
+                            "
+                        >
 
-                            Administrator accounts cannot
-                            be created through public registration.
 
-                        </small>
+                            <span
+                                class="
+                                    text-body-secondary
+                                    fw-bold
+                                "
+                            >
+                                🔒
+                            </span>
+
+
+                            <small class="text-body-secondary">
+
+                                Administrator accounts cannot be
+                                created through public registration.
+
+                                Admin access is managed internally
+                                by authorized administrators.
+
+                            </small>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- ACCOUNT TYPE EXPLANATION -->
+                <!-- ========================================= -->
+
+                <div class="mt-4">
+
+
+                    <div class="row g-2">
+
+
+                        <!-- CLIENT -->
+
+                        <div class="col-md-6">
+
+
+                            <div
+                                class="
+                                    h-100
+                                    border
+                                    rounded-3
+                                    p-3
+                                    bg-body-tertiary
+                                "
+                            >
+
+
+                                <small
+                                    class="
+                                        text-primary
+                                        fw-bold
+                                        text-uppercase
+                                    "
+                                >
+                                    Client
+                                </small>
+
+
+                                <p
+                                    class="
+                                        small
+                                        text-body-secondary
+                                        mb-0
+                                        mt-1
+                                    "
+                                >
+
+                                    Browse Swiggy,
+                                    place orders,
+                                    submit Insights projects
+                                    and track your activity.
+
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- MERCHANT -->
+
+                        <div class="col-md-6">
+
+
+                            <div
+                                class="
+                                    h-100
+                                    border
+                                    rounded-3
+                                    p-3
+                                    bg-body-tertiary
+                                "
+                            >
+
+
+                                <small
+                                    class="
+                                        text-warning-emphasis
+                                        fw-bold
+                                        text-uppercase
+                                    "
+                                >
+                                    Merchant
+                                </small>
+
+
+                                <p
+                                    class="
+                                        small
+                                        text-body-secondary
+                                        mb-0
+                                        mt-1
+                                    "
+                                >
+
+                                    Register or claim a restaurant
+                                    and manage your restaurant's
+                                    Swiggy operations.
+
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
 
 
                     </div>
@@ -578,12 +759,13 @@
 
 
 <!-- ========================================= -->
-<!-- LOGIN JAVASCRIPT -->
+<!-- LOGIN PAGE JAVASCRIPT -->
 <!-- ========================================= -->
 
 <script>
 
     (() => {
+
 
         const root =
             document.documentElement;
@@ -601,6 +783,11 @@
             );
 
 
+
+        // =========================================
+        // THEME
+        // =========================================
+
         function currentTheme() {
 
             return (
@@ -617,7 +804,9 @@
         function updateThemeButton() {
 
             const dark =
-                currentTheme() === "dark";
+                currentTheme()
+                ===
+                "dark";
 
 
             if (themeIcon) {
@@ -654,6 +843,7 @@
         }
 
 
+
         if (themeButton) {
 
             themeButton.addEventListener(
@@ -661,7 +851,9 @@
                 () => {
 
                     const nextTheme =
-                        currentTheme() === "dark"
+                        currentTheme()
+                        ===
+                        "dark"
                             ? "light"
                             : "dark";
 
@@ -718,7 +910,8 @@
 
                     const hidden =
                         passwordInput.type
-                        === "password";
+                        ===
+                        "password";
 
 
                     passwordInput.type =
@@ -744,6 +937,7 @@
             );
 
         }
+
 
     })();
 
@@ -808,6 +1002,7 @@
         "DOMContentLoaded",
         function () {
 
+
             const params =
                 new URLSearchParams(
                     window.location.search
@@ -832,8 +1027,11 @@
                 );
 
 
+
             if (
-                reason === "inactive"
+                reason
+                ===
+                "inactive"
                 &&
                 modal
             ) {
@@ -845,6 +1043,7 @@
             }
 
 
+
             if (
                 closeButton
                 &&
@@ -854,6 +1053,7 @@
                 closeButton.addEventListener(
                     "click",
                     function () {
+
 
                         modal.classList.remove(
                             "show"
@@ -870,10 +1070,12 @@
                             cleanUrl
                         );
 
+
                     }
                 );
 
             }
+
 
         }
     );

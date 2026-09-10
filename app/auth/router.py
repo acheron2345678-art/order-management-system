@@ -85,6 +85,18 @@ router.include_router(
     registration_router
 )
 
+def get_login_destination(
+    user,
+):
+    if user.role == "merchant":
+
+        # Temporary destination until
+        # the Merchant Dashboard is
+        # added in 11E.
+        return "/swiggy"
+
+    return "/home"
+
 def clear_auth_cookies(
     response,
 ):
@@ -213,7 +225,9 @@ def login_page(
 
     if current_user:
         return RedirectResponse(
-            url="/home",
+            url=get_login_destination(
+                current_user
+            ),
             status_code=303,
         )
 
@@ -320,7 +334,9 @@ def login(
     csrf_token = create_csrf_token()
 
     response = RedirectResponse(
-        url="/home",
+        url=get_login_destination(
+            user
+        ),
         status_code=303,
     )
 

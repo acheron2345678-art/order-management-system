@@ -349,6 +349,45 @@ def require_authenticated_user(
         },
     )
 
+def require_admin_or_client(
+    current_user: User = Depends(
+        require_authenticated_user
+    ),
+):
+    if current_user.role not in {
+        "admin",
+        "client",
+    }:
+
+        raise HTTPException(
+            status_code=403,
+            detail=(
+                "This area is available only "
+                "to administrators and clients."
+            ),
+        )
+
+    return current_user
+
+
+def require_merchant(
+    current_user: User = Depends(
+        require_authenticated_user
+    ),
+):
+    if (
+        current_user.role
+        !=
+        "merchant"
+    ):
+
+        raise HTTPException(
+            status_code=403,
+            detail="Merchant access required",
+        )
+
+    return current_user
+
 
 def require_admin(
     current_user: User = Depends(

@@ -517,3 +517,272 @@
     }
 
 }
+
+/* =========================================
+   MERCHANT REGISTRATION
+   ========================================= */
+
+.merchant-registration-form {
+
+    max-width: 720px;
+
+}
+
+
+.merchant-form-section {
+
+    padding: 22px;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius: 18px;
+
+    background:
+        var(--bs-body-bg);
+
+}
+
+
+.merchant-step-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.merchant-step-number {
+
+    width: 34px;
+
+    height: 34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    font-weight: 800;
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+    border:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+}
+
+
+.merchant-step-heading strong,
+.merchant-step-heading small {
+
+    display: block;
+
+}
+
+
+.merchant-step-heading small {
+
+    margin-top: 2px;
+
+    color:
+        var(--bs-secondary-color);
+
+}
+
+
+.merchant-choice-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+}
+
+
+.merchant-choice-card {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    background:
+        var(--bs-tertiary-bg);
+
+}
+
+
+.merchant-choice-card:has(
+    input:checked
+) {
+
+    border-color:
+        var(--bs-primary);
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+}
+
+
+.merchant-choice-card input {
+
+    margin-top: 4px;
+
+}
+
+
+.merchant-choice-card strong,
+.merchant-choice-card small {
+
+    display: block;
+
+}
+
+
+.merchant-choice-card small {
+
+    margin-top: 4px;
+
+    color:
+        var(--bs-secondary-color);
+
+    line-height: 1.45;
+
+}
+
+
+.merchant-setup-panel {
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    background:
+        var(--bs-tertiary-bg);
+
+}
+
+
+@media (
+    max-width: 700px
+) {
+
+    .merchant-choice-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .merchant-form-section {
+
+        padding: 16px;
+
+    }
+
+}
+
+/* =========================================
+   MERCHANT DELIVERY TIME
+   ========================================= */
+
+.merchant-delivery-field {
+
+    height: 100%;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius: 12px;
+
+    background:
+        var(--bs-body-bg);
+
+}
+
+
+.merchant-delivery-field .form-label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-weight: 600;
+
+}
+
+
+.merchant-delivery-field .input-group {
+
+    width: 100%;
+
+}
+
+
+.merchant-delivery-field .form-control {
+
+    min-width: 0;
+
+}
+
+
+.merchant-delivery-field .input-group-text {
+
+    min-width: 52px;
+
+    justify-content: center;
+
+}
+
+
+@media (
+    max-width: 767px
+) {
+
+    .merchant-delivery-field {
+
+        padding: 12px;
+
+    }
+
+}

@@ -51,7 +51,7 @@ from app.orders.order_item_service import (
 )
 
 from app.auth.dependencies import (
-    require_authenticated_user,
+    require_admin_or_client,
     require_admin,
     require_client,
 )
@@ -161,7 +161,7 @@ def get_orders_page(
     order_date: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client,
     ),
 ):
     context = get_platform_context(
@@ -197,7 +197,7 @@ def view_order(
     request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client,
     ),
 ):
     context = get_platform_context(

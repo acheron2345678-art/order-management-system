@@ -6,7 +6,7 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from app.auth.dependencies import (
-    require_authenticated_user,
+    require_admin_or_client,
 )
 
 from app.database import get_db
@@ -35,7 +35,7 @@ def search_results(
     q: str = "",
     db: Session = Depends(get_db),
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client
     ),
 ):
     client_id = None

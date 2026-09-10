@@ -10,7 +10,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
 from app.auth.dependencies import (
-    require_authenticated_user,
+    require_admin_or_client,
 )
 
 from app.core import templates
@@ -57,7 +57,7 @@ def dashboard(
     request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client
     ),
 ):
     context = build_dashboard_context(
@@ -86,7 +86,7 @@ def dashboard(
 def dashboard_summary(
     db: Session = Depends(get_db),
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client
     ),
 ):
     return build_dashboard_context(
@@ -109,7 +109,7 @@ def dashboard_orders(
     date: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(
-        require_authenticated_user
+        require_admin_or_client
     ),
 ):
     try:
