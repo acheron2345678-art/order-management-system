@@ -1,0 +1,776 @@
+{% extends "merchant/base.html" %}
+
+
+{% block title %}
+
+Menu | {{ restaurant.name }}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="merchant-page">
+
+
+    <div class="merchant-page-header">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                MENU MANAGEMENT
+            </span>
+
+
+            <h1>
+                Restaurant Menu
+            </h1>
+
+
+            <p>
+
+                Add, edit and control the Swiggy dishes
+                belonging to {{ restaurant.name }}.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="merchant-header-actions">
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+                class="btn btn-outline-secondary"
+            >
+                Preview Menu
+            </a>
+
+
+            <a
+                href="/merchant/menu/add"
+                class="btn btn-primary"
+            >
+                + Add Dish
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    {% if request.query_params.get('created') == '1' %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Dish created.
+        </strong>
+
+        The new item has been added
+        to your restaurant menu.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    {% if request.query_params.get('saved') == '1' %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Dish updated.
+        </strong>
+
+        Your menu changes have been saved.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    {% if request.query_params.get('status') == 'active' %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        The dish is now active
+        on your restaurant menu.
+
+    </div>
+
+
+    {% elif request.query_params.get('status') == 'inactive' %}
+
+
+    <div
+        class="alert alert-warning"
+        role="alert"
+    >
+
+        The dish has been deactivated
+        and is hidden from normal ordering.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <div class="merchant-menu-summary-grid">
+
+
+        <article class="merchant-menu-summary-card">
+
+            <span>
+                Total Items
+            </span>
+
+            <strong>
+                {{ summary.total_items }}
+            </strong>
+
+        </article>
+
+
+        <article class="merchant-menu-summary-card">
+
+            <span>
+                Active
+            </span>
+
+            <strong>
+                {{ summary.active_items }}
+            </strong>
+
+        </article>
+
+
+        <article class="merchant-menu-summary-card">
+
+            <span>
+                Inactive
+            </span>
+
+            <strong>
+                {{ summary.inactive_items }}
+            </strong>
+
+        </article>
+
+
+        <article class="merchant-menu-summary-card">
+
+            <span>
+                Bestsellers
+            </span>
+
+            <strong>
+                {{ summary.bestseller_items }}
+            </strong>
+
+        </article>
+
+
+        <article class="merchant-menu-summary-card">
+
+            <span>
+                Low Stock
+            </span>
+
+            <strong>
+                {{ summary.low_stock_items }}
+            </strong>
+
+        </article>
+
+
+        <article class="merchant-menu-summary-card">
+
+            <span>
+                Out of Stock
+            </span>
+
+            <strong>
+                {{ summary.out_of_stock_items }}
+            </strong>
+
+        </article>
+
+
+    </div>
+
+
+
+    <div class="merchant-panel">
+
+
+        <div class="merchant-menu-toolbar">
+
+
+            <div>
+
+
+                <span class="merchant-eyebrow">
+                    {{ restaurant.name|upper }}
+                </span>
+
+
+                <h2>
+                    Menu Items
+                </h2>
+
+
+            </div>
+
+
+
+            <div class="merchant-menu-search">
+
+
+                <input
+                    id="merchant-menu-search"
+                    type="search"
+                    class="form-control"
+                    placeholder="Search dishes or categories..."
+                    autocomplete="off"
+                >
+
+
+            </div>
+
+
+        </div>
+
+
+
+        {% if products %}
+
+
+        <div class="table-responsive">
+
+
+            <table
+                class="
+                    table
+                    align-middle
+                    merchant-menu-table
+                    mb-0
+                "
+                id="merchant-menu-table"
+            >
+
+
+                <thead>
+
+
+                    <tr>
+
+                        <th>
+                            Dish
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+
+                        <th>
+                            Stock
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Bestseller
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for product in products %}
+
+
+                    <tr
+                        data-menu-row
+                        data-search-text="{{ (product.product_name ~ ' ' ~ (product.menu_category or '') ~ ' ' ~ (product.description or ''))|lower }}"
+                    >
+
+
+                        <td>
+
+
+                            <div class="merchant-menu-product-cell">
+
+
+                                {% if product.image_url %}
+
+
+                                <img
+                                    src="{{ product.image_url }}"
+                                    alt="{{ product.product_name }}"
+                                    class="merchant-menu-thumb"
+                                >
+
+
+                                {% else %}
+
+
+                                <div
+                                    class="
+                                        merchant-menu-thumb
+                                        merchant-menu-thumb-placeholder
+                                    "
+                                >
+                                    {{ product.product_name[0]|upper }}
+                                </div>
+
+
+                                {% endif %}
+
+
+
+                                <div>
+
+
+                                    <strong>
+                                        {{ product.product_name }}
+                                    </strong>
+
+
+                                    <small>
+                                        {{ product.description or "No description" }}
+                                    </small>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </td>
+
+
+
+                        <td>
+
+
+                            <span
+                                class="
+                                    badge
+                                    text-bg-light
+                                    border
+                                "
+                            >
+
+                                {{ product.menu_category or "Uncategorised" }}
+
+                            </span>
+
+
+                        </td>
+
+
+
+                        <td>
+
+                            <strong>
+                                ₹{{ "%.2f"|format(product.price) }}
+                            </strong>
+
+                        </td>
+
+
+
+                        <td>
+
+
+                            {% if product.stock_quantity <= 0 %}
+
+
+                            <span class="badge text-bg-danger">
+                                Out of stock
+                            </span>
+
+
+                            {% elif product.stock_quantity <= product.reorder_level %}
+
+
+                            <span class="badge text-bg-warning">
+                                {{ product.stock_quantity }} left
+                            </span>
+
+
+                            {% else %}
+
+
+                            <span>
+                                {{ product.stock_quantity }}
+                            </span>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <td>
+
+
+                            {% if product.is_active %}
+
+
+                            <span class="badge text-bg-success">
+                                Active
+                            </span>
+
+
+                            {% else %}
+
+
+                            <span class="badge text-bg-secondary">
+                                Inactive
+                            </span>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <td>
+
+
+                            {% if product.is_bestseller %}
+
+
+                            <span class="badge text-bg-warning">
+                                ★ Bestseller
+                            </span>
+
+
+                            {% else %}
+
+
+                            <span class="text-body-secondary">
+                                —
+                            </span>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <td>
+
+
+                            <div class="merchant-menu-actions">
+
+
+                                <a
+                                    href="/merchant/menu/{{ product.id }}/edit"
+                                    class="
+                                        btn
+                                        btn-sm
+                                        btn-outline-primary
+                                    "
+                                >
+                                    Edit
+                                </a>
+
+
+
+                                <form
+                                    method="post"
+                                    action="/merchant/menu/{{ product.id }}/status"
+                                >
+
+
+                                    {% if product.is_active %}
+
+
+                                    <input
+                                        type="hidden"
+                                        name="state"
+                                        value="inactive"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="
+                                            btn
+                                            btn-sm
+                                            btn-outline-danger
+                                        "
+                                    >
+                                        Deactivate
+                                    </button>
+
+
+                                    {% else %}
+
+
+                                    <input
+                                        type="hidden"
+                                        name="state"
+                                        value="active"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="
+                                            btn
+                                            btn-sm
+                                            btn-outline-success
+                                        "
+                                    >
+                                        Activate
+                                    </button>
+
+
+                                    {% endif %}
+
+
+                                </form>
+
+
+                            </div>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <div
+            id="merchant-menu-no-results"
+            class="
+                merchant-menu-empty
+                d-none
+            "
+        >
+
+            <h3>
+                No matching dishes
+            </h3>
+
+            <p>
+                Try another dish name
+                or menu category.
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="merchant-menu-empty">
+
+
+            <div class="merchant-menu-empty-icon">
+                ≡
+            </div>
+
+
+            <h3>
+                Your menu is empty
+            </h3>
+
+
+            <p>
+
+                Add your first dish to start
+                building the {{ restaurant.name }} menu.
+
+            </p>
+
+
+            <a
+                href="/merchant/menu/add"
+                class="btn btn-primary"
+            >
+                Add First Dish
+            </a>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+    (() => {
+
+
+        const input =
+            document.getElementById(
+                "merchant-menu-search"
+            );
+
+
+        const rows =
+            Array.from(
+                document.querySelectorAll(
+                    "[data-menu-row]"
+                )
+            );
+
+
+        const empty =
+            document.getElementById(
+                "merchant-menu-no-results"
+            );
+
+
+        if (
+            !input
+            ||
+            !rows.length
+        ) {
+            return;
+        }
+
+
+        input.addEventListener(
+            "input",
+            () => {
+
+
+                const query =
+                    input.value
+                    .trim()
+                    .toLowerCase();
+
+
+                let visible = 0;
+
+
+                rows.forEach(
+                    (row) => {
+
+
+                        const matches =
+                            !query
+                            ||
+                            row.dataset.searchText.includes(
+                                query
+                            );
+
+
+                        row.classList.toggle(
+                            "d-none",
+                            !matches
+                        );
+
+
+                        if (matches) {
+                            visible += 1;
+                        }
+
+
+                    }
+                );
+
+
+                if (empty) {
+
+                    empty.classList.toggle(
+                        "d-none",
+                        visible !== 0
+                    );
+
+                }
+
+
+            }
+        );
+
+
+    })();
+
+</script>
+
+
+{% endblock %}

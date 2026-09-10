@@ -14,10 +14,6 @@
 <section class="merchant-page">
 
 
-    <!-- ========================================= -->
-    <!-- HEADER -->
-    <!-- ========================================= -->
-
     <div class="merchant-page-header">
 
 
@@ -54,21 +50,23 @@
 
             <a
                 href="/merchant/profile"
-                class="
-                    btn
-                    btn-outline-secondary
-                "
+                class="btn btn-outline-secondary"
             >
                 Edit Restaurant
             </a>
 
 
             <a
+                href="/merchant/menu"
+                class="btn btn-outline-secondary"
+            >
+                Manage Menu
+            </a>
+
+
+            <a
                 href="/swiggy"
-                class="
-                    btn
-                    btn-outline-secondary
-                "
+                class="btn btn-outline-secondary"
             >
                 Swiggy Overview
             </a>
@@ -93,10 +91,6 @@
 
 
 
-    <!-- ========================================= -->
-    <!-- STATUS -->
-    <!-- ========================================= -->
-
     <div class="merchant-status-banner">
 
 
@@ -108,9 +102,9 @@
                     merchant-status-dot
 
                     {% if restaurant.is_active %}
-                        active
+                    active
                     {% else %}
-                        inactive
+                    inactive
                     {% endif %}
                 "
             >
@@ -125,20 +119,15 @@
             <strong>
 
                 {% if restaurant.is_active %}
-
                     Active
-
                 {% else %}
-
                     Inactive
-
                 {% endif %}
 
             </strong>
 
 
         </div>
-
 
 
         <small>
@@ -155,14 +144,8 @@
 
 
 
-    <!-- ========================================= -->
-    <!-- METRICS -->
-    <!-- ========================================= -->
-
     <div class="merchant-metric-grid">
 
-
-        <!-- TOTAL ITEMS -->
 
         <article class="merchant-metric-card">
 
@@ -182,8 +165,6 @@
 
 
 
-        <!-- ACTIVE ITEMS -->
-
         <article class="merchant-metric-card">
 
             <span>
@@ -201,8 +182,6 @@
         </article>
 
 
-
-        <!-- CATEGORIES -->
 
         <article class="merchant-metric-card">
 
@@ -222,8 +201,6 @@
 
 
 
-        <!-- BESTSELLERS -->
-
         <article class="merchant-metric-card">
 
             <span>
@@ -241,8 +218,6 @@
         </article>
 
 
-
-        <!-- LOW STOCK -->
 
         <article
             class="
@@ -266,8 +241,6 @@
         </article>
 
 
-
-        <!-- OUT OF STOCK -->
 
         <article
             class="
@@ -295,16 +268,8 @@
 
 
 
-    <!-- ========================================= -->
-    <!-- DETAILS GRID -->
-    <!-- ========================================= -->
-
     <div class="merchant-dashboard-grid">
 
-
-        <!-- ===================================== -->
-        <!-- RESTAURANT INFORMATION -->
-        <!-- ===================================== -->
 
         <article class="merchant-panel">
 
@@ -344,8 +309,6 @@
             <dl class="merchant-detail-list">
 
 
-                <!-- NAME -->
-
                 <div>
 
                     <dt>
@@ -359,9 +322,6 @@
                 </div>
 
 
-
-                <!-- CUISINES -->
-
                 <div>
 
                     <dt>
@@ -369,16 +329,11 @@
                     </dt>
 
                     <dd>
-
                         {{ restaurant.cuisines or "Not configured" }}
-
                     </dd>
 
                 </div>
 
-
-
-                <!-- LOCATION -->
 
                 <div>
 
@@ -387,16 +342,11 @@
                     </dt>
 
                     <dd>
-
                         {{ restaurant.location or "Not configured" }}
-
                     </dd>
 
                 </div>
 
-
-
-                <!-- DELIVERY -->
 
                 <div>
 
@@ -415,9 +365,6 @@
 
                 </div>
 
-
-
-                <!-- RATING -->
 
                 <div>
 
@@ -442,9 +389,6 @@
                 </div>
 
 
-
-                <!-- OFFER -->
-
                 <div>
 
                     <dt>
@@ -452,9 +396,7 @@
                     </dt>
 
                     <dd>
-
                         {{ restaurant.offer_text or "No active offer" }}
-
                     </dd>
 
                 </div>
@@ -466,10 +408,6 @@
         </article>
 
 
-
-        <!-- ===================================== -->
-        <!-- SECURITY BOUNDARY -->
-        <!-- ===================================== -->
 
         <article class="merchant-panel">
 
@@ -497,8 +435,6 @@
             <div class="merchant-permission-list">
 
 
-                <!-- ALLOWED -->
-
                 <div class="allowed">
 
                     <span>
@@ -512,8 +448,7 @@
                         </strong>
 
                         <small>
-                            Manage only your assigned
-                            restaurant.
+                            Manage only your assigned restaurant.
                         </small>
 
                     </p>
@@ -535,8 +470,31 @@
                         </strong>
 
                         <small>
-                            Manage public restaurant
-                            information and availability.
+                            Manage public restaurant information
+                            and availability.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="allowed">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Menu
+                        </strong>
+
+                        <small>
+                            Add and manage dishes belonging
+                            only to this restaurant.
                         </small>
 
                     </p>
@@ -568,8 +526,6 @@
 
 
 
-                <!-- BLOCKED -->
-
                 <div class="blocked">
 
                     <span>
@@ -583,8 +539,8 @@
                         </strong>
 
                         <small>
-                            No user management, global
-                            catalogue or administrator access.
+                            No user management, global catalogue
+                            or administrator access.
                         </small>
 
                     </p>
@@ -648,10 +604,6 @@
 
 
 
-    <!-- ========================================= -->
-    <!-- MANAGEMENT ROADMAP -->
-    <!-- ========================================= -->
-
     <article class="merchant-next-panel">
 
 
@@ -670,10 +622,11 @@
 
             <p>
 
-                Restaurant profile management is now active.
+                Restaurant profile and menu management
+                are now active.
 
-                Menu, inventory and restaurant-order
-                management will be added next.
+                Dedicated inventory and restaurant-order
+                tools will be added next.
 
             </p>
 
@@ -687,15 +640,18 @@
 
             <a
                 href="/merchant/profile"
-                class="btn btn-primary"
+                class="btn btn-outline-primary"
             >
                 Restaurant Profile
             </a>
 
 
-            <span>
-                Menu
-            </span>
+            <a
+                href="/merchant/menu"
+                class="btn btn-primary"
+            >
+                Manage Menu
+            </a>
 
 
             <span>
