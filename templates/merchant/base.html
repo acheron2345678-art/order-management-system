@@ -17,9 +17,7 @@
     <title>
 
         {% block title %}
-
         Merchant Console
-
         {% endblock %}
 
     </title>
@@ -30,9 +28,7 @@
         (() => {
 
             const savedTheme =
-                localStorage.getItem(
-                    "theme"
-                )
+                localStorage.getItem("theme")
                 ||
                 "light";
 
@@ -54,7 +50,7 @@
 
     <link
         rel="stylesheet"
-        href="/static/css/merchant.css?v=4"
+        href="/static/css/merchant.css?v=5"
     >
 
 
@@ -73,10 +69,6 @@
 <div class="merchant-shell">
 
 
-    <!-- ========================================= -->
-    <!-- DESKTOP SIDEBAR -->
-    <!-- ========================================= -->
-
     <aside
         class="
             merchant-sidebar
@@ -85,8 +77,6 @@
         "
     >
 
-
-        <!-- BRAND -->
 
         <a
             href="/merchant"
@@ -117,10 +107,6 @@
 
 
 
-        <!-- ===================================== -->
-        <!-- RESTAURANT -->
-        <!-- ===================================== -->
-
         <div class="merchant-nav-label">
             Restaurant
         </div>
@@ -128,8 +114,6 @@
 
         <nav class="merchant-nav">
 
-
-            <!-- DASHBOARD -->
 
             <a
                 href="/merchant"
@@ -150,8 +134,6 @@
 
 
 
-            <!-- PROFILE -->
-
             <a
                 href="/merchant/profile"
                 class="
@@ -170,8 +152,6 @@
             </a>
 
 
-
-            <!-- MENU -->
 
             <a
                 href="/merchant/menu"
@@ -192,8 +172,6 @@
 
 
 
-            <!-- INVENTORY -->
-
             <a
                 href="/merchant/inventory"
                 class="
@@ -213,7 +191,24 @@
 
 
 
-            <!-- SWIGGY OVERVIEW -->
+            <a
+                href="/merchant/orders"
+                class="
+                    {% if current_path.startswith('/merchant/orders') %}
+                    active
+                    {% endif %}
+                "
+            >
+
+                <span>
+                    ◇
+                </span>
+
+                Orders
+
+            </a>
+
+
 
             <a href="/swiggy">
 
@@ -226,8 +221,6 @@
             </a>
 
 
-
-            <!-- PREVIEW -->
 
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -246,45 +239,10 @@
 
 
 
-        <!-- ===================================== -->
-        <!-- MANAGEMENT -->
-        <!-- ===================================== -->
-
-        <div class="merchant-nav-label mt-4">
-            Management
-        </div>
-
-
-        <div class="merchant-coming-list">
-
-
-            <div>
-
-                <span>
-                    ◇
-                </span>
-
-                Orders
-
-                <small>
-                    Next
-                </small>
-
-            </div>
-
-
-        </div>
-
-
-
         <div class="merchant-sidebar-spacer">
         </div>
 
 
-
-        <!-- ===================================== -->
-        <!-- USER -->
-        <!-- ===================================== -->
 
         <div class="merchant-sidebar-user">
 
@@ -343,14 +301,8 @@
 
 
 
-    <!-- ========================================= -->
-    <!-- MAIN -->
-    <!-- ========================================= -->
-
     <main class="merchant-main">
 
-
-        <!-- TOPBAR -->
 
         <header
             class="
@@ -362,8 +314,6 @@
 
             <div class="merchant-topbar-inner">
 
-
-                <!-- MOBILE MENU -->
 
                 <button
                     class="
@@ -382,8 +332,6 @@
 
 
 
-                <!-- TITLE -->
-
                 <div class="merchant-topbar-title">
 
                     <small>
@@ -397,8 +345,6 @@
                 </div>
 
 
-
-                <!-- ACTIONS -->
 
                 <div class="merchant-topbar-actions">
 
@@ -424,10 +370,7 @@
                     <button
                         id="theme-toggle"
                         type="button"
-                        class="
-                            btn
-                            btn-outline-secondary
-                        "
+                        class="btn btn-outline-secondary"
                         aria-label="Switch theme"
                         title="Switch theme"
                     >
@@ -449,8 +392,6 @@
 
 
 
-        <!-- CONTENT -->
-
         <div class="merchant-content">
 
             {% block content %}
@@ -465,10 +406,6 @@
 </div>
 
 
-
-<!-- ========================================= -->
-<!-- MOBILE NAVIGATION -->
-<!-- ========================================= -->
 
 <div
     class="
@@ -542,6 +479,11 @@
             </a>
 
 
+            <a href="/merchant/orders">
+                Orders
+            </a>
+
+
             <a href="/swiggy">
                 Swiggy Overview
             </a>
@@ -558,8 +500,6 @@
 
 
 
-        <!-- LOCK NOTICE -->
-
         <div class="merchant-mobile-lock mt-4">
 
             <strong>
@@ -568,9 +508,8 @@
 
             <small>
 
-                Only an administrator can move
-                this Merchant account to
-                another restaurant.
+                This account can manage only
+                {{ restaurant.name }}.
 
             </small>
 
@@ -578,17 +517,10 @@
 
 
 
-        <!-- USER -->
-
         <div class="mt-auto pt-4">
 
 
-            <div
-                class="
-                    merchant-user-row
-                    mb-3
-                "
-            >
+            <div class="merchant-user-row mb-3">
 
 
                 <span class="merchant-user-avatar">
@@ -644,28 +576,15 @@
 
 
 
-<!-- ========================================= -->
-<!-- BOOTSTRAP -->
-<!-- ========================================= -->
-
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 ></script>
 
 
-<!-- ========================================= -->
-<!-- CSRF -->
-<!-- ========================================= -->
-
 <script
     src="/static/js/csrf.js?v=1"
 ></script>
 
-
-
-<!-- ========================================= -->
-<!-- THEME -->
-<!-- ========================================= -->
 
 <script>
 
@@ -688,7 +607,6 @@
             );
 
 
-
         function updateThemeIcon() {
 
 
@@ -709,13 +627,10 @@
 
             }
 
-
         }
 
 
-
         if (themeButton) {
-
 
             themeButton.addEventListener(
                 "click",
@@ -746,10 +661,8 @@
 
                     updateThemeIcon();
 
-
                 }
             );
-
 
         }
 

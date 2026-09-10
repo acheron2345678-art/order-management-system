@@ -33,6 +33,7 @@ MONEY_PLACES = Decimal(
 def normalize_money(
     value,
 ):
+
     return Decimal(
         str(value)
     ).quantize(
@@ -44,21 +45,22 @@ def normalize_money(
 def normalize_cart(
     cart,
 ):
+
     normalized = {}
 
-
     if not cart:
-        return normalized
 
+        return normalized
 
     if isinstance(
         cart,
         dict,
     ):
 
-        for product_id, quantity in (
-            cart.items()
-        ):
+        for (
+            product_id,
+            quantity,
+        ) in cart.items():
 
             try:
 
@@ -74,17 +76,16 @@ def normalize_cart(
                 TypeError,
                 ValueError,
             ):
-                continue
 
+                continue
 
             if quantity <= 0:
-                continue
 
+                continue
 
             normalized[
                 product_id
             ] = quantity
-
 
     return normalized
 
@@ -108,10 +109,10 @@ def create_cart_orders(
     delivery_postal_code: str | None = None,
     delivery_country: str | None = None,
 ):
+
     customer_name = (
         customer_name.strip()
     )
-
 
     if not customer_name:
 
@@ -119,13 +120,11 @@ def create_cart_orders(
             "Customer name is required."
         )
 
-
     normalized_cart = (
         normalize_cart(
             cart
         )
     )
-
 
     if not normalized_cart:
 
@@ -137,6 +136,7 @@ def create_cart_orders(
     try:
 
         prepared_items = []
+
         restaurant_ids = set()
 
 
@@ -150,7 +150,9 @@ def create_cart_orders(
         ) in normalized_cart.items():
 
             product = (
-                db.query(Product)
+                db.query(
+                    Product
+                )
                 .join(
                     Restaurant,
                     Restaurant.id
@@ -194,7 +196,10 @@ def create_cart_orders(
                 )
 
 
-            if product.restaurant_id is None:
+            if (
+                product.restaurant_id
+                is None
+            ):
 
                 raise ValueError(
                     "Every Swiggy dish must belong "
@@ -209,7 +214,13 @@ def create_cart_orders(
             )
 
 
-            if len(restaurant_ids) > 1:
+            if (
+                len(
+                    restaurant_ids
+                )
+                >
+                1
+            ):
 
                 raise ValueError(
                     "Your cart can contain items "
@@ -295,6 +306,27 @@ def create_cart_orders(
 
 
         # =====================================
+        # PERMANENT RESTAURANT OWNERSHIP
+        # =====================================
+
+        if len(
+            restaurant_ids
+        ) != 1:
+
+            raise ValueError(
+                "A Swiggy order must belong "
+                "to exactly one restaurant."
+            )
+
+
+        assigned_restaurant_id = next(
+            iter(
+                restaurant_ids
+            )
+        )
+
+
+        # =====================================
         # ORDER TOTAL
         # =====================================
 
@@ -306,7 +338,9 @@ def create_cart_orders(
                 for item
                 in prepared_items
             ),
-            Decimal("0.00"),
+            Decimal(
+                "0.00"
+            ),
         )
 
 
@@ -318,24 +352,29 @@ def create_cart_orders(
 
 
         # =====================================
-        # ORDER HEADER DESCRIPTION
+        # ORDER HEADER
         # =====================================
 
         first_item = (
-            prepared_items[0]
+            prepared_items[
+                0
+            ]
         )
 
 
-        if len(
-            prepared_items
-        ) == 1:
+        if (
+            len(
+                prepared_items
+            )
+            ==
+            1
+        ):
 
             order_product_name = (
                 first_item[
                     "product_name"
                 ]
             )
-
 
         else:
 
@@ -366,10 +405,11 @@ def create_cart_orders(
 
 
         # =====================================
-        # CREATE SWIGGY ORDER
+        # CREATE ORDER
         # =====================================
 
         order = SwiggyOrders(
+
             customer_name=(
                 customer_name
             ),
@@ -402,6 +442,11 @@ def create_cart_orders(
 
             client_id=(
                 client_id
+            ),
+
+            # Permanent restaurant ownership.
+            restaurant_id=(
+                assigned_restaurant_id
             ),
 
             delivery_name=(
@@ -455,6 +500,7 @@ def create_cart_orders(
         for item in prepared_items:
 
             create_order_item(
+
                 db=db,
 
                 platform=PLATFORM,
@@ -494,19 +540,23 @@ def create_cart_orders(
             # =================================
 
             product = (
-                item["product"]
+                item[
+                    "product"
+                ]
             )
 
 
             product.stock_quantity = (
                 product.stock_quantity
                 -
-                item["quantity"]
+                item[
+                    "quantity"
+                ]
             )
 
 
             # =================================
-            # SAFE RESULT DATA
+            # RESULT DATA
             # =================================
 
             email_items.append(
@@ -555,10 +605,6 @@ def create_cart_orders(
             order
         )
 
-
-        # =====================================
-        # KEEP EXISTING RETURN SHAPE
-        # =====================================
 
         return [
             {

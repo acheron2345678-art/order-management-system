@@ -1,0 +1,633 @@
+{% extends "merchant/base.html" %}
+
+
+{% block title %}
+
+Orders | {{ restaurant.name }}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="merchant-page">
+
+
+    <div class="merchant-page-header">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                ORDER MANAGEMENT
+            </span>
+
+
+            <h1>
+                Restaurant Orders
+            </h1>
+
+
+            <p>
+
+                Track and manage Swiggy orders
+                placed with {{ restaurant.name }}.
+
+            </p>
+
+
+        </div>
+
+
+        <div class="merchant-header-actions">
+
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+                class="btn btn-outline-primary"
+            >
+                Preview Restaurant
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="merchant-order-summary-grid">
+
+
+        <a
+            href="/merchant/orders"
+            class="merchant-order-summary-card"
+        >
+
+            <span>
+                Total Orders
+            </span>
+
+            <strong>
+                {{ summary.total }}
+            </strong>
+
+        </a>
+
+
+        <a
+            href="/merchant/orders?status=pending"
+            class="merchant-order-summary-card"
+        >
+
+            <span>
+                Pending
+            </span>
+
+            <strong>
+                {{ summary.pending }}
+            </strong>
+
+        </a>
+
+
+        <a
+            href="/merchant/orders?status=processing"
+            class="merchant-order-summary-card"
+        >
+
+            <span>
+                Processing
+            </span>
+
+            <strong>
+                {{ summary.processing }}
+            </strong>
+
+        </a>
+
+
+        <a
+            href="/merchant/orders?status=completed"
+            class="merchant-order-summary-card"
+        >
+
+            <span>
+                Completed
+            </span>
+
+            <strong>
+                {{ summary.completed }}
+            </strong>
+
+        </a>
+
+
+        <a
+            href="/merchant/orders?status=cancelled"
+            class="merchant-order-summary-card"
+        >
+
+            <span>
+                Cancelled
+            </span>
+
+            <strong>
+                {{ summary.cancelled }}
+            </strong>
+
+        </a>
+
+
+        <article class="merchant-order-summary-card">
+
+            <span>
+                Completed Revenue
+            </span>
+
+            <strong>
+                ₹{{ "%.2f"|format(summary.completed_revenue) }}
+            </strong>
+
+        </article>
+
+
+    </div>
+
+
+
+    <div class="merchant-panel">
+
+
+        <div class="merchant-order-toolbar">
+
+
+            <div>
+
+
+                <span class="merchant-eyebrow">
+                    {{ restaurant.name|upper }}
+                </span>
+
+
+                <h2>
+                    Order History
+                </h2>
+
+
+            </div>
+
+
+
+            <div class="merchant-order-toolbar-actions">
+
+
+                <form
+                    method="get"
+                    action="/merchant/orders"
+                >
+
+
+                    <select
+                        name="status"
+                        class="form-select"
+                        onchange="this.form.submit()"
+                    >
+
+
+                        <option value="">
+                            All Statuses
+                        </option>
+
+
+                        {% for status in order_statuses %}
+
+
+                        <option
+                            value="{{ status }}"
+                            {% if status_filter == status %}
+                            selected
+                            {% endif %}
+                        >
+                            {{ status|capitalize }}
+                        </option>
+
+
+                        {% endfor %}
+
+
+                    </select>
+
+
+                </form>
+
+
+
+                <input
+                    id="merchant-order-search"
+                    type="search"
+                    class="form-control"
+                    placeholder="Search orders..."
+                    autocomplete="off"
+                >
+
+
+            </div>
+
+
+        </div>
+
+
+
+        {% if orders %}
+
+
+        <div class="table-responsive">
+
+
+            <table
+                class="
+                    table
+                    table-hover
+                    align-middle
+                    mb-0
+                "
+            >
+
+
+                <thead>
+
+
+                    <tr>
+
+                        <th>
+                            Order
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Ordered At
+                        </th>
+
+                        <th>
+                            Items
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="text-end">
+                            Action
+                        </th>
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for order in orders %}
+
+
+                    <tr
+                        data-order-row
+                        data-search-text="{{ (order.order_number ~ ' ' ~ order.customer_name ~ ' ' ~ order.status ~ ' ' ~ (order.product_name or ''))|lower }}"
+                    >
+
+
+                        <td>
+
+
+                            <a
+                                href="/merchant/orders/{{ order.id }}"
+                                class="
+                                    fw-bold
+                                    text-decoration-none
+                                "
+                            >
+                                {{ order.order_number }}
+                            </a>
+
+
+                            <small
+                                class="
+                                    d-block
+                                    text-body-secondary
+                                "
+                            >
+                                #{{ order.id }}
+                            </small>
+
+
+                        </td>
+
+
+
+                        <td>
+                            {{ order.customer_name }}
+                        </td>
+
+
+
+                        <td
+                            data-order="{% if order.sort_created_at %}{{ order.sort_created_at.strftime('%Y-%m-%d %H:%M:%S.%f') }}{% else %}{{ order.order_date.isoformat() }} 00:00:00.{{ '%012d'|format(order.id) }}{% endif %}"
+                        >
+
+
+                            {% if order.sort_created_at %}
+
+
+                            <span class="d-block">
+
+                                {{ order.sort_created_at.strftime('%d %b %Y') }}
+
+                            </span>
+
+
+                            <small class="text-body-secondary">
+
+                                {{ order.sort_created_at.strftime('%I:%M:%S %p') }}
+
+                            </small>
+
+
+                            {% else %}
+
+
+                            {{ order.order_date.strftime('%d %b %Y') }}
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <td>
+                            {{ order.item_count }}
+                        </td>
+
+
+
+                        <td>
+
+                            <strong>
+                                ₹{{ "%.2f"|format(order.amount) }}
+                            </strong>
+
+                        </td>
+
+
+
+                        <td>
+
+
+                            {% if order.status == "pending" %}
+
+                            <span class="badge text-bg-warning">
+                                Pending
+                            </span>
+
+                            {% elif order.status == "processing" %}
+
+                            <span class="badge text-bg-info">
+                                Processing
+                            </span>
+
+                            {% elif order.status == "completed" %}
+
+                            <span class="badge text-bg-success">
+                                Completed
+                            </span>
+
+                            {% elif order.status == "cancelled" %}
+
+                            <span class="badge text-bg-danger">
+                                Cancelled
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge text-bg-secondary">
+                                {{ order.status|capitalize }}
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <td class="text-end">
+
+
+                            <a
+                                href="/merchant/orders/{{ order.id }}"
+                                class="
+                                    btn
+                                    btn-sm
+                                    btn-outline-primary
+                                "
+                            >
+                                View Order
+                            </a>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <div
+            id="merchant-order-no-results"
+            class="
+                merchant-menu-empty
+                d-none
+            "
+        >
+
+            <h3>
+                No matching orders
+            </h3>
+
+            <p>
+                Try another order number or customer name.
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="merchant-menu-empty">
+
+
+            <div class="merchant-menu-empty-icon">
+                ◇
+            </div>
+
+
+            <h3>
+                No restaurant orders
+            </h3>
+
+
+            <p>
+
+                Swiggy orders placed with
+                {{ restaurant.name }}
+                will appear here.
+
+            </p>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+    (() => {
+
+
+        const input =
+            document.getElementById(
+                "merchant-order-search"
+            );
+
+
+        const rows =
+            Array.from(
+                document.querySelectorAll(
+                    "[data-order-row]"
+                )
+            );
+
+
+        const empty =
+            document.getElementById(
+                "merchant-order-no-results"
+            );
+
+
+        if (
+            !input
+            ||
+            !rows.length
+        ) {
+
+            return;
+
+        }
+
+
+        input.addEventListener(
+            "input",
+            () => {
+
+
+                const query =
+                    input.value
+                    .trim()
+                    .toLowerCase();
+
+
+                let visible = 0;
+
+
+                rows.forEach(
+                    (row) => {
+
+
+                        const matches =
+                            !query
+                            ||
+                            row.dataset.searchText.includes(
+                                query
+                            );
+
+
+                        row.classList.toggle(
+                            "d-none",
+                            !matches
+                        );
+
+
+                        if (matches) {
+
+                            visible += 1;
+
+                        }
+
+
+                    }
+                );
+
+
+                if (empty) {
+
+                    empty.classList.toggle(
+                        "d-none",
+                        visible !== 0
+                    );
+
+                }
+
+
+            }
+        );
+
+
+    })();
+
+</script>
+
+
+{% endblock %}

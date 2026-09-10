@@ -1,0 +1,696 @@
+{% extends "merchant/base.html" %}
+
+
+{% block title %}
+
+{{ order.order_number }} | {{ restaurant.name }}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="merchant-page">
+
+
+    <div class="merchant-page-header">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                RESTAURANT ORDER
+            </span>
+
+
+            <h1>
+                {{ order.order_number }}
+            </h1>
+
+
+            <p>
+
+                Review the customer's order,
+                delivery information and fulfillment status.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="merchant-header-actions">
+
+
+            <a
+                href="/merchant/orders"
+                class="btn btn-outline-secondary"
+            >
+                ← All Orders
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    {% if request.query_params.get("updated") == "1" %}
+
+
+    <div class="alert alert-success">
+
+        <strong>
+            ✓ Order status updated.
+        </strong>
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <div class="merchant-order-detail-header">
+
+
+        <div>
+
+
+            <small>
+                Current Status
+            </small>
+
+
+            <div class="mt-1">
+
+
+                {% if order.status == "pending" %}
+
+                <span class="badge text-bg-warning">
+                    Pending
+                </span>
+
+                {% elif order.status == "processing" %}
+
+                <span class="badge text-bg-info">
+                    Processing
+                </span>
+
+                {% elif order.status == "completed" %}
+
+                <span class="badge text-bg-success">
+                    Completed
+                </span>
+
+                {% elif order.status == "cancelled" %}
+
+                <span class="badge text-bg-danger">
+                    Cancelled
+                </span>
+
+                {% else %}
+
+                <span class="badge text-bg-secondary">
+                    {{ order.status|capitalize }}
+                </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div>
+
+
+            <small>
+                Order Total
+            </small>
+
+            <strong>
+                ₹{{ "%.2f"|format(order.amount) }}
+            </strong>
+
+
+        </div>
+
+
+
+        <div>
+
+
+            <small>
+                Ordered At
+            </small>
+
+
+            {% if order.sort_created_at %}
+
+            <strong>
+                {{ order.sort_created_at.strftime('%d %b %Y') }}
+            </strong>
+
+            <span>
+                {{ order.sort_created_at.strftime('%I:%M:%S %p') }}
+            </span>
+
+            {% else %}
+
+            <strong>
+                {{ order.order_date.strftime('%d %b %Y') }}
+            </strong>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="merchant-order-detail-layout">
+
+
+        <div>
+
+
+            <article class="merchant-panel">
+
+
+                <div class="merchant-panel-header">
+
+
+                    <div>
+
+                        <span class="merchant-eyebrow">
+                            ORDER ITEMS
+                        </span>
+
+                        <h2>
+                            Customer Order
+                        </h2>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="table-responsive">
+
+
+                    <table
+                        class="
+                            table
+                            align-middle
+                            mb-0
+                        "
+                    >
+
+
+                        <thead>
+
+
+                            <tr>
+
+                                <th>
+                                    Dish
+                                </th>
+
+                                <th>
+                                    Unit Price
+                                </th>
+
+                                <th>
+                                    Quantity
+                                </th>
+
+                                <th class="text-end">
+                                    Total
+                                </th>
+
+                            </tr>
+
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                            {% for item in items %}
+
+
+                            <tr>
+
+
+                                <td>
+
+                                    <strong>
+                                        {{ item.product_name }}
+                                    </strong>
+
+                                </td>
+
+
+
+                                <td>
+
+                                    ₹{{ "%.2f"|format(item.unit_price) }}
+
+                                </td>
+
+
+
+                                <td>
+
+                                    {{ item.quantity }}
+
+                                </td>
+
+
+
+                                <td class="text-end">
+
+                                    <strong>
+
+                                        ₹{{ "%.2f"|format(item.line_total) }}
+
+                                    </strong>
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                        <tfoot>
+
+
+                            <tr>
+
+                                <th colspan="3">
+                                    Order Total
+                                </th>
+
+                                <th class="text-end">
+
+                                    ₹{{ "%.2f"|format(order.amount) }}
+
+                                </th>
+
+                            </tr>
+
+
+                        </tfoot>
+
+
+                    </table>
+
+
+                </div>
+
+
+            </article>
+
+
+
+            <article class="merchant-panel mt-4">
+
+
+                <div class="merchant-panel-header">
+
+
+                    <div>
+
+                        <span class="merchant-eyebrow">
+                            DELIVERY
+                        </span>
+
+                        <h2>
+                            Delivery Information
+                        </h2>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <dl class="merchant-detail-list">
+
+
+                    <div>
+
+                        <dt>
+                            Name
+                        </dt>
+
+                        <dd>
+                            {{ order.delivery_name or order.customer_name }}
+                        </dd>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <dt>
+                            Phone
+                        </dt>
+
+                        <dd>
+                            {{ order.delivery_phone or "Not provided" }}
+                        </dd>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <dt>
+                            Address
+                        </dt>
+
+                        <dd>
+
+                            {% if order.delivery_address_line1 %}
+
+                                {{ order.delivery_address_line1 }}
+
+                                {% if order.delivery_address_line2 %}
+
+                                    <br>
+                                    {{ order.delivery_address_line2 }}
+
+                                {% endif %}
+
+                                {% if order.delivery_city %}
+
+                                    <br>
+                                    {{ order.delivery_city }}
+
+                                {% endif %}
+
+                                {% if order.delivery_state %}
+
+                                    ,
+                                    {{ order.delivery_state }}
+
+                                {% endif %}
+
+                                {% if order.delivery_postal_code %}
+
+                                    -
+                                    {{ order.delivery_postal_code }}
+
+                                {% endif %}
+
+                                {% if order.delivery_country %}
+
+                                    <br>
+                                    {{ order.delivery_country }}
+
+                                {% endif %}
+
+                            {% else %}
+
+                                Not provided
+
+                            {% endif %}
+
+                        </dd>
+
+                    </div>
+
+
+                </dl>
+
+
+            </article>
+
+
+        </div>
+
+
+
+        <aside class="merchant-order-sidebar">
+
+
+            <article class="merchant-panel">
+
+
+                <span class="merchant-eyebrow">
+                    FULFILLMENT
+                </span>
+
+
+                <h2 class="mt-1">
+                    Update Status
+                </h2>
+
+
+
+                {% if allowed_statuses %}
+
+
+                <p class="text-body-secondary small">
+
+                    Choose the next valid state
+                    for this order.
+
+                </p>
+
+
+
+                <form
+                    method="post"
+                    action="/merchant/orders/{{ order.id }}/status"
+                >
+
+
+                    <select
+                        name="status"
+                        class="form-select mb-3"
+                        required
+                    >
+
+
+                        <option value="">
+                            Choose status
+                        </option>
+
+
+                        {% for status in allowed_statuses %}
+
+
+                        <option value="{{ status }}">
+                            {{ status|capitalize }}
+                        </option>
+
+
+                        {% endfor %}
+
+
+                    </select>
+
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        Update Order Status
+                    </button>
+
+
+                </form>
+
+
+                {% else %}
+
+
+                <div class="merchant-order-final-status">
+
+
+                    <strong>
+                        Order finalized
+                    </strong>
+
+
+                    <small>
+
+                        {% if order.status == "completed" %}
+
+                            This order has been completed.
+
+                        {% elif order.status == "cancelled" %}
+
+                            This order has been cancelled.
+
+                        {% else %}
+
+                            No further status transition is available.
+
+                        {% endif %}
+
+                    </small>
+
+
+                </div>
+
+
+                {% endif %}
+
+
+            </article>
+
+
+
+            <article class="merchant-panel">
+
+
+                <span class="merchant-eyebrow">
+                    ORDER DETAILS
+                </span>
+
+
+                <h2 class="mt-1">
+                    Information
+                </h2>
+
+
+                <dl class="merchant-profile-account">
+
+
+                    <div>
+
+                        <dt>
+                            Order
+                        </dt>
+
+                        <dd>
+                            {{ order.order_number }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Customer
+                        </dt>
+
+                        <dd>
+                            {{ order.customer_name }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Items
+                        </dt>
+
+                        <dd>
+                            {{ order.item_count }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Restaurant
+                        </dt>
+
+                        <dd>
+                            {{ restaurant.name }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Restaurant ID
+                        </dt>
+
+                        <dd>
+                            #{{ restaurant.id }}
+                        </dd>
+
+                    </div>
+
+
+                </dl>
+
+
+            </article>
+
+
+
+            <article class="merchant-panel">
+
+
+                <span class="merchant-eyebrow">
+                    ACCESS CONTROL
+                </span>
+
+
+                <h2 class="mt-1">
+                    Restaurant Scoped
+                </h2>
+
+
+                <p class="text-body-secondary small mb-0">
+
+                    This Merchant account can access
+                    this order only because the order
+                    belongs permanently to
+                    {{ restaurant.name }}.
+
+                </p>
+
+
+            </article>
+
+
+        </aside>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}
