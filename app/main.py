@@ -100,6 +100,10 @@ from app.search.router import (
     router as search_router,
 )
 
+from app.swiggy.access import (
+    enforce_merchant_swiggy_scope,
+)
+
 from app.swiggy.router import (
     router as swiggy_storefront_router,
 )
@@ -134,9 +138,9 @@ app = FastAPI(
 )
 
 
-# =========================================
+# =========================================================
 # SAFE ERROR RESPONSE
-# =========================================
+# =========================================================
 
 def safe_error_response(
     request: Request,
@@ -162,7 +166,6 @@ def safe_error_response(
             name="errors/error.html",
 
             context={
-
                 "request":
                     request,
 
@@ -188,9 +191,9 @@ def safe_error_response(
     )
 
 
-# =========================================
-# REQUEST VALIDATION ERROR
-# =========================================
+# =========================================================
+# VALIDATION ERROR
+# =========================================================
 
 @app.exception_handler(
     RequestValidationError
@@ -201,21 +204,15 @@ async def request_validation_error_handler(
 ):
 
     logger.warning(
-
         "Malformed request rejected: %s %s",
-
         request.method,
-
         request.url.path,
     )
 
 
     return safe_error_response(
-
         request=request,
-
         status_code=422,
-
         message=(
             "The request contains invalid "
             "or malformed values."
@@ -223,9 +220,9 @@ async def request_validation_error_handler(
     )
 
 
-# =========================================
+# =========================================================
 # VALUE ERROR
-# =========================================
+# =========================================================
 
 @app.exception_handler(
     ValueError
@@ -236,20 +233,17 @@ async def value_error_handler(
 ):
 
     return safe_error_response(
-
         request=request,
-
         status_code=400,
-
         message=(
             "The request contains invalid values."
         ),
     )
 
 
-# =========================================
-# INTEGRITY ERROR
-# =========================================
+# =========================================================
+# DATABASE INTEGRITY ERROR
+# =========================================================
 
 @app.exception_handler(
     IntegrityError
@@ -260,21 +254,15 @@ async def integrity_error_handler(
 ):
 
     logger.exception(
-
         "Database integrity error while handling %s %s",
-
         request.method,
-
         request.url.path,
     )
 
 
     return safe_error_response(
-
         request=request,
-
         status_code=409,
-
         message=(
             "The request conflicts with existing data. "
             "Please review the submitted values and try again."
@@ -282,9 +270,9 @@ async def integrity_error_handler(
     )
 
 
-# =========================================
+# =========================================================
 # SQLALCHEMY ERROR
-# =========================================
+# =========================================================
 
 @app.exception_handler(
     SQLAlchemyError
@@ -295,21 +283,15 @@ async def sqlalchemy_error_handler(
 ):
 
     logger.exception(
-
         "Database operation failed while handling %s %s",
-
         request.method,
-
         request.url.path,
     )
 
 
     return safe_error_response(
-
         request=request,
-
         status_code=500,
-
         message=(
             "A database operation could not be completed. "
             "Please try again."
@@ -317,9 +299,9 @@ async def sqlalchemy_error_handler(
     )
 
 
-# =========================================
-# UNEXPECTED ERROR
-# =========================================
+# =========================================================
+# UNKNOWN ERROR
+# =========================================================
 
 @app.exception_handler(
     Exception
@@ -330,21 +312,15 @@ async def unexpected_error_handler(
 ):
 
     logger.exception(
-
         "Unexpected application error while handling %s %s",
-
         request.method,
-
         request.url.path,
     )
 
 
     return safe_error_response(
-
         request=request,
-
         status_code=500,
-
         message=(
             "The request could not be completed. "
             "Please try again."
@@ -352,9 +328,9 @@ async def unexpected_error_handler(
     )
 
 
-# =========================================
+# =========================================================
 # SECURITY MIDDLEWARE
-# =========================================
+# =========================================================
 
 app.add_middleware(
 
@@ -367,18 +343,18 @@ app.add_middleware(
 
 
 app.add_middleware(
-    RedirectTargetValidationMiddleware,
+    RedirectTargetValidationMiddleware
 )
 
 
 app.add_middleware(
-    SecurityHeadersMiddleware,
+    SecurityHeadersMiddleware
 )
 
 
-# =========================================
+# =========================================================
 # STATIC FILES
-# =========================================
+# =========================================================
 
 app.mount(
 
@@ -392,29 +368,30 @@ app.mount(
 )
 
 
-# =========================================
+# =========================================================
 # DATABASE
-# =========================================
+# =========================================================
 
 Base.metadata.create_all(
     bind=engine
 )
 
 
-# =========================================
+# =========================================================
 # ROUTERS
-# =========================================
+# =========================================================
 
 app.include_router(
     auth_router
 )
 
 
-# =========================================
-# IMPORTANT:
-# MERCHANT ROUTES MUST COME BEFORE THE
-# GENERIC /{platform}/orders ROUTER
-# =========================================
+# =========================================================
+# MERCHANT ROUTES
+#
+# These remain before the generic
+# /{platform}/orders routes.
+# =========================================================
 
 app.include_router(
     merchant_router
@@ -431,9 +408,9 @@ app.include_router(
 )
 
 
-# =========================================
-# NORMAL ORDER MANAGEMENT ROUTES
-# =========================================
+# =========================================================
+# NORMAL ORDER MANAGEMENT
+# =========================================================
 
 app.include_router(
     orders_router
@@ -465,32 +442,51 @@ app.include_router(
 )
 
 
-# =========================================
-# STOREFRONTS
-# =========================================
+# =========================================================
+# SWIGGY
+#
+# Merchant access is restricted here.
+#
+# A Merchant can access only:
+#
+# /swiggy/restaurants/{assigned_restaurant_id}
+#
+# All other Swiggy endpoints are blocked.
+# =========================================================
 
 app.include_router(
-    swiggy_storefront_router
+
+    swiggy_storefront_router,
+
+    dependencies=[
+        Depends(
+            enforce_merchant_swiggy_scope
+        )
+    ],
 )
 
+
+# =========================================================
+# INSIGHTS
+# =========================================================
 
 app.include_router(
     insights_storefront_router
 )
 
 
-# =========================================
+# =========================================================
 # PROFILE
-# =========================================
+# =========================================================
 
 app.include_router(
     profile_router
 )
 
 
-# =========================================
+# =========================================================
 # ROOT
-# =========================================
+# =========================================================
 
 @app.get(
     "/",
@@ -499,16 +495,14 @@ app.include_router(
 def root():
 
     return RedirectResponse(
-
         url="/login",
-
         status_code=303,
     )
 
 
-# =========================================
+# =========================================================
 # HOME
-# =========================================
+# =========================================================
 
 @app.get(
     "/home",
@@ -530,7 +524,6 @@ def home(
         name="home.html",
 
         context={
-
             "request":
                 request,
 
