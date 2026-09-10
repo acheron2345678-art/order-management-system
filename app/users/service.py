@@ -19,6 +19,7 @@ from app.utils.email_rules import (
 ALLOWED_ROLES = {
     "admin",
     "client",
+    "merchant"
 }
 
 
@@ -311,7 +312,7 @@ def update_user(
         and count_active_admins(db) <= 1
     ):
         raise ValueError(
-            "The last active administrator cannot be changed to a client."
+            "The last active administrator cannot be changed to another role."
         )
 
     if password_changed:
