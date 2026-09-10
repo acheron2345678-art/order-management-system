@@ -72,6 +72,10 @@ from app.insights.router import (
     router as insights_storefront_router,
 )
 
+from app.merchants.admin_router import (
+    router as admin_merchant_router,
+)
+
 from app.merchants.inventory_router import (
     router as merchant_inventory_router,
 )
@@ -150,6 +154,7 @@ def safe_error_response(
 
     accepts_html = (
         "text/html"
+
         in request.headers.get(
             "accept",
             "",
@@ -166,6 +171,7 @@ def safe_error_response(
             name="errors/error.html",
 
             context={
+
                 "request":
                     request,
 
@@ -192,7 +198,7 @@ def safe_error_response(
 
 
 # =========================================================
-# VALIDATION ERROR
+# REQUEST VALIDATION ERROR
 # =========================================================
 
 @app.exception_handler(
@@ -204,15 +210,21 @@ async def request_validation_error_handler(
 ):
 
     logger.warning(
+
         "Malformed request rejected: %s %s",
+
         request.method,
+
         request.url.path,
     )
 
 
     return safe_error_response(
+
         request=request,
+
         status_code=422,
+
         message=(
             "The request contains invalid "
             "or malformed values."
@@ -233,8 +245,11 @@ async def value_error_handler(
 ):
 
     return safe_error_response(
+
         request=request,
+
         status_code=400,
+
         message=(
             "The request contains invalid values."
         ),
@@ -254,15 +269,21 @@ async def integrity_error_handler(
 ):
 
     logger.exception(
+
         "Database integrity error while handling %s %s",
+
         request.method,
+
         request.url.path,
     )
 
 
     return safe_error_response(
+
         request=request,
+
         status_code=409,
+
         message=(
             "The request conflicts with existing data. "
             "Please review the submitted values and try again."
@@ -283,15 +304,21 @@ async def sqlalchemy_error_handler(
 ):
 
     logger.exception(
+
         "Database operation failed while handling %s %s",
+
         request.method,
+
         request.url.path,
     )
 
 
     return safe_error_response(
+
         request=request,
+
         status_code=500,
+
         message=(
             "A database operation could not be completed. "
             "Please try again."
@@ -312,15 +339,21 @@ async def unexpected_error_handler(
 ):
 
     logger.exception(
+
         "Unexpected application error while handling %s %s",
+
         request.method,
+
         request.url.path,
     )
 
 
     return safe_error_response(
+
         request=request,
+
         status_code=500,
+
         message=(
             "The request could not be completed. "
             "Please try again."
@@ -378,7 +411,7 @@ Base.metadata.create_all(
 
 
 # =========================================================
-# ROUTERS
+# AUTH
 # =========================================================
 
 app.include_router(
@@ -389,8 +422,7 @@ app.include_router(
 # =========================================================
 # MERCHANT ROUTES
 #
-# These remain before the generic
-# /{platform}/orders routes.
+# Keep before generic /{platform}/orders.
 # =========================================================
 
 app.include_router(
@@ -409,7 +441,16 @@ app.include_router(
 
 
 # =========================================================
-# NORMAL ORDER MANAGEMENT
+# ADMIN MERCHANT MANAGEMENT
+# =========================================================
+
+app.include_router(
+    admin_merchant_router
+)
+
+
+# =========================================================
+# ORDER MANAGEMENT
 # =========================================================
 
 app.include_router(
@@ -445,13 +486,9 @@ app.include_router(
 # =========================================================
 # SWIGGY
 #
-# Merchant access is restricted here.
-#
-# A Merchant can access only:
-#
-# /swiggy/restaurants/{assigned_restaurant_id}
-#
-# All other Swiggy endpoints are blocked.
+# Merchants may access only their assigned
+# /swiggy/restaurants/{restaurant_id}
+# page.
 # =========================================================
 
 app.include_router(
@@ -495,7 +532,9 @@ app.include_router(
 def root():
 
     return RedirectResponse(
+
         url="/login",
+
         status_code=303,
     )
 
@@ -524,6 +563,7 @@ def home(
         name="home.html",
 
         context={
+
             "request":
                 request,
 
