@@ -39,7 +39,7 @@
                 Review your restaurant's current
                 Swiggy setup and menu health.
 
-                Management controls remain limited
+                Your Merchant account is restricted
                 to this restaurant.
 
             </p>
@@ -53,6 +53,17 @@
 
 
             <a
+                href="/merchant/profile"
+                class="
+                    btn
+                    btn-outline-secondary
+                "
+            >
+                Edit Restaurant
+            </a>
+
+
+            <a
                 href="/swiggy"
                 class="
                     btn
@@ -63,12 +74,16 @@
             </a>
 
 
+            {% if restaurant.is_active %}
+
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
                 class="btn btn-primary"
             >
                 Preview Restaurant
             </a>
+
+            {% endif %}
 
 
         </div>
@@ -147,6 +162,8 @@
     <div class="merchant-metric-grid">
 
 
+        <!-- TOTAL ITEMS -->
+
         <article class="merchant-metric-card">
 
             <span>
@@ -164,6 +181,8 @@
         </article>
 
 
+
+        <!-- ACTIVE ITEMS -->
 
         <article class="merchant-metric-card">
 
@@ -183,6 +202,8 @@
 
 
 
+        <!-- CATEGORIES -->
+
         <article class="merchant-metric-card">
 
             <span>
@@ -201,6 +222,8 @@
 
 
 
+        <!-- BESTSELLERS -->
+
         <article class="merchant-metric-card">
 
             <span>
@@ -218,6 +241,8 @@
         </article>
 
 
+
+        <!-- LOW STOCK -->
 
         <article
             class="
@@ -241,6 +266,8 @@
         </article>
 
 
+
+        <!-- OUT OF STOCK -->
 
         <article
             class="
@@ -269,13 +296,15 @@
 
 
     <!-- ========================================= -->
-    <!-- DETAILS -->
+    <!-- DETAILS GRID -->
     <!-- ========================================= -->
 
     <div class="merchant-dashboard-grid">
 
 
-        <!-- RESTAURANT PROFILE -->
+        <!-- ===================================== -->
+        <!-- RESTAURANT INFORMATION -->
+        <!-- ===================================== -->
 
         <article class="merchant-panel">
 
@@ -297,14 +326,14 @@
 
 
                 <a
-                    href="/swiggy/restaurants/{{ restaurant.id }}"
+                    href="/merchant/profile"
                     class="
                         btn
                         btn-sm
                         btn-outline-primary
                     "
                 >
-                    Preview
+                    Edit Profile
                 </a>
 
 
@@ -314,6 +343,8 @@
 
             <dl class="merchant-detail-list">
 
+
+                <!-- NAME -->
 
                 <div>
 
@@ -328,6 +359,8 @@
                 </div>
 
 
+
+                <!-- CUISINES -->
 
                 <div>
 
@@ -345,6 +378,8 @@
 
 
 
+                <!-- LOCATION -->
+
                 <div>
 
                     <dt>
@@ -360,6 +395,8 @@
                 </div>
 
 
+
+                <!-- DELIVERY -->
 
                 <div>
 
@@ -379,6 +416,8 @@
                 </div>
 
 
+
+                <!-- RATING -->
 
                 <div>
 
@@ -403,6 +442,24 @@
                 </div>
 
 
+
+                <!-- OFFER -->
+
+                <div>
+
+                    <dt>
+                        Offer
+                    </dt>
+
+                    <dd>
+
+                        {{ restaurant.offer_text or "No active offer" }}
+
+                    </dd>
+
+                </div>
+
+
             </dl>
 
 
@@ -410,7 +467,9 @@
 
 
 
+        <!-- ===================================== -->
         <!-- SECURITY BOUNDARY -->
+        <!-- ===================================== -->
 
         <article class="merchant-panel">
 
@@ -438,6 +497,8 @@
             <div class="merchant-permission-list">
 
 
+                <!-- ALLOWED -->
+
                 <div class="allowed">
 
                     <span>
@@ -447,12 +508,12 @@
                     <p>
 
                         <strong>
-                            Your restaurant
+                            Your Restaurant
                         </strong>
 
                         <small>
-                            Manage only this restaurant
-                            and its Swiggy catalogue.
+                            Manage only your assigned
+                            restaurant.
                         </small>
 
                     </p>
@@ -470,7 +531,30 @@
                     <p>
 
                         <strong>
-                            Swiggy preview
+                            Restaurant Profile
+                        </strong>
+
+                        <small>
+                            Manage public restaurant
+                            information and availability.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="allowed">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Swiggy Preview
                         </strong>
 
                         <small>
@@ -484,6 +568,8 @@
 
 
 
+                <!-- BLOCKED -->
+
                 <div class="blocked">
 
                     <span>
@@ -493,12 +579,12 @@
                     <p>
 
                         <strong>
-                            Admin areas
+                            Admin Areas
                         </strong>
 
                         <small>
-                            No users, global catalogue
-                            or administration access.
+                            No user management, global
+                            catalogue or administrator access.
                         </small>
 
                     </p>
@@ -516,12 +602,35 @@
                     <p>
 
                         <strong>
-                            Client areas
+                            Client Areas
                         </strong>
 
                         <small>
                             No cart, checkout, My Orders
                             or Insights project access.
+                        </small>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="blocked">
+
+                    <span>
+                        ×
+                    </span>
+
+                    <p>
+
+                        <strong>
+                            Restaurant Assignment
+                        </strong>
+
+                        <small>
+                            Only an administrator can move
+                            this account to another restaurant.
                         </small>
 
                     </p>
@@ -540,7 +649,7 @@
 
 
     <!-- ========================================= -->
-    <!-- NEXT -->
+    <!-- MANAGEMENT ROADMAP -->
     <!-- ========================================= -->
 
     <article class="merchant-next-panel">
@@ -550,22 +659,21 @@
 
 
             <span class="merchant-eyebrow">
-                NEXT MANAGEMENT TOOLS
+                RESTAURANT MANAGEMENT
             </span>
 
 
             <h2>
-                Restaurant controls are coming next
+                Manage your restaurant
             </h2>
 
 
             <p>
 
-                The Merchant security boundary and dashboard
-                are now in place.
+                Restaurant profile management is now active.
 
-                We can now safely add restaurant profile,
-                menu, inventory and order controls.
+                Menu, inventory and restaurant-order
+                management will be added next.
 
             </p>
 
@@ -576,21 +684,29 @@
 
         <div class="merchant-next-actions">
 
-            <span>
+
+            <a
+                href="/merchant/profile"
+                class="btn btn-primary"
+            >
                 Restaurant Profile
-            </span>
+            </a>
+
 
             <span>
                 Menu
             </span>
 
+
             <span>
                 Inventory
             </span>
 
+
             <span>
                 Orders
             </span>
+
 
         </div>
 

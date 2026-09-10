@@ -1,0 +1,1076 @@
+{% extends "merchant/base.html" %}
+
+
+{% block title %}
+
+Restaurant Profile | {{ restaurant.name }}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+{% set entered_name =
+    form_data.name
+    if form_data
+    else restaurant.name
+%}
+
+
+{% set entered_cuisines =
+    form_data.cuisines
+    if form_data
+    else restaurant.cuisines
+%}
+
+
+{% set entered_description =
+    form_data.description
+    if form_data
+    else (restaurant.description or '')
+%}
+
+
+{% set entered_location =
+    form_data.location
+    if form_data
+    else (restaurant.location or '')
+%}
+
+
+{% set entered_offer =
+    form_data.offer_text
+    if form_data
+    else (restaurant.offer_text or '')
+%}
+
+
+{% set entered_image_url =
+    form_data.image_url
+    if form_data
+    else (restaurant.image_url or '')
+%}
+
+
+{% set entered_delivery_min =
+    form_data.delivery_min_minutes
+    if form_data
+    else restaurant.delivery_min_minutes
+%}
+
+
+{% set entered_delivery_max =
+    form_data.delivery_max_minutes
+    if form_data
+    else restaurant.delivery_max_minutes
+%}
+
+
+
+<section class="merchant-page">
+
+
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
+
+    <div class="merchant-page-header">
+
+
+        <div>
+
+
+            <span class="merchant-eyebrow">
+                RESTAURANT MANAGEMENT
+            </span>
+
+
+            <h1>
+                Restaurant Profile
+            </h1>
+
+
+            <p>
+
+                Manage the public information shown
+                for {{ restaurant.name }} on Swiggy.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="merchant-header-actions">
+
+
+            <a
+                href="/merchant"
+                class="btn btn-outline-secondary"
+            >
+                ← Dashboard
+            </a>
+
+
+            {% if restaurant.is_active %}
+
+            <a
+                href="/swiggy/restaurants/{{ restaurant.id }}"
+                class="btn btn-outline-primary"
+            >
+                Preview Restaurant
+            </a>
+
+            {% else %}
+
+            <button
+                type="button"
+                class="btn btn-outline-secondary"
+                disabled
+            >
+                Preview Unavailable
+            </button>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- SUCCESS -->
+    <!-- ========================================= -->
+
+    {% if request.query_params.get("saved") == "1" %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Restaurant profile updated.
+        </strong>
+
+        Your changes have been saved.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- ========================================= -->
+    <!-- STATUS MESSAGE -->
+    <!-- ========================================= -->
+
+    {% if request.query_params.get("status") == "active" %}
+
+
+    <div
+        class="alert alert-success"
+        role="alert"
+    >
+
+        <strong>
+            ✓ Restaurant activated.
+        </strong>
+
+        Customers can now discover your restaurant.
+
+    </div>
+
+
+    {% elif request.query_params.get("status") == "inactive" %}
+
+
+    <div
+        class="alert alert-warning"
+        role="alert"
+    >
+
+        <strong>
+            Restaurant deactivated.
+        </strong>
+
+        It is now hidden from normal Swiggy
+        restaurant discovery.
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- ========================================= -->
+    <!-- ERROR -->
+    <!-- ========================================= -->
+
+    {% if error %}
+
+
+    <div
+        class="alert alert-danger"
+        role="alert"
+    >
+
+        {{ error }}
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- ========================================= -->
+    <!-- OWNERSHIP LOCK -->
+    <!-- ========================================= -->
+
+    <div class="merchant-profile-lock">
+
+
+        <div>
+
+
+            <span class="merchant-profile-lock-icon">
+                🔒
+            </span>
+
+
+            <div>
+
+                <strong>
+                    Restaurant Assignment Locked
+                </strong>
+
+
+                <p>
+
+                    This Merchant account is assigned to
+
+                    <strong>
+                        {{ restaurant.name }}
+                    </strong>.
+
+                    You can edit this restaurant,
+                    but only an administrator can assign
+                    your Merchant account to another one.
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <span class="merchant-profile-id">
+
+            Restaurant #{{ restaurant.id }}
+
+        </span>
+
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- PAGE GRID -->
+    <!-- ========================================= -->
+
+    <div class="merchant-profile-layout">
+
+
+        <!-- ===================================== -->
+        <!-- PROFILE FORM -->
+        <!-- ===================================== -->
+
+        <div class="merchant-panel merchant-profile-main">
+
+
+            <div class="merchant-panel-header">
+
+
+                <div>
+
+                    <span class="merchant-eyebrow">
+                        PUBLIC INFORMATION
+                    </span>
+
+                    <h2>
+                        Restaurant Details
+                    </h2>
+
+                </div>
+
+
+            </div>
+
+
+
+            <form
+                method="post"
+                action="/merchant/profile"
+            >
+
+
+                <!-- ================================= -->
+                <!-- BASIC INFORMATION -->
+                <!-- ================================= -->
+
+                <div class="merchant-profile-section">
+
+
+                    <div class="merchant-profile-section-heading">
+
+
+                        <h3>
+                            Basic Information
+                        </h3>
+
+
+                        <p>
+
+                            Information customers see
+                            while discovering your restaurant.
+
+                        </p>
+
+
+                    </div>
+
+
+
+                    <div class="row g-3">
+
+
+                        <!-- NAME -->
+
+                        <div class="col-md-6">
+
+
+                            <label
+                                for="name"
+                                class="form-label fw-semibold"
+                            >
+                                Restaurant Name
+                            </label>
+
+
+                            <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_name }}"
+                                maxlength="120"
+                                required
+                            >
+
+
+                            <div class="form-text">
+
+                                Renaming the restaurant does not
+                                change your Merchant assignment.
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- CUISINES -->
+
+                        <div class="col-md-6">
+
+
+                            <label
+                                for="cuisines"
+                                class="form-label fw-semibold"
+                            >
+                                Cuisines
+                            </label>
+
+
+                            <input
+                                id="cuisines"
+                                name="cuisines"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_cuisines }}"
+                                maxlength="255"
+                                placeholder="Biryani, North Indian, Kebabs"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="col-12">
+
+
+                            <label
+                                for="description"
+                                class="form-label fw-semibold"
+                            >
+                                Description
+                            </label>
+
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="4"
+                                maxlength="500"
+                                placeholder="Tell customers about your restaurant..."
+                            >{{ entered_description }}</textarea>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ================================= -->
+                <!-- DISCOVERY -->
+                <!-- ================================= -->
+
+                <div class="merchant-profile-section">
+
+
+                    <div class="merchant-profile-section-heading">
+
+
+                        <h3>
+                            Discovery Details
+                        </h3>
+
+
+                        <p>
+
+                            Location and promotional information
+                            displayed to customers.
+
+                        </p>
+
+
+                    </div>
+
+
+
+                    <div class="row g-3">
+
+
+                        <!-- LOCATION -->
+
+                        <div class="col-md-6">
+
+
+                            <label
+                                for="location"
+                                class="form-label fw-semibold"
+                            >
+                                Location
+                            </label>
+
+
+                            <input
+                                id="location"
+                                name="location"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_location }}"
+                                maxlength="150"
+                                placeholder="Anna Nagar, Chennai"
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- OFFER -->
+
+                        <div class="col-md-6">
+
+
+                            <label
+                                for="offer_text"
+                                class="form-label fw-semibold"
+                            >
+                                Offer Text
+                            </label>
+
+
+                            <input
+                                id="offer_text"
+                                name="offer_text"
+                                type="text"
+                                class="form-control"
+                                value="{{ entered_offer }}"
+                                maxlength="150"
+                                placeholder="20% OFF up to ₹100"
+                            >
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ================================= -->
+                <!-- DELIVERY WINDOW -->
+                <!-- ================================= -->
+
+                <div class="merchant-profile-section">
+
+
+                    <div class="merchant-profile-section-heading">
+
+
+                        <h3>
+                            Delivery Window
+                        </h3>
+
+
+                        <p>
+
+                            Estimated delivery time range shown
+                            on your Swiggy restaurant page.
+
+                        </p>
+
+
+                    </div>
+
+
+
+                    <div class="row g-3">
+
+
+                        <!-- MINIMUM -->
+
+                        <div class="col-md-6">
+
+
+                            <div class="merchant-profile-delivery">
+
+
+                                <label
+                                    for="delivery_min_minutes"
+                                    class="form-label"
+                                >
+                                    Minimum Delivery Time
+                                </label>
+
+
+                                <div class="input-group">
+
+
+                                    <input
+                                        id="delivery_min_minutes"
+                                        name="delivery_min_minutes"
+                                        type="number"
+                                        class="form-control"
+                                        value="{{ entered_delivery_min }}"
+                                        min="1"
+                                        max="240"
+                                        required
+                                    >
+
+
+                                    <span class="input-group-text">
+                                        min
+                                    </span>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- MAXIMUM -->
+
+                        <div class="col-md-6">
+
+
+                            <div class="merchant-profile-delivery">
+
+
+                                <label
+                                    for="delivery_max_minutes"
+                                    class="form-label"
+                                >
+                                    Maximum Delivery Time
+                                </label>
+
+
+                                <div class="input-group">
+
+
+                                    <input
+                                        id="delivery_max_minutes"
+                                        name="delivery_max_minutes"
+                                        type="number"
+                                        class="form-control"
+                                        value="{{ entered_delivery_max }}"
+                                        min="1"
+                                        max="240"
+                                        required
+                                    >
+
+
+                                    <span class="input-group-text">
+                                        min
+                                    </span>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ================================= -->
+                <!-- IMAGE -->
+                <!-- ================================= -->
+
+                <div class="merchant-profile-section">
+
+
+                    <div class="merchant-profile-section-heading">
+
+
+                        <h3>
+                            Restaurant Image
+                        </h3>
+
+
+                        <p>
+
+                            Optional image displayed by
+                            the Swiggy restaurant interface.
+
+                        </p>
+
+
+                    </div>
+
+
+
+                    <label
+                        for="image_url"
+                        class="form-label fw-semibold"
+                    >
+                        Image URL
+                    </label>
+
+
+                    <input
+                        id="image_url"
+                        name="image_url"
+                        type="url"
+                        class="form-control"
+                        value="{{ entered_image_url }}"
+                        maxlength="500"
+                        placeholder="https://..."
+                    >
+
+
+                    {% if entered_image_url %}
+
+
+                    <div class="mt-3">
+
+
+                        <small
+                            class="
+                                text-body-secondary
+                                d-block
+                                mb-2
+                            "
+                        >
+                            Current image
+                        </small>
+
+
+                        <img
+                            src="{{ entered_image_url }}"
+                            alt="{{ restaurant.name }}"
+                            style="
+                                width: 160px;
+                                height: 110px;
+                                object-fit: cover;
+                                border-radius: 12px;
+                            "
+                        >
+
+
+                    </div>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+
+                <!-- ================================= -->
+                <!-- SAVE -->
+                <!-- ================================= -->
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-end
+                        flex-wrap
+                        gap-2
+                        mt-4
+                    "
+                >
+
+
+                    <a
+                        href="/merchant"
+                        class="btn btn-outline-secondary"
+                    >
+                        Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Save Restaurant Profile
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- SIDEBAR -->
+        <!-- ===================================== -->
+
+        <aside class="merchant-profile-sidebar">
+
+
+            <!-- ================================= -->
+            <!-- STATUS -->
+            <!-- ================================= -->
+
+            <div class="merchant-panel">
+
+
+                <span class="merchant-eyebrow">
+                    RESTAURANT STATUS
+                </span>
+
+
+                <h2 class="mt-1">
+                    Availability
+                </h2>
+
+
+
+                <div class="merchant-profile-status">
+
+
+                    <span
+                        class="
+                            merchant-status-dot
+
+                            {% if restaurant.is_active %}
+                                active
+                            {% else %}
+                                inactive
+                            {% endif %}
+                        "
+                    >
+                    </span>
+
+
+                    <div>
+
+                        <strong>
+
+                            {% if restaurant.is_active %}
+
+                                Active
+
+                            {% else %}
+
+                                Inactive
+
+                            {% endif %}
+
+                        </strong>
+
+
+                        <small>
+
+                            {% if restaurant.is_active %}
+
+                                Customers can discover
+                                your restaurant.
+
+                            {% else %}
+
+                                Your restaurant is currently
+                                hidden from customers.
+
+                            {% endif %}
+
+                        </small>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <form
+                    method="post"
+                    action="/merchant/profile/status"
+                    class="mt-3"
+                >
+
+
+                    {% if restaurant.is_active %}
+
+
+                    <input
+                        type="hidden"
+                        name="state"
+                        value="inactive"
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-danger w-100"
+                    >
+                        Deactivate Restaurant
+                    </button>
+
+
+                    {% else %}
+
+
+                    <input
+                        type="hidden"
+                        name="state"
+                        value="active"
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-success w-100"
+                    >
+                        Activate Restaurant
+                    </button>
+
+
+                    {% endif %}
+
+
+                </form>
+
+
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- ADMIN CONTROLLED RATING -->
+            <!-- ================================= -->
+
+            <div class="merchant-panel">
+
+
+                <span class="merchant-eyebrow">
+                    ADMIN CONTROLLED
+                </span>
+
+
+                <h2 class="mt-1">
+                    Marketplace Rating
+                </h2>
+
+
+                <div class="merchant-profile-rating">
+
+                    <strong>
+
+                        {% if restaurant.rating is not none %}
+
+                            ★ {{ "%.1f"|format(restaurant.rating) }}
+
+                        {% else %}
+
+                            Not rated
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <p class="text-body-secondary small mb-0">
+
+                    Merchant accounts cannot modify
+                    their own marketplace rating.
+
+                    This value remains controlled by
+                    the platform administrator.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- OWNERSHIP -->
+            <!-- ================================= -->
+
+            <div class="merchant-panel">
+
+
+                <span class="merchant-eyebrow">
+                    ACCOUNT
+                </span>
+
+
+                <h2 class="mt-1">
+                    Merchant Ownership
+                </h2>
+
+
+                <dl class="merchant-profile-account">
+
+
+                    <div>
+
+                        <dt>
+                            Merchant
+                        </dt>
+
+                        <dd>
+                            {{ current_user.username }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Restaurant
+                        </dt>
+
+                        <dd>
+                            {{ restaurant.name }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Restaurant ID
+                        </dt>
+
+                        <dd>
+                            #{{ restaurant.id }}
+                        </dd>
+
+                    </div>
+
+
+                    <div>
+
+                        <dt>
+                            Assignment
+                        </dt>
+
+                        <dd>
+                            Locked
+                        </dd>
+
+                    </div>
+
+
+                </dl>
+
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}

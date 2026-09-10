@@ -54,7 +54,7 @@
 
     <link
         rel="stylesheet"
-        href="/static/css/merchant.css?v=1"
+        href="/static/css/merchant.css?v=2"
     >
 
 
@@ -85,6 +85,8 @@
         "
     >
 
+
+        <!-- BRAND -->
 
         <a
             href="/merchant"
@@ -117,6 +119,10 @@
 
 
 
+        <!-- ================================= -->
+        <!-- RESTAURANT NAV -->
+        <!-- ================================= -->
+
         <div class="merchant-nav-label">
             Restaurant
         </div>
@@ -124,6 +130,8 @@
 
         <nav class="merchant-nav">
 
+
+            <!-- DASHBOARD -->
 
             <a
                 href="/merchant"
@@ -144,6 +152,29 @@
 
 
 
+            <!-- PROFILE -->
+
+            <a
+                href="/merchant/profile"
+                class="
+                    {% if current_path.startswith('/merchant/profile') %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span>
+                    ○
+                </span>
+
+                Restaurant Profile
+
+            </a>
+
+
+
+            <!-- SWIGGY OVERVIEW -->
+
             <a href="/swiggy">
 
                 <span>
@@ -155,6 +186,8 @@
             </a>
 
 
+
+            <!-- RESTAURANT PREVIEW -->
 
             <a
                 href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -174,7 +207,7 @@
 
 
         <!-- ================================= -->
-        <!-- UPCOMING MANAGEMENT -->
+        <!-- MANAGEMENT -->
         <!-- ================================= -->
 
         <div class="merchant-nav-label mt-4">
@@ -183,21 +216,6 @@
 
 
         <div class="merchant-coming-list">
-
-
-            <div>
-
-                <span>
-                    ○
-                </span>
-
-                Restaurant Profile
-
-                <small>
-                    Next
-                </small>
-
-            </div>
 
 
             <div>
@@ -316,13 +334,15 @@
 
 
     <!-- ===================================== -->
-    <!-- MAIN -->
+    <!-- MAIN CONTENT -->
     <!-- ===================================== -->
 
     <main class="merchant-main">
 
 
+        <!-- ================================= -->
         <!-- TOPBAR -->
+        <!-- ================================= -->
 
         <header
             class="
@@ -353,6 +373,8 @@
 
 
 
+                <!-- TITLE -->
+
                 <div class="merchant-topbar-title">
 
                     <small>
@@ -367,8 +389,12 @@
 
 
 
+                <!-- ACTIONS -->
+
                 <div class="merchant-topbar-actions">
 
+
+                    {% if restaurant.is_active %}
 
                     <a
                         href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -381,6 +407,8 @@
                     >
                         Preview Restaurant
                     </a>
+
+                    {% endif %}
 
 
 
@@ -412,7 +440,9 @@
 
 
 
-        <!-- CONTENT -->
+        <!-- ================================= -->
+        <!-- PAGE CONTENT -->
+        <!-- ================================= -->
 
         <div class="merchant-content">
 
@@ -490,6 +520,11 @@
             </a>
 
 
+            <a href="/merchant/profile">
+                Restaurant Profile
+            </a>
+
+
             <a href="/swiggy">
                 Swiggy Overview
             </a>
@@ -506,6 +541,8 @@
 
 
 
+        <!-- LOCK NOTICE -->
+
         <div class="merchant-mobile-lock mt-4">
 
             <strong>
@@ -515,13 +552,16 @@
             <small>
 
                 Only an administrator can move
-                this account to another restaurant.
+                this Merchant account to
+                another restaurant.
 
             </small>
 
         </div>
 
 
+
+        <!-- USER -->
 
         <div class="mt-auto pt-4">
 
@@ -587,18 +627,28 @@
 
 
 
+<!-- ========================================= -->
+<!-- BOOTSTRAP -->
+<!-- ========================================= -->
+
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 ></script>
 
 
-<!-- Required for POST /logout -->
+<!-- ========================================= -->
+<!-- CSRF -->
+<!-- ========================================= -->
 
 <script
     src="/static/js/csrf.js?v=1"
 ></script>
 
 
+
+<!-- ========================================= -->
+<!-- THEME -->
+<!-- ========================================= -->
 
 <script>
 
