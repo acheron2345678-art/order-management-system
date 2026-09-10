@@ -194,7 +194,8 @@
                             </strong>
 
                             <span>
-                                Role-based access for admins and clients.
+                                Role-based access for admins,
+                                clients and merchants.
                             </span>
 
                         </div>
@@ -267,7 +268,7 @@
                     <p>
 
                         Sign in to continue to your
-                        Order Management dashboard.
+                        Order Management account.
 
                     </p>
 
@@ -275,7 +276,41 @@
 
 
 
+                <!-- ========================================= -->
+                <!-- REGISTRATION SUCCESS -->
+                <!-- ========================================= -->
+
+                {% if request.query_params.get("registered") == "client" %}
+
+                <div
+                    class="alert alert-success login-alert"
+                    role="alert"
+                >
+
+                    <div class="d-flex align-items-start gap-2">
+
+                        <span class="fw-bold">
+                            ✓
+                        </span>
+
+                        <div>
+
+                            Client account created successfully.
+                            Sign in to continue.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+
+                <!-- ========================================= -->
                 <!-- ERROR -->
+                <!-- ========================================= -->
 
                 {% if error %}
 
@@ -302,7 +337,9 @@
 
 
 
+                <!-- ========================================= -->
                 <!-- LOGIN FORM -->
+                <!-- ========================================= -->
 
                 <form
                     method="post"
@@ -415,7 +452,103 @@
 
 
 
+                <!-- ========================================= -->
+                <!-- PUBLIC REGISTRATION -->
+                <!-- ========================================= -->
+
+                <div class="mt-4 pt-4 border-top">
+
+
+                    <div class="text-center mb-3">
+
+
+                        <span class="d-block fw-semibold">
+                            New to Order Management?
+                        </span>
+
+
+                        <small class="text-body-secondary">
+
+                            Choose the type of account
+                            you want to create.
+
+                        </small>
+
+
+                    </div>
+
+
+
+                    <div class="d-grid gap-2">
+
+
+                        <!-- CLIENT REGISTRATION -->
+
+                        <a
+                            href="/register/client"
+                            class="btn btn-outline-primary"
+                        >
+
+                            Create Client Account
+
+                        </a>
+
+
+
+                        <!--
+                            MERCHANT REGISTRATION
+
+                            This becomes active in Phase 11C
+                            after MerchantRestaurant ownership
+                            and merchant onboarding are wired.
+                        -->
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            disabled
+                            aria-disabled="true"
+                            title="Merchant registration will be enabled next"
+                        >
+
+                            Register as Merchant
+
+                            <span
+                                class="badge text-bg-secondary ms-2"
+                            >
+                                Next
+                            </span>
+
+                        </button>
+
+
+                    </div>
+
+
+
+                    <!-- ADMIN SECURITY NOTICE -->
+
+                    <div class="text-center mt-3">
+
+
+                        <small class="text-body-secondary">
+
+                            Administrator accounts cannot
+                            be created through public registration.
+
+                        </small>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ========================================= -->
                 <!-- FOOTER -->
+                <!-- ========================================= -->
 
                 <div class="login-footer">
 
@@ -432,6 +565,7 @@
                     </span>
 
                 </div>
+
 
             </div>
 
@@ -556,7 +690,9 @@
 
 
 
+        // =========================================
         // PASSWORD VISIBILITY
+        // =========================================
 
         const passwordInput =
             document.getElementById(
@@ -613,38 +749,61 @@
 
 </script>
 
+
+
+<!-- ========================================= -->
+<!-- INACTIVITY MODAL -->
+<!-- ========================================= -->
+
 <div
     id="inactivity-modal"
     class="inactivity-modal"
 >
+
     <div class="inactivity-modal-card">
+
 
         <div class="inactivity-icon">
             !
         </div>
 
+
         <h2>
             Session Expired
         </h2>
 
+
         <p>
+
             You have been logged out due to inactivity.
             Please log in again to continue.
+
         </p>
+
 
         <button
             type="button"
             id="inactivity-modal-close"
             class="inactivity-modal-button"
         >
+
             OK
+
         </button>
 
+
     </div>
+
 </div>
 
 
+
+<!-- ========================================= -->
+<!-- INACTIVITY MODAL JAVASCRIPT -->
+<!-- ========================================= -->
+
 <script>
+
     document.addEventListener(
         "DOMContentLoaded",
         function () {
@@ -654,13 +813,18 @@
                     window.location.search
                 );
 
+
             const reason =
-                params.get("reason");
+                params.get(
+                    "reason"
+                );
+
 
             const modal =
                 document.getElementById(
                     "inactivity-modal"
                 );
+
 
             const closeButton =
                 document.getElementById(
@@ -681,7 +845,11 @@
             }
 
 
-            if (closeButton) {
+            if (
+                closeButton
+                &&
+                modal
+            ) {
 
                 closeButton.addEventListener(
                     "click",
@@ -694,6 +862,7 @@
 
                         const cleanUrl =
                             window.location.pathname;
+
 
                         window.history.replaceState(
                             {},
@@ -708,7 +877,9 @@
 
         }
     );
+
 </script>
+
 
 </body>
 

@@ -72,11 +72,18 @@ from app.users.service import (
     get_user_by_id,
 )
 
+from app.auth.registration_router import (
+    router as registration_router,
+)
+
 
 router = APIRouter(
     tags=["authentication"]
 )
 
+router.include_router(
+    registration_router
+)
 
 def clear_auth_cookies(
     response,

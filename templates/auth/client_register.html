@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+<html
+    lang="en"
+    data-bs-theme="light"
+>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Create Client Account - Order Management
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css?v=7"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/css/registration.css?v=1"
+    >
+
+    <script>
+
+        (() => {
+
+            const savedTheme =
+                localStorage.getItem(
+                    "theme"
+                )
+                ||
+                "light";
+
+            document.documentElement.setAttribute(
+                "data-bs-theme",
+                savedTheme
+            );
+
+        })();
+
+    </script>
+
+</head>
+
+
+<body class="registration-page">
+
+
+<div class="registration-shell">
+
+
+    <div class="registration-card shadow-lg">
+
+
+        <!-- LEFT PANEL -->
+
+        <div class="registration-side-panel">
+
+
+            <a
+                href="/login"
+                class="registration-brand text-decoration-none"
+            >
+
+                <span class="registration-brand-mark">
+                    OM
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Order Management
+                    </strong>
+
+                    <small>
+                        Client Registration
+                    </small>
+
+                </span>
+
+            </a>
+
+
+
+            <div class="registration-side-copy">
+
+
+                <span class="registration-eyebrow">
+                    CLIENT ACCOUNT
+                </span>
+
+
+                <h1>
+                    Order and track from one account.
+                </h1>
+
+
+                <p>
+
+                    Create a client account to place Swiggy orders,
+                    submit Insights projects and track your activity.
+
+                </p>
+
+
+
+                <div class="registration-points">
+
+
+                    <div>
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Browse Swiggy restaurants and dishes.
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Place orders and track their status.
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Submit and manage your Insights projects.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- RIGHT PANEL -->
+
+        <div class="registration-form-panel">
+
+
+            <div class="registration-top-actions">
+
+
+                <a
+                    href="/login"
+                    class="btn btn-sm btn-outline-secondary"
+                >
+                    ← Sign In
+                </a>
+
+
+                <button
+                    type="button"
+                    id="theme-toggle"
+                    class="btn btn-sm btn-outline-secondary"
+                    aria-label="Switch theme"
+                >
+
+                    <span id="theme-icon">
+                        ☾
+                    </span>
+
+                </button>
+
+
+            </div>
+
+
+
+            <div class="registration-form-wrapper">
+
+
+                <div class="mb-4">
+
+
+                    <span
+                        class="registration-eyebrow text-primary"
+                    >
+                        CREATE ACCOUNT
+                    </span>
+
+
+                    <h2 class="mt-2 mb-2">
+                        Create Client Account
+                    </h2>
+
+
+                    <p class="text-body-secondary mb-0">
+
+                        Create an account to use Swiggy
+                        and Insights services.
+
+                    </p>
+
+
+                </div>
+
+
+
+                {% if error %}
+
+
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                >
+
+                    {{ error }}
+
+                </div>
+
+
+                {% endif %}
+
+
+
+                <form
+                    method="post"
+                    action="/register/client"
+                    autocomplete="on"
+                >
+
+
+                    <!-- CSRF -->
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+
+
+                    <!-- USERNAME -->
+
+                    <div class="mb-3">
+
+
+                        <label
+                            for="username"
+                            class="form-label fw-semibold"
+                        >
+                            Username
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-control form-control-lg"
+                            value="{{ form_data.get('username', '') }}"
+                            maxlength="100"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="mb-3">
+
+
+                        <label
+                            for="email"
+                            class="form-label fw-semibold"
+                        >
+                            Gmail Address
+                        </label>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control form-control-lg"
+                            value="{{ form_data.get('email', '') }}"
+                            maxlength="255"
+                            autocomplete="email"
+                            placeholder="name@gmail.com"
+                            required
+                        >
+
+
+                        <div class="form-text">
+
+                            Use the Gmail address you want
+                            associated with your orders
+                            and projects.
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- PASSWORDS -->
+
+                    <div class="row g-3">
+
+
+                        <div class="col-md-6">
+
+
+                            <label
+                                for="password"
+                                class="form-label fw-semibold"
+                            >
+                                Password
+                            </label>
+
+
+                            <div class="input-group">
+
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-control form-control-lg"
+                                    minlength="12"
+                                    maxlength="128"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary"
+                                    data-password-toggle="password"
+                                >
+                                    Show
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+
+                            <label
+                                for="confirm_password"
+                                class="form-label fw-semibold"
+                            >
+                                Confirm Password
+                            </label>
+
+
+                            <div class="input-group">
+
+
+                                <input
+                                    type="password"
+                                    id="confirm_password"
+                                    name="confirm_password"
+                                    class="form-control form-control-lg"
+                                    minlength="12"
+                                    maxlength="128"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary"
+                                    data-password-toggle="confirm_password"
+                                >
+                                    Show
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- SECURITY NOTE -->
+
+                    <div
+                        class="registration-security-note mt-3"
+                    >
+
+
+                        <strong>
+                            Password requirement
+                        </strong>
+
+
+                        <span>
+
+                            Use at least 12 characters.
+                            Avoid common passwords and
+                            passwords containing your
+                            username or email name.
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <div class="d-grid mt-4">
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Create Client Account
+                        </button>
+
+
+                    </div>
+
+
+                </form>
+
+
+
+                <div class="registration-login-link">
+
+                    Already have an account?
+
+                    <a href="/login">
+                        Sign in
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+    (() => {
+
+
+        const root =
+            document.documentElement;
+
+
+        const themeButton =
+            document.getElementById(
+                "theme-toggle"
+            );
+
+
+        const themeIcon =
+            document.getElementById(
+                "theme-icon"
+            );
+
+
+
+        function updateThemeIcon() {
+
+
+            const dark =
+                root.getAttribute(
+                    "data-bs-theme"
+                )
+                ===
+                "dark";
+
+
+            if (themeIcon) {
+
+                themeIcon.textContent =
+                    dark
+                        ? "☀"
+                        : "☾";
+
+            }
+
+
+        }
+
+
+
+        if (themeButton) {
+
+
+            themeButton.addEventListener(
+                "click",
+                () => {
+
+
+                    const nextTheme =
+                        root.getAttribute(
+                            "data-bs-theme"
+                        )
+                        ===
+                        "dark"
+                            ? "light"
+                            : "dark";
+
+
+                    root.setAttribute(
+                        "data-bs-theme",
+                        nextTheme
+                    );
+
+
+                    localStorage.setItem(
+                        "theme",
+                        nextTheme
+                    );
+
+
+                    updateThemeIcon();
+
+
+                }
+            );
+
+
+        }
+
+
+
+        document
+            .querySelectorAll(
+                "[data-password-toggle]"
+            )
+            .forEach(
+                (button) => {
+
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+
+                            const input =
+                                document.getElementById(
+                                    button.dataset.passwordToggle
+                                );
+
+
+                            if (!input) {
+                                return;
+                            }
+
+
+                            const hidden =
+                                input.type
+                                ===
+                                "password";
+
+
+                            input.type =
+                                hidden
+                                    ? "text"
+                                    : "password";
+
+
+                            button.textContent =
+                                hidden
+                                    ? "Hide"
+                                    : "Show";
+
+
+                        }
+                    );
+
+
+                }
+            );
+
+
+        updateThemeIcon();
+
+
+    })();
+
+</script>
+
+
+</body>
+
+</html>
