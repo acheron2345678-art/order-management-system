@@ -5,12 +5,13 @@ from decimal import (
     ROUND_HALF_UP,
 )
 
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 
 from sqlalchemy.orm import Session
 
 from app.orders.models import (
     InsightsOrders,
+    OrderItem,
 )
 
 from app.orders.order_item_service import (
@@ -407,14 +408,38 @@ def get_client_insights_projects(
     db: Session,
     client_id: int,
 ):
-    client_id = validate_positive_id(
-        client_id,
-        "Client ID",
+    project_times = (
+        db.query(
+            OrderItem.order_id.label(
+                "order_id"
+            ),
+            func.min(
+                OrderItem.created_at
+            ).label(
+                "created_at"
+            ),
+        )
+        .filter(
+            OrderItem.platform
+            ==
+            PLATFORM
+        )
+        .group_by(
+            OrderItem.order_id
+        )
+        .subquery()
     )
 
-    return (
+    rows = (
         db.query(
-            InsightsOrders
+            InsightsOrders,
+            project_times.c.created_at,
+        )
+        .outerjoin(
+            project_times,
+            project_times.c.order_id
+            ==
+            InsightsOrders.id,
         )
         .filter(
             InsightsOrders.client_id
@@ -422,10 +447,26 @@ def get_client_insights_projects(
             client_id
         )
         .order_by(
-            InsightsOrders.id.desc()
+            project_times.c.created_at.desc(),
+            InsightsOrders.order_date.desc(),
+            InsightsOrders.id.desc(),
         )
         .all()
     )
+
+    projects = []
+
+    for project, created_at in rows:
+
+        project.sort_created_at = (
+            created_at
+        )
+
+        projects.append(
+            project
+        )
+
+    return projects
 
 
 def get_client_insights_project(

@@ -3,7 +3,10 @@ from decimal import Decimal, ROUND_HALF_UP
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, selectinload
 
-from app.orders.models import SwiggyOrders
+from app.orders.models import (
+    OrderItem,
+    SwiggyOrders,
+)
 from app.orders.validation import validate_positive_id
 from app.products.models import CartItem, Product, Restaurant
 
@@ -886,16 +889,65 @@ def get_client_swiggy_orders(
     db: Session,
     client_id: int,
 ):
-    return (
-        db.query(SwiggyOrders)
+    order_times = (
+        db.query(
+            OrderItem.order_id.label(
+                "order_id"
+            ),
+            func.min(
+                OrderItem.created_at
+            ).label(
+                "created_at"
+            ),
+        )
         .filter(
-            SwiggyOrders.client_id == client_id
+            OrderItem.platform
+            ==
+            PLATFORM
+        )
+        .group_by(
+            OrderItem.order_id
+        )
+        .subquery()
+    )
+
+    rows = (
+        db.query(
+            SwiggyOrders,
+            order_times.c.created_at,
+        )
+        .outerjoin(
+            order_times,
+            order_times.c.order_id
+            ==
+            SwiggyOrders.id,
+        )
+        .filter(
+            SwiggyOrders.client_id
+            ==
+            client_id
         )
         .order_by(
-            SwiggyOrders.id.desc()
+            order_times.c.created_at.desc(),
+            SwiggyOrders.order_date.desc(),
+            SwiggyOrders.id.desc(),
         )
         .all()
     )
+
+    orders = []
+
+    for order, created_at in rows:
+
+        order.sort_created_at = (
+            created_at
+        )
+
+        orders.append(
+            order
+        )
+
+    return orders
 
 
 def get_client_swiggy_order(

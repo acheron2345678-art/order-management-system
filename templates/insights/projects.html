@@ -167,7 +167,7 @@ My Projects | Insights
 
                                 <th>
 
-                                    Request Date
+                                    Submitted At
 
                                 </th>
 
@@ -244,14 +244,41 @@ My Projects | Insights
 
 
 
-                                <!-- DATE -->
+                                <!-- DATE AND TIME -->
 
                                 <td
-                                    data-order="{{ project.order_date.isoformat() }}"
+                                    data-order="{% if project.sort_created_at %}{{ project.sort_created_at.strftime('%Y-%m-%d %H:%M:%S.%f') }}{% else %}{{ project.order_date.strftime('%Y-%m-%d') }} 00:00:00.{{ '%012d'|format(project.id) }}{% endif %}"
                                 >
 
 
-                                    {{ project.order_date.strftime('%d %b %Y') }}
+                                    {% if project.sort_created_at %}
+
+
+                                    <div class="fw-medium">
+
+                                        {{ project.sort_created_at.strftime('%d %b %Y') }}
+
+                                    </div>
+
+
+                                    <small class="text-body-secondary">
+
+                                        {{ project.sort_created_at.strftime('%I:%M:%S %p') }}
+
+                                    </small>
+
+
+                                    {% else %}
+
+
+                                    <div class="fw-medium">
+
+                                        {{ project.order_date.strftime('%d %b %Y') }}
+
+                                    </div>
+
+
+                                    {% endif %}
 
 
                                 </td>
