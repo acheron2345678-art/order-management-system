@@ -1999,3 +1999,2829 @@ svg {
     line-height: normal;
     opacity: 0.65;
 }
+
+/* =========================================================
+   UI POLISH PASS
+   ---------------------------------------------------------
+   Consistent:
+   - Button hierarchy
+   - Empty states
+   - Mobile layouts
+   - Action groups
+   - Responsive tables
+   - Form controls
+   - Admin / Merchant / Swiggy / Insights
+   ========================================================= */
+
+
+/* =========================================================
+   1. BUTTON SYSTEM
+   ========================================================= */
+
+.btn {
+    min-height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 0.58rem 0.95rem;
+
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    border-radius: 12px !important;
+
+    white-space: nowrap;
+
+    transition:
+        transform var(--proto-transition),
+        background-color var(--proto-transition),
+        border-color var(--proto-transition),
+        color var(--proto-transition),
+        box-shadow var(--proto-transition);
+}
+
+
+/* =========================================================
+   SMALL BUTTON
+   ========================================================= */
+
+.btn-sm {
+    min-height: 34px;
+
+    padding:
+        0.4rem
+        0.72rem;
+
+    font-size: 0.75rem;
+
+    border-radius: 10px !important;
+}
+
+
+/* =========================================================
+   LARGE BUTTON
+   ========================================================= */
+
+.btn-lg {
+    min-height: 48px;
+
+    padding:
+        0.7rem
+        1.15rem;
+
+    font-size: 0.95rem;
+
+    border-radius: 14px !important;
+}
+
+
+/* =========================================================
+   PRIMARY ACTION
+   ========================================================= */
+
+.btn-primary,
+.sw-primary-action {
+    border-color:
+        var(--proto-accent) !important;
+
+    background:
+        var(--proto-accent) !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0
+        7px
+        18px
+        rgba(255, 107, 36, 0.16);
+}
+
+
+.btn-primary:hover,
+.sw-primary-action:hover {
+    border-color:
+        var(--proto-accent-strong) !important;
+
+    background:
+        var(--proto-accent-strong) !important;
+
+    color:
+        #ffffff !important;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0
+        10px
+        22px
+        rgba(255, 107, 36, 0.22);
+}
+
+
+/* =========================================================
+   SECONDARY ACTION
+   ========================================================= */
+
+.btn-outline-primary {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--proto-accent) 42%,
+            var(--proto-border)
+        ) !important;
+
+    background:
+        transparent !important;
+
+    color:
+        var(--proto-accent-strong) !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+.btn-outline-primary:hover {
+    border-color:
+        var(--proto-accent) !important;
+
+    background:
+        var(--proto-accent-soft) !important;
+
+    color:
+        var(--proto-accent-strong) !important;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   TERTIARY ACTION
+   ========================================================= */
+
+.btn-outline-secondary,
+.btn-secondary,
+.btn-light {
+    border-color:
+        var(--proto-border) !important;
+
+    background:
+        var(--proto-surface) !important;
+
+    color:
+        var(--proto-text) !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+.btn-outline-secondary:hover,
+.btn-secondary:hover,
+.btn-light:hover {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--proto-border) 60%,
+            var(--proto-text)
+        ) !important;
+
+    background:
+        var(--proto-surface-2) !important;
+
+    color:
+        var(--proto-text) !important;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   DESTRUCTIVE ACTION
+   ========================================================= */
+
+.btn-danger {
+    box-shadow:
+        0
+        6px
+        16px
+        rgba(207, 81, 65, 0.14);
+}
+
+
+.btn-outline-danger {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--proto-danger) 55%,
+            var(--proto-border)
+        ) !important;
+
+    color:
+        var(--proto-danger) !important;
+
+    background:
+        transparent !important;
+}
+
+
+.btn-outline-danger:hover {
+    border-color:
+        var(--proto-danger) !important;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-danger) 10%,
+            transparent
+        ) !important;
+
+    color:
+        var(--proto-danger) !important;
+}
+
+
+/* =========================================================
+   SUCCESS ACTION
+   ========================================================= */
+
+.btn-outline-success {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--proto-success) 45%,
+            var(--proto-border)
+        ) !important;
+
+    color:
+        var(--proto-success) !important;
+}
+
+
+.btn-outline-success:hover {
+    border-color:
+        var(--proto-success) !important;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-success) 10%,
+            transparent
+        ) !important;
+
+    color:
+        var(--proto-success) !important;
+}
+
+
+/* =========================================================
+   DISABLED BUTTON
+   ========================================================= */
+
+.btn:disabled,
+.btn.disabled {
+    transform:
+        none !important;
+
+    box-shadow:
+        none !important;
+
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.55;
+}
+
+
+/* =========================================================
+   BUTTON FOCUS
+   ========================================================= */
+
+.btn:focus-visible {
+    outline:
+        none;
+
+    box-shadow:
+        0
+        0
+        0
+        3px
+        rgba(255, 107, 36, 0.18) !important;
+}
+
+
+/* =========================================================
+   2. ACTION GROUP CONSISTENCY
+   ========================================================= */
+
+.merchant-header-actions,
+.merchant-next-actions,
+.merchant-menu-actions,
+.merchant-order-toolbar-actions,
+.sw-hero-actions,
+.sw-product-actions,
+.sw-search-dish-actions,
+.sw-success-actions,
+.sw-switch-actions,
+.in-hero-actions,
+.in-service-actions,
+.in-success-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   3. PAGE HEADERS
+   ========================================================= */
+
+.merchant-page-header,
+.sw-page-heading,
+.in-page-heading,
+.page-header,
+.content-header {
+    gap: 18px;
+}
+
+
+.merchant-page-header h1,
+.sw-page-heading h1,
+.in-page-heading h1,
+.page-header h1,
+.content-header h1 {
+    margin-bottom:
+        0.35rem;
+
+    line-height:
+        1.1;
+
+    letter-spacing:
+        -0.035em;
+}
+
+
+.merchant-page-header p,
+.sw-page-heading p,
+.in-page-heading p,
+.page-header p,
+.content-header p {
+    max-width:
+        720px;
+
+    color:
+        var(--proto-muted);
+}
+
+
+/* =========================================================
+   4. CONSISTENT EMPTY STATES
+   ========================================================= */
+
+.sw-empty-state,
+.in-empty-state,
+.merchant-menu-empty {
+    width:
+        100%;
+
+    min-height:
+        230px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        36px
+        24px !important;
+
+    border:
+        1px
+        dashed
+        color-mix(
+            in srgb,
+            var(--proto-border) 82%,
+            var(--proto-muted)
+        ) !important;
+
+    border-radius:
+        var(--proto-radius-lg) !important;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface) 92%,
+            var(--proto-bg)
+        ) !important;
+
+    text-align:
+        center;
+}
+
+
+.sw-empty-state-icon,
+.in-empty-state-icon,
+.merchant-menu-empty-icon {
+    width:
+        50px;
+
+    height:
+        50px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    margin-bottom:
+        5px;
+
+    border:
+        1px
+        solid
+        color-mix(
+            in srgb,
+            var(--proto-accent) 20%,
+            var(--proto-border)
+        );
+
+    border-radius:
+        16px;
+
+    background:
+        var(--proto-accent-soft);
+
+    color:
+        var(--proto-accent-strong);
+
+    font-size:
+        1.25rem;
+}
+
+
+.sw-empty-state h3,
+.in-empty-state h3,
+.merchant-menu-empty h3 {
+    margin:
+        0;
+
+    color:
+        var(--proto-text);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+.sw-empty-state p,
+.in-empty-state p,
+.merchant-menu-empty p,
+.merchant-menu-empty small {
+    max-width:
+        480px;
+
+    margin:
+        0;
+
+    color:
+        var(--proto-muted);
+
+    font-size:
+        0.8rem;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   INLINE EMPTY STATE
+   ========================================================= */
+
+.sw-empty-inline {
+    padding:
+        18px;
+
+    border:
+        1px
+        dashed
+        var(--proto-border);
+
+    border-radius:
+        14px;
+
+    background:
+        var(--proto-surface-2);
+
+    color:
+        var(--proto-muted);
+
+    font-size:
+        0.8rem;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   TABLE EMPTY STATES
+   ========================================================= */
+
+.table
+tbody
+tr:only-child
+td[colspan] {
+    min-height:
+        180px;
+
+    padding:
+        42px
+        20px !important;
+
+    color:
+        var(--proto-muted) !important;
+
+    font-size:
+        0.84rem;
+
+    font-weight:
+        600;
+
+    text-align:
+        center !important;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface) 94%,
+            var(--proto-bg)
+        );
+}
+
+
+/* =========================================================
+   CARD BODY EMPTY MESSAGES
+   ========================================================= */
+
+.card-body
+>
+.text-center.py-4,
+.card-body
+>
+.text-center.py-5,
+.merchant-panel
+>
+.text-center.py-4,
+.merchant-panel
+>
+.text-center.py-5 {
+    padding:
+        36px
+        20px !important;
+
+    border:
+        1px
+        dashed
+        var(--proto-border);
+
+    border-radius:
+        14px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface-2) 54%,
+            transparent
+        );
+
+    color:
+        var(--proto-muted);
+}
+
+
+/* =========================================================
+   5. TABLE CONSISTENCY
+   ========================================================= */
+
+.table-responsive {
+    border-radius:
+        inherit;
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        color-mix(
+            in srgb,
+            var(--proto-muted) 30%,
+            transparent
+        )
+        transparent;
+}
+
+
+.table-responsive::-webkit-scrollbar {
+    height:
+        7px;
+}
+
+
+.table-responsive::-webkit-scrollbar-track {
+    background:
+        transparent;
+}
+
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-muted) 28%,
+            transparent
+        );
+
+    border-radius:
+        999px;
+}
+
+
+.table {
+    --bs-table-bg:
+        transparent;
+
+    --bs-table-hover-bg:
+        color-mix(
+            in srgb,
+            var(--proto-accent-soft) 36%,
+            transparent
+        );
+}
+
+
+.table thead th {
+    padding-top:
+        0.8rem;
+
+    padding-bottom:
+        0.8rem;
+
+    color:
+        var(--proto-muted);
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.035em;
+
+    text-transform:
+        uppercase;
+
+    white-space:
+        nowrap;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface-2) 55%,
+            var(--proto-surface)
+        );
+}
+
+
+.table tbody td {
+    padding-top:
+        0.82rem;
+
+    padding-bottom:
+        0.82rem;
+
+    vertical-align:
+        middle;
+}
+
+
+/* =========================================================
+   TABLE ACTION BUTTONS
+   ========================================================= */
+
+.table td .btn {
+    min-height:
+        32px;
+
+    padding:
+        0.35rem
+        0.65rem;
+
+    font-size:
+        0.72rem;
+}
+
+
+/* =========================================================
+   6. FORM CONSISTENCY
+   ========================================================= */
+
+.form-control,
+.form-select {
+    min-height:
+        44px;
+}
+
+
+textarea.form-control {
+    min-height:
+        110px;
+
+    line-height:
+        1.55;
+}
+
+
+.form-label {
+    margin-bottom:
+        6px;
+
+    color:
+        var(--proto-text);
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        700;
+}
+
+
+.form-text {
+    color:
+        var(--proto-muted);
+
+    font-size:
+        0.72rem;
+}
+
+
+/* =========================================================
+   CHECKBOX / RADIO ACCENT
+   ========================================================= */
+
+.form-check-input:checked {
+    border-color:
+        var(--proto-accent) !important;
+
+    background-color:
+        var(--proto-accent) !important;
+}
+
+
+.form-check-input:focus {
+    border-color:
+        var(--proto-accent);
+
+    box-shadow:
+        0
+        0
+        0
+        0.2rem
+        rgba(255, 107, 36, 0.12);
+}
+
+
+/* =========================================================
+   7. STATUS BADGE CONSISTENCY
+   ========================================================= */
+
+.badge {
+    min-height:
+        24px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0.35rem
+        0.58rem;
+
+    font-size:
+        0.67rem;
+}
+
+
+/* =========================================================
+   8. CARD SPACING
+   ========================================================= */
+
+.card-header {
+    padding:
+        1rem
+        1.1rem;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface) 96%,
+            var(--proto-bg)
+        ) !important;
+}
+
+
+.card-body {
+    padding:
+        1.1rem;
+}
+
+
+/* =========================================================
+   9. TOPBAR CONSISTENCY
+   ========================================================= */
+
+.app-topbar,
+.merchant-topbar,
+.sw-app-topbar,
+.in-app-topbar {
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface) 92%,
+            transparent
+        ) !important;
+}
+
+
+/* =========================================================
+   MOBILE / TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    /* =====================================================
+       CONTENT SPACING
+       ===================================================== */
+
+    .page-content,
+    .merchant-content,
+    .sw-page,
+    .in-page {
+        padding-left:
+            16px !important;
+
+        padding-right:
+            16px !important;
+    }
+
+
+    /* =====================================================
+       HEADERS
+       ===================================================== */
+
+    .merchant-page-header,
+    .sw-page-heading,
+    .in-page-heading,
+    .page-header,
+    .content-header {
+        align-items:
+            stretch !important;
+    }
+
+
+    /* =====================================================
+       ACTION GROUPS
+       ===================================================== */
+
+    .merchant-header-actions,
+    .merchant-next-actions {
+        width:
+            100%;
+
+        justify-content:
+            flex-start;
+    }
+
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
+    .card,
+    .merchant-panel,
+    .merchant-next-panel,
+    .sw-card,
+    .in-card {
+        border-radius:
+            16px !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    /* =====================================================
+       MAIN OMS TOPBAR
+       ===================================================== */
+
+    .app-topbar
+    .container-fluid {
+        flex-wrap:
+            wrap;
+
+        gap:
+            8px !important;
+
+        padding-top:
+            10px !important;
+
+        padding-bottom:
+            10px !important;
+    }
+
+
+    /* =====================================================
+       GLOBAL SEARCH ON ITS OWN ROW
+       ===================================================== */
+
+    .app-topbar
+    .global-search {
+        order:
+            3;
+
+        flex:
+            0
+            0
+            100% !important;
+
+        width:
+            100%;
+    }
+
+
+    /* =====================================================
+       TOPBAR ACTIONS
+       ===================================================== */
+
+    .om-topbar-actions {
+        margin-left:
+            auto;
+    }
+
+
+    /* =====================================================
+       SEARCH HEIGHT
+       ===================================================== */
+
+    .global-search
+    .form-control,
+    .global-search
+    .input-group-text {
+        height:
+            42px !important;
+
+        min-height:
+            42px !important;
+    }
+
+
+    /* =====================================================
+       PAGE TITLES
+       ===================================================== */
+
+    .merchant-page-header h1,
+    .sw-page-heading h1,
+    .in-page-heading h1,
+    .page-header h1,
+    .content-header h1 {
+        font-size:
+            clamp(
+                1.5rem,
+                7vw,
+                2rem
+            );
+    }
+
+
+    /* =====================================================
+       PAGE HEADER ACTIONS
+       ===================================================== */
+
+    .merchant-header-actions,
+    .merchant-next-actions,
+    .sw-hero-actions,
+    .sw-success-actions,
+    .sw-switch-actions,
+    .in-hero-actions,
+    .in-success-actions {
+        width:
+            100%;
+    }
+
+
+    .merchant-header-actions
+    .btn,
+    .merchant-next-actions
+    .btn,
+    .sw-hero-actions
+    .btn,
+    .sw-success-actions
+    .btn,
+    .sw-switch-actions
+    .btn,
+    .in-hero-actions
+    .btn,
+    .in-success-actions
+    .btn {
+        flex:
+            1
+            1
+            150px;
+    }
+
+
+    /* =====================================================
+       TABLES
+       ===================================================== */
+
+    .table-responsive {
+        margin-left:
+            -4px;
+
+        margin-right:
+            -4px;
+
+        padding-bottom:
+            4px;
+    }
+
+
+    .table-responsive
+    .table {
+        min-width:
+            680px;
+    }
+
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
+    .card-header {
+        padding:
+            0.85rem
+            0.9rem;
+    }
+
+
+    .card-body {
+        padding:
+            0.9rem;
+    }
+
+
+    /* =====================================================
+       EMPTY STATES
+       ===================================================== */
+
+    .sw-empty-state,
+    .in-empty-state,
+    .merchant-menu-empty {
+        min-height:
+            190px;
+
+        padding:
+            28px
+            18px !important;
+    }
+
+
+    /* =====================================================
+       MODALS
+       ===================================================== */
+
+    .modal-dialog {
+        margin:
+            12px;
+    }
+
+
+    .modal-content {
+        border-radius:
+            18px !important;
+    }
+
+
+    /* =====================================================
+       OFFCANVAS
+       ===================================================== */
+
+    .offcanvas {
+        max-width:
+            min(
+                88vw,
+                340px
+            );
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    /* =====================================================
+       CONTENT
+       ===================================================== */
+
+    .page-content,
+    .merchant-content {
+        padding:
+            18px
+            12px !important;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+       ===================================================== */
+
+    .merchant-header-actions
+    .btn,
+    .merchant-next-actions
+    .btn,
+    .sw-success-actions
+    .btn,
+    .sw-switch-actions
+    .btn,
+    .in-success-actions
+    .btn {
+        width:
+            100%;
+
+        flex:
+            1
+            1
+            100%;
+    }
+
+
+    /* =====================================================
+       FILTER / SEARCH FORMS
+       ===================================================== */
+
+    .merchant-order-toolbar-actions,
+    .sw-product-actions,
+    .in-service-actions {
+        align-items:
+            stretch;
+    }
+
+
+    /* =====================================================
+       PAGINATION
+       ===================================================== */
+
+    .admin-table-pagination {
+        padding:
+            12px;
+    }
+
+
+    .admin-table-pagination__controls {
+        width:
+            100%;
+
+        justify-content:
+            center;
+    }
+
+
+    .admin-table-pagination__meta {
+        width:
+            100%;
+
+        justify-content:
+            space-between;
+    }
+
+
+    /* =====================================================
+       EMPTY STATE ICON
+       ===================================================== */
+
+    .sw-empty-state-icon,
+    .in-empty-state-icon,
+    .merchant-menu-empty-icon {
+        width:
+            44px;
+
+        height:
+            44px;
+
+        border-radius:
+            14px;
+
+        font-size:
+            1.05rem;
+    }
+
+
+    /* =====================================================
+       FORM CONTROLS
+       ===================================================== */
+
+    .form-control,
+    .form-select {
+        font-size:
+            16px;
+    }
+
+}
+
+
+/* =========================================================
+   DARK MODE REFINEMENTS
+   ========================================================= */
+
+[data-bs-theme="dark"]
+.btn-outline-secondary,
+[data-bs-theme="dark"]
+.btn-secondary,
+[data-bs-theme="dark"]
+.btn-light {
+    background:
+        var(--proto-surface-2) !important;
+}
+
+
+[data-bs-theme="dark"]
+.table
+thead
+th {
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface-2) 86%,
+            black
+        );
+}
+
+
+[data-bs-theme="dark"]
+.sw-empty-state,
+[data-bs-theme="dark"]
+.in-empty-state,
+[data-bs-theme="dark"]
+.merchant-menu-empty {
+    background:
+        color-mix(
+            in srgb,
+            var(--proto-surface-2) 60%,
+            var(--proto-surface)
+        ) !important;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .btn,
+    .card,
+    .merchant-panel,
+    .sw-product-card,
+    .sw-restaurant-card,
+    .in-service-card {
+        transition:
+            none !important;
+
+        transform:
+            none !important;
+    }
+
+}
+/* =========================================================
+   FINAL UI CONSISTENCY / QA PASS
+   =========================================================
+   Covers:
+   - Order Management
+   - Admin
+   - Merchant
+   - Swiggy
+   - Insights
+   - Desktop / Tablet / Mobile
+   ========================================================= */
+
+
+/* =========================================================
+   1. GLOBAL LAYOUT SAFETY
+   ========================================================= */
+
+html {
+    width: 100%;
+    max-width: 100%;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: hidden;
+}
+
+.app-shell,
+.app-main,
+.merchant-shell,
+.merchant-main {
+    min-width: 0;
+}
+
+.app-main,
+.merchant-main {
+    width: 100%;
+}
+
+.page-content,
+.merchant-content,
+.sw-section,
+.in-section {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   2. CONSISTENT PAGE WIDTH
+   ========================================================= */
+
+.page-content,
+.merchant-content {
+    width: 100%;
+}
+
+.dashboard-page,
+.merchant-page {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   3. TOPBAR ALIGNMENT
+   ========================================================= */
+
+.app-topbar,
+.merchant-topbar {
+    z-index: 1020;
+}
+
+.app-topbar .container-fluid,
+.merchant-topbar-inner {
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+}
+
+.om-topbar-actions,
+.merchant-topbar-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.om-topbar-actions .btn,
+.merchant-topbar-actions .btn {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   4. GLOBAL SEARCH FINAL CONSISTENCY
+   ========================================================= */
+
+.global-search {
+    min-width: 0;
+}
+
+.global-search .input-group {
+    width: 100%;
+
+    display: flex;
+    align-items: stretch;
+}
+
+.global-search .input-group-text.global-search-icon {
+    width: 44px !important;
+    min-width: 44px !important;
+
+    height: 44px !important;
+    min-height: 44px !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-right: 0 !important;
+
+    border-radius:
+        14px
+        0
+        0
+        14px !important;
+}
+
+.global-search
+.input-group-text.global-search-icon
+svg {
+    position: static !important;
+
+    width: 17px !important;
+    height: 17px !important;
+
+    margin: 0 !important;
+
+    display: block !important;
+
+    transform:
+        translateY(-1px) !important;
+}
+
+.global-search .form-control {
+    min-width: 0;
+
+    height: 44px !important;
+    min-height: 44px !important;
+
+    padding:
+        0
+        16px
+        0
+        4px !important;
+
+    line-height: normal !important;
+
+    border-left: 0 !important;
+
+    border-radius:
+        0
+        14px
+        14px
+        0 !important;
+}
+
+.global-search .form-control::placeholder {
+    color: var(--proto-muted);
+
+    opacity: 0.72;
+}
+
+
+/* =========================================================
+   5. PAGE HEADER CONSISTENCY
+   ========================================================= */
+
+.dashboard-page-header,
+.merchant-page-header,
+.sw-page-header,
+.in-page-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.dashboard-header-copy,
+.merchant-page-header > div:first-child,
+.sw-page-header > div:first-child,
+.in-page-header > div:first-child {
+    min-width: 0;
+}
+
+.dashboard-page-title,
+.merchant-page-header h1,
+.sw-page-header h1,
+.in-page-header h1 {
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   6. DASHBOARD KPI ALIGNMENT
+   ========================================================= */
+
+.dashboard-kpi-grid {
+    gap: 0 !important;
+}
+
+.dashboard-kpi-grid > [class*="col-"] {
+    display: flex;
+}
+
+.dashboard-kpi-card {
+    width: 100%;
+    height: 100%;
+
+    min-height: 150px;
+}
+
+.dashboard-kpi-content {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-kpi-foot {
+    margin-top: auto;
+}
+
+
+/* =========================================================
+   7. DASHBOARD ANALYTICS
+   ========================================================= */
+
+.dashboard-analysis-grid {
+    gap: 0 !important;
+
+    align-items: stretch;
+}
+
+.dashboard-analysis-grid > [class*="col-"] {
+    display: flex;
+}
+
+.dashboard-analysis-grid
+.dashboard-card,
+.dashboard-analysis-grid
+.chart-card {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* =========================================================
+   8. DASHBOARD CHART PROTECTION
+   ========================================================= */
+
+.dashboard-page svg,
+.dashboard-page canvas {
+    max-width: 100%;
+}
+
+.chart-card,
+.dashboard-card {
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+.chart-card-body,
+.dashboard-chart-container {
+    min-width: 0;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   9. CARD CONSISTENCY
+   ========================================================= */
+
+.card,
+.dashboard-card,
+.dashboard-kpi-card,
+.merchant-panel,
+.merchant-next-panel,
+.merchant-metric-card,
+.merchant-order-summary-card,
+.merchant-menu-summary-card,
+.merchant-inventory-summary-card,
+.sw-restaurant-card,
+.sw-menu-dish,
+.sw-cart-item,
+.sw-summary-card,
+.in-service-card {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   10. CONSISTENT HOVER
+   ========================================================= */
+
+@media (hover: hover) {
+
+    .dashboard-kpi-card:hover,
+    .merchant-metric-card:hover,
+    .merchant-order-summary-card:hover,
+    .merchant-menu-summary-card:hover,
+    .merchant-inventory-summary-card:hover,
+    .sw-restaurant-card:hover,
+    .sw-menu-dish:hover,
+    .in-service-card:hover {
+        transform: translateY(-2px);
+    }
+
+}
+
+
+/* =========================================================
+   11. ADMIN METRIC CARDS
+   ========================================================= */
+
+.row > [class*="col-"] > .card.h-100 {
+    width: 100%;
+}
+
+.card.h-100 .card-body {
+    height: 100%;
+}
+
+
+/* =========================================================
+   12. MERCHANT SUMMARY GRIDS
+   ========================================================= */
+
+.merchant-order-summary-grid,
+.merchant-metric-grid,
+.merchant-menu-summary-grid,
+.merchant-inventory-summary-grid {
+    align-items: stretch;
+}
+
+.merchant-order-summary-card,
+.merchant-metric-card,
+.merchant-menu-summary-card,
+.merchant-inventory-summary-card {
+    height: 100%;
+}
+
+
+/* =========================================================
+   13. MERCHANT DASHBOARD GRID
+   ========================================================= */
+
+.merchant-dashboard-grid {
+    align-items: stretch;
+}
+
+.merchant-dashboard-grid > .merchant-panel {
+    height: 100%;
+}
+
+
+/* =========================================================
+   14. MERCHANT PANEL HEADERS
+   ========================================================= */
+
+.merchant-panel-header,
+.merchant-menu-toolbar,
+.merchant-inventory-toolbar,
+.merchant-order-toolbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+}
+
+.merchant-panel-header > div:first-child,
+.merchant-menu-toolbar > div:first-child,
+.merchant-inventory-toolbar > div:first-child,
+.merchant-order-toolbar > div:first-child {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   15. MERCHANT SEARCH INPUTS
+   ========================================================= */
+
+.merchant-menu-search,
+.merchant-inventory-search {
+    min-width: 220px;
+
+    flex:
+        0
+        1
+        360px;
+}
+
+.merchant-menu-search .form-control,
+.merchant-inventory-search .form-control {
+    width: 100%;
+}
+
+
+/* =========================================================
+   16. MERCHANT ORDER FILTERS
+   ========================================================= */
+
+.merchant-order-toolbar-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.merchant-order-toolbar-actions .form-control,
+.merchant-order-toolbar-actions .form-select {
+    width: auto;
+
+    min-width: 150px;
+}
+
+
+/* =========================================================
+   17. TABLE WRAPPERS
+   ========================================================= */
+
+.table-responsive {
+    width: 100%;
+
+    max-width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive > table {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   18. TABLE CELL SAFETY
+   ========================================================= */
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.table th {
+    white-space: nowrap;
+}
+
+.table td {
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   19. KEEP ACTION COLUMNS TOGETHER
+   ========================================================= */
+
+.table th:last-child,
+.table td:last-child {
+    white-space: nowrap;
+}
+
+.table td:last-child form {
+    display: inline-flex;
+}
+
+
+/* =========================================================
+   20. ACTION GROUPS INSIDE TABLES
+   ========================================================= */
+
+.table td
+.d-inline-flex {
+    align-items: center;
+}
+
+
+/* =========================================================
+   21. PRODUCT / USER / RESTAURANT TABLES
+   ========================================================= */
+
+.catalog-row td,
+[data-merchant-row] td {
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   22. PAGINATION CONSISTENCY
+   ========================================================= */
+
+.admin-table-pagination {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+
+    padding:
+        14px
+        4px
+        4px;
+}
+
+.admin-table-pagination__meta {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.admin-table-pagination__size {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.admin-table-pagination__size select {
+    min-height: 34px;
+
+    padding:
+        4px
+        28px
+        4px
+        9px;
+
+    border:
+        1px
+        solid
+        var(--proto-border);
+
+    border-radius: 9px;
+
+    background:
+        var(--proto-surface);
+
+    color:
+        var(--proto-text);
+}
+
+.admin-table-pagination__controls {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-wrap: wrap;
+}
+
+.admin-table-pagination__button {
+    min-width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   23. SWIGGY RESTAURANT GRID
+   ========================================================= */
+
+.sw-restaurant-grid {
+    align-items: stretch;
+}
+
+.sw-restaurant-card {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sw-restaurant-card-body {
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sw-restaurant-card-footer {
+    margin-top: auto;
+}
+
+
+/* =========================================================
+   24. SWIGGY RESTAURANT IMAGES
+   ========================================================= */
+
+.sw-restaurant-visual,
+.sw-menu-dish-image,
+.sw-cart-item-visual {
+    overflow: hidden;
+}
+
+.sw-restaurant-visual img,
+.sw-menu-dish-image img,
+.sw-cart-item-visual img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   25. SWIGGY MENU LAYOUT
+   ========================================================= */
+
+.sw-menu-content-layout {
+    min-width: 0;
+
+    align-items: start;
+}
+
+.sw-menu-main {
+    min-width: 0;
+}
+
+.sw-menu-category-scroll {
+    scrollbar-width: none;
+}
+
+.sw-menu-category-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================================================
+   26. SWIGGY MENU DISH CONSISTENCY
+   ========================================================= */
+
+.sw-menu-dish {
+    height: 100%;
+}
+
+.sw-menu-dish-copy {
+    min-width: 0;
+}
+
+.sw-menu-dish-title {
+    overflow-wrap: anywhere;
+}
+
+.sw-menu-dish-description {
+    display: -webkit-box;
+
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+
+/* =========================================================
+   27. SWIGGY CART
+   ========================================================= */
+
+.sw-cart-layout {
+    align-items: start;
+}
+
+.sw-cart-items,
+.sw-summary-card {
+    min-width: 0;
+}
+
+.sw-cart-item-copy {
+    min-width: 0;
+}
+
+.sw-cart-item-title {
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   28. CART SUMMARY STICKY ON DESKTOP
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .sw-summary-card {
+        position: sticky;
+
+        top: 92px;
+    }
+
+}
+
+
+/* =========================================================
+   29. INSIGHTS SERVICE GRID
+   ========================================================= */
+
+.in-service-grid {
+    align-items: stretch;
+}
+
+.in-service-card {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.in-service-body {
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.in-service-footer {
+    margin-top: auto;
+}
+
+
+/* =========================================================
+   30. INSIGHTS SERVICE TITLES
+   ========================================================= */
+
+.in-service-title {
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   31. INPUT CONSISTENCY
+   ========================================================= */
+
+.form-control,
+.form-select,
+.input-group-text {
+    border-color:
+        var(--proto-border);
+}
+
+.form-control,
+.form-select {
+    min-width: 0;
+
+    background-color:
+        var(--proto-surface);
+
+    color:
+        var(--proto-text);
+}
+
+.form-control::placeholder {
+    color:
+        var(--proto-muted);
+
+    opacity:
+        0.72;
+}
+
+
+/* =========================================================
+   32. INPUT FOCUS CONSISTENCY
+   ========================================================= */
+
+.form-control:focus,
+.form-select:focus {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--proto-accent) 70%,
+            var(--proto-border)
+        );
+
+    box-shadow:
+        0
+        0
+        0
+        3px
+        rgba(255, 107, 36, 0.12);
+}
+
+
+/* =========================================================
+   33. LINKS / INTERACTIVE FOCUS
+   ========================================================= */
+
+a:focus-visible,
+button:focus-visible,
+.sidebar-link:focus-visible,
+.merchant-nav a:focus-visible,
+.om-app-item:focus-visible {
+    outline:
+        2px
+        solid
+        color-mix(
+            in srgb,
+            var(--proto-accent) 75%,
+            white
+        );
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   34. ALERT CONSISTENCY
+   ========================================================= */
+
+.alert {
+    border-radius: 14px;
+
+    font-size: 0.83rem;
+}
+
+
+/* =========================================================
+   35. DROPDOWN CONSISTENCY
+   ========================================================= */
+
+.dropdown-menu {
+    border:
+        1px
+        solid
+        var(--proto-border);
+
+    border-radius:
+        14px;
+
+    background:
+        var(--proto-surface);
+
+    box-shadow:
+        0
+        18px
+        44px
+        rgba(31, 38, 48, 0.12);
+}
+
+.dropdown-item {
+    border-radius: 9px;
+}
+
+
+/* =========================================================
+   36. MODAL CONSISTENCY
+   ========================================================= */
+
+.modal-content {
+    border:
+        1px
+        solid
+        var(--proto-border);
+
+    border-radius:
+        18px;
+
+    background:
+        var(--proto-surface);
+
+    box-shadow:
+        0
+        24px
+        70px
+        rgba(31, 38, 48, 0.18);
+}
+
+
+/* =========================================================
+   37. OFFCANVAS CONSISTENCY
+   ========================================================= */
+
+.offcanvas {
+    background:
+        var(--proto-surface);
+
+    color:
+        var(--proto-text);
+}
+
+
+/* =========================================================
+   38. TEXT TRUNCATION SAFETY
+   ========================================================= */
+
+.min-w-0 {
+    min-width: 0 !important;
+}
+
+.text-truncate {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   39. DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    /* Keep all dashboard KPIs on one line */
+
+    .dashboard-kpi-grid
+    > .col-xl-3 {
+        flex:
+            0
+            0
+            25%;
+
+        max-width:
+            25%;
+    }
+
+
+    /* Keep Swiggy / Combined / Insights
+       analytics on the same row */
+
+    .dashboard-analysis-grid {
+        flex-wrap: nowrap;
+    }
+
+}
+
+
+/* =========================================================
+   40. TABLET
+   ========================================================= */
+
+@media (
+    min-width: 768px
+)
+and
+(
+    max-width: 1199.98px
+) {
+
+    .dashboard-page-header,
+    .merchant-page-header {
+        align-items:
+            flex-start;
+    }
+
+    .dashboard-header-actions,
+    .merchant-header-actions {
+        justify-content:
+            flex-start;
+    }
+
+}
+
+
+/* =========================================================
+   41. MOBILE TOPBAR
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .app-topbar
+    .container-fluid {
+        min-height:
+            auto;
+
+        display:
+            flex;
+
+        flex-wrap:
+            wrap;
+
+        align-items:
+            center;
+    }
+
+
+    .global-search {
+        order:
+            3;
+
+        width:
+            100%;
+
+        flex:
+            0
+            0
+            100%;
+    }
+
+
+    .om-topbar-actions {
+        margin-left:
+            auto;
+    }
+
+
+    .merchant-topbar-inner {
+        min-height:
+            64px;
+
+        padding:
+            10px
+            14px;
+    }
+
+}
+
+
+/* =========================================================
+   42. MOBILE PAGE HEADERS
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .dashboard-page-header,
+    .merchant-page-header,
+    .sw-page-header,
+    .in-page-header {
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+        gap:
+            14px;
+    }
+
+
+    .dashboard-header-actions,
+    .merchant-header-actions {
+        width:
+            100%;
+    }
+
+}
+
+
+/* =========================================================
+   43. MOBILE DASHBOARD
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .dashboard-kpi-card {
+        min-height:
+            132px;
+    }
+
+
+    .dashboard-kpi-value {
+        overflow-wrap:
+            anywhere;
+    }
+
+}
+
+
+/* =========================================================
+   44. MOBILE MERCHANT TOOLBARS
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .merchant-panel-header,
+    .merchant-menu-toolbar,
+    .merchant-inventory-toolbar,
+    .merchant-order-toolbar {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .merchant-menu-search,
+    .merchant-inventory-search {
+        width:
+            100%;
+
+        max-width:
+            none;
+
+        min-width:
+            0;
+
+        flex:
+            1
+            1
+            auto;
+    }
+
+
+    .merchant-order-toolbar-actions {
+        width:
+            100%;
+    }
+
+
+    .merchant-order-toolbar-actions
+    .form-control,
+    .merchant-order-toolbar-actions
+    .form-select {
+        width:
+            100%;
+
+        min-width:
+            0;
+
+        flex:
+            1
+            1
+            180px;
+    }
+
+}
+
+
+/* =========================================================
+   45. MOBILE SWIGGY
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .sw-restaurant-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    .sw-menu-content-layout {
+        display:
+            block;
+    }
+
+
+    .sw-menu-category-nav {
+        position:
+            static !important;
+
+        width:
+            100% !important;
+
+        margin-bottom:
+            18px;
+    }
+
+
+    .sw-menu-category-scroll {
+        display:
+            flex;
+
+        gap:
+            7px;
+
+        overflow-x:
+            auto;
+
+        padding-bottom:
+            5px;
+    }
+
+
+    .sw-menu-category-scroll a,
+    .sw-menu-category-scroll button {
+        flex:
+            0
+            0
+            auto;
+    }
+
+
+    .sw-cart-layout {
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    .sw-summary-card {
+        position:
+            static !important;
+    }
+
+}
+
+
+/* =========================================================
+   46. MOBILE INSIGHTS
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .in-service-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    .in-services-toolbar {
+        display:
+            flex;
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+        gap:
+            10px;
+    }
+
+
+    .in-services-search {
+        width:
+            100%;
+    }
+
+}
+
+
+/* =========================================================
+   47. MOBILE TABLES
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .table-responsive {
+        width:
+            calc(100% + 4px);
+
+        margin-right:
+            -4px;
+    }
+
+
+    .table-responsive
+    table {
+        min-width:
+            680px;
+    }
+
+
+    .table
+    th,
+    .table
+    td {
+        padding:
+            0.7rem
+            0.65rem;
+    }
+
+}
+
+
+/* =========================================================
+   48. MOBILE PAGINATION
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .admin-table-pagination {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+        gap:
+            10px;
+    }
+
+
+    .admin-table-pagination__meta {
+        width:
+            100%;
+
+        justify-content:
+            space-between;
+    }
+
+
+    .admin-table-pagination__controls {
+        width:
+            100%;
+
+        justify-content:
+            center;
+    }
+
+
+    .admin-table-pagination__button {
+        min-width:
+            32px;
+
+        height:
+            32px;
+    }
+
+}
+
+
+/* =========================================================
+   49. MOBILE ACTION BUTTONS
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .merchant-header-actions,
+    .merchant-next-actions,
+    .sw-success-actions,
+    .sw-switch-actions,
+    .in-success-actions {
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr;
+
+        width:
+            100%;
+    }
+
+
+    .merchant-header-actions .btn,
+    .merchant-next-actions .btn,
+    .sw-success-actions .btn,
+    .sw-switch-actions .btn,
+    .in-success-actions .btn {
+        width:
+            100%;
+    }
+
+}
+
+
+/* =========================================================
+   50. TOUCH TARGETS
+   ========================================================= */
+
+@media (pointer: coarse) {
+
+    .btn:not(.btn-sm),
+    .sidebar-link,
+    .merchant-nav a {
+        min-height:
+            44px;
+    }
+
+}
+
+
+/* =========================================================
+   51. DARK MODE TABLES
+   ========================================================= */
+
+[data-bs-theme="dark"]
+.table {
+    --bs-table-color:
+        var(--proto-text);
+
+    --bs-table-bg:
+        transparent;
+
+    --bs-table-border-color:
+        var(--proto-border);
+}
+
+
+/* =========================================================
+   52. DARK MODE DROPDOWN
+   ========================================================= */
+
+[data-bs-theme="dark"]
+.dropdown-menu {
+    box-shadow:
+        0
+        18px
+        44px
+        rgba(0, 0, 0, 0.32);
+}
+
+
+/* =========================================================
+   53. DARK MODE MODALS
+   ========================================================= */
+
+[data-bs-theme="dark"]
+.modal-content {
+    box-shadow:
+        0
+        24px
+        70px
+        rgba(0, 0, 0, 0.4);
+}
+
+
+/* =========================================================
+   54. DISABLED ELEMENT CONSISTENCY
+   ========================================================= */
+
+button:disabled,
+.btn.disabled,
+.form-control:disabled,
+.form-select:disabled {
+    cursor:
+        not-allowed;
+}
+
+
+/* =========================================================
+   55. REDUCED MOTION ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior:
+            auto !important;
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+    }
+
+}
