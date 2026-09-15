@@ -3353,1475 +3353,1842 @@ th {
 
 }
 /* =========================================================
-   FINAL UI CONSISTENCY / QA PASS
-   =========================================================
-   Covers:
-   - Order Management
-   - Admin
-   - Merchant
-   - Swiggy
-   - Insights
-   - Desktop / Tablet / Mobile
+   INSIGHTS BLUE THEME
    ========================================================= */
 
+body.insights-page {
+    --proto-accent: #2563eb;
+    --proto-accent-strong: #1d4ed8;
+    --proto-accent-soft: #eff6ff;
 
-/* =========================================================
-   1. GLOBAL LAYOUT SAFETY
-   ========================================================= */
+    --bs-primary: #2563eb;
+    --bs-primary-rgb: 37, 99, 235;
 
-html {
-    width: 100%;
-    max-width: 100%;
-}
+    --bs-primary-bg-subtle: #eff6ff;
+    --bs-primary-border-subtle: #bfdbfe;
 
-body {
-    width: 100%;
-    max-width: 100%;
-
-    overflow-x: hidden;
-}
-
-.app-shell,
-.app-main,
-.merchant-shell,
-.merchant-main {
-    min-width: 0;
-}
-
-.app-main,
-.merchant-main {
-    width: 100%;
-}
-
-.page-content,
-.merchant-content,
-.sw-section,
-.in-section {
-    min-width: 0;
+    --bs-link-color: #2563eb;
+    --bs-link-hover-color: #1d4ed8;
 }
 
 
 /* =========================================================
-   2. CONSISTENT PAGE WIDTH
+   DARK MODE
    ========================================================= */
 
-.page-content,
-.merchant-content {
-    width: 100%;
-}
+[data-bs-theme="dark"] body.insights-page,
+body.insights-page[data-bs-theme="dark"] {
+    --proto-accent: #3b82f6;
+    --proto-accent-strong: #60a5fa;
+    --proto-accent-soft: #172554;
 
-.dashboard-page,
-.merchant-page {
-    width: 100%;
-    max-width: 100%;
+    --bs-primary: #3b82f6;
+    --bs-primary-rgb: 59, 130, 246;
+
+    --bs-primary-bg-subtle: #172554;
+    --bs-primary-border-subtle: #1e3a8a;
+
+    --bs-link-color: #60a5fa;
+    --bs-link-hover-color: #93c5fd;
 }
 
 
 /* =========================================================
-   3. TOPBAR ALIGNMENT
+   INSIGHTS BRAND
    ========================================================= */
 
-.app-topbar,
-.merchant-topbar {
-    z-index: 1020;
-}
+body.insights-page .in-brand-mark {
+    background:
+        linear-gradient(
+            135deg,
+            #60a5fa,
+            #2563eb
+        ) !important;
 
-.app-topbar .container-fluid,
-.merchant-topbar-inner {
-    min-height: 72px;
-
-    display: flex;
-    align-items: center;
-}
-
-.om-topbar-actions,
-.merchant-topbar-actions {
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-}
-
-.om-topbar-actions .btn,
-.merchant-topbar-actions .btn {
-    flex-shrink: 0;
+    color: #ffffff !important;
 }
 
 
 /* =========================================================
-   4. GLOBAL SEARCH FINAL CONSISTENCY
+   USER AVATAR
    ========================================================= */
 
-.global-search {
-    min-width: 0;
-}
+body.insights-page .in-user-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #60a5fa,
+            #2563eb
+        ) !important;
 
-.global-search .input-group {
-    width: 100%;
-
-    display: flex;
-    align-items: stretch;
-}
-
-.global-search .input-group-text.global-search-icon {
-    width: 44px !important;
-    min-width: 44px !important;
-
-    height: 44px !important;
-    min-height: 44px !important;
-
-    padding: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    border-right: 0 !important;
-
-    border-radius:
-        14px
-        0
-        0
-        14px !important;
-}
-
-.global-search
-.input-group-text.global-search-icon
-svg {
-    position: static !important;
-
-    width: 17px !important;
-    height: 17px !important;
-
-    margin: 0 !important;
-
-    display: block !important;
-
-    transform:
-        translateY(-1px) !important;
-}
-
-.global-search .form-control {
-    min-width: 0;
-
-    height: 44px !important;
-    min-height: 44px !important;
-
-    padding:
-        0
-        16px
-        0
-        4px !important;
-
-    line-height: normal !important;
-
-    border-left: 0 !important;
-
-    border-radius:
-        0
-        14px
-        14px
-        0 !important;
-}
-
-.global-search .form-control::placeholder {
-    color: var(--proto-muted);
-
-    opacity: 0.72;
+    color: #ffffff !important;
 }
 
 
 /* =========================================================
-   5. PAGE HEADER CONSISTENCY
+   NAVIGATION
    ========================================================= */
 
-.dashboard-page-header,
-.merchant-page-header,
-.sw-page-header,
-.in-page-header {
-    width: 100%;
-
-    display: flex;
-
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 20px;
-}
-
-.dashboard-header-copy,
-.merchant-page-header > div:first-child,
-.sw-page-header > div:first-child,
-.in-page-header > div:first-child {
-    min-width: 0;
-}
-
-.dashboard-page-title,
-.merchant-page-header h1,
-.sw-page-header h1,
-.in-page-header h1 {
-    overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   6. DASHBOARD KPI ALIGNMENT
-   ========================================================= */
-
-.dashboard-kpi-grid {
-    gap: 0 !important;
-}
-
-.dashboard-kpi-grid > [class*="col-"] {
-    display: flex;
-}
-
-.dashboard-kpi-card {
-    width: 100%;
-    height: 100%;
-
-    min-height: 150px;
-}
-
-.dashboard-kpi-content {
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-}
-
-.dashboard-kpi-foot {
-    margin-top: auto;
-}
-
-
-/* =========================================================
-   7. DASHBOARD ANALYTICS
-   ========================================================= */
-
-.dashboard-analysis-grid {
-    gap: 0 !important;
-
-    align-items: stretch;
-}
-
-.dashboard-analysis-grid > [class*="col-"] {
-    display: flex;
-}
-
-.dashboard-analysis-grid
-.dashboard-card,
-.dashboard-analysis-grid
-.chart-card {
-    width: 100%;
-    height: 100%;
-}
-
-
-/* =========================================================
-   8. DASHBOARD CHART PROTECTION
-   ========================================================= */
-
-.dashboard-page svg,
-.dashboard-page canvas {
-    max-width: 100%;
-}
-
-.chart-card,
-.dashboard-card {
-    min-width: 0;
-
-    overflow: hidden;
-}
-
-.chart-card-body,
-.dashboard-chart-container {
-    min-width: 0;
-
-    overflow-x: auto;
-}
-
-
-/* =========================================================
-   9. CARD CONSISTENCY
-   ========================================================= */
-
-.card,
-.dashboard-card,
-.dashboard-kpi-card,
-.merchant-panel,
-.merchant-next-panel,
-.merchant-metric-card,
-.merchant-order-summary-card,
-.merchant-menu-summary-card,
-.merchant-inventory-summary-card,
-.sw-restaurant-card,
-.sw-menu-dish,
-.sw-cart-item,
-.sw-summary-card,
-.in-service-card {
-    min-width: 0;
-}
-
-
-/* =========================================================
-   10. CONSISTENT HOVER
-   ========================================================= */
-
-@media (hover: hover) {
-
-    .dashboard-kpi-card:hover,
-    .merchant-metric-card:hover,
-    .merchant-order-summary-card:hover,
-    .merchant-menu-summary-card:hover,
-    .merchant-inventory-summary-card:hover,
-    .sw-restaurant-card:hover,
-    .sw-menu-dish:hover,
-    .in-service-card:hover {
-        transform: translateY(-2px);
-    }
-
-}
-
-
-/* =========================================================
-   11. ADMIN METRIC CARDS
-   ========================================================= */
-
-.row > [class*="col-"] > .card.h-100 {
-    width: 100%;
-}
-
-.card.h-100 .card-body {
-    height: 100%;
-}
-
-
-/* =========================================================
-   12. MERCHANT SUMMARY GRIDS
-   ========================================================= */
-
-.merchant-order-summary-grid,
-.merchant-metric-grid,
-.merchant-menu-summary-grid,
-.merchant-inventory-summary-grid {
-    align-items: stretch;
-}
-
-.merchant-order-summary-card,
-.merchant-metric-card,
-.merchant-menu-summary-card,
-.merchant-inventory-summary-card {
-    height: 100%;
-}
-
-
-/* =========================================================
-   13. MERCHANT DASHBOARD GRID
-   ========================================================= */
-
-.merchant-dashboard-grid {
-    align-items: stretch;
-}
-
-.merchant-dashboard-grid > .merchant-panel {
-    height: 100%;
-}
-
-
-/* =========================================================
-   14. MERCHANT PANEL HEADERS
-   ========================================================= */
-
-.merchant-panel-header,
-.merchant-menu-toolbar,
-.merchant-inventory-toolbar,
-.merchant-order-toolbar {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 14px;
-
-    flex-wrap: wrap;
-}
-
-.merchant-panel-header > div:first-child,
-.merchant-menu-toolbar > div:first-child,
-.merchant-inventory-toolbar > div:first-child,
-.merchant-order-toolbar > div:first-child {
-    min-width: 0;
-}
-
-
-/* =========================================================
-   15. MERCHANT SEARCH INPUTS
-   ========================================================= */
-
-.merchant-menu-search,
-.merchant-inventory-search {
-    min-width: 220px;
-
-    flex:
-        0
-        1
-        360px;
-}
-
-.merchant-menu-search .form-control,
-.merchant-inventory-search .form-control {
-    width: 100%;
-}
-
-
-/* =========================================================
-   16. MERCHANT ORDER FILTERS
-   ========================================================= */
-
-.merchant-order-toolbar-actions {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    flex-wrap: wrap;
-}
-
-.merchant-order-toolbar-actions .form-control,
-.merchant-order-toolbar-actions .form-select {
-    width: auto;
-
-    min-width: 150px;
-}
-
-
-/* =========================================================
-   17. TABLE WRAPPERS
-   ========================================================= */
-
-.table-responsive {
-    width: 100%;
-
-    max-width: 100%;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    -webkit-overflow-scrolling: touch;
-}
-
-.table-responsive > table {
-    margin-bottom: 0;
-}
-
-
-/* =========================================================
-   18. TABLE CELL SAFETY
-   ========================================================= */
-
-.table th,
-.table td {
-    vertical-align: middle;
-}
-
-.table th {
-    white-space: nowrap;
-}
-
-.table td {
-    overflow-wrap: break-word;
-}
-
-
-/* =========================================================
-   19. KEEP ACTION COLUMNS TOGETHER
-   ========================================================= */
-
-.table th:last-child,
-.table td:last-child {
-    white-space: nowrap;
-}
-
-.table td:last-child form {
-    display: inline-flex;
-}
-
-
-/* =========================================================
-   20. ACTION GROUPS INSIDE TABLES
-   ========================================================= */
-
-.table td
-.d-inline-flex {
-    align-items: center;
-}
-
-
-/* =========================================================
-   21. PRODUCT / USER / RESTAURANT TABLES
-   ========================================================= */
-
-.catalog-row td,
-[data-merchant-row] td {
-    vertical-align: middle;
-}
-
-
-/* =========================================================
-   22. PAGINATION CONSISTENCY
-   ========================================================= */
-
-.admin-table-pagination {
-    width: 100%;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 14px;
-
-    flex-wrap: wrap;
-
-    padding:
-        14px
-        4px
-        4px;
-}
-
-.admin-table-pagination__meta {
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    flex-wrap: wrap;
-}
-
-.admin-table-pagination__size {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 7px;
-}
-
-.admin-table-pagination__size select {
-    min-height: 34px;
-
-    padding:
-        4px
-        28px
-        4px
-        9px;
-
-    border:
-        1px
-        solid
-        var(--proto-border);
-
-    border-radius: 9px;
+body.insights-page .in-desktop-nav a:hover,
+body.insights-page .in-desktop-nav a.active {
+    color:
+        var(--proto-accent-strong) !important;
 
     background:
-        var(--proto-surface);
-
-    color:
-        var(--proto-text);
-}
-
-.admin-table-pagination__controls {
-    display: flex;
-
-    align-items: center;
-
-    gap: 5px;
-
-    flex-wrap: wrap;
-}
-
-.admin-table-pagination__button {
-    min-width: 34px;
-    height: 34px;
-
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
+        var(--proto-accent-soft) !important;
 }
 
 
 /* =========================================================
-   23. SWIGGY RESTAURANT GRID
+   SEARCH FOCUS
    ========================================================= */
 
-.sw-restaurant-grid {
-    align-items: stretch;
-}
-
-.sw-restaurant-card {
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-}
-
-.sw-restaurant-card-body {
-    flex: 1 1 auto;
-
-    display: flex;
-    flex-direction: column;
-}
-
-.sw-restaurant-card-footer {
-    margin-top: auto;
-}
-
-
-/* =========================================================
-   24. SWIGGY RESTAURANT IMAGES
-   ========================================================= */
-
-.sw-restaurant-visual,
-.sw-menu-dish-image,
-.sw-cart-item-visual {
-    overflow: hidden;
-}
-
-.sw-restaurant-visual img,
-.sw-menu-dish-image img,
-.sw-cart-item-visual img {
-    width: 100%;
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-}
-
-
-/* =========================================================
-   25. SWIGGY MENU LAYOUT
-   ========================================================= */
-
-.sw-menu-content-layout {
-    min-width: 0;
-
-    align-items: start;
-}
-
-.sw-menu-main {
-    min-width: 0;
-}
-
-.sw-menu-category-scroll {
-    scrollbar-width: none;
-}
-
-.sw-menu-category-scroll::-webkit-scrollbar {
-    display: none;
-}
-
-
-/* =========================================================
-   26. SWIGGY MENU DISH CONSISTENCY
-   ========================================================= */
-
-.sw-menu-dish {
-    height: 100%;
-}
-
-.sw-menu-dish-copy {
-    min-width: 0;
-}
-
-.sw-menu-dish-title {
-    overflow-wrap: anywhere;
-}
-
-.sw-menu-dish-description {
-    display: -webkit-box;
-
-    overflow: hidden;
-
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-}
-
-
-/* =========================================================
-   27. SWIGGY CART
-   ========================================================= */
-
-.sw-cart-layout {
-    align-items: start;
-}
-
-.sw-cart-items,
-.sw-summary-card {
-    min-width: 0;
-}
-
-.sw-cart-item-copy {
-    min-width: 0;
-}
-
-.sw-cart-item-title {
-    overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   28. CART SUMMARY STICKY ON DESKTOP
-   ========================================================= */
-
-@media (min-width: 992px) {
-
-    .sw-summary-card {
-        position: sticky;
-
-        top: 92px;
-    }
-
-}
-
-
-/* =========================================================
-   29. INSIGHTS SERVICE GRID
-   ========================================================= */
-
-.in-service-grid {
-    align-items: stretch;
-}
-
-.in-service-card {
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-}
-
-.in-service-body {
-    flex: 1 1 auto;
-
-    display: flex;
-    flex-direction: column;
-}
-
-.in-service-footer {
-    margin-top: auto;
-}
-
-
-/* =========================================================
-   30. INSIGHTS SERVICE TITLES
-   ========================================================= */
-
-.in-service-title {
-    overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   31. INPUT CONSISTENCY
-   ========================================================= */
-
-.form-control,
-.form-select,
-.input-group-text {
+body.insights-page .in-topbar-search:focus-within {
     border-color:
-        var(--proto-border);
-}
+        rgba(37, 99, 235, 0.6) !important;
 
-.form-control,
-.form-select {
-    min-width: 0;
-
-    background-color:
-        var(--proto-surface);
-
-    color:
-        var(--proto-text);
-}
-
-.form-control::placeholder {
-    color:
-        var(--proto-muted);
-
-    opacity:
-        0.72;
+    box-shadow:
+        0
+        0
+        0
+        4px
+        rgba(37, 99, 235, 0.10) !important;
 }
 
 
 /* =========================================================
-   32. INPUT FOCUS CONSISTENCY
+   PRIMARY BUTTONS
    ========================================================= */
 
-.form-control:focus,
-.form-select:focus {
+body.insights-page .btn-primary {
+    background:
+        var(--proto-accent) !important;
+
+    border-color:
+        var(--proto-accent) !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0
+        7px
+        18px
+        rgba(37, 99, 235, 0.18) !important;
+}
+
+
+body.insights-page .btn-primary:hover {
+    background:
+        var(--proto-accent-strong) !important;
+
+    border-color:
+        var(--proto-accent-strong) !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0
+        10px
+        22px
+        rgba(37, 99, 235, 0.24) !important;
+}
+
+
+/* =========================================================
+   OUTLINE BUTTONS
+   ========================================================= */
+
+body.insights-page .btn-outline-primary {
+    color:
+        var(--proto-accent-strong) !important;
+
     border-color:
         color-mix(
             in srgb,
-            var(--proto-accent) 70%,
+            var(--proto-accent) 45%,
             var(--proto-border)
-        );
+        ) !important;
+
+    background:
+        transparent !important;
+}
+
+
+body.insights-page .btn-outline-primary:hover {
+    color:
+        var(--proto-accent-strong) !important;
+
+    border-color:
+        var(--proto-accent) !important;
+
+    background:
+        var(--proto-accent-soft) !important;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+body.insights-page a:not(.btn):not(.dropdown-item) {
+    --bs-link-color-rgb: 37, 99, 235;
+}
+
+
+/* =========================================================
+   FORM FOCUS
+   ========================================================= */
+
+body.insights-page .form-control:focus,
+body.insights-page .form-select:focus {
+    border-color:
+        rgba(37, 99, 235, 0.65) !important;
 
     box-shadow:
         0
         0
         0
         3px
-        rgba(255, 107, 36, 0.12);
+        rgba(37, 99, 235, 0.12) !important;
 }
 
 
 /* =========================================================
-   33. LINKS / INTERACTIVE FOCUS
+   CHECKBOXES / RADIOS
    ========================================================= */
 
-a:focus-visible,
-button:focus-visible,
-.sidebar-link:focus-visible,
-.merchant-nav a:focus-visible,
-.om-app-item:focus-visible {
+body.insights-page .form-check-input:checked {
+    background-color:
+        var(--proto-accent) !important;
+
+    border-color:
+        var(--proto-accent) !important;
+}
+
+
+body.insights-page .form-check-input:focus {
+    border-color:
+        var(--proto-accent) !important;
+
+    box-shadow:
+        0
+        0
+        0
+        0.2rem
+        rgba(37, 99, 235, 0.12) !important;
+}
+
+
+/* =========================================================
+   SERVICE CARD ACCENTS
+   ========================================================= */
+
+body.insights-page .in-service-card:hover,
+body.insights-page .in-project-card:hover {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--proto-accent) 32%,
+            var(--proto-border)
+        ) !important;
+
+    box-shadow:
+        0
+        14px
+        32px
+        rgba(37, 99, 235, 0.10) !important;
+}
+
+
+/* =========================================================
+   BADGES / ACCENT ELEMENTS
+   ========================================================= */
+
+body.insights-page .text-primary {
+    color:
+        var(--proto-accent-strong) !important;
+}
+
+
+body.insights-page .bg-primary {
+    background-color:
+        var(--proto-accent) !important;
+}
+
+
+body.insights-page .border-primary {
+    border-color:
+        var(--proto-accent) !important;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+body.insights-page a:focus-visible,
+body.insights-page button:focus-visible {
     outline:
         2px
         solid
-        color-mix(
-            in srgb,
-            var(--proto-accent) 75%,
-            white
-        );
+        #3b82f6 !important;
 
-    outline-offset: 2px;
+    outline-offset:
+        2px;
 }
+
+/* =========================================================
+   ORDER MANAGEMENT SYSTEM
+   UNIFIED APPLICATION COLOR SYSTEM
+   =========================================================
+
+   Order Management : #00A896
+   Swiggy           : #FF6B24
+   Insights         : #2563EB
+   Merchant         : #FFC107
+
+   Light background : #F8F9FA
+   Dark background  : #0F172A
+   ========================================================= */
 
 
 /* =========================================================
-   34. ALERT CONSISTENCY
+   1. GLOBAL LIGHT MODE
    ========================================================= */
 
-.alert {
-    border-radius: 14px;
+[data-bs-theme="light"] {
 
-    font-size: 0.83rem;
+    --proto-bg: #F8F9FA;
+
+    --proto-surface: #FFFFFF;
+    --proto-surface-2: #F8F9FA;
+    --proto-surface-3: #F1F3F5;
+
+    --proto-border: #DEE2E6;
+
+    --proto-text: #212529;
+    --proto-muted: #6C757D;
+
+    --bs-body-bg: #F8F9FA;
+    --bs-body-color: #212529;
+
+    --bs-border-color: #DEE2E6;
+    --bs-secondary-color: #6C757D;
+
+    --bs-tertiary-bg: #F1F3F5;
 }
 
 
-/* =========================================================
-   35. DROPDOWN CONSISTENCY
-   ========================================================= */
-
-.dropdown-menu {
-    border:
-        1px
-        solid
-        var(--proto-border);
-
-    border-radius:
-        14px;
-
+[data-bs-theme="light"] body {
     background:
-        var(--proto-surface);
-
-    box-shadow:
-        0
-        18px
-        44px
-        rgba(31, 38, 48, 0.12);
-}
-
-.dropdown-item {
-    border-radius: 9px;
-}
-
-
-/* =========================================================
-   36. MODAL CONSISTENCY
-   ========================================================= */
-
-.modal-content {
-    border:
-        1px
-        solid
-        var(--proto-border);
-
-    border-radius:
-        18px;
-
-    background:
-        var(--proto-surface);
-
-    box-shadow:
-        0
-        24px
-        70px
-        rgba(31, 38, 48, 0.18);
-}
-
-
-/* =========================================================
-   37. OFFCANVAS CONSISTENCY
-   ========================================================= */
-
-.offcanvas {
-    background:
-        var(--proto-surface);
+        #F8F9FA !important;
 
     color:
-        var(--proto-text);
+        #212529;
 }
 
 
 /* =========================================================
-   38. TEXT TRUNCATION SAFETY
+   LIGHT PAGE AREAS
    ========================================================= */
 
-.min-w-0 {
-    min-width: 0 !important;
-}
-
-.text-truncate {
-    min-width: 0;
-}
-
-
-/* =========================================================
-   39. DESKTOP
-   ========================================================= */
-
-@media (min-width: 1200px) {
-
-    /* Keep all dashboard KPIs on one line */
-
-    .dashboard-kpi-grid
-    > .col-xl-3 {
-        flex:
-            0
-            0
-            25%;
-
-        max-width:
-            25%;
-    }
-
-
-    /* Keep Swiggy / Combined / Insights
-       analytics on the same row */
-
-    .dashboard-analysis-grid {
-        flex-wrap: nowrap;
-    }
-
+[data-bs-theme="light"] .app-shell,
+[data-bs-theme="light"] .app-main,
+[data-bs-theme="light"] .merchant-shell,
+[data-bs-theme="light"] .merchant-main,
+[data-bs-theme="light"] .sw-app,
+[data-bs-theme="light"] .in-app,
+[data-bs-theme="light"] .page-content,
+[data-bs-theme="light"] .merchant-content {
+    background:
+        #F8F9FA !important;
 }
 
 
 /* =========================================================
-   40. TABLET
+   LIGHT SIDEBARS
    ========================================================= */
 
-@media (
-    min-width: 768px
-)
-and
-(
-    max-width: 1199.98px
-) {
+[data-bs-theme="light"] .app-sidebar,
+[data-bs-theme="light"] .merchant-sidebar {
+    background:
+        #FFFFFF !important;
 
-    .dashboard-page-header,
-    .merchant-page-header {
-        align-items:
-            flex-start;
-    }
-
-    .dashboard-header-actions,
-    .merchant-header-actions {
-        justify-content:
-            flex-start;
-    }
-
+    border-color:
+        #DEE2E6 !important;
 }
 
 
 /* =========================================================
-   41. MOBILE TOPBAR
+   LIGHT TOPBARS
    ========================================================= */
 
-@media (max-width: 767.98px) {
+[data-bs-theme="light"] .app-topbar,
+[data-bs-theme="light"] .merchant-topbar,
+[data-bs-theme="light"] .sw-app-topbar,
+[data-bs-theme="light"] .in-app-topbar {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.94
+        ) !important;
 
-    .app-topbar
-    .container-fluid {
-        min-height:
-            auto;
+    border-color:
+        #DEE2E6 !important;
 
-        display:
-            flex;
+    backdrop-filter:
+        blur(18px);
 
-        flex-wrap:
-            wrap;
-
-        align-items:
-            center;
-    }
-
-
-    .global-search {
-        order:
-            3;
-
-        width:
-            100%;
-
-        flex:
-            0
-            0
-            100%;
-    }
-
-
-    .om-topbar-actions {
-        margin-left:
-            auto;
-    }
-
-
-    .merchant-topbar-inner {
-        min-height:
-            64px;
-
-        padding:
-            10px
-            14px;
-    }
-
+    -webkit-backdrop-filter:
+        blur(18px);
 }
 
 
 /* =========================================================
-   42. MOBILE PAGE HEADERS
+   LIGHT CARDS
    ========================================================= */
 
-@media (max-width: 767.98px) {
+[data-bs-theme="light"] .card,
+[data-bs-theme="light"] .dashboard-card,
+[data-bs-theme="light"] .dashboard-kpi-card,
 
-    .dashboard-page-header,
-    .merchant-page-header,
-    .sw-page-header,
-    .in-page-header {
-        flex-direction:
-            column;
+[data-bs-theme="light"] .merchant-panel,
+[data-bs-theme="light"] .merchant-next-panel,
+[data-bs-theme="light"] .merchant-metric-card,
+[data-bs-theme="light"] .merchant-order-summary-card,
+[data-bs-theme="light"] .merchant-menu-summary-card,
+[data-bs-theme="light"] .merchant-inventory-summary-card,
 
-        align-items:
-            stretch;
+[data-bs-theme="light"] .sw-restaurant-card,
+[data-bs-theme="light"] .sw-menu-dish,
+[data-bs-theme="light"] .sw-cart-item,
+[data-bs-theme="light"] .sw-summary-card,
 
-        gap:
-            14px;
-    }
+[data-bs-theme="light"] .in-service-card,
+[data-bs-theme="light"] .in-project-card {
+    background:
+        #FFFFFF !important;
 
+    border-color:
+        #DEE2E6 !important;
 
-    .dashboard-header-actions,
-    .merchant-header-actions {
-        width:
-            100%;
-    }
-
+    color:
+        #212529;
 }
 
 
 /* =========================================================
-   43. MOBILE DASHBOARD
+   LIGHT SECONDARY SURFACES
    ========================================================= */
 
-@media (max-width: 767.98px) {
+[data-bs-theme="light"] .card-header,
+[data-bs-theme="light"] .card-footer,
+[data-bs-theme="light"] .merchant-panel-header {
+    background:
+        #F8F9FA !important;
 
-    .dashboard-kpi-card {
-        min-height:
-            132px;
-    }
-
-
-    .dashboard-kpi-value {
-        overflow-wrap:
-            anywhere;
-    }
-
+    border-color:
+        #DEE2E6 !important;
 }
 
 
 /* =========================================================
-   44. MOBILE MERCHANT TOOLBARS
+   LIGHT FORM CONTROLS
    ========================================================= */
 
-@media (max-width: 767.98px) {
+[data-bs-theme="light"] .form-control,
+[data-bs-theme="light"] .form-select,
+[data-bs-theme="light"] .input-group-text {
+    background:
+        #FFFFFF !important;
 
-    .merchant-panel-header,
-    .merchant-menu-toolbar,
-    .merchant-inventory-toolbar,
-    .merchant-order-toolbar {
-        align-items:
-            stretch;
+    border-color:
+        #DEE2E6 !important;
 
-        flex-direction:
-            column;
-    }
-
-
-    .merchant-menu-search,
-    .merchant-inventory-search {
-        width:
-            100%;
-
-        max-width:
-            none;
-
-        min-width:
-            0;
-
-        flex:
-            1
-            1
-            auto;
-    }
+    color:
+        #212529 !important;
+}
 
 
-    .merchant-order-toolbar-actions {
-        width:
-            100%;
-    }
+[data-bs-theme="light"]
+.form-control::placeholder {
+    color:
+        #868E96 !important;
 
-
-    .merchant-order-toolbar-actions
-    .form-control,
-    .merchant-order-toolbar-actions
-    .form-select {
-        width:
-            100%;
-
-        min-width:
-            0;
-
-        flex:
-            1
-            1
-            180px;
-    }
-
+    opacity:
+        1;
 }
 
 
 /* =========================================================
-   45. MOBILE SWIGGY
+   LIGHT TABLE
    ========================================================= */
 
-@media (max-width: 767.98px) {
-
-    .sw-restaurant-grid {
-        grid-template-columns:
-            1fr !important;
-    }
-
-
-    .sw-menu-content-layout {
-        display:
-            block;
-    }
-
-
-    .sw-menu-category-nav {
-        position:
-            static !important;
-
-        width:
-            100% !important;
-
-        margin-bottom:
-            18px;
-    }
-
-
-    .sw-menu-category-scroll {
-        display:
-            flex;
-
-        gap:
-            7px;
-
-        overflow-x:
-            auto;
-
-        padding-bottom:
-            5px;
-    }
-
-
-    .sw-menu-category-scroll a,
-    .sw-menu-category-scroll button {
-        flex:
-            0
-            0
-            auto;
-    }
-
-
-    .sw-cart-layout {
-        grid-template-columns:
-            1fr !important;
-    }
-
-
-    .sw-summary-card {
-        position:
-            static !important;
-    }
-
-}
-
-
-/* =========================================================
-   46. MOBILE INSIGHTS
-   ========================================================= */
-
-@media (max-width: 767.98px) {
-
-    .in-service-grid {
-        grid-template-columns:
-            1fr !important;
-    }
-
-
-    .in-services-toolbar {
-        display:
-            flex;
-
-        align-items:
-            stretch;
-
-        flex-direction:
-            column;
-
-        gap:
-            10px;
-    }
-
-
-    .in-services-search {
-        width:
-            100%;
-    }
-
-}
-
-
-/* =========================================================
-   47. MOBILE TABLES
-   ========================================================= */
-
-@media (max-width: 767.98px) {
-
-    .table-responsive {
-        width:
-            calc(100% + 4px);
-
-        margin-right:
-            -4px;
-    }
-
-
-    .table-responsive
-    table {
-        min-width:
-            680px;
-    }
-
-
-    .table
-    th,
-    .table
-    td {
-        padding:
-            0.7rem
-            0.65rem;
-    }
-
-}
-
-
-/* =========================================================
-   48. MOBILE PAGINATION
-   ========================================================= */
-
-@media (max-width: 575.98px) {
-
-    .admin-table-pagination {
-        align-items:
-            stretch;
-
-        flex-direction:
-            column;
-
-        gap:
-            10px;
-    }
-
-
-    .admin-table-pagination__meta {
-        width:
-            100%;
-
-        justify-content:
-            space-between;
-    }
-
-
-    .admin-table-pagination__controls {
-        width:
-            100%;
-
-        justify-content:
-            center;
-    }
-
-
-    .admin-table-pagination__button {
-        min-width:
-            32px;
-
-        height:
-            32px;
-    }
-
-}
-
-
-/* =========================================================
-   49. MOBILE ACTION BUTTONS
-   ========================================================= */
-
-@media (max-width: 575.98px) {
-
-    .merchant-header-actions,
-    .merchant-next-actions,
-    .sw-success-actions,
-    .sw-switch-actions,
-    .in-success-actions {
-        display:
-            grid;
-
-        grid-template-columns:
-            1fr;
-
-        width:
-            100%;
-    }
-
-
-    .merchant-header-actions .btn,
-    .merchant-next-actions .btn,
-    .sw-success-actions .btn,
-    .sw-switch-actions .btn,
-    .in-success-actions .btn {
-        width:
-            100%;
-    }
-
-}
-
-
-/* =========================================================
-   50. TOUCH TARGETS
-   ========================================================= */
-
-@media (pointer: coarse) {
-
-    .btn:not(.btn-sm),
-    .sidebar-link,
-    .merchant-nav a {
-        min-height:
-            44px;
-    }
-
-}
-
-
-/* =========================================================
-   51. DARK MODE TABLES
-   ========================================================= */
-
-[data-bs-theme="dark"]
-.table {
-    --bs-table-color:
-        var(--proto-text);
+[data-bs-theme="light"] .table {
 
     --bs-table-bg:
         transparent;
 
+    --bs-table-color:
+        #212529;
+
     --bs-table-border-color:
-        var(--proto-border);
+        #E9ECEF;
+
+    --bs-table-hover-bg:
+        #F8F9FA;
+
+    --bs-table-hover-color:
+        #212529;
+}
+
+
+[data-bs-theme="light"]
+.table thead th {
+    background:
+        #F8F9FA !important;
+
+    color:
+        #6C757D !important;
+
+    border-color:
+        #DEE2E6 !important;
 }
 
 
 /* =========================================================
-   52. DARK MODE DROPDOWN
+   2. GLOBAL DARK MODE
+   DEEP NAVY #0F172A
+   ========================================================= */
+
+[data-bs-theme="dark"] {
+
+    --proto-bg: #0F172A;
+
+    --proto-surface: #162033;
+    --proto-surface-2: #1E293B;
+    --proto-surface-3: #273449;
+
+    --proto-border: #334155;
+
+    --proto-text: #F8FAFC;
+    --proto-muted: #94A3B8;
+
+    --bs-body-bg: #0F172A;
+    --bs-body-color: #F8FAFC;
+
+    --bs-border-color: #334155;
+
+    --bs-secondary-color: #94A3B8;
+
+    --bs-tertiary-bg: #1E293B;
+}
+
+
+[data-bs-theme="dark"] body {
+    background:
+        #0F172A !important;
+
+    color:
+        #E2E8F0 !important;
+}
+
+
+/* =========================================================
+   DARK APPLICATION AREAS
+   ========================================================= */
+
+[data-bs-theme="dark"] .app-shell,
+[data-bs-theme="dark"] .app-main,
+
+[data-bs-theme="dark"] .merchant-shell,
+[data-bs-theme="dark"] .merchant-main,
+
+[data-bs-theme="dark"] .sw-app,
+[data-bs-theme="dark"] .in-app,
+
+[data-bs-theme="dark"] .page-content,
+[data-bs-theme="dark"] .merchant-content {
+    background:
+        #0F172A !important;
+}
+
+
+/* =========================================================
+   DARK SIDEBARS
+   ========================================================= */
+
+[data-bs-theme="dark"] .app-sidebar,
+[data-bs-theme="dark"] .merchant-sidebar {
+    background:
+        #162033 !important;
+
+    border-color:
+        #334155 !important;
+}
+
+
+/* =========================================================
+   DARK TOPBARS
+   ========================================================= */
+
+[data-bs-theme="dark"] .app-topbar,
+[data-bs-theme="dark"] .merchant-topbar,
+[data-bs-theme="dark"] .sw-app-topbar,
+[data-bs-theme="dark"] .in-app-topbar {
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.94
+        ) !important;
+
+    border-color:
+        #334155 !important;
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+}
+
+
+/* =========================================================
+   DARK CARDS
+   ========================================================= */
+
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .dashboard-card,
+[data-bs-theme="dark"] .dashboard-kpi-card,
+
+[data-bs-theme="dark"] .merchant-panel,
+[data-bs-theme="dark"] .merchant-next-panel,
+[data-bs-theme="dark"] .merchant-metric-card,
+[data-bs-theme="dark"] .merchant-order-summary-card,
+[data-bs-theme="dark"] .merchant-menu-summary-card,
+[data-bs-theme="dark"] .merchant-inventory-summary-card,
+
+[data-bs-theme="dark"] .sw-restaurant-card,
+[data-bs-theme="dark"] .sw-menu-dish,
+[data-bs-theme="dark"] .sw-cart-item,
+[data-bs-theme="dark"] .sw-summary-card,
+
+[data-bs-theme="dark"] .in-service-card,
+[data-bs-theme="dark"] .in-project-card {
+    background:
+        #162033 !important;
+
+    border-color:
+        #334155 !important;
+
+    color:
+        #F8FAFC !important;
+}
+
+
+/* =========================================================
+   DARK SECONDARY SURFACES
+   ========================================================= */
+
+[data-bs-theme="dark"] .card-header,
+[data-bs-theme="dark"] .card-footer,
+[data-bs-theme="dark"] .merchant-panel-header {
+    background:
+        #1E293B !important;
+
+    border-color:
+        #334155 !important;
+}
+
+
+/* =========================================================
+   DARK TEXT
+   ========================================================= */
+
+[data-bs-theme="dark"] h1,
+[data-bs-theme="dark"] h2,
+[data-bs-theme="dark"] h3,
+[data-bs-theme="dark"] h4,
+[data-bs-theme="dark"] h5,
+[data-bs-theme="dark"] h6,
+[data-bs-theme="dark"] strong {
+    color:
+        #F8FAFC;
+}
+
+
+[data-bs-theme="dark"] p,
+[data-bs-theme="dark"] td,
+[data-bs-theme="dark"] dd,
+[data-bs-theme="dark"] label {
+    color:
+        #E2E8F0;
+}
+
+
+[data-bs-theme="dark"] small,
+[data-bs-theme="dark"] .text-muted,
+[data-bs-theme="dark"] .text-body-secondary {
+    color:
+        #94A3B8 !important;
+}
+
+
+/* =========================================================
+   DARK FORM CONTROLS
+   ========================================================= */
+
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select,
+[data-bs-theme="dark"] .input-group-text {
+    background:
+        #162033 !important;
+
+    border-color:
+        #334155 !important;
+
+    color:
+        #F8FAFC !important;
+}
+
+
+[data-bs-theme="dark"]
+.form-control::placeholder {
+    color:
+        #64748B !important;
+
+    opacity:
+        1;
+}
+
+
+[data-bs-theme="dark"]
+.form-select option {
+    background:
+        #162033;
+
+    color:
+        #F8FAFC;
+}
+
+
+/* =========================================================
+   DARK TABLES
+   ========================================================= */
+
+[data-bs-theme="dark"] .table {
+
+    --bs-table-bg:
+        transparent;
+
+    --bs-table-color:
+        #E2E8F0;
+
+    --bs-table-border-color:
+        #334155;
+
+    --bs-table-hover-bg:
+        #1E293B;
+
+    --bs-table-hover-color:
+        #FFFFFF;
+}
+
+
+[data-bs-theme="dark"]
+.table thead th {
+    background:
+        #1E293B !important;
+
+    color:
+        #CBD5E1 !important;
+
+    border-color:
+        #334155 !important;
+}
+
+
+[data-bs-theme="dark"]
+.table tbody td {
+    border-color:
+        #334155 !important;
+
+    color:
+        #E2E8F0;
+}
+
+
+/* =========================================================
+   DARK SECONDARY BUTTONS
+   ========================================================= */
+
+[data-bs-theme="dark"] .btn-outline-secondary,
+[data-bs-theme="dark"] .btn-secondary,
+[data-bs-theme="dark"] .btn-light {
+    background:
+        #1E293B !important;
+
+    border-color:
+        #475569 !important;
+
+    color:
+        #E2E8F0 !important;
+}
+
+
+[data-bs-theme="dark"]
+.btn-outline-secondary:hover,
+[data-bs-theme="dark"]
+.btn-secondary:hover,
+[data-bs-theme="dark"]
+.btn-light:hover {
+    background:
+        #273449 !important;
+
+    border-color:
+        #64748B !important;
+
+    color:
+        #FFFFFF !important;
+}
+
+
+/* =========================================================
+   DARK DROPDOWN
    ========================================================= */
 
 [data-bs-theme="dark"]
 .dropdown-menu {
+    background:
+        #162033 !important;
+
+    border-color:
+        #334155 !important;
+
+    color:
+        #F8FAFC !important;
+
     box-shadow:
         0
         18px
-        44px
-        rgba(0, 0, 0, 0.32);
+        50px
+        rgba(0, 0, 0, 0.34);
+}
+
+
+[data-bs-theme="dark"]
+.dropdown-item {
+    color:
+        #E2E8F0;
+}
+
+
+[data-bs-theme="dark"]
+.dropdown-item:hover {
+    background:
+        #1E293B;
+
+    color:
+        #FFFFFF;
 }
 
 
 /* =========================================================
-   53. DARK MODE MODALS
+   DARK MODAL / OFFCANVAS
    ========================================================= */
 
 [data-bs-theme="dark"]
-.modal-content {
+.modal-content,
+[data-bs-theme="dark"]
+.offcanvas {
+    background:
+        #162033 !important;
+
+    border-color:
+        #334155 !important;
+
+    color:
+        #F8FAFC !important;
+}
+
+
+/* =========================================================
+   3. ORDER MANAGEMENT
+   TEAL #00A896
+   ========================================================= */
+
+body.order-management-page {
+
+    --app-accent: #00A896;
+
+    --app-accent-hover: #008F81;
+    --app-accent-strong: #006F64;
+
+    --app-accent-soft: #E6F8F5;
+    --app-accent-border: #8ED9D0;
+
+    --app-accent-text: #FFFFFF;
+
+    --proto-accent: #00A896;
+    --proto-accent-strong: #006F64;
+    --proto-accent-soft: #E6F8F5;
+
+    --bs-primary: #00A896;
+    --bs-primary-rgb: 0, 168, 150;
+}
+
+
+/* =========================================================
+   ORDER MANAGEMENT BRAND
+   ========================================================= */
+
+body.order-management-page
+.brand-mark {
+    background:
+        linear-gradient(
+            135deg,
+            #32C9B9,
+            #00A896
+        ) !important;
+
+    color:
+        #FFFFFF !important;
+}
+
+
+body.order-management-page
+.user-avatar,
+body.order-management-page
+.om-topbar-user-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #32C9B9,
+            #00A896
+        ) !important;
+
+    color:
+        #FFFFFF !important;
+}
+
+
+/* =========================================================
+   ORDER MANAGEMENT NAV
+   ========================================================= */
+
+body.order-management-page
+.sidebar-link.active {
+    background:
+        var(--app-accent-soft) !important;
+
+    color:
+        var(--app-accent-strong) !important;
+}
+
+
+body.order-management-page
+.sidebar-link.active::before {
+    background:
+        var(--app-accent) !important;
+}
+
+
+/* =========================================================
+   4. SWIGGY
+   ORANGE #FF6B24
+   ========================================================= */
+
+body.swiggy-page {
+
+    --app-accent: #FF6B24;
+
+    --app-accent-hover: #E85B16;
+    --app-accent-strong: #C84C0D;
+
+    --app-accent-soft: #FFF1E8;
+    --app-accent-border: #FFC3A3;
+
+    --app-accent-text: #FFFFFF;
+
+    --proto-accent: #FF6B24;
+    --proto-accent-strong: #C84C0D;
+    --proto-accent-soft: #FFF1E8;
+
+    --bs-primary: #FF6B24;
+    --bs-primary-rgb: 255, 107, 36;
+}
+
+
+/* =========================================================
+   SWIGGY BRAND / ACCENTS
+   ========================================================= */
+
+body.swiggy-page
+.sw-brand-mark,
+body.swiggy-page
+.sw-user-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #FF9B61,
+            #FF6B24
+        ) !important;
+
+    color:
+        #FFFFFF !important;
+}
+
+
+/* =========================================================
+   SWIGGY NAV
+   ========================================================= */
+
+body.swiggy-page
+.sw-desktop-nav a.active,
+body.swiggy-page
+.sw-desktop-nav a:hover {
+    background:
+        var(--app-accent-soft) !important;
+
+    color:
+        var(--app-accent-strong) !important;
+}
+
+
+/* =========================================================
+   5. INSIGHTS
+   BLUE #2563EB
+   ========================================================= */
+
+body.insights-page {
+
+    --app-accent: #2563EB;
+
+    --app-accent-hover: #1D4ED8;
+    --app-accent-strong: #1E40AF;
+
+    --app-accent-soft: #EFF6FF;
+    --app-accent-border: #BFDBFE;
+
+    --app-accent-text: #FFFFFF;
+
+    --proto-accent: #2563EB;
+    --proto-accent-strong: #1E40AF;
+    --proto-accent-soft: #EFF6FF;
+
+    --bs-primary: #2563EB;
+    --bs-primary-rgb: 37, 99, 235;
+}
+
+
+/* =========================================================
+   INSIGHTS BRAND
+   ========================================================= */
+
+body.insights-page
+.in-brand-mark,
+body.insights-page
+.in-user-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #60A5FA,
+            #2563EB
+        ) !important;
+
+    color:
+        #FFFFFF !important;
+}
+
+
+/* =========================================================
+   INSIGHTS NAV
+   ========================================================= */
+
+body.insights-page
+.in-desktop-nav a.active,
+body.insights-page
+.in-desktop-nav a:hover {
+    background:
+        var(--app-accent-soft) !important;
+
+    color:
+        var(--app-accent-strong) !important;
+}
+
+
+/* =========================================================
+   6. MERCHANT CONSOLE
+   SOFT WARM YELLOW #FFC107
+   ========================================================= */
+
+body.merchant-console-page {
+
+    --app-accent: #FFC107;
+
+    --app-accent-hover: #E0A800;
+    --app-accent-strong: #8A6700;
+
+    --app-accent-soft: #FFF8DB;
+    --app-accent-border: #F2D675;
+
+    /*
+       Yellow requires dark text
+       for proper contrast.
+    */
+
+    --app-accent-text: #2B2300;
+
+    --proto-accent: #FFC107;
+    --proto-accent-strong: #8A6700;
+    --proto-accent-soft: #FFF8DB;
+
+    --bs-primary: #FFC107;
+    --bs-primary-rgb: 255, 193, 7;
+}
+
+
+/* =========================================================
+   MERCHANT BRAND
+   ========================================================= */
+
+body.merchant-console-page
+.merchant-brand-mark {
+    background:
+        linear-gradient(
+            135deg,
+            #FFD75A,
+            #FFC107
+        ) !important;
+
+    color:
+        #2B2300 !important;
+
     box-shadow:
         0
+        7px
+        18px
+        rgba(255, 193, 7, 0.20);
+}
+
+
+/* =========================================================
+   MERCHANT USER AVATAR
+   ========================================================= */
+
+body.merchant-console-page
+.merchant-user-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #FFD75A,
+            #FFC107
+        ) !important;
+
+    color:
+        #2B2300 !important;
+}
+
+
+/* =========================================================
+   MERCHANT NAVIGATION
+   ========================================================= */
+
+body.merchant-console-page
+.merchant-nav a.active {
+    background:
+        var(--app-accent-soft) !important;
+
+    color:
+        var(--app-accent-strong) !important;
+
+    border-color:
+        var(--app-accent-border) !important;
+}
+
+
+body.merchant-console-page
+.merchant-nav a.active::before {
+    background:
+        var(--app-accent) !important;
+}
+
+
+body.merchant-console-page
+.merchant-nav a:hover {
+    background:
+        color-mix(
+            in srgb,
+            var(--app-accent-soft) 75%,
+            transparent
+        ) !important;
+}
+
+
+/* =========================================================
+   7. SHARED APPLICATION PRIMARY BUTTON
+   ========================================================= */
+
+body.order-management-page
+.btn-primary,
+
+body.swiggy-page
+.btn-primary,
+
+body.insights-page
+.btn-primary,
+
+body.merchant-console-page
+.btn-primary {
+    background:
+        var(--app-accent) !important;
+
+    border-color:
+        var(--app-accent) !important;
+
+    color:
+        var(--app-accent-text) !important;
+
+    box-shadow:
+        0
+        7px
+        18px
+        color-mix(
+            in srgb,
+            var(--app-accent) 22%,
+            transparent
+        ) !important;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON HOVER
+   ========================================================= */
+
+body.order-management-page
+.btn-primary:hover,
+
+body.swiggy-page
+.btn-primary:hover,
+
+body.insights-page
+.btn-primary:hover,
+
+body.merchant-console-page
+.btn-primary:hover {
+    background:
+        var(--app-accent-hover) !important;
+
+    border-color:
+        var(--app-accent-hover) !important;
+
+    color:
+        var(--app-accent-text) !important;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0
+        10px
         24px
-        70px
-        rgba(0, 0, 0, 0.4);
+        color-mix(
+            in srgb,
+            var(--app-accent) 28%,
+            transparent
+        ) !important;
 }
 
 
 /* =========================================================
-   54. DISABLED ELEMENT CONSISTENCY
+   8. SHARED OUTLINE PRIMARY
    ========================================================= */
 
-button:disabled,
-.btn.disabled,
-.form-control:disabled,
-.form-select:disabled {
-    cursor:
-        not-allowed;
+body.order-management-page
+.btn-outline-primary,
+
+body.swiggy-page
+.btn-outline-primary,
+
+body.insights-page
+.btn-outline-primary,
+
+body.merchant-console-page
+.btn-outline-primary {
+    color:
+        var(--app-accent-strong) !important;
+
+    border-color:
+        var(--app-accent-border) !important;
+
+    background:
+        transparent !important;
+}
+
+
+body.order-management-page
+.btn-outline-primary:hover,
+
+body.swiggy-page
+.btn-outline-primary:hover,
+
+body.insights-page
+.btn-outline-primary:hover,
+
+body.merchant-console-page
+.btn-outline-primary:hover {
+    background:
+        var(--app-accent-soft) !important;
+
+    border-color:
+        var(--app-accent) !important;
+
+    color:
+        var(--app-accent-strong) !important;
 }
 
 
 /* =========================================================
-   55. REDUCED MOTION ACCESSIBILITY
+   9. SHARED FORM FOCUS
    ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+body.order-management-page
+.form-control:focus,
 
-    *,
-    *::before,
-    *::after {
-        scroll-behavior:
-            auto !important;
+body.order-management-page
+.form-select:focus,
 
-        animation-duration:
-            0.01ms !important;
+body.swiggy-page
+.form-control:focus,
 
-        animation-iteration-count:
-            1 !important;
+body.swiggy-page
+.form-select:focus,
 
-        transition-duration:
-            0.01ms !important;
-    }
+body.insights-page
+.form-control:focus,
 
+body.insights-page
+.form-select:focus,
+
+body.merchant-console-page
+.form-control:focus,
+
+body.merchant-console-page
+.form-select:focus {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--app-accent) 70%,
+            var(--proto-border)
+        ) !important;
+
+    box-shadow:
+        0
+        0
+        0
+        3px
+        color-mix(
+            in srgb,
+            var(--app-accent) 14%,
+            transparent
+        ) !important;
 }
+
+
+/* =========================================================
+   10. CHECKBOX / RADIO
+   ========================================================= */
+
+body.order-management-page
+.form-check-input:checked,
+
+body.swiggy-page
+.form-check-input:checked,
+
+body.insights-page
+.form-check-input:checked,
+
+body.merchant-console-page
+.form-check-input:checked {
+    background-color:
+        var(--app-accent) !important;
+
+    border-color:
+        var(--app-accent) !important;
+}
+
+
+/* =========================================================
+   11. PRIMARY BADGES
+   ========================================================= */
+
+body.order-management-page
+.bg-primary,
+
+body.order-management-page
+.text-bg-primary,
+
+body.swiggy-page
+.bg-primary,
+
+body.swiggy-page
+.text-bg-primary,
+
+body.insights-page
+.bg-primary,
+
+body.insights-page
+.text-bg-primary,
+
+body.merchant-console-page
+.bg-primary,
+
+body.merchant-console-page
+.text-bg-primary {
+    background:
+        var(--app-accent) !important;
+
+    color:
+        var(--app-accent-text) !important;
+}
+
+
+/* =========================================================
+   PRIMARY TEXT
+   ========================================================= */
+
+body.order-management-page
+.text-primary,
+
+body.swiggy-page
+.text-primary,
+
+body.insights-page
+.text-primary,
+
+body.merchant-console-page
+.text-primary {
+    color:
+        var(--app-accent-strong) !important;
+}
+
+
+/* =========================================================
+   PRIMARY BORDER
+   ========================================================= */
+
+body.order-management-page
+.border-primary,
+
+body.swiggy-page
+.border-primary,
+
+body.insights-page
+.border-primary,
+
+body.merchant-console-page
+.border-primary {
+    border-color:
+        var(--app-accent) !important;
+}
+
+
+/* =========================================================
+   12. CARD HOVER ACCENT
+   ========================================================= */
+
+body.order-management-page
+.dashboard-kpi-card:hover,
+
+body.order-management-page
+.dashboard-card:hover,
+
+body.merchant-console-page
+.merchant-metric-card:hover,
+
+body.merchant-console-page
+.merchant-order-summary-card:hover,
+
+body.swiggy-page
+.sw-restaurant-card:hover,
+
+body.swiggy-page
+.sw-menu-dish:hover,
+
+body.insights-page
+.in-service-card:hover,
+
+body.insights-page
+.in-project-card:hover {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--app-accent) 34%,
+            var(--proto-border)
+        ) !important;
+
+    box-shadow:
+        0
+        14px
+        32px
+        color-mix(
+            in srgb,
+            var(--app-accent) 10%,
+            transparent
+        ) !important;
+}
+
+
+/* =========================================================
+   13. ADMIN PAGINATION
+   ========================================================= */
+
+body.order-management-page
+.admin-table-pagination__button.is-active {
+    background:
+        var(--app-accent) !important;
+
+    border-color:
+        var(--app-accent) !important;
+
+    color:
+        var(--app-accent-text) !important;
+}
+
+
+/* =========================================================
+   14. ORDER MANAGEMENT APP ICON
+   ========================================================= */
+
+body.order-management-page
+.om-app-icon-management {
+    background:
+        var(--app-accent-soft) !important;
+
+    color:
+        var(--app-accent-strong) !important;
+
+    border-color:
+        var(--app-accent-border) !important;
+}
+
+
+/* =========================================================
+   15. DARK MODE APPLICATION SOFT COLORS
+   ========================================================= */
+
+[data-bs-theme="dark"]
+body.order-management-page {
+    --app-accent-soft:
+        rgba(
+            0,
+            168,
+            150,
+            0.13
+        );
+
+    --app-accent-border:
+        rgba(
+            0,
+            168,
+            150,
+            0.42
+        );
+
+    --app-accent-strong:
+        #50D5C7;
+
+    --proto-accent-soft:
+        rgba(
+            0,
+            168,
+            150,
+            0.13
+        );
+
+    --proto-accent-strong:
+        #50D5C7;
+}
+
+
+[data-bs-theme="dark"]
+body.swiggy-page {
+    --app-accent-soft:
+        rgba(
+            255,
+            107,
+            36,
+            0.13
+        );
+
+    --app-accent-border:
+        rgba(
+            255,
+            107,
+            36,
+            0.45
+        );
+
+    --app-accent-strong:
+        #FF9B61;
+
+    --proto-accent-soft:
+        rgba(
+            255,
+            107,
+            36,
+            0.13
+        );
+
+    --proto-accent-strong:
+        #FF9B61;
+}
+
+
+[data-bs-theme="dark"]
+body.insights-page {
+    --app-accent-soft:
+        rgba(
+            37,
+            99,
+            235,
+            0.15
+        );
+
+    --app-accent-border:
+        rgba(
+            96,
+            165,
+            250,
+            0.42
+        );
+
+    --app-accent-strong:
+        #60A5FA;
+
+    --proto-accent-soft:
+        rgba(
+            37,
+            99,
+            235,
+            0.15
+        );
+
+    --proto-accent-strong:
+        #60A5FA;
+}
+
+
+[data-bs-theme="dark"]
+body.merchant-console-page {
+    --app-accent-soft:
+        rgba(
+            255,
+            193,
+            7,
+            0.13
+        );
+
+    --app-accent-border:
+        rgba(
+            255,
+            193,
+            7,
+            0.48
+        );
+
+    --app-accent-strong:
+        #FFD54F;
+
+    --proto-accent-soft:
+        rgba(
+            255,
+            193,
+            7,
+            0.13
+        );
+
+    --proto-accent-strong:
+        #FFD54F;
+}
+
+
+/* =========================================================
+   16. DARK MODE PRIMARY OUTLINES
+   ========================================================= */
+
+[data-bs-theme="dark"]
+body.order-management-page
+.btn-outline-primary,
+
+[data-bs-theme="dark"]
+body.swiggy-page
+.btn-outline-primary,
+
+[data-bs-theme="dark"]
+body.insights-page
+.btn-outline-primary,
+
+[data-bs-theme="dark"]
+body.merchant-console-page
+.btn-outline-primary {
+    color:
+        var(--app-accent-strong) !important;
+
+    border-color:
+        var(--app-accent-border) !important;
+}
+
+
+/* =========================================================
+   17. MERCHANT DARK PRIMARY BUTTON
+   Yellow retains dark text.
+   ========================================================= */
+
+[data-bs-theme="dark"]
+body.merchant-console-page
+.btn-primary {
+    color:
+        #2B2300 !important;
+}
+
+
+/* =========================================================
+   18. FOCUS ACCESSIBILITY
+   ========================================================= */
+
+body.order-management-page
+a:focus-visible,
+
+body.order-management-page
+button:focus-visible,
+
+body.swiggy-page
+a:focus-visible,
+
+body.swiggy-page
+button:focus-visible,
+
+body.insights-page
+a:focus-visible,
+
+body.insights-page
+button:focus-visible,
+
+body.merchant-console-page
+a:focus-visible,
+
+body.merchant-console-page
+button:focus-visible {
+    outline:
+        2px
+        solid
+        var(--app-accent) !important;
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   19. SCROLLBARS - LIGHT
+   ========================================================= */
+
+[data-bs-theme="light"]
+.app-sidebar-scroll,
+
+[data-bs-theme="light"]
+.merchant-sidebar-scroll,
+
+[data-bs-theme="light"]
+.table-responsive {
+    scrollbar-color:
+        #CED4DA
+        transparent;
+}
+
+
+[data-bs-theme="light"]
+.app-sidebar-scroll::-webkit-scrollbar-thumb,
+
+[data-bs-theme="light"]
+.merchant-sidebar-scroll::-webkit-scrollbar-thumb,
+
+[data-bs-theme="light"]
+.table-responsive::-webkit-scrollbar-thumb {
+    background:
+        #CED4DA;
+}
+
+
+/* =========================================================
+   20. SCROLLBARS - DARK
+   ========================================================= */
+
+[data-bs-theme="dark"]
+.app-sidebar-scroll,
+
+[data-bs-theme="dark"]
+.merchant-sidebar-scroll,
+
+[data-bs-theme="dark"]
+.table-responsive {
+    scrollbar-color:
+        #475569
+        transparent;
+}
+
+
+[data-bs-theme="dark"]
+.app-sidebar-scroll::-webkit-scrollbar-thumb,
+
+[data-bs-theme="dark"]
+.merchant-sidebar-scroll::-webkit-scrollbar-thumb,
+
+[data-bs-theme="dark"]
+.table-responsive::-webkit-scrollbar-thumb {
+    background:
+        #475569;
+}
+
+
+[data-bs-theme="dark"]
+.app-sidebar-scroll::-webkit-scrollbar-thumb:hover,
+
+[data-bs-theme="dark"]
+.merchant-sidebar-scroll::-webkit-scrollbar-thumb:hover,
+
+[data-bs-theme="dark"]
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background:
+        #64748B;
+}
+
+
+/* =========================================================
+   FINAL PALETTE
+
+   Order Management
+   #00A896
+
+   Swiggy
+   #FF6B24
+
+   Insights
+   #2563EB
+
+   Merchant
+   #FFC107
+
+   Light
+   #F8F9FA
+
+   Dark
+   #0F172A
+   ========================================================= */
