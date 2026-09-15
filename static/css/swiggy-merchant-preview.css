@@ -330,3 +330,231 @@ small {
     }
 
 }
+
+/* =========================================================
+   UI-7C
+   MERCHANT → SWIGGY PREVIEW POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   PREVIEW STATUS
+   ========================================================= */
+
+.sw-preview-nav-status {
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   PREVIEW BANNER
+   ========================================================= */
+
+.sw-merchant-preview-banner {
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        105;
+
+    border-bottom:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    box-shadow:
+        0
+        4px
+        18px
+        rgba(
+            15,
+            23,
+            42,
+            0.06
+        );
+}
+
+
+.sw-merchant-preview-banner-inner {
+    min-height:
+        66px;
+}
+
+
+/* =========================================================
+   PREVIEW ICON
+   ========================================================= */
+
+.sw-merchant-preview-icon {
+    border:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   PREVIEW COPY
+   ========================================================= */
+
+.sw-merchant-preview-banner-copy
+strong {
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.01em;
+}
+
+
+.sw-merchant-preview-banner-copy
+small {
+    line-height:
+        1.45;
+}
+
+
+/* =========================================================
+   RETURN BUTTON
+   ========================================================= */
+
+.sw-preview-return-button {
+    min-height:
+        38px;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   READ-ONLY DISH BUTTON
+   ========================================================= */
+
+.sw-main-merchant-preview
+.sw-menu-dish-footer
+button[
+    disabled
+] {
+    opacity:
+        1;
+
+    cursor:
+        default;
+
+    color:
+        var(--bs-secondary-color);
+
+    border-color:
+        var(--bs-border-color);
+
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+/* =========================================================
+   MERCHANT PREVIEW DISH CARDS
+   ========================================================= */
+
+.sw-main-merchant-preview
+.sw-menu-dish {
+    cursor:
+        default;
+}
+
+
+.sw-main-merchant-preview
+.sw-menu-dish:hover {
+    transform:
+        none;
+}
+
+
+/* =========================================================
+   READ-ONLY VISUAL CUE
+   ========================================================= */
+
+.sw-main-merchant-preview
+.sw-menu-dish-footer {
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 55%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   MOBILE PREVIEW NOTICE
+   ========================================================= */
+
+.sw-mobile-preview-notice {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .sw-merchant-preview-banner {
+        position:
+            relative;
+    }
+
+
+    .sw-merchant-preview-banner-inner {
+        min-height:
+            0;
+
+        padding:
+            0.9rem
+            0;
+    }
+
+
+    .sw-preview-return-button {
+        width:
+            100%;
+    }
+
+}

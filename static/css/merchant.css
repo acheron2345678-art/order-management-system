@@ -2815,3 +2815,2061 @@ a.merchant-order-summary-card:hover {
     }
 
 }
+
+/* =========================================================
+   UI-7C
+   MERCHANT WORKSPACE POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   MERCHANT DESIGN TOKENS
+   ========================================================= */
+
+:root {
+
+    --merchant-console-accent:
+        var(--bs-primary);
+
+    --merchant-console-accent-soft:
+        var(--bs-primary-bg-subtle);
+
+    --merchant-console-swiggy:
+        #fc8019;
+
+    --merchant-console-swiggy-dark:
+        #e66d06;
+
+}
+
+
+/* =========================================================
+   SHELL
+   ========================================================= */
+
+.merchant-shell {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.merchant-main {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.merchant-sidebar {
+    padding:
+        1.35rem
+        1rem;
+
+    border-right:
+        1px solid
+        var(--bs-border-color);
+
+    box-shadow:
+        5px
+        0
+        24px
+        rgba(
+            15,
+            23,
+            42,
+            0.03
+        );
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.merchant-brand {
+    padding:
+        0.35rem
+        0.4rem;
+}
+
+
+.merchant-brand-mark {
+    width:
+        42px;
+
+    height:
+        42px;
+
+    flex:
+        0
+        0
+        42px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    box-shadow:
+        0
+        5px
+        14px
+        rgba(
+            var(--bs-primary-rgb),
+            0.2
+        );
+}
+
+
+.merchant-brand strong {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+.merchant-brand small {
+    margin-top:
+        0.1rem;
+
+    font-size:
+        0.75rem;
+}
+
+
+/* =========================================================
+   NAVIGATION LABEL
+   ========================================================= */
+
+.merchant-nav-label {
+    margin:
+        1.7rem
+        0.7rem
+        0.6rem;
+
+    color:
+        var(--bs-secondary-color);
+
+    font-size:
+        0.66rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.11em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.merchant-nav {
+    gap:
+        0.35rem;
+}
+
+
+.merchant-nav a,
+.merchant-mobile-nav a {
+    min-height:
+        44px;
+
+    gap:
+        0.7rem;
+
+    padding:
+        0.65rem
+        0.75rem;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    color:
+        var(--bs-body-color);
+
+    font-size:
+        0.88rem;
+
+    font-weight:
+        620;
+
+    transition:
+        color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.merchant-nav a:hover {
+    transform:
+        translateX(
+            2px
+        );
+}
+
+
+.merchant-nav a.active {
+    border-color:
+        var(--bs-primary-border-subtle);
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   NAV ICONS
+   ========================================================= */
+
+.merchant-nav a > span:first-child {
+    width:
+        30px;
+
+    height:
+        30px;
+
+    flex:
+        0
+        0
+        30px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+
+    background:
+        var(--bs-tertiary-bg);
+
+    font-size:
+        0.92rem;
+}
+
+
+.merchant-nav a.active
+>
+span:first-child {
+    color:
+        var(--bs-primary-text-emphasis);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-primary) 10%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   SWIGGY PREVIEW NAV ITEM
+   ========================================================= */
+
+.merchant-nav
+a[
+    href^="/swiggy/restaurants/"
+] {
+    margin-top:
+        0.45rem;
+
+    border-top:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        0;
+
+    padding-top:
+        0.9rem;
+
+    color:
+        var(--merchant-console-swiggy);
+}
+
+
+.merchant-nav
+a[
+    href^="/swiggy/restaurants/"
+]:hover {
+    color:
+        var(--merchant-console-swiggy-dark);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 7%,
+            transparent
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+.merchant-nav
+a[
+    href^="/swiggy/restaurants/"
+]
+>
+span:first-child {
+    color:
+        var(--merchant-console-swiggy);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 10%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   SIDEBAR USER
+   ========================================================= */
+
+.merchant-sidebar-user {
+    margin-top:
+        1rem;
+
+    padding:
+        1rem;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 60%,
+            var(--bs-body-bg)
+        );
+}
+
+
+.merchant-sidebar-user
+.merchant-user-row {
+    margin-bottom:
+        0.85rem;
+}
+
+
+/* =========================================================
+   USER AVATAR
+   ========================================================= */
+
+.merchant-user-avatar {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(--bs-primary-bg-subtle);
+
+    color:
+        var(--bs-primary-text-emphasis);
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.merchant-topbar {
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-body-bg) 94%,
+            transparent
+        );
+
+    backdrop-filter:
+        blur(
+            14px
+        );
+}
+
+
+.merchant-topbar-inner {
+    min-height:
+        72px;
+}
+
+
+/* =========================================================
+   TOPBAR TITLE
+   ========================================================= */
+
+.merchant-topbar-title small {
+    color:
+        var(--bs-secondary-color);
+
+    font-size:
+        0.68rem;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        0.055em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.merchant-topbar-title strong {
+    margin-top:
+        0.1rem;
+
+    color:
+        var(--bs-emphasis-color);
+
+    font-size:
+        0.94rem;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   TOPBAR SWIGGY PREVIEW BUTTON
+   ========================================================= */
+
+.merchant-topbar-actions
+a[
+    href^="/swiggy/restaurants/"
+] {
+    color:
+        var(--merchant-console-swiggy);
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 65%,
+            var(--bs-border-color)
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 5%,
+            var(--bs-body-bg)
+        );
+}
+
+
+.merchant-topbar-actions
+a[
+    href^="/swiggy/restaurants/"
+]:hover {
+    color:
+        #ffffff;
+
+    border-color:
+        var(--merchant-console-swiggy);
+
+    background:
+        var(--merchant-console-swiggy);
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.merchant-content {
+    width:
+        100%;
+
+    max-width:
+        var(
+            --om-content-width,
+            1600px
+        );
+
+    margin-inline:
+        auto;
+
+    padding-bottom:
+        var(
+            --om-space-7,
+            3rem
+        );
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.merchant-page-header {
+    padding-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border-bottom:
+        1px solid
+        var(--bs-border-color);
+}
+
+
+.merchant-page-header h1 {
+    font-size:
+        clamp(
+            1.75rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.04em;
+}
+
+
+.merchant-page-header p {
+    max-width:
+        760px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.merchant-eyebrow {
+    color:
+        var(--bs-primary);
+
+    font-size:
+        0.67rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.105em;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.merchant-header-actions {
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        0.5rem;
+}
+
+
+/* =========================================================
+   SWIGGY HEADER ACTION
+   ========================================================= */
+
+.merchant-header-actions
+a[
+    href^="/swiggy/restaurants/"
+] {
+    color:
+        var(--merchant-console-swiggy);
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 60%,
+            var(--bs-border-color)
+        );
+}
+
+
+.merchant-header-actions
+a[
+    href^="/swiggy/restaurants/"
+]:hover {
+    color:
+        #ffffff;
+
+    border-color:
+        var(--merchant-console-swiggy);
+
+    background:
+        var(--merchant-console-swiggy);
+}
+
+
+/* =========================================================
+   STATUS BANNER
+   ========================================================= */
+
+.merchant-status-banner {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    background:
+        var(--bs-body-bg);
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.merchant-status-banner::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(--bs-success);
+}
+
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+.merchant-panel,
+.merchant-next-panel {
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    background:
+        var(--bs-body-bg);
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.merchant-panel-header {
+    padding-bottom:
+        1rem;
+
+    border-bottom:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--bs-border-color) 72%,
+            transparent
+        );
+}
+
+
+.merchant-panel-header h2,
+.merchant-next-panel h2 {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   DASHBOARD METRIC CARDS
+   ========================================================= */
+
+.merchant-metric-card {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    background:
+        var(--bs-body-bg);
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.merchant-metric-card::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(--bs-primary);
+
+    opacity:
+        0.7;
+}
+
+
+.merchant-metric-warning::before {
+    background:
+        var(--bs-warning);
+}
+
+
+.merchant-metric-danger::before {
+    background:
+        var(--bs-danger);
+}
+
+
+/* =========================================================
+   SUMMARY CARD FOUNDATION
+   ========================================================= */
+
+.merchant-menu-summary-card,
+.merchant-inventory-summary-card,
+.merchant-order-summary-card {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    min-height:
+        116px;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(--bs-body-bg);
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+/* =========================================================
+   SUMMARY ACCENT
+   ========================================================= */
+
+.merchant-menu-summary-card::before,
+.merchant-inventory-summary-card::before,
+.merchant-order-summary-card::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(--bs-primary);
+
+    opacity:
+        0.7;
+}
+
+
+/* =========================================================
+   SUMMARY LABELS
+   ========================================================= */
+
+.merchant-menu-summary-card span,
+.merchant-inventory-summary-card span,
+.merchant-order-summary-card span {
+    color:
+        var(--bs-secondary-color);
+
+    font-size:
+        0.69rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.045em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   SUMMARY VALUES
+   ========================================================= */
+
+.merchant-menu-summary-card strong,
+.merchant-inventory-summary-card strong,
+.merchant-order-summary-card strong {
+    margin-top:
+        0.45rem;
+
+    color:
+        var(--bs-emphasis-color);
+
+    font-size:
+        1.65rem;
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.035em;
+}
+
+
+/* =========================================================
+   SUMMARY HOVER
+   ========================================================= */
+
+a.merchant-order-summary-card:hover {
+    transform:
+        translateY(
+            -2px
+        );
+
+    border-color:
+        var(--bs-primary-border-subtle);
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   INVENTORY WARNING CARDS
+   ========================================================= */
+
+.merchant-inventory-warning-card::before {
+    background:
+        var(--bs-warning);
+}
+
+
+.merchant-inventory-danger-card::before {
+    background:
+        var(--bs-danger);
+}
+
+
+/* =========================================================
+   TOOLBARS
+   ========================================================= */
+
+.merchant-menu-toolbar,
+.merchant-inventory-toolbar,
+.merchant-order-toolbar {
+    align-items:
+        flex-end;
+
+    padding:
+        0
+        0
+        1rem;
+
+    border-bottom:
+        1px solid
+        var(--bs-border-color);
+}
+
+
+.merchant-menu-toolbar h2,
+.merchant-inventory-toolbar h2,
+.merchant-order-toolbar h2 {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   SEARCH FIELDS
+   ========================================================= */
+
+.merchant-menu-search,
+.merchant-inventory-search,
+.merchant-order-toolbar-actions
+.form-control {
+    min-height:
+        42px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   ORDER FILTER
+   ========================================================= */
+
+.merchant-order-toolbar-actions
+.form-select {
+    min-height:
+        42px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   TABLE FOUNDATION
+   ========================================================= */
+
+.merchant-page
+.table {
+    margin-bottom:
+        0;
+}
+
+
+.merchant-page
+.table
+thead
+th {
+    padding-top:
+        0.8rem;
+
+    padding-bottom:
+        0.8rem;
+
+    border-bottom-width:
+        1px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 74%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(--bs-secondary-color);
+
+    font-size:
+        0.69rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.05em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.merchant-page
+.table
+tbody
+td {
+    padding-top:
+        0.85rem;
+
+    padding-bottom:
+        0.85rem;
+
+    font-size:
+        0.87rem;
+}
+
+
+.merchant-page
+.table-hover
+tbody
+tr:hover
+>
+* {
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-primary) 3.5%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   TABLE BUTTONS
+   ========================================================= */
+
+.merchant-page
+.table
+.btn-sm {
+    min-height:
+        34px;
+
+    padding:
+        0.35rem
+        0.65rem;
+
+    font-size:
+        0.75rem;
+}
+
+
+/* =========================================================
+   MENU / INVENTORY THUMBNAILS
+   ========================================================= */
+
+.merchant-menu-thumb,
+.merchant-inventory-thumb {
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+/* =========================================================
+   PROFILE LAYOUT
+   ========================================================= */
+
+.merchant-profile-layout {
+    gap:
+        var(
+            --om-space-4,
+            1rem
+        );
+}
+
+
+/* =========================================================
+   PROFILE LOCK
+   ========================================================= */
+
+.merchant-profile-lock {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-primary) 5%,
+            var(--bs-body-bg)
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.merchant-profile-lock::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(--bs-primary);
+}
+
+
+/* =========================================================
+   PROFILE SECTIONS
+   ========================================================= */
+
+.merchant-profile-section {
+    padding:
+        1.35rem
+        0;
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--bs-border-color) 76%,
+            transparent
+        );
+}
+
+
+.merchant-profile-section-heading {
+    margin-bottom:
+        1.15rem;
+}
+
+
+.merchant-profile-section-heading h3 {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+.merchant-profile-section-heading p {
+    max-width:
+        620px;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   PROFILE SIDEBAR
+   ========================================================= */
+
+.merchant-profile-sidebar {
+    display:
+        grid;
+
+    gap:
+        1rem;
+}
+
+
+@media (
+    min-width: 1100px
+) {
+
+    .merchant-profile-sidebar {
+        position:
+            sticky;
+
+        top:
+            92px;
+    }
+
+}
+
+
+/* =========================================================
+   PROFILE ACCOUNT / STATUS CARDS
+   ========================================================= */
+
+.merchant-profile-account,
+.merchant-profile-status,
+.merchant-profile-rating,
+.merchant-profile-delivery {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   MENU FORM
+   ========================================================= */
+
+.merchant-menu-form-layout {
+    gap:
+        1rem;
+}
+
+
+.merchant-menu-form-sidebar {
+    gap:
+        1rem;
+}
+
+
+@media (
+    min-width: 1050px
+) {
+
+    .merchant-menu-form-sidebar {
+        position:
+            sticky;
+
+        top:
+            92px;
+    }
+
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE PREVIEW
+
+   Show the entire uploaded image instead of cropping it.
+   ========================================================= */
+
+.merchant-product-image-preview {
+    padding:
+        0.5rem;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.merchant-product-image-preview
+img {
+    object-fit:
+        contain;
+
+    object-position:
+        center;
+
+    border-radius:
+        calc(
+            var(
+                --om-radius-md,
+                1rem
+            )
+            -
+            0.35rem
+        );
+}
+
+
+/* =========================================================
+   BULK RESTOCK
+   ========================================================= */
+
+.merchant-bulk-restock {
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.merchant-bulk-restock-summary {
+    transition:
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.merchant-bulk-restock-summary:hover {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.merchant-bulk-chevron {
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+/* =========================================================
+   STOCK ADJUSTMENT
+   ========================================================= */
+
+.merchant-stock-adjust
+>
+summary {
+    min-height:
+        34px;
+
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+
+    background:
+        var(--bs-body-bg);
+}
+
+
+.merchant-stock-adjust
+>
+summary:hover {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.merchant-stock-adjust-form {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   ORDER DETAIL HEADER
+   ========================================================= */
+
+.merchant-order-detail-header {
+    gap:
+        1rem;
+}
+
+
+.merchant-order-detail-header
+>
+div {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    min-height:
+        104px;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.merchant-order-detail-header
+>
+div::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(--bs-primary);
+
+    opacity:
+        0.7;
+}
+
+
+/* =========================================================
+   ORDER DETAIL VALUE
+   ========================================================= */
+
+.merchant-order-detail-header
+strong {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+/* =========================================================
+   ORDER DETAIL LAYOUT
+   ========================================================= */
+
+.merchant-order-detail-layout {
+    gap:
+        1rem;
+}
+
+
+.merchant-order-sidebar {
+    gap:
+        1rem;
+}
+
+
+@media (
+    min-width: 1100px
+) {
+
+    .merchant-order-sidebar {
+        position:
+            sticky;
+
+        top:
+            92px;
+    }
+
+}
+
+
+/* =========================================================
+   FINAL ORDER STATUS
+   ========================================================= */
+
+.merchant-order-final-status {
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   PERMISSION LIST
+   ========================================================= */
+
+.merchant-permission-list
+>
+div {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    transition:
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.merchant-permission-list
+>
+div:hover {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+/* =========================================================
+   NEXT / WORKSPACE PANEL
+   ========================================================= */
+
+.merchant-next-panel {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+}
+
+
+.merchant-next-panel::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(--bs-primary);
+}
+
+
+/* =========================================================
+   MOBILE OFFCANVAS
+   ========================================================= */
+
+#merchantMobileNav
+.offcanvas-header {
+    padding:
+        1rem
+        1.1rem;
+}
+
+
+#merchantMobileNav
+.offcanvas-body {
+    padding:
+        1rem;
+}
+
+
+.merchant-mobile-nav {
+    display:
+        grid;
+
+    gap:
+        0.35rem;
+}
+
+
+.merchant-mobile-nav
+a {
+    min-height:
+        44px;
+
+    border:
+        1px solid
+        transparent;
+}
+
+
+.merchant-mobile-nav
+a:hover {
+    border-color:
+        var(--bs-primary-border-subtle);
+}
+
+
+/* =========================================================
+   MOBILE SWIGGY PREVIEW LINK
+   ========================================================= */
+
+.merchant-mobile-nav
+a[
+    href^="/swiggy/restaurants/"
+] {
+    margin-top:
+        0.5rem;
+
+    color:
+        var(--merchant-console-swiggy);
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 20%,
+            var(--bs-border-color)
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--merchant-console-swiggy) 6%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   MOBILE OWNERSHIP NOTICE
+   ========================================================= */
+
+.merchant-mobile-lock {
+    padding:
+        1rem;
+
+    border:
+        1px solid
+        var(--bs-primary-border-subtle);
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(--bs-primary-bg-subtle);
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (
+    max-width: 1199.98px
+) {
+
+    .merchant-menu-summary-grid,
+    .merchant-order-summary-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+
+    .merchant-inventory-summary-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .merchant-content {
+        padding-bottom:
+            2rem;
+    }
+
+
+    .merchant-page-header {
+        gap:
+            1rem;
+    }
+
+
+    .merchant-header-actions {
+        width:
+            100%;
+    }
+
+
+    .merchant-header-actions
+    .btn {
+        flex:
+            1
+            1
+            145px;
+    }
+
+
+    .merchant-menu-summary-grid,
+    .merchant-inventory-summary-grid,
+    .merchant-order-summary-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap:
+            0.75rem;
+    }
+
+
+    .merchant-menu-summary-card,
+    .merchant-inventory-summary-card,
+    .merchant-order-summary-card {
+        min-height:
+            105px;
+
+        padding:
+            1rem;
+    }
+
+
+    .merchant-menu-toolbar,
+    .merchant-inventory-toolbar,
+    .merchant-order-toolbar {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .merchant-menu-search,
+    .merchant-inventory-search {
+        width:
+            100%;
+    }
+
+
+    .merchant-order-toolbar-actions {
+        width:
+            100%;
+
+        flex-direction:
+            column;
+    }
+
+
+    .merchant-order-toolbar-actions
+    form,
+    .merchant-order-toolbar-actions
+    .form-select,
+    .merchant-order-toolbar-actions
+    .form-control {
+        width:
+            100%;
+
+        min-width:
+            0;
+    }
+
+
+    .merchant-page
+    .table-responsive {
+        margin-inline:
+            -0.25rem;
+    }
+
+
+    .merchant-page
+    .table {
+        min-width:
+            760px;
+    }
+
+
+    .merchant-order-detail-header {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .merchant-order-detail-layout {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .merchant-product-image-layout {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .merchant-product-image-preview-wrapper {
+        width:
+            min(
+                100%,
+                320px
+            );
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — SMALL MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    .merchant-menu-summary-grid,
+    .merchant-inventory-summary-grid,
+    .merchant-order-summary-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+
+    .merchant-menu-summary-card,
+    .merchant-inventory-summary-card,
+    .merchant-order-summary-card {
+        padding:
+            0.9rem;
+    }
+
+
+    .merchant-menu-summary-card strong,
+    .merchant-inventory-summary-card strong,
+    .merchant-order-summary-card strong {
+        font-size:
+            1.4rem;
+    }
+
+
+    .merchant-panel {
+        padding:
+            1rem;
+    }
+
+
+    .merchant-topbar-inner {
+        min-height:
+            64px;
+    }
+
+}
