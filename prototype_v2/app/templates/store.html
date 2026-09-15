@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Kitchen · Storefront Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/store.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/"><span class="brand-mark">N</span><span>NOVA</span></a>
+      <nav class="side-nav">
+        <a class="nav-item" href="/dashboard"><span>▦</span> Dashboard</a>
+        <a class="nav-item active" href="/"><span>◉</span> Storefront</a>
+        <a class="nav-item" href="/dashboard"><span>≣</span> Orders</a>
+        <a class="nav-item" href="/dashboard"><span>◫</span> Analytics</a>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Prototype B</strong>
+        <span>Alternate UI for comparison with the existing project.</span>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Customer Storefront</p>
+          <h1 id="store-name">Loading store…</h1>
+          <p class="muted" id="store-description">Browse the menu and place a live demo order.</p>
+        </div>
+        <div class="top-actions">
+          <label class="search-wrap" aria-label="Search menu">
+            <span>⌕</span>
+            <input id="search-input" type="search" placeholder="Search dishes…" autocomplete="off" />
+          </label>
+          <button id="theme-toggle" class="icon-button" type="button" aria-label="Toggle theme">☾</button>
+          <button id="mobile-cart-button" class="cart-button" type="button">Cart <span id="cart-badge">0</span></button>
+        </div>
+      </header>
+
+      <section class="catalog-toolbar">
+        <div class="category-scroller" id="category-tabs"></div>
+        <div class="toolbar-status"><span class="live-dot"></span><span id="availability-label">Live menu</span></div>
+      </section>
+
+      <section class="catalog-section">
+        <div id="catalog-grid" class="catalog-grid" aria-live="polite"></div>
+        <div id="empty-state" class="empty-state hidden">
+          <div class="empty-icon">⌕</div>
+          <h2>No dishes found</h2>
+          <p>Try a different search or category.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside id="cart-panel" class="cart-panel">
+      <div class="cart-header">
+        <div>
+          <p class="eyebrow">Current Order</p>
+          <h2>Your cart</h2>
+        </div>
+        <button id="close-cart" class="icon-button mobile-only" type="button" aria-label="Close cart">×</button>
+      </div>
+
+      <div id="cart-empty" class="cart-empty">
+        <div class="cart-empty-icon">🛍</div>
+        <strong>Your cart is empty</strong>
+        <span>Add something delicious from the menu.</span>
+      </div>
+      <div id="cart-items" class="cart-items"></div>
+
+      <div class="cart-summary">
+        <div><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
+        <div><span>Tax (10%)</span><strong id="tax">₹0.00</strong></div>
+        <div class="total-row"><span>Total</span><strong id="total">₹0.00</strong></div>
+        <button id="checkout-button" class="primary-button" type="button" disabled>Proceed to Checkout</button>
+      </div>
+    </aside>
+  </div>
+
+  <div id="cart-overlay" class="cart-overlay"></div>
+
+  <dialog id="checkout-modal" class="checkout-modal">
+    <form id="checkout-form" method="dialog">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Checkout</p>
+          <h2>Delivery details</h2>
+        </div>
+        <button id="checkout-close" class="icon-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label>Full name<input name="customer_name" required minlength="2" value="Jane Demo" /></label>
+        <label>Email<input name="customer_email" type="email" required value="jane@example.com" /></label>
+        <label>Phone<input name="customer_phone" type="tel" value="9876543210" /></label>
+        <label class="full">Delivery address<textarea name="delivery_address" required minlength="5">12 Demo Street, Chennai</textarea></label>
+        <label class="full">Order notes<textarea name="notes" placeholder="Optional instructions"></textarea></label>
+      </div>
+      <div class="modal-total"><span>Order total</span><strong id="modal-total">₹0.00</strong></div>
+      <div id="checkout-error" class="form-error hidden"></div>
+      <button id="place-order-button" class="primary-button" type="submit">Place Order</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/static/js/store.js" defer></script>
+</body>
+</html>

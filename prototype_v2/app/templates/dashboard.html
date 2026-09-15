@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merchant Dashboard · Nova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="/static/js/dashboard.js" defer></script>
+</head>
+<body>
+  <div class="dashboard-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/"><span>N</span><b>NOVA</b></a>
+      <nav>
+        <a class="active" href="/dashboard">▦ <span>Dashboard</span></a>
+        <a href="/">◉ <span>Storefront</span></a>
+        <a href="#orders">≣ <span>Orders</span></a>
+        <a href="#analytics">◫ <span>Analytics</span></a>
+      </nav>
+      <div class="live-card"><span class="live-dot"></span><div><strong>Live operations</strong><small id="socket-label">Connecting…</small></div></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div><p class="eyebrow">Merchant Operations</p><h1>Good day, <span>Nova Kitchen</span></h1><p>Manage live orders and monitor performance.</p></div>
+        <div class="header-actions"><select id="store-select" aria-label="Store"></select><button id="theme-toggle" type="button">☾</button><a href="/" class="primary-link">Open Store</a></div>
+      </header>
+
+      <section class="metric-grid" id="analytics">
+        <article class="metric-card"><span>Revenue</span><strong id="metric-revenue">—</strong><small>Delivered orders</small></article>
+        <article class="metric-card"><span>Active Orders</span><strong id="metric-active">—</strong><small><i class="pulse"></i> Live queue</small></article>
+        <article class="metric-card"><span>Total Orders</span><strong id="metric-orders">—</strong><small>All statuses</small></article>
+        <article class="metric-card"><span>Avg. Order Value</span><strong id="metric-aov">—</strong><small>Delivered orders</small></article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel queue-panel" id="orders">
+          <div class="panel-header"><div><p class="eyebrow">Action Queue</p><h2>Live orders</h2></div><button id="refresh-button" class="ghost-button" type="button">Refresh</button></div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody id="orders-body"></tbody></table>
+          </div>
+          <div id="orders-empty" class="empty-row hidden">No orders yet. Place one from the storefront to test the workflow.</div>
+        </article>
+
+        <article class="panel chart-panel">
+          <div class="panel-header"><div><p class="eyebrow">Revenue</p><h2>Last 7 days</h2></div></div>
+          <div class="chart-box"><canvas id="revenue-chart"></canvas></div>
+        </article>
+      </section>
+
+      <section class="bottom-grid">
+        <article class="panel chart-panel"><div class="panel-header"><div><p class="eyebrow">Distribution</p><h2>Order status</h2></div></div><div class="chart-box donut"><canvas id="status-chart"></canvas></div></article>
+        <article class="panel"><div class="panel-header"><div><p class="eyebrow">Best Sellers</p><h2>Top items</h2></div></div><div id="top-items" class="top-items"></div></article>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast"></div>
+</body>
+</html>

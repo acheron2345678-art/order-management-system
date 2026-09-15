@@ -1,9 +1,7 @@
 {% extends "merchant/base.html" %}
 
 {% block title %}
-
 {{ restaurant.name }} | Merchant Console
-
 {% endblock %}
 
 {% block content %}
@@ -27,13 +25,11 @@
             </h1>
 
             <p>
-
                 Review your restaurant's Swiggy
                 profile, menu, inventory and orders.
 
                 Your Merchant account is restricted
                 to this restaurant.
-
             </p>
 
         </div>
@@ -68,20 +64,10 @@
                 Orders
             </a>
 
-            {% if restaurant.is_active %}
-
-            <a
-                href="/swiggy/restaurants/{{ restaurant.id }}"
-                class="btn btn-primary"
-            >
-                Preview on Swiggy
-            </a>
-
-            {% endif %}
-
         </div>
 
     </div>
+
 
     <!-- ========================================= -->
     <!-- STATUS -->
@@ -125,15 +111,14 @@
         </div>
 
         <small>
-
             Restaurant assignment is locked
             to this Merchant account.
 
             Only an administrator can reassign it.
-
         </small>
 
     </div>
+
 
     <!-- ========================================= -->
     <!-- ORDER SUMMARY -->
@@ -181,6 +166,7 @@
 
             </a>
 
+
             <a
                 href="/merchant/orders?status=pending"
                 class="merchant-order-summary-card"
@@ -195,6 +181,7 @@
                 </strong>
 
             </a>
+
 
             <a
                 href="/merchant/orders?status=processing"
@@ -211,6 +198,7 @@
 
             </a>
 
+
             <a
                 href="/merchant/orders?status=completed"
                 class="merchant-order-summary-card"
@@ -225,6 +213,7 @@
                 </strong>
 
             </a>
+
 
             <a
                 href="/merchant/orders?status=cancelled"
@@ -241,6 +230,7 @@
 
             </a>
 
+
             <article class="merchant-order-summary-card">
 
                 <span>
@@ -256,6 +246,7 @@
         </div>
 
     </article>
+
 
     <!-- ========================================= -->
     <!-- MENU / INVENTORY METRICS -->
@@ -274,13 +265,12 @@
             </strong>
 
             <small>
-
                 Swiggy dishes registered
                 to this restaurant
-
             </small>
 
         </article>
+
 
         <article class="merchant-metric-card">
 
@@ -298,6 +288,7 @@
 
         </article>
 
+
         <article class="merchant-metric-card">
 
             <span>
@@ -314,6 +305,7 @@
 
         </article>
 
+
         <article class="merchant-metric-card">
 
             <span>
@@ -329,6 +321,7 @@
             </small>
 
         </article>
+
 
         <article
             class="
@@ -350,6 +343,7 @@
             </small>
 
         </article>
+
 
         <article
             class="
@@ -373,6 +367,7 @@
         </article>
 
     </div>
+
 
     <!-- ========================================= -->
     <!-- OPERATIONS -->
@@ -408,6 +403,7 @@
                 </a>
 
             </div>
+
 
             {% if summary.recent_orders %}
 
@@ -458,6 +454,7 @@
                                     {{ order.order_number }}
                                 </a>
 
+
                                 {% if order.sort_created_at %}
 
                                 <small class="d-block text-body-secondary">
@@ -478,13 +475,16 @@
 
                             </td>
 
+
                             <td>
                                 {{ order.customer_name }}
                             </td>
 
+
                             <td>
                                 {{ order.item_count }}
                             </td>
+
 
                             <td>
 
@@ -494,11 +494,13 @@
                                     Pending
                                 </span>
 
+
                                 {% elif order.status == "processing" %}
 
                                 <span class="badge text-bg-info">
                                     Processing
                                 </span>
+
 
                                 {% elif order.status == "completed" %}
 
@@ -506,11 +508,13 @@
                                     Completed
                                 </span>
 
+
                                 {% elif order.status == "cancelled" %}
 
                                 <span class="badge text-bg-danger">
                                     Cancelled
                                 </span>
+
 
                                 {% else %}
 
@@ -521,6 +525,7 @@
                                 {% endif %}
 
                             </td>
+
 
                             <td class="text-end fw-semibold">
 
@@ -537,6 +542,7 @@
                 </table>
 
             </div>
+
 
             {% else %}
 
@@ -555,6 +561,7 @@
             {% endif %}
 
         </article>
+
 
         <!-- ===================================== -->
         <!-- STOCK ATTENTION -->
@@ -584,6 +591,7 @@
                 </a>
 
             </div>
+
 
             {% if summary.stock_alert_items %}
 
@@ -618,6 +626,7 @@
 
                     </div>
 
+
                     <div class="text-end flex-shrink-0">
 
                         {% if product.stock_quantity <= 0 %}
@@ -645,6 +654,7 @@
 
             </div>
 
+
             {% else %}
 
             <div class="text-center py-4">
@@ -667,6 +677,7 @@
         </article>
 
     </div>
+
 
     <!-- ========================================= -->
     <!-- DETAILS -->
@@ -703,6 +714,7 @@
 
             </div>
 
+
             <dl class="merchant-detail-list">
 
                 <div>
@@ -717,6 +729,7 @@
 
                 </div>
 
+
                 <div>
 
                     <dt>
@@ -729,6 +742,7 @@
 
                 </div>
 
+
                 <div>
 
                     <dt>
@@ -740,6 +754,7 @@
                     </dd>
 
                 </div>
+
 
                 <div>
 
@@ -757,6 +772,7 @@
                     </dd>
 
                 </div>
+
 
                 <div>
 
@@ -780,6 +796,7 @@
 
                 </div>
 
+
                 <div>
 
                     <dt>
@@ -795,6 +812,7 @@
             </dl>
 
         </article>
+
 
         <!-- ===================================== -->
         <!-- PERMISSIONS -->
@@ -818,6 +836,7 @@
 
             </div>
 
+
             <div class="merchant-permission-list">
 
                 <div class="allowed">
@@ -840,6 +859,7 @@
 
                 </div>
 
+
                 <div class="allowed">
 
                     <span>
@@ -859,6 +879,7 @@
                     </p>
 
                 </div>
+
 
                 <div class="allowed">
 
@@ -880,6 +901,7 @@
 
                 </div>
 
+
                 <div class="allowed">
 
                     <span>
@@ -899,6 +921,7 @@
                     </p>
 
                 </div>
+
 
                 <div class="allowed">
 
@@ -920,6 +943,7 @@
 
                 </div>
 
+
                 <div class="blocked">
 
                     <span>
@@ -940,6 +964,7 @@
 
                 </div>
 
+
                 <div class="blocked">
 
                     <span>
@@ -959,6 +984,7 @@
                     </p>
 
                 </div>
+
 
                 <div class="blocked">
 
@@ -985,6 +1011,7 @@
         </article>
 
     </div>
+
 
     <!-- ========================================= -->
     <!-- MANAGEMENT TOOLS -->
@@ -1015,6 +1042,7 @@
 
         </div>
 
+
         <div class="merchant-next-actions">
 
             <a
@@ -1024,12 +1052,14 @@
                 Profile
             </a>
 
+
             <a
                 href="/merchant/menu"
                 class="btn btn-outline-primary"
             >
                 Menu
             </a>
+
 
             <a
                 href="/merchant/inventory"
@@ -1038,12 +1068,14 @@
                 Inventory
             </a>
 
+
             <a
                 href="/merchant/orders"
                 class="btn btn-outline-primary"
             >
                 Orders
             </a>
+
 
             {% if restaurant.is_active %}
 

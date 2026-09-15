@@ -1,0 +1,7 @@
+"use client";
+import {useEffect,useState} from "react";
+import {api,wsBase} from "../lib/api";
+
+type Order={id:number;status:string;customer_name:string;delivery_address:string;total_amount:string;items:{id:number;item_name:string;quantity:number;line_total:string}[]};
+const FLOW=["PENDING","PREPARING","OUT_FOR_DELIVERY","DELIVERED"];
+export default function OrderTracker({orderId}:{orderId:number}){const [order,setOrder]=useState<Order|null>(null);async function load(){setOrder(await api<Order>(`/api/v1/orders/${orderId}`));}useEffect(()=>{load();const ws=new WebSocket(`${wsBase()}/ws/orders/${orderId}`);ws.onmessage=e=>{const x=JSON.parse(e.data);if(x.type==="ORDER_STATUS_UPDATED")load()};return()=>ws.close();},[orderId]);const normalized=order?.status==="CONFIRMED"?"PENDING":order?.status;const idx=normalized?FLOW.indexOf(normalized):-1;return <main className="nx-track"><a href="/">← Store</a><div className="nx-panel"><h1>Order #{orderId}</h1><p className="nx-muted">Live status: {order?.status??"Loading…"}</p></div><div className="nx-panel nx-stepper">{FLOW.map((s,i)=><div key={s} className={`nx-step ${i<idx?"done":""} ${i===idx?"active":""}`}><div className="nx-step-dot">{i+1}</div><p>{s.replaceAll("_"," ")}</p></div>)}</div>{order&&<div className="nx-panel"><h2>Summary</h2>{order.items.map(i=><div className="nx-row" key={i.id}><span>{i.quantity}× {i.item_name}</span><b>₹{Number(i.line_total).toFixed(2)}</b></div>)}<hr/><div className="nx-row"><b>Total</b><b className="nx-price">₹{Number(order.total_amount).toFixed(2)}</b></div></div>}</main>}

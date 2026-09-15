@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Order #{{ order_id }} · Nova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/track.css" />
+</head>
+<body data-order-id="{{ order_id }}">
+  <main class="track-shell">
+    <header>
+      <a href="/" class="brand"><span>N</span> NOVA</a>
+      <div class="header-actions"><a href="/">Back to store</a><button id="theme-toggle" type="button">☾</button></div>
+    </header>
+
+    <section class="hero-card">
+      <div>
+        <p class="eyebrow">Live Order Tracking</p>
+        <h1>Order <span>#{{ order_id }}</span></h1>
+        <p id="status-copy">Connecting to live updates…</p>
+      </div>
+      <div class="connection-pill"><span id="connection-dot"></span><span id="connection-label">Connecting</span></div>
+    </section>
+
+    <section class="timeline-card">
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <div class="details-grid">
+      <section class="panel">
+        <div class="panel-title"><h2>Order summary</h2><span id="order-status" class="status-badge">—</span></div>
+        <div id="order-items" class="order-items"></div>
+        <div class="totals">
+          <div><span>Subtotal</span><strong id="subtotal">—</strong></div>
+          <div><span>Tax</span><strong id="tax">—</strong></div>
+          <div class="grand"><span>Total</span><strong id="total">—</strong></div>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Delivery</h2>
+        <div class="info-row"><span>Customer</span><strong id="customer">—</strong></div>
+        <div class="info-row"><span>Address</span><strong id="address">—</strong></div>
+        <div class="info-row"><span>Placed</span><strong id="placed">—</strong></div>
+        <div class="support-box">This prototype updates instantly when the merchant advances the order from the dashboard.</div>
+      </section>
+    </div>
+  </main>
+  <script src="/static/js/track.js" defer></script>
+</body>
+</html>

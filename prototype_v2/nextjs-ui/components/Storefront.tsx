@@ -1,0 +1,18 @@
+"use client";
+import {useEffect,useMemo,useState} from "react";
+import {api} from "../lib/api";
+
+type Store={id:number;name:string;description?:string};
+type Item={id:number;store_id:number;name:string;description?:string;category:string;price:string;image_url?:string};
+type CartItem=Item&{quantity:number};
+
+export default function Storefront(){
+  const [store,setStore]=useState<Store|null>(null); const [menu,setMenu]=useState<Item[]>([]); const [category,setCategory]=useState("All"); const [q,setQ]=useState(""); const [cart,setCart]=useState<Record<number,CartItem>>({});
+  useEffect(()=>{const saved=localStorage.getItem("nova-next-cart");if(saved)setCart(JSON.parse(saved));(async()=>{const stores=await api<Store[]>("/api/v1/stores");if(!stores[0])return;setStore(stores[0]);setMenu(await api<Item[]>(`/api/v1/stores/${stores[0].id}/menu`));})();},[]);
+  useEffect(()=>localStorage.setItem("nova-next-cart",JSON.stringify(cart)),[cart]);
+  const categories=["All",...Array.from(new Set(menu.map(i=>i.category)))]; const visible=menu.filter(i=>(category==="All"||i.category===category)&&`${i.name} ${i.description??""}`.toLowerCase().includes(q.toLowerCase()));
+  const sub=useMemo(()=>Object.values(cart).reduce((s,i)=>s+Number(i.price)*i.quantity,0),[cart]);
+  function add(item:Item,delta=1){setCart(prev=>{const quantity=(prev[item.id]?.quantity??0)+delta;const next={...prev};if(quantity<=0)delete next[item.id];else next[item.id]={...item,quantity};return next;});}
+  async function checkout(){if(!store||!Object.keys(cart).length)return;const order=await api<{id:number}>("/api/v1/orders",{method:"POST",body:JSON.stringify({store_id:store.id,customer_name:"Next.js Demo",customer_email:"next@example.com",delivery_address:"12 Demo Street, Chennai",items:Object.values(cart).map(i=>({menu_item_id:i.id,quantity:i.quantity}))})});setCart({});location.href=`/track/${order.id}`;}
+  return <div className="nx-shell"><aside className="nx-side"><div className="nx-brand">NOVA</div><p className="nx-muted">Next.js reference UI</p></aside><main className="nx-main"><div className="nx-top"><div><h1>{store?.name??"Loading…"}</h1><p className="nx-muted">{store?.description}</p></div><input className="nx-search" placeholder="Search menu…" value={q} onChange={e=>setQ(e.target.value)}/></div><div className="nx-tabs">{categories.map(c=><button key={c} className={`nx-tab ${c===category?"active":""}`} onClick={()=>setCategory(c)}>{c}</button>)}</div><div className="nx-grid">{visible.map(item=><article className="nx-card" key={item.id}><img src={item.image_url} alt={item.name}/><div className="nx-card-body"><div className="nx-row"><b>{item.name}</b><span className="nx-price">₹{Number(item.price).toFixed(2)}</span></div><p className="nx-muted">{item.description}</p><div className="nx-row"><span>{cart[item.id]?.quantity??0} in cart</span><button className="nx-add" onClick={()=>add(item)}>Add</button></div></div></article>)}</div></main><aside className="nx-cart"><h2>Your cart</h2>{Object.values(cart).map(item=><div key={item.id} className="nx-cart-line"><div className="nx-row"><b>{item.name}</b><span>{item.quantity}×</span></div><button onClick={()=>add(item,-1)}>−</button> <button onClick={()=>add(item,1)}>+</button></div>)}<div className="nx-cart-total"><div className="nx-row"><span>Subtotal</span><b>₹{sub.toFixed(2)}</b></div><div className="nx-row"><span>Tax</span><b>₹{(sub*.1).toFixed(2)}</b></div><hr/><div className="nx-row"><b>Total</b><b className="nx-price">₹{(sub*1.1).toFixed(2)}</b></div><button className="nx-primary" style={{width:"100%",marginTop:12}} onClick={checkout}>Checkout demo</button></div></aside></div>;
+}
