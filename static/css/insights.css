@@ -2540,3 +2540,286 @@ thead
     }
 
 }
+
+/* =========================================================
+   UI-3
+   INSIGHTS PAGE HEADER + CARD CONSISTENCY
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.in-page-header {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.in-page-header h1 {
+    margin:
+        0.3rem
+        0
+        0;
+
+    font-size:
+        clamp(
+            1.75rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.035em;
+
+    line-height:
+        1.1;
+}
+
+
+.in-page-header p {
+    max-width:
+        720px;
+
+    margin-top:
+        0.5rem;
+
+    font-size:
+        0.9rem;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   EYEBROWS
+   ========================================================= */
+
+.in-eyebrow,
+.in-card-kicker {
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.1em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   SECTION HEADERS
+   ========================================================= */
+
+.in-section-header,
+.in-section-header-row {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+}
+
+
+.in-section-header h2 {
+    margin:
+        0.25rem
+        0
+        0;
+
+    font-size:
+        1.3rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.025em;
+}
+
+
+/* =========================================================
+   STANDARD INSIGHTS CARDS
+   ========================================================= */
+
+.in-card,
+.in-overview-card,
+.in-summary-card,
+.in-checkout-card,
+.in-project-main-card,
+.in-detail-card,
+.in-success-card,
+.in-service-card,
+.in-project-card,
+.in-table-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   INTERACTIVE CARDS
+   ========================================================= */
+
+.in-service-card,
+.in-project-card {
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-service-card:hover,
+.in-project-card:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   CARD HEADERS
+   ========================================================= */
+
+.in-card-head {
+    align-items:
+        flex-start;
+}
+
+
+.in-card-head h2 {
+    font-size:
+        1.1rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   BOOTSTRAP CARDS INSIDE INSIGHTS
+   ========================================================= */
+
+.in-main
+.card {
+    overflow:
+        hidden;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+}
+
+
+.in-main
+.card-header {
+    min-height:
+        68px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .in-page-header {
+        flex-direction:
+            column;
+    }
+
+
+    .in-page-header
+    >
+    .btn,
+    .in-page-header
+    >
+    div
+    +
+    .btn {
+        width:
+            100%;
+    }
+
+
+    .in-section-header,
+    .in-section-header-row {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+}

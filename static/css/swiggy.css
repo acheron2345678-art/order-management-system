@@ -3709,3 +3709,253 @@ a {
     }
 
 }
+
+/* =========================================================
+   UI-3
+   SWIGGY PAGE HEADER + CARD CONSISTENCY
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.sw-page-header {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.sw-page-header h1 {
+    margin:
+        0.3rem
+        0
+        0;
+
+    font-size:
+        clamp(
+            1.75rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.035em;
+
+    line-height:
+        1.1;
+}
+
+
+.sw-page-header p {
+    max-width:
+        720px;
+
+    margin-top:
+        0.5rem;
+
+    font-size:
+        0.9rem;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   EYEBROWS
+   ========================================================= */
+
+.sw-eyebrow,
+.sw-card-kicker {
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.1em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   SECTION HEADERS
+   ========================================================= */
+
+.sw-section-header,
+.sw-section-header-row {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+}
+
+
+.sw-section-header h2 {
+    margin:
+        0.25rem
+        0
+        0;
+
+    font-size:
+        1.3rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.025em;
+}
+
+
+/* =========================================================
+   SHARED SWIGGY CARDS
+   ========================================================= */
+
+.sw-card,
+.sw-product-card,
+.sw-summary-card,
+.sw-checkout-card,
+.sw-success-card,
+.sw-detail-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   PRODUCT CARDS
+   ========================================================= */
+
+.sw-product-card {
+    overflow:
+        hidden;
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-product-card:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   CARD HEADINGS
+   ========================================================= */
+
+.sw-card-head {
+    align-items:
+        flex-start;
+}
+
+
+.sw-card-head h2 {
+    font-size:
+        1.1rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .sw-page-header {
+        flex-direction:
+            column;
+    }
+
+
+    .sw-page-header
+    >
+    .btn,
+    .sw-page-header
+    >
+    div
+    +
+    .btn {
+        width:
+            100%;
+    }
+
+
+    .sw-section-header,
+    .sw-section-header-row {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+}

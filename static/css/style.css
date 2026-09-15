@@ -6371,3 +6371,369 @@ span {
     }
 
 }
+/* =========================================================
+   UI-3
+   ADMIN / CLIENT PAGE HEADER + CARD CONSISTENCY
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN CONTENT RHYTHM
+   ========================================================= */
+
+.page-content {
+    max-width:
+        var(
+            --om-content-width,
+            1600px
+        );
+
+    margin-inline:
+        auto;
+}
+
+
+/* =========================================================
+   STANDARD TOP-LEVEL PAGE HEADER
+   ========================================================= */
+
+.page-content
+>
+.d-flex:first-child {
+    align-items:
+        flex-start !important;
+
+    gap:
+        var(
+            --om-space-5,
+            1.5rem
+        ) !important;
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        ) !important;
+}
+
+
+.page-content
+>
+.d-flex:first-child
+h1 {
+    margin:
+        0 !important;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        clamp(
+            1.75rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.035em;
+
+    line-height:
+        1.1;
+}
+
+
+.page-content
+>
+.d-flex:first-child
+h1
++
+p {
+    max-width:
+        720px;
+
+    margin-top:
+        0.45rem !important;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   HEADER EYEBROWS / ROLE LABELS
+   ========================================================= */
+
+.page-content
+>
+.d-flex:first-child
+.badge {
+    min-height:
+        28px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    padding:
+        0.35rem
+        0.65rem;
+
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.045em;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.page-content
+>
+.d-flex:first-child
+>
+a.btn {
+    flex-shrink:
+        0;
+}
+
+
+/* =========================================================
+   GENERIC CARDS
+   ========================================================= */
+
+.page-content
+.card {
+    overflow:
+        hidden;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+/* =========================================================
+   TOP-LEVEL CONTENT CARDS
+   ========================================================= */
+
+.page-content
+>
+.card {
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.page-content
+.card-header {
+    min-height:
+        68px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+.page-content
+.card-header
+.fw-semibold {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        800 !important;
+}
+
+
+/* =========================================================
+   CARD BODY
+   ========================================================= */
+
+.page-content
+.card-body {
+    color:
+        var(
+            --bs-body-color
+        );
+}
+
+
+/* =========================================================
+   DASHBOARD HEADER NORMALIZATION
+   ========================================================= */
+
+.dashboard-page-header {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.dashboard-page-title {
+    font-size:
+        clamp(
+            1.75rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.035em;
+
+    line-height:
+        1.1;
+}
+
+
+.dashboard-page-subtitle {
+    max-width:
+        720px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   DASHBOARD / SUMMARY CARDS
+   ========================================================= */
+
+.dashboard-kpi-card,
+.dashboard-analysis-card,
+.dashboard-products-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .page-content
+    >
+    .d-flex:first-child {
+        align-items:
+            stretch !important;
+    }
+
+
+    .page-content
+    >
+    .d-flex:first-child
+    >
+    a.btn {
+        width:
+            100%;
+    }
+
+
+    .dashboard-page-header {
+        flex-direction:
+            column;
+    }
+
+
+    .dashboard-header-actions {
+        width:
+            100%;
+    }
+
+
+    .dashboard-header-actions
+    .btn {
+        flex:
+            1
+            1
+            150px;
+    }
+
+}

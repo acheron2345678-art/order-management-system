@@ -2419,3 +2419,399 @@ a.merchant-order-summary-card:hover {
     }
 
 }
+
+/* =========================================================
+   UI-3
+   MERCHANT PAGE HEADER + CARD CONSISTENCY
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.merchant-page-header {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.merchant-page-header h1 {
+    margin:
+        0.3rem
+        0
+        0;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        clamp(
+            1.75rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.035em;
+
+    line-height:
+        1.1;
+}
+
+
+.merchant-page-header p {
+    max-width:
+        720px;
+
+    margin-top:
+        0.5rem;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    line-height:
+        1.65;
+}
+
+
+.merchant-eyebrow {
+    display:
+        block;
+
+    color:
+        var(
+            --bs-primary
+        );
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.1em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.merchant-header-actions {
+    align-items:
+        center;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        var(
+            --om-space-2,
+            0.5rem
+        );
+}
+
+
+/* =========================================================
+   STATUS BANNER
+   ========================================================= */
+
+.merchant-status-banner {
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    padding:
+        var(
+            --om-space-4,
+            1rem
+        )
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   METRIC CARDS
+   ========================================================= */
+
+.merchant-metric-grid {
+    gap:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.merchant-metric-card {
+    min-height:
+        150px;
+
+    padding:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.merchant-metric-card strong {
+    margin:
+        0.6rem
+        0
+        0.3rem;
+
+    font-size:
+        2rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.03em;
+}
+
+
+/* =========================================================
+   MAIN PANELS
+   ========================================================= */
+
+.merchant-panel,
+.merchant-next-panel {
+    padding:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.merchant-dashboard-grid {
+    gap:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.merchant-panel-header {
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.merchant-panel-header h2,
+.merchant-next-panel h2 {
+    margin:
+        0.3rem
+        0
+        0;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        1.15rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.merchant-order-summary-card,
+.merchant-menu-summary-card,
+.merchant-inventory-summary-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+a.merchant-order-summary-card:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .merchant-page-header {
+        flex-direction:
+            column;
+    }
+
+
+    .merchant-header-actions {
+        width:
+            100%;
+
+        justify-content:
+            flex-start;
+    }
+
+
+    .merchant-header-actions
+    .btn {
+        flex:
+            1
+            1
+            145px;
+    }
+
+
+    .merchant-status-banner {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .merchant-panel,
+    .merchant-next-panel {
+        padding:
+            var(
+                --om-space-4,
+                1rem
+            );
+    }
+
+}
