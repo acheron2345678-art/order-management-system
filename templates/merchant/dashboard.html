@@ -157,11 +157,7 @@
 
             <a
                 href="/merchant/orders"
-                class="
-                    btn
-                    btn-sm
-                    btn-outline-primary
-                "
+                class="btn btn-sm btn-outline-primary"
             >
                 View All Orders
             </a>
@@ -379,10 +375,304 @@
     </div>
 
     <!-- ========================================= -->
-    <!-- DETAILS -->
+    <!-- OPERATIONS -->
     <!-- ========================================= -->
 
     <div class="merchant-dashboard-grid">
+
+        <!-- ===================================== -->
+        <!-- RECENT ORDERS -->
+        <!-- ===================================== -->
+
+        <article class="merchant-panel">
+
+            <div class="merchant-panel-header">
+
+                <div>
+
+                    <span class="merchant-eyebrow">
+                        LIVE OPERATIONS
+                    </span>
+
+                    <h2>
+                        Recent Orders
+                    </h2>
+
+                </div>
+
+                <a
+                    href="/merchant/orders"
+                    class="btn btn-sm btn-outline-primary"
+                >
+                    View All
+                </a>
+
+            </div>
+
+            {% if summary.recent_orders %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Items
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="text-end">
+                                Total
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for order in summary.recent_orders %}
+
+                        <tr>
+
+                            <td>
+
+                                <a
+                                    href="/merchant/orders/{{ order.id }}"
+                                    class="fw-semibold text-decoration-none"
+                                >
+                                    {{ order.order_number }}
+                                </a>
+
+                                {% if order.sort_created_at %}
+
+                                <small class="d-block text-body-secondary">
+
+                                    {{ order.sort_created_at.strftime('%d %b, %I:%M %p') }}
+
+                                </small>
+
+                                {% else %}
+
+                                <small class="d-block text-body-secondary">
+
+                                    {{ order.order_date.strftime('%d %b %Y') }}
+
+                                </small>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ order.customer_name }}
+                            </td>
+
+                            <td>
+                                {{ order.item_count }}
+                            </td>
+
+                            <td>
+
+                                {% if order.status == "pending" %}
+
+                                <span class="badge text-bg-warning">
+                                    Pending
+                                </span>
+
+                                {% elif order.status == "processing" %}
+
+                                <span class="badge text-bg-info">
+                                    Processing
+                                </span>
+
+                                {% elif order.status == "completed" %}
+
+                                <span class="badge text-bg-success">
+                                    Completed
+                                </span>
+
+                                {% elif order.status == "cancelled" %}
+
+                                <span class="badge text-bg-danger">
+                                    Cancelled
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge text-bg-secondary">
+                                    {{ order.status|capitalize }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="text-end fw-semibold">
+
+                                ₹{{ "%.2f"|format(order.amount) }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-4">
+
+                <strong class="d-block mb-1">
+                    No restaurant orders yet
+                </strong>
+
+                <small class="text-body-secondary">
+                    New Swiggy orders will appear here.
+                </small>
+
+            </div>
+
+            {% endif %}
+
+        </article>
+
+        <!-- ===================================== -->
+        <!-- STOCK ATTENTION -->
+        <!-- ===================================== -->
+
+        <article class="merchant-panel">
+
+            <div class="merchant-panel-header">
+
+                <div>
+
+                    <span class="merchant-eyebrow">
+                        INVENTORY ATTENTION
+                    </span>
+
+                    <h2>
+                        Stock Attention
+                    </h2>
+
+                </div>
+
+                <a
+                    href="/merchant/inventory"
+                    class="btn btn-sm btn-outline-primary"
+                >
+                    Inventory
+                </a>
+
+            </div>
+
+            {% if summary.stock_alert_items %}
+
+            <div class="d-grid gap-2">
+
+                {% for product in summary.stock_alert_items %}
+
+                <div
+                    class="
+                        border
+                        rounded-3
+                        p-3
+                        d-flex
+                        align-items-center
+                        justify-content-between
+                        gap-3
+                    "
+                >
+
+                    <div class="min-w-0">
+
+                        <strong class="d-block text-truncate">
+                            {{ product.product_name }}
+                        </strong>
+
+                        <small class="text-body-secondary">
+
+                            Reorder at
+                            {{ product.reorder_level }}
+
+                        </small>
+
+                    </div>
+
+                    <div class="text-end flex-shrink-0">
+
+                        {% if product.stock_quantity <= 0 %}
+
+                        <span class="badge text-bg-danger">
+                            Out of stock
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge text-bg-warning">
+
+                            {{ product.stock_quantity }}
+                            left
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-4">
+
+                <strong class="d-block mb-1">
+                    Stock levels look healthy
+                </strong>
+
+                <small class="text-body-secondary">
+
+                    No active dish is currently
+                    at or below its reorder level.
+
+                </small>
+
+            </div>
+
+            {% endif %}
+
+        </article>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- DETAILS -->
+    <!-- ========================================= -->
+
+    <div class="merchant-dashboard-grid mt-4">
 
         <!-- ===================================== -->
         <!-- RESTAURANT INFORMATION -->
@@ -406,11 +696,7 @@
 
                 <a
                     href="/merchant/profile"
-                    class="
-                        btn
-                        btn-sm
-                        btn-outline-primary
-                    "
+                    class="btn btn-sm btn-outline-primary"
                 >
                     Edit Profile
                 </a>
@@ -438,9 +724,7 @@
                     </dt>
 
                     <dd>
-
                         {{ restaurant.cuisines or "Not configured" }}
-
                     </dd>
 
                 </div>
@@ -452,9 +736,7 @@
                     </dt>
 
                     <dd>
-
                         {{ restaurant.location or "Not configured" }}
-
                     </dd>
 
                 </div>
@@ -505,9 +787,7 @@
                     </dt>
 
                     <dd>
-
                         {{ restaurant.offer_text or "No active offer" }}
-
                     </dd>
 
                 </div>
@@ -553,10 +833,7 @@
                         </strong>
 
                         <small>
-
-                            Manage your restaurant's
-                            public information.
-
+                            Manage your restaurant's public information.
                         </small>
 
                     </p>
@@ -576,10 +853,7 @@
                         </strong>
 
                         <small>
-
-                            Add and manage dishes
-                            belonging to your restaurant.
-
+                            Add and manage dishes belonging to your restaurant.
                         </small>
 
                     </p>
@@ -599,10 +873,7 @@
                         </strong>
 
                         <small>
-
-                            Monitor stock and restock
-                            your restaurant's dishes.
-
+                            Monitor stock and restock your restaurant's dishes.
                         </small>
 
                     </p>
@@ -622,10 +893,7 @@
                         </strong>
 
                         <small>
-
-                            Process only orders permanently
-                            assigned to your restaurant.
-
+                            Process only orders permanently assigned to your restaurant.
                         </small>
 
                     </p>
@@ -645,10 +913,7 @@
                         </strong>
 
                         <small>
-
-                            View your customer-facing
-                            restaurant page in read-only mode.
-
+                            View your customer-facing restaurant page in read-only mode.
                         </small>
 
                     </p>
@@ -668,10 +933,7 @@
                         </strong>
 
                         <small>
-
-                            Merchant accounts cannot
-                            add to cart or checkout.
-
+                            Merchant accounts cannot add to cart or checkout.
                         </small>
 
                     </p>
@@ -691,10 +953,7 @@
                         </strong>
 
                         <small>
-
-                            Merchant management privileges
-                            apply only to your assigned restaurant.
-
+                            Merchant management privileges apply only to your assigned restaurant.
                         </small>
 
                     </p>
@@ -714,10 +973,7 @@
                         </strong>
 
                         <small>
-
-                            No global administration
-                            or user-management privileges.
-
+                            No global administration or user-management privileges.
                         </small>
 
                     </p>
@@ -734,7 +990,7 @@
     <!-- MANAGEMENT TOOLS -->
     <!-- ========================================= -->
 
-    <article class="merchant-next-panel">
+    <article class="merchant-next-panel mt-4">
 
         <div>
 

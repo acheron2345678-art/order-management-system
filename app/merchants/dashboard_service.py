@@ -3,8 +3,15 @@ from decimal import Decimal
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.orders.models import SwiggyOrders
+from app.orders.models import (
+    OrderItem,
+    SwiggyOrders,
+)
+
 from app.products.models import Product
+
+
+PLATFORM = "swiggy"
 
 
 def get_merchant_dashboard_summary(
@@ -23,7 +30,7 @@ def get_merchant_dashboard_summary(
         .filter(
             Product.platform
             ==
-            "swiggy",
+            PLATFORM,
 
             Product.restaurant_id
             ==
@@ -90,7 +97,7 @@ def get_merchant_dashboard_summary(
         .filter(
             Product.platform
             ==
-            "swiggy",
+            PLATFORM,
 
             Product.restaurant_id
             ==
@@ -110,7 +117,7 @@ def get_merchant_dashboard_summary(
     )
 
     # =====================================================
-    # RESTAURANT ORDER SUMMARY
+    # ORDER SUMMARY
     # =====================================================
 
     order_rows = (
@@ -199,6 +206,130 @@ def get_merchant_dashboard_summary(
             )
 
     # =====================================================
+    # RECENT ORDERS
+    # =====================================================
+
+    item_stats = (
+        db.query(
+            OrderItem.order_id.label(
+                "order_id"
+            ),
+
+            func.min(
+                OrderItem.created_at
+            ).label(
+                "created_at"
+            ),
+
+            func.sum(
+                OrderItem.quantity
+            ).label(
+                "item_count"
+            ),
+        )
+        .filter(
+            OrderItem.platform
+            ==
+            PLATFORM
+        )
+        .group_by(
+            OrderItem.order_id
+        )
+        .subquery()
+    )
+
+    recent_order_rows = (
+        db.query(
+            SwiggyOrders,
+
+            item_stats.c.created_at,
+
+            item_stats.c.item_count,
+        )
+        .outerjoin(
+            item_stats,
+
+            item_stats.c.order_id
+            ==
+            SwiggyOrders.id,
+        )
+        .filter(
+            SwiggyOrders.restaurant_id
+            ==
+            restaurant_id
+        )
+        .order_by(
+            item_stats.c.created_at.desc(),
+
+            SwiggyOrders.order_date.desc(),
+
+            SwiggyOrders.id.desc(),
+        )
+        .limit(
+            5
+        )
+        .all()
+    )
+
+    recent_orders = []
+
+    for (
+        order,
+        created_at,
+        item_count,
+    ) in recent_order_rows:
+
+        order.sort_created_at = (
+            created_at
+        )
+
+        order.item_count = int(
+            item_count
+            or
+            0
+        )
+
+        recent_orders.append(
+            order
+        )
+
+    # =====================================================
+    # STOCK ATTENTION
+    # =====================================================
+
+    stock_alert_items = (
+        db.query(
+            Product
+        )
+        .filter(
+            Product.platform
+            ==
+            PLATFORM,
+
+            Product.restaurant_id
+            ==
+            restaurant_id,
+
+            Product.is_active.is_(
+                True
+            ),
+
+            Product.stock_quantity
+            <=
+            Product.reorder_level,
+        )
+        .order_by(
+            Product.stock_quantity.asc(),
+
+            Product.product_name.asc(),
+        )
+        .limit(
+            5
+        )
+        .all()
+    )
+
+    # =====================================================
     # RESULT
     # =====================================================
 
@@ -246,4 +377,10 @@ def get_merchant_dashboard_summary(
 
         "completed_revenue":
             completed_revenue,
+
+        "recent_orders":
+            recent_orders,
+
+        "stock_alert_items":
+            stock_alert_items,
     }
