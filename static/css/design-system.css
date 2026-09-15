@@ -1653,3 +1653,988 @@ button:focus-visible,
     }
 
 }
+
+/* =========================================================
+   UI-4
+   EMPTY STATES + USER FEEDBACK
+   ========================================================= */
+
+
+/* =========================================================
+   EMPTY STATE FOUNDATION
+   ========================================================= */
+
+:where(
+    .sw-empty-state,
+    .in-empty-state,
+    .merchant-menu-empty,
+    .dashboard-empty-state,
+    .dashboard-empty-state-pro
+) {
+    min-height:
+        230px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        var(
+            --om-space-2,
+            0.5rem
+        );
+
+    padding:
+        var(
+            --om-space-6,
+            2rem
+        );
+
+    border:
+        1px dashed
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 70%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   EMPTY STATE HEADINGS
+   ========================================================= */
+
+:where(
+    .sw-empty-state,
+    .in-empty-state,
+    .merchant-menu-empty,
+    .dashboard-empty-state,
+    .dashboard-empty-state-pro
+)
+:is(
+    h2,
+    h3,
+    strong
+) {
+    margin:
+        0;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        1.05rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+/* =========================================================
+   EMPTY STATE DESCRIPTION
+   ========================================================= */
+
+:where(
+    .sw-empty-state,
+    .in-empty-state,
+    .merchant-menu-empty,
+    .dashboard-empty-state,
+    .dashboard-empty-state-pro
+)
+p {
+    max-width:
+        520px;
+
+    margin:
+        0.15rem
+        auto
+        0.65rem;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.86rem;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   EMPTY STATE ICON
+   ========================================================= */
+
+:where(
+    .sw-empty-state-icon,
+    .in-empty-state-icon,
+    .merchant-menu-empty-icon,
+    .dashboard-drilldown-empty-icon
+) {
+    width:
+        56px;
+
+    height:
+        56px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    margin:
+        0
+        auto
+        var(
+            --om-space-2,
+            0.5rem
+        );
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    color:
+        var(
+            --bs-primary
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    font-size:
+        1.5rem;
+
+    line-height:
+        1;
+}
+
+
+/* =========================================================
+   SWIGGY EMPTY ICON
+   ========================================================= */
+
+.sw-app-shell
+.sw-empty-state-icon {
+    color:
+        var(
+            --sw-orange
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 8%,
+            var(--bs-body-bg)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 25%,
+            var(--bs-border-color)
+        );
+}
+
+
+/* =========================================================
+   INSIGHTS EMPTY ICON
+   ========================================================= */
+
+.in-app-shell
+.in-empty-state-icon {
+    color:
+        var(
+            --in-accent
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 8%,
+            var(--bs-body-bg)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 25%,
+            var(--bs-border-color)
+        );
+}
+
+
+/* =========================================================
+   MERCHANT EMPTY ICON
+   ========================================================= */
+
+.merchant-menu-empty-icon {
+    color:
+        var(
+            --bs-primary
+        );
+
+    background:
+        var(
+            --bs-primary-bg-subtle
+        );
+
+    border-color:
+        var(
+            --bs-primary-border-subtle
+        );
+}
+
+
+/* =========================================================
+   EMPTY STATE ACTIONS
+   ========================================================= */
+
+:where(
+    .sw-empty-state,
+    .in-empty-state,
+    .merchant-menu-empty
+)
+.btn {
+    margin-top:
+        var(
+            --om-space-2,
+            0.5rem
+        );
+}
+
+
+/* =========================================================
+   ADMIN / CLIENT BOOTSTRAP EMPTY STATES
+
+   Existing templates commonly use:
+   .card > .text-center.py-5
+   or
+   .card-body.text-center.py-5
+   ========================================================= */
+
+.card
+>
+.text-center.py-5,
+
+.card-body.text-center.py-5 {
+    min-height:
+        220px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        var(
+            --om-space-6,
+            2rem
+        ) !important;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 55%,
+            var(--bs-body-bg)
+        );
+}
+
+
+.card
+>
+.text-center.py-5
+:is(
+    h2,
+    h3
+),
+
+.card-body.text-center.py-5
+:is(
+    h2,
+    h3
+) {
+    margin-bottom:
+        var(
+            --om-space-2,
+            0.5rem
+        );
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+.card
+>
+.text-center.py-5
+p,
+
+.card-body.text-center.py-5
+p {
+    max-width:
+        520px;
+
+    margin-inline:
+        auto;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   SEARCH / FILTER EMPTY STATES
+   ========================================================= */
+
+#merchant-no-results,
+#merchant-menu-no-results,
+#merchant-inventory-no-results,
+#merchant-order-no-results {
+    min-height:
+        180px;
+
+    padding:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    border:
+        1px dashed
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    text-align:
+        center;
+}
+
+
+#merchant-no-results
+h3,
+
+#merchant-menu-no-results
+h3,
+
+#merchant-inventory-no-results
+h3,
+
+#merchant-order-no-results
+h3 {
+    margin:
+        0
+        0
+        var(
+            --om-space-2,
+            0.5rem
+        );
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        1rem;
+
+    font-weight:
+        800;
+}
+
+
+#merchant-no-results
+p,
+
+#merchant-menu-no-results
+p,
+
+#merchant-inventory-no-results
+p,
+
+#merchant-order-no-results
+p {
+    max-width:
+        480px;
+
+    margin:
+        0
+        auto;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.85rem;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   INLINE EMPTY INFORMATION
+   ========================================================= */
+
+.sw-empty-inline {
+    padding:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border:
+        1px dashed
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.85rem;
+
+    line-height:
+        1.5;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   ALERT FOUNDATION
+
+   Used for:
+   - success
+   - errors
+   - warnings
+   - information
+   ========================================================= */
+
+.alert {
+    position:
+        relative;
+
+    margin-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    padding:
+        0.9rem
+        1rem;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    border-width:
+        1px;
+
+    box-shadow:
+        none;
+
+    font-size:
+        0.88rem;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   SUCCESS FEEDBACK
+   ========================================================= */
+
+.alert-success {
+    border-left:
+        4px solid
+        var(
+            --bs-success
+        );
+}
+
+
+/* =========================================================
+   ERROR FEEDBACK
+   ========================================================= */
+
+.alert-danger {
+    border-left:
+        4px solid
+        var(
+            --bs-danger
+        );
+}
+
+
+/* =========================================================
+   WARNING FEEDBACK
+   ========================================================= */
+
+.alert-warning {
+    border-left:
+        4px solid
+        var(
+            --bs-warning
+        );
+}
+
+
+/* =========================================================
+   INFORMATION FEEDBACK
+   ========================================================= */
+
+.alert-info {
+    border-left:
+        4px solid
+        var(
+            --bs-info
+        );
+}
+
+
+/* =========================================================
+   ALERT TITLES
+   ========================================================= */
+
+.alert
+strong {
+    color:
+        inherit;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   DISMISS BUTTON
+   ========================================================= */
+
+.alert
+.btn-close {
+    width:
+        36px;
+
+    height:
+        36px;
+
+    padding:
+        0.65rem;
+
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+}
+
+
+/* =========================================================
+   FORM HELP TEXT
+   ========================================================= */
+
+.form-text {
+    margin-top:
+        0.4rem;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.78rem;
+
+    line-height:
+        1.45;
+}
+
+
+/* =========================================================
+   INVALID FORM FEEDBACK
+   ========================================================= */
+
+.invalid-feedback {
+    margin-top:
+        0.4rem;
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   VALID FORM FEEDBACK
+   ========================================================= */
+
+.valid-feedback {
+    margin-top:
+        0.4rem;
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   DISABLED / UNAVAILABLE CONTENT
+   ========================================================= */
+
+.om-muted-state {
+    padding:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.84rem;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   STATUS MESSAGE
+   ========================================================= */
+
+.om-status-message {
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        var(
+            --om-space-3,
+            0.75rem
+        );
+
+    padding:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+}
+
+
+.om-status-message-icon {
+    width:
+        38px;
+
+    height:
+        38px;
+
+    flex:
+        0
+        0
+        38px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   LOADING PLACEHOLDER FOUNDATION
+
+   We will use this properly in UI-6.
+   This only establishes the visual language now.
+   ========================================================= */
+
+.om-skeleton {
+    overflow:
+        hidden;
+
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+
+    background:
+        linear-gradient(
+            90deg,
+            var(
+                --bs-tertiary-bg
+            )
+            25%,
+
+            var(
+                --bs-secondary-bg
+            )
+            50%,
+
+            var(
+                --bs-tertiary-bg
+            )
+            75%
+        );
+
+    background-size:
+        200%
+        100%;
+
+    animation:
+        om-skeleton-loading
+        1.4s
+        ease
+        infinite;
+}
+
+
+@keyframes om-skeleton-loading {
+
+    0% {
+        background-position:
+            200%
+            0;
+    }
+
+    100% {
+        background-position:
+            -200%
+            0;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    :where(
+        .sw-empty-state,
+        .in-empty-state,
+        .merchant-menu-empty,
+        .dashboard-empty-state,
+        .dashboard-empty-state-pro
+    ) {
+        min-height:
+            200px;
+
+        padding:
+            var(
+                --om-space-5,
+                1.5rem
+            );
+    }
+
+
+    :where(
+        .sw-empty-state-icon,
+        .in-empty-state-icon,
+        .merchant-menu-empty-icon,
+        .dashboard-drilldown-empty-icon
+    ) {
+        width:
+            50px;
+
+        height:
+            50px;
+
+        font-size:
+            1.3rem;
+    }
+
+
+    .card
+    >
+    .text-center.py-5,
+
+    .card-body.text-center.py-5 {
+        min-height:
+            190px;
+
+        padding:
+            var(
+                --om-space-5,
+                1.5rem
+            )
+            !important;
+    }
+
+
+    .alert {
+        padding:
+            0.8rem
+            0.9rem;
+
+        font-size:
+            0.84rem;
+    }
+
+}
