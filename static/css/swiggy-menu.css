@@ -906,3 +906,360 @@
     }
 
 }
+
+/* =========================================================
+   UI-7D
+   RESTAURANT MENU POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   RESTAURANT HEADER
+   ========================================================= */
+
+.sw-menu-restaurant-header {
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-menu-restaurant-copy h1 {
+    font-weight:
+        860;
+
+    letter-spacing:
+        -0.045em;
+}
+
+
+/* =========================================================
+   RESTAURANT HERO IMAGE
+   ========================================================= */
+
+.sw-menu-restaurant-visual {
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.sw-menu-search-card {
+    min-height:
+        58px;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-menu-restaurant-search:focus-within {
+    color:
+        var(--sw-orange);
+}
+
+
+/* =========================================================
+   CATEGORY NAV
+   ========================================================= */
+
+.sw-menu-category-nav {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   CATEGORY PILLS
+   ========================================================= */
+
+.sw-menu-category-scroll
+a {
+    border:
+        1px solid
+        transparent;
+
+    transition:
+        color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-menu-category-scroll
+a:hover {
+    color:
+        var(--sw-orange-dark);
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 25%,
+            transparent
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 8%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   CATEGORY SECTION
+   ========================================================= */
+
+.sw-menu-category-section {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   DISH CARD
+   ========================================================= */
+
+.sw-menu-dish {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-menu-dish:hover {
+    transform:
+        translateY(
+            -2px
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+
+   IMPORTANT:
+   Keep the complete image visible.
+   ========================================================= */
+
+.sw-menu-dish-image {
+    height:
+        240px;
+
+    min-height:
+        240px;
+
+    padding:
+        0.4rem;
+
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.sw-menu-dish-image
+img {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        contain
+        !important;
+
+    object-position:
+        center
+        center;
+
+    border-radius:
+        calc(
+            var(
+                --om-radius-md,
+                1rem
+            )
+            -
+            0.35rem
+        );
+
+    background:
+        var(--bs-tertiary-bg);
+
+    transform:
+        none
+        !important;
+}
+
+
+.sw-menu-dish:hover
+.sw-menu-dish-image
+img {
+    transform:
+        none
+        !important;
+}
+
+
+/* =========================================================
+   DISH COPY
+   ========================================================= */
+
+.sw-menu-dish-copy {
+    padding:
+        0.9rem
+        0.95rem
+        0.7rem;
+}
+
+
+.sw-menu-dish-title {
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+.sw-menu-dish-price {
+    color:
+        var(--sw-orange-dark);
+
+    font-weight:
+        850;
+}
+
+
+/* =========================================================
+   DISH FOOTER
+   ========================================================= */
+
+.sw-menu-dish-footer {
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 42%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   SIDE CARD
+   ========================================================= */
+
+.sw-menu-side-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .sw-menu-dish-image {
+        height:
+            210px;
+
+        min-height:
+            210px;
+    }
+
+}
+
+
+@media (
+    max-width: 575.98px
+) {
+
+    .sw-menu-dish-image {
+        height:
+            250px;
+
+        min-height:
+            250px;
+    }
+
+}

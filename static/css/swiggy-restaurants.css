@@ -584,3 +584,382 @@
         flex-direction: column;
     }
 }
+/* =========================================================
+   UI-7D
+   RESTAURANT DISCOVERY POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   DISCOVERY HERO
+   ========================================================= */
+
+.sw-discovery-hero-copy,
+.sw-discovery-summary-card {
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-discovery-hero-copy {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+}
+
+
+.sw-discovery-hero-copy::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        4px;
+
+    background:
+        var(--sw-orange);
+}
+
+
+.sw-discovery-hero-copy h1 {
+    font-weight:
+        860;
+
+    letter-spacing:
+        -0.05em;
+}
+
+
+/* =========================================================
+   DISCOVERY SEARCH
+   ========================================================= */
+
+.sw-discovery-search {
+    min-height:
+        54px;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-discovery-search:focus-within {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 60%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        0
+        0
+        0
+        0.2rem
+        rgba(
+            var(--sw-orange-rgb),
+            0.1
+        );
+}
+
+
+/* =========================================================
+   DISCOVERY SUMMARY
+   ========================================================= */
+
+.sw-discovery-summary-grid
+>
+div {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-discovery-summary-grid
+>
+div:hover {
+    transform:
+        translateY(
+            -1px
+        );
+}
+
+
+/* =========================================================
+   QUICK LINK
+   ========================================================= */
+
+.sw-discovery-quick-link {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-discovery-quick-link:hover {
+    transform:
+        translateY(
+            -2px
+        );
+}
+
+
+/* =========================================================
+   FOOD CATEGORY PILLS
+   ========================================================= */
+
+.sw-food-category-pill {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-food-category-pill:hover {
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   RESTAURANT GRID
+   ========================================================= */
+
+.sw-restaurant-grid {
+    gap:
+        1rem;
+}
+
+
+/* =========================================================
+   RESTAURANT CARD
+   ========================================================= */
+
+.sw-restaurant-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-restaurant-card:hover {
+    transform:
+        translateY(
+            -3px
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 32%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   RESTAURANT IMAGE
+   ========================================================= */
+
+.sw-restaurant-visual {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.sw-restaurant-visual
+img {
+    transition:
+        transform
+        220ms
+        ease;
+}
+
+
+.sw-restaurant-card:hover
+.sw-restaurant-visual
+img {
+    transform:
+        scale(
+            1.025
+        );
+}
+
+
+/* =========================================================
+   RESTAURANT CARD BODY
+   ========================================================= */
+
+.sw-restaurant-card-body {
+    padding:
+        1rem;
+}
+
+
+.sw-restaurant-title-row
+strong,
+.sw-restaurant-title-row
+h2,
+.sw-restaurant-title-row
+h3 {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   RESTAURANT META
+   ========================================================= */
+
+.sw-restaurant-rating,
+.sw-restaurant-delivery {
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   RESTAURANT OFFER
+   ========================================================= */
+
+.sw-restaurant-offer {
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+}
+
+
+/* =========================================================
+   LIST TOOLBAR
+   ========================================================= */
+
+.sw-restaurant-list-toolbar {
+    padding-bottom:
+        0.9rem;
+
+    border-bottom:
+        1px solid
+        var(--bs-border-color);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .sw-discovery-hero {
+        gap:
+            1rem;
+    }
+
+
+    .sw-discovery-hero-copy {
+        padding:
+            1.4rem;
+    }
+
+
+    .sw-restaurant-grid,
+    .sw-restaurant-grid-large {
+        gap:
+            0.85rem;
+    }
+
+}

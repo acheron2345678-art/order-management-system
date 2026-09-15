@@ -338,3 +338,234 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* =========================================================
+   UI-7D
+   GLOBAL SWIGGY SEARCH POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   SEARCH HERO
+   ========================================================= */
+
+.sw-search-hero {
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+/* =========================================================
+   SEARCH FORM
+   ========================================================= */
+
+.sw-global-search-form {
+    min-height:
+        54px;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-global-search-form:focus-within {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 55%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        0
+        0
+        0
+        0.2rem
+        rgba(
+            var(--sw-orange-rgb),
+            0.1
+        );
+}
+
+
+/* =========================================================
+   RESULT COUNT
+   ========================================================= */
+
+.sw-result-count-pill {
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   RESULT SECTION
+   ========================================================= */
+
+.sw-search-result-section {
+    margin-top:
+        1.5rem;
+}
+
+
+/* =========================================================
+   DISH CARD
+   ========================================================= */
+
+.sw-search-dish-card {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.sw-search-dish-card:hover {
+    transform:
+        translateY(
+            -2px
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 30%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   SEARCH DISH IMAGE
+   ========================================================= */
+
+.sw-search-dish-visual {
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+.sw-search-dish-visual
+img {
+    object-fit:
+        contain;
+
+    object-position:
+        center;
+
+    background:
+        var(--bs-tertiary-bg);
+}
+
+
+/* =========================================================
+   DISH TITLE
+   ========================================================= */
+
+.sw-search-dish-title {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+/* =========================================================
+   DISH PRICE
+   ========================================================= */
+
+.sw-search-dish-price {
+    color:
+        var(--sw-orange-dark);
+
+    font-weight:
+        850;
+}
+
+
+/* =========================================================
+   START / EMPTY STATE
+   ========================================================= */
+
+.sw-search-start-state,
+.sw-search-empty-state {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}

@@ -228,3 +228,194 @@
         width: 4.25rem;
     }
 }
+/* =========================================================
+   UI-7D
+   CART + RESTAURANT SWITCH POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   CART RESTAURANT
+   ========================================================= */
+
+.sw-cart-restaurant-card {
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+}
+
+
+.sw-cart-restaurant-mark {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--sw-orange) 12%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(--sw-orange);
+}
+
+
+/* =========================================================
+   RESTAURANT NAME
+   ========================================================= */
+
+.sw-cart-restaurant-card
+h2 {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   SUMMARY RESTAURANT
+   ========================================================= */
+
+.sw-summary-restaurant {
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   RESTAURANT SWITCH CARD
+   ========================================================= */
+
+.sw-switch-card {
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-lg
+        );
+}
+
+
+.sw-switch-card
+h1 {
+    color:
+        var(--bs-emphasis-color);
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        -0.035em;
+}
+
+
+/* =========================================================
+   CURRENT / TARGET RESTAURANT
+   ========================================================= */
+
+.sw-switch-current,
+.sw-switch-target {
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+}
+
+
+/* =========================================================
+   SWITCH PRODUCT IMAGE
+   ========================================================= */
+
+.sw-switch-product-visual {
+    padding:
+        0.25rem;
+
+    border:
+        1px solid
+        var(--bs-border-color);
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+.sw-switch-product-visual
+img {
+    object-fit:
+        contain;
+
+    object-position:
+        center;
+
+    border-radius:
+        calc(
+            var(
+                --om-radius-sm,
+                0.75rem
+            )
+            -
+            0.2rem
+        );
+}
+
+
+/* =========================================================
+   WARNING
+   ========================================================= */
+
+.sw-switch-warning {
+    border:
+        1px solid
+        var(--bs-warning-border-subtle);
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.sw-switch-actions {
+    padding-top:
+        1rem;
+
+    border-top:
+        1px solid
+        var(--bs-border-color);
+}
