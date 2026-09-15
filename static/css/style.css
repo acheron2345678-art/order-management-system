@@ -8326,3 +8326,2490 @@ td[
     }
 
 }
+
+/* =========================================================
+   UI-7B
+   CLIENT WORKSPACE POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   CLIENT ROLE TOKENS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+] {
+
+    --om-client-surface:
+        var(
+            --bs-body-bg
+        );
+
+    --om-client-soft:
+        var(
+            --bs-tertiary-bg
+        );
+
+    --om-client-border:
+        var(
+            --bs-border-color
+        );
+
+    --om-client-swiggy:
+        var(
+            --om-swiggy,
+            #fc8019
+        );
+
+    --om-client-insights:
+        var(
+            --om-insights,
+            #6f42c1
+        );
+
+}
+
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content {
+
+    width:
+        100%;
+
+    max-width:
+        var(
+            --om-content-width,
+            1600px
+        );
+
+    margin-inline:
+        auto;
+
+    padding-bottom:
+        var(
+            --om-space-7,
+            3rem
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT SIDEBAR
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.app-sidebar {
+
+    box-shadow:
+        5px
+        0
+        22px
+        rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+
+}
+
+
+/* =========================================================
+   SIDEBAR SECTION LABELS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-section-label {
+
+    margin-top:
+        0.15rem;
+
+    margin-bottom:
+        0.55rem;
+
+    padding-inline:
+        0.75rem;
+
+    font-size:
+        0.67rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.11em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   SIDEBAR LINKS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link {
+
+    min-height:
+        44px;
+
+    gap:
+        0.7rem;
+
+    padding:
+        0.66rem
+        0.78rem;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    font-size:
+        0.89rem;
+
+    font-weight:
+        620;
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.sidebar-link:hover {
+
+    transform:
+        translateX(
+            2px
+        );
+
+}
+
+
+/* =========================================================
+   GENERAL CLIENT ACTIVE LINK
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link.active {
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--bs-primary) 18%,
+            transparent
+        );
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   SIDEBAR ICONS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-icon {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    flex:
+        0
+        0
+        30px;
+
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    font-size:
+        0.95rem;
+
+}
+
+
+/* =========================================================
+   ACTIVE MAIN / ACCOUNT ICON
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link.active
+.sidebar-icon {
+
+    background:
+        var(
+            --bs-primary-bg-subtle
+        );
+
+    color:
+        var(
+            --bs-primary-text-emphasis
+        );
+
+}
+
+
+/* =========================================================
+   SWIGGY SIDEBAR LINKS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link[
+    href^="/swiggy"
+]:hover {
+
+    color:
+        var(
+            --om-client-swiggy
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--om-client-swiggy) 7%,
+            transparent
+        );
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.sidebar-link[
+    href^="/swiggy"
+].active {
+
+    color:
+        color-mix(
+            in srgb,
+            var(--om-client-swiggy) 86%,
+            var(--bs-emphasis-color)
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--om-client-swiggy) 11%,
+            var(--bs-body-bg)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--om-client-swiggy) 26%,
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   SWIGGY GENERIC ICON
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link[
+    href^="/swiggy"
+].active
+.sidebar-icon {
+
+    color:
+        var(
+            --om-client-swiggy
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--om-client-swiggy) 12%,
+            var(--bs-body-bg)
+        );
+
+}
+
+
+/* =========================================================
+   INSIGHTS SIDEBAR LINKS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link[
+    href^="/insights"
+]:hover {
+
+    color:
+        var(
+            --om-client-insights
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--om-client-insights) 7%,
+            transparent
+        );
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.sidebar-link[
+    href^="/insights"
+].active {
+
+    color:
+        color-mix(
+            in srgb,
+            var(--om-client-insights) 86%,
+            var(--bs-emphasis-color)
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--om-client-insights) 10%,
+            var(--bs-body-bg)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--om-client-insights) 24%,
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   INSIGHTS GENERIC ICON
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-link[
+    href^="/insights"
+].active
+.sidebar-icon {
+
+    color:
+        var(
+            --om-client-insights
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--om-client-insights) 11%,
+            var(--bs-body-bg)
+        );
+
+}
+
+
+/* =========================================================
+   PLATFORM DOTS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.platform-dot {
+
+    box-shadow:
+        none;
+
+}
+
+
+/* =========================================================
+   SIDEBAR USER CARD
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.sidebar-user {
+
+    padding:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 58%,
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT AVATAR
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.user-avatar {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bs-primary),
+            #7c3aed
+        );
+
+    color:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.app-topbar {
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-body-bg) 94%,
+            transparent
+        )
+        !important;
+
+    backdrop-filter:
+        blur(
+            14px
+        );
+
+}
+
+
+/* =========================================================
+   TOPBAR USER
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.om-topbar-user {
+
+    padding:
+        0.35rem
+        0.55rem;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT HOME HERO
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel {
+
+    position:
+        relative;
+
+    isolation:
+        isolate;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-xl,
+            1.5rem
+        )
+        !important;
+
+    background:
+        radial-gradient(
+            circle at 88% 15%,
+            rgba(
+                var(--bs-primary-rgb),
+                0.18
+            ),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 72% 95%,
+            rgba(
+                124,
+                58,
+                237,
+                0.08
+            ),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            135deg,
+            var(--bs-body-bg),
+            var(--bs-tertiary-bg)
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+
+}
+
+
+/* =========================================================
+   HERO ACCENT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        4px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--bs-primary),
+            #7c3aed
+        );
+
+    z-index:
+        -1;
+
+}
+
+
+/* =========================================================
+   HERO BADGE
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel
+>
+.row
+.badge {
+
+    padding:
+        0.45rem
+        0.7rem;
+
+    border:
+        1px solid
+        var(
+            --bs-primary-border-subtle
+        );
+
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    font-size:
+        0.68rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.055em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   HERO TITLE
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel
+h1 {
+
+    max-width:
+        760px;
+
+    letter-spacing:
+        -0.045em;
+
+    line-height:
+        1.05;
+
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel
+.lead {
+
+    max-width:
+        720px;
+
+    line-height:
+        1.65;
+
+}
+
+
+/* =========================================================
+   HERO ACTIONS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel
+.btn {
+
+    min-width:
+        142px;
+
+}
+
+
+/* =========================================================
+   HERO VISUAL
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-visual {
+
+    width:
+        210px;
+
+    height:
+        210px;
+
+    border-radius:
+        50%;
+
+    box-shadow:
+        var(
+            --om-shadow-lg
+        );
+
+}
+
+
+/* =========================================================
+   QUICK ACCESS HEADING
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.hero-panel
++
+.mb-4 {
+
+    margin-bottom:
+        var(
+            --om-space-4,
+            1rem
+        )
+        !important;
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.hero-panel
++
+.mb-4
+h2 {
+
+    letter-spacing:
+        -0.025em;
+
+}
+
+
+/* =========================================================
+   CLIENT QUICK CARDS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card {
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        )
+        !important;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        )
+        !important;
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+
+}
+
+
+/* =========================================================
+   QUICK CARD ACCENT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        0
+        auto
+        0;
+
+    height:
+        3px;
+
+    background:
+        var(
+            --bs-primary
+        );
+
+    opacity:
+        0.82;
+
+}
+
+
+/* =========================================================
+   SWIGGY QUICK CARD
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href^="/swiggy"
+]::before {
+
+    background:
+        var(
+            --om-client-swiggy
+        );
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href^="/swiggy"
+]:hover {
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--om-client-swiggy) 30%,
+            var(--bs-border-color)
+        )
+        !important;
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href^="/swiggy"
+]
+span.fw-semibold {
+
+    color:
+        var(
+            --om-client-swiggy
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   INSIGHTS QUICK CARD
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href^="/insights"
+]::before {
+
+    background:
+        var(
+            --om-client-insights
+        );
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href^="/insights"
+]:hover {
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--om-client-insights) 28%,
+            var(--bs-border-color)
+        )
+        !important;
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href^="/insights"
+]
+span.fw-semibold {
+
+    color:
+        var(
+            --om-client-insights
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   DASHBOARD QUICK CARD
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card[
+    href="/dashboard"
+]::before {
+
+    background:
+        var(
+            --bs-primary
+        );
+
+}
+
+
+/* =========================================================
+   QUICK CARD HOVER
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card:hover {
+
+    transform:
+        translateY(
+            -3px
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   QUICK CARD BODY
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card
+.card-body {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    min-height:
+        245px;
+
+    padding:
+        var(
+            --om-space-5,
+            1.5rem
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   QUICK CARD TITLE
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card
+h3 {
+
+    margin-bottom:
+        0.55rem;
+
+    font-weight:
+        800
+        !important;
+
+    letter-spacing:
+        -0.02em;
+
+}
+
+
+/* =========================================================
+   QUICK CARD DESCRIPTION
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card
+p {
+
+    line-height:
+        1.58;
+
+}
+
+
+/* =========================================================
+   QUICK CARD CTA PUSH TO BOTTOM
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-card
+.card-body
+>
+span:last-child {
+
+    margin-top:
+        auto;
+
+}
+
+
+/* =========================================================
+   QUICK ICON
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.quick-icon {
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    box-shadow:
+        none;
+
+}
+
+
+/* =========================================================
+   CLIENT DASHBOARD HEADER
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.dashboard-page-header {
+
+    padding-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT ROLE PILL
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.dashboard-role-client {
+
+    border:
+        1px solid
+        var(
+            --bs-primary-border-subtle
+        );
+
+    background:
+        var(
+            --bs-primary-bg-subtle
+        );
+
+    color:
+        var(
+            --bs-primary-text-emphasis
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT DASHBOARD KPI CARDS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.dashboard-kpi-card {
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.dashboard-kpi-card:hover {
+
+    transform:
+        translateY(
+            -2px
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT GENERAL PAGE HEADER
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.d-flex:first-child {
+
+    position:
+        relative;
+
+    padding-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT PAGE TITLE
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.d-flex:first-child
+h1 {
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        820;
+
+}
+
+
+/* =========================================================
+   CLIENT PAGE DESCRIPTION
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.d-flex:first-child
+p {
+
+    max-width:
+        760px;
+
+    line-height:
+        1.6;
+
+}
+
+
+/* =========================================================
+   CLIENT SUMMARY CARDS
+
+   Used by My Purchases.
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-3.mb-4
+>
+[class*="col-"]
+>
+.card {
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    min-height:
+        118px;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        )
+        !important;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   CLIENT SUMMARY CARD ACCENT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-3.mb-4
+>
+[class*="col-"]
+>
+.card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        3px;
+
+    background:
+        var(
+            --bs-primary
+        );
+
+    opacity:
+        0.78;
+
+}
+
+
+/* =========================================================
+   SUMMARY CARD CONTENT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-3.mb-4
+>
+[class*="col-"]
+>
+.card
+.card-body {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    padding:
+        1.15rem
+        1.2rem
+        !important;
+
+}
+
+
+/* =========================================================
+   SUMMARY LABEL
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-3.mb-4
+>
+[class*="col-"]
+>
+.card
+.small {
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        0.045em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   SUMMARY VALUE
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-3.mb-4
+>
+[class*="col-"]
+>
+.card
+.h3 {
+
+    margin-top:
+        0.35rem;
+
+    font-size:
+        1.75rem;
+
+    font-weight:
+        820
+        !important;
+
+    letter-spacing:
+        -0.035em;
+
+}
+
+
+/* =========================================================
+   CLIENT MAIN CONTENT CARDS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.card {
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        )
+        !important;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   CLIENT CARD HEADERS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.card
+>
+.card-header {
+
+    min-height:
+        72px;
+
+    padding:
+        1rem
+        1.2rem
+        !important;
+
+    background:
+        var(
+            --bs-body-bg
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   SWIGGY PURCHASE CARD
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.card:has(
+    .platform-swiggy
+)
+>
+.card-header {
+
+    border-top:
+        3px solid
+        var(
+            --om-client-swiggy
+        );
+
+}
+
+
+/* =========================================================
+   INSIGHTS PURCHASE CARD
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.card:has(
+    .platform-insights
+)
+>
+.card-header {
+
+    border-top:
+        3px solid
+        var(
+            --om-client-insights
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT TABLE HEADERS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+.table
+thead
+th {
+
+    padding-top:
+        0.75rem;
+
+    padding-bottom:
+        0.75rem;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 74%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.69rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.05em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   CLIENT TABLE ROWS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+.table-hover
+tbody
+tr:hover
+>
+* {
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-primary) 3.5%,
+            var(--bs-body-bg)
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT TABLE TEXT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+.table
+tbody
+td {
+
+    font-size:
+        0.87rem;
+
+}
+
+
+/* =========================================================
+   CLIENT TABLE ACTION
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+.table
+tbody
+.btn-sm {
+
+    min-height:
+        34px;
+
+    padding:
+        0.35rem
+        0.68rem;
+
+    font-size:
+        0.76rem;
+
+}
+
+
+/* =========================================================
+   CLIENT STATUS BADGES
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.status-badge {
+
+    min-height:
+        25px;
+
+    padding:
+        0.32rem
+        0.58rem;
+
+    border:
+        1px solid
+        transparent;
+
+    font-size:
+        0.68rem;
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   CLIENT PROFILE LAYOUT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-4
+.card {
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        )
+        !important;
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   PROFILE CARD BODY
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-4
+.card
+.card-body {
+
+    padding:
+        clamp(
+            1.25rem,
+            2.2vw,
+            2rem
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   PROFILE SECTION KICKERS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-4
+.card
+.text-uppercase.small {
+
+    color:
+        var(
+            --bs-primary
+        )
+        !important;
+
+    font-size:
+        0.67rem;
+
+    font-weight:
+        800
+        !important;
+
+    letter-spacing:
+        0.1em;
+
+}
+
+
+/* =========================================================
+   PROFILE SECTION TITLES
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-4
+.card
+h2 {
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        800
+        !important;
+
+    letter-spacing:
+        -0.02em;
+
+}
+
+
+/* =========================================================
+   PROFILE FORM LABELS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+form
+.form-label {
+
+    margin-bottom:
+        0.42rem;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        700
+        !important;
+
+}
+
+
+/* =========================================================
+   PROFILE READONLY FIELDS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+form
+.form-control[
+    readonly
+] {
+
+    cursor:
+        not-allowed;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   PROFILE HELP TEXT
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+form
+.form-text {
+
+    max-width:
+        520px;
+
+}
+
+
+/* =========================================================
+   PROFILE SIDEBAR CARD
+   ========================================================= */
+
+@media (
+    min-width: 1200px
+) {
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .row.g-4
+    >
+    .col-xl-4
+    >
+    .card:first-child {
+
+        position:
+            sticky;
+
+        top:
+            92px;
+
+    }
+
+}
+
+
+/* =========================================================
+   PROFILE SUMMARY ROWS
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.page-content
+>
+.row.g-4
+.col-xl-4
+.card
+.border-bottom {
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--bs-border-color) 76%,
+            transparent
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   DATATABLE TOOLBAR
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.dt-container
+.dt-layout-row:first-child {
+
+    align-items:
+        flex-end;
+
+    gap:
+        var(
+            --om-space-3,
+            0.75rem
+        );
+
+    margin-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+}
+
+
+/* =========================================================
+   DATATABLE SEARCH
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.dt-container
+.dt-search {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        0.5rem;
+
+}
+
+
+body[
+    data-user-role="client"
+]
+.dt-container
+.dt-search
+input {
+
+    min-height:
+        38px;
+
+    min-width:
+        220px;
+
+    margin-left:
+        0.4rem
+        !important;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+}
+
+
+/* =========================================================
+   DATATABLE LENGTH
+   ========================================================= */
+
+body[
+    data-user-role="client"
+]
+.dt-container
+.dt-length
+select {
+
+    min-height:
+        38px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+}
+
+
+/* =========================================================
+   CLIENT MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content {
+
+        padding-bottom:
+            2rem;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .hero-panel {
+
+        padding:
+            1.5rem
+            !important;
+
+        margin-bottom:
+            2rem
+            !important;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .hero-panel
+    h1 {
+
+        font-size:
+            clamp(
+                2rem,
+                9vw,
+                2.65rem
+            );
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .hero-panel
+    .btn {
+
+        flex:
+            1
+            1
+            145px;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .quick-card
+    .card-body {
+
+        min-height:
+            220px;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .d-flex:first-child {
+
+        padding-bottom:
+            1rem;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .d-flex:first-child
+    >
+    .d-flex {
+
+        width:
+            100%;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .d-flex:first-child
+    .btn {
+
+        flex:
+            1
+            1
+            145px;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .table-responsive {
+
+        margin-inline:
+            -0.25rem;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .table {
+
+        min-width:
+            760px;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .dt-container
+    .dt-layout-row:first-child {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .dt-container
+    .dt-search {
+
+        width:
+            100%;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .dt-container
+    .dt-search
+    input {
+
+        width:
+            100%;
+
+        min-width:
+            0;
+
+    }
+
+}
+
+
+/* =========================================================
+   CLIENT SMALL MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    body[
+        data-user-role="client"
+    ]
+    .hero-panel {
+
+        border-radius:
+            var(
+                --om-radius-lg,
+                1.25rem
+            )
+            !important;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .hero-panel
+    .d-flex.flex-wrap.gap-2 {
+
+        display:
+            grid
+            !important;
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .hero-panel
+    .btn {
+
+        width:
+            100%;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .quick-card
+    .card-body {
+
+        min-height:
+            0;
+
+        padding:
+            1.2rem
+            !important;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .row.g-3.mb-4
+    >
+    [class*="col-"] {
+
+        width:
+            50%;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .row.g-3.mb-4
+    >
+    [class*="col-"]
+    >
+    .card {
+
+        min-height:
+            106px;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .row.g-3.mb-4
+    >
+    [class*="col-"]
+    >
+    .card
+    .card-body {
+
+        padding:
+            0.95rem
+            !important;
+
+    }
+
+
+    body[
+        data-user-role="client"
+    ]
+    .page-content
+    >
+    .row.g-3.mb-4
+    >
+    [class*="col-"]
+    >
+    .card
+    .h3 {
+
+        font-size:
+            1.42rem;
+
+    }
+
+}
