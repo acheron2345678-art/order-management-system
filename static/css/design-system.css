@@ -3014,3 +3014,161 @@ strong {
     }
 
 }
+/* =========================================================
+   UI-6
+   LOADING + ACTION STATES
+   ========================================================= */
+
+
+/* =========================================================
+   SUBMITTING FORM
+   ========================================================= */
+
+.om-form-submitting {
+    cursor:
+        progress;
+}
+
+
+/* =========================================================
+   LOADING BUTTON
+   ========================================================= */
+
+.om-button-loading {
+    position:
+        relative;
+
+    cursor:
+        wait !important;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    opacity:
+        0.88;
+
+    transform:
+        none !important;
+}
+
+
+/* =========================================================
+   SPINNER
+   ========================================================= */
+
+.om-button-spinner {
+    width:
+        1rem;
+
+    height:
+        1rem;
+
+    flex:
+        0
+        0
+        1rem;
+
+    display:
+        inline-block;
+
+    border:
+        2px solid
+        currentColor;
+
+    border-right-color:
+        transparent;
+
+    border-radius:
+        50%;
+
+    opacity:
+        0.8;
+
+    animation:
+        om-button-spin
+        650ms
+        linear
+        infinite;
+}
+
+
+@keyframes om-button-spin {
+
+    to {
+        transform:
+            rotate(
+                360deg
+            );
+    }
+
+}
+
+
+/* =========================================================
+   LOADING PRIMARY BUTTONS
+   ========================================================= */
+
+.btn-primary.om-button-loading,
+.btn-success.om-button-loading,
+.btn-danger.om-button-loading,
+.btn-warning.om-button-loading {
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   SWIGGY LOADING STATE
+   ========================================================= */
+
+.sw-app-shell
+.om-button-loading {
+    transform:
+        none !important;
+}
+
+
+/* =========================================================
+   INSIGHTS LOADING STATE
+   ========================================================= */
+
+.in-app-shell
+.om-button-loading {
+    transform:
+        none !important;
+}
+
+
+/* =========================================================
+   BUTTON CONTENT ALIGNMENT
+   ========================================================= */
+
+.om-button-loading
+>
+span {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (
+    prefers-reduced-motion:
+    reduce
+) {
+
+    .om-button-spinner {
+        animation-duration:
+            1.4s;
+    }
+
+}
