@@ -2823,3 +2823,3227 @@ thead
     }
 
 }
+
+/* =========================================================
+   UI-7E
+   INSIGHTS WORKSPACE POLISH
+   ========================================================= */
+
+
+/* =========================================================
+   INSIGHTS DESIGN TOKENS
+   ========================================================= */
+
+:root {
+
+    --in-console-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    --in-console-radius-lg:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    --in-console-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+    --in-console-shadow-hover:
+        var(
+            --om-shadow-md
+        );
+
+}
+
+
+/* =========================================================
+   APPLICATION SHELL
+   ========================================================= */
+
+.in-app-shell {
+    background:
+        var(
+            --in-page-bg
+        );
+}
+
+
+.in-main {
+    padding-bottom:
+        var(
+            --om-space-7,
+            3rem
+        );
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.in-app-topbar {
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-body-bg) 94%,
+            transparent
+        )
+        !important;
+
+    backdrop-filter:
+        blur(
+            14px
+        );
+
+    box-shadow:
+        0
+        4px
+        18px
+        rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+.in-topbar-inner {
+    min-height:
+        72px;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.in-brand-mark {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    box-shadow:
+        0
+        6px
+        16px
+        rgba(
+            var(--in-accent-rgb),
+            0.22
+        );
+}
+
+
+.in-brand-copy strong {
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+/* =========================================================
+   DESKTOP NAVIGATION
+   ========================================================= */
+
+.in-desktop-nav {
+    gap:
+        0.3rem;
+}
+
+
+.in-desktop-nav
+a {
+    min-height:
+        40px;
+
+    padding:
+        0.5rem
+        0.7rem;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    font-weight:
+        650;
+
+    transition:
+        color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-desktop-nav
+a:hover {
+    color:
+        var(
+            --in-accent
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 7%,
+            transparent
+        );
+}
+
+
+.in-desktop-nav
+a.active {
+    color:
+        var(
+            --in-accent
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 10%,
+            var(--bs-body-bg)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 22%,
+            transparent
+        );
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   TOPBAR SEARCH
+   ========================================================= */
+
+.in-topbar-search
+input {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-topbar-search
+input:focus {
+    background:
+        var(
+            --bs-body-bg
+        );
+}
+
+
+/* =========================================================
+   USER PILL
+   ========================================================= */
+
+.in-user-pill {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+.in-user-avatar {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.in-page-header {
+    padding-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+.in-page-header
+h1 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        -0.04em;
+}
+
+
+.in-page-header
+p {
+    max-width:
+        760px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.in-eyebrow,
+.in-card-kicker {
+    color:
+        var(
+            --in-accent
+        );
+
+    font-size:
+        0.67rem;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.105em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.in-hero-panel {
+    gap:
+        1.25rem;
+}
+
+
+/* =========================================================
+   HERO COPY
+   ========================================================= */
+
+.in-hero-copy {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius-lg
+        );
+
+    background:
+        radial-gradient(
+            circle at 88% 10%,
+            rgba(
+                var(--in-accent-rgb),
+                0.15
+            ),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            135deg,
+            var(--bs-body-bg),
+            var(--bs-tertiary-bg)
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   HERO ACCENT
+   ========================================================= */
+
+.in-hero-copy::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0
+        auto
+        0
+        0;
+
+    width:
+        4px;
+
+    background:
+        var(
+            --in-accent
+        );
+}
+
+
+/* =========================================================
+   HERO TITLE
+   ========================================================= */
+
+.in-hero-copy
+h1 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        860;
+
+    letter-spacing:
+        -0.05em;
+
+    line-height:
+        1.04;
+}
+
+
+/* =========================================================
+   HERO ACCENT TEXT
+   ========================================================= */
+
+.in-hero-copy
+h1
+span {
+    color:
+        var(
+            --in-accent
+        );
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+   ========================================================= */
+
+.in-hero-copy
+p {
+    max-width:
+        680px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   HERO ACTIONS
+   ========================================================= */
+
+.in-hero-actions {
+    gap:
+        0.65rem;
+}
+
+
+.in-hero-actions
+.btn {
+    min-width:
+        145px;
+}
+
+
+/* =========================================================
+   WORKFLOW OVERVIEW CARD
+   ========================================================= */
+
+.in-overview-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius-lg
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.in-card-head {
+    align-items:
+        flex-start;
+
+    padding-bottom:
+        1rem;
+
+    border-bottom:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--bs-border-color) 72%,
+            transparent
+        );
+}
+
+
+.in-card-head
+h2 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.025em;
+}
+
+
+/* =========================================================
+   LIVE INDICATOR
+   ========================================================= */
+
+.in-live-indicator {
+    border:
+        1px solid
+        var(
+            --bs-success-border-subtle
+        );
+
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    background:
+        var(
+            --bs-success-bg-subtle
+        );
+
+    color:
+        var(
+            --bs-success-text-emphasis
+        );
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   WORKFLOW
+   ========================================================= */
+
+.in-workflow {
+    gap:
+        0.75rem;
+}
+
+
+.in-workflow
+>
+div {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-workflow
+>
+div.active {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 32%,
+            var(--bs-border-color)
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 6%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   WORKFLOW STEP NUMBER
+   ========================================================= */
+
+.in-workflow
+>
+div
+>
+span {
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-xs,
+            0.5rem
+        );
+
+    font-weight:
+        800;
+}
+
+
+.in-workflow
+>
+div.active
+>
+span {
+    background:
+        var(
+            --in-accent
+        );
+
+    color:
+        #ffffff;
+}
+
+
+/* =========================================================
+   SECTION HEADERS
+   ========================================================= */
+
+.in-section-header,
+.in-section-header-row {
+    padding-bottom:
+        0.9rem;
+
+    border-bottom:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--bs-border-color) 72%,
+            transparent
+        );
+}
+
+
+.in-section-header
+h2 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.025em;
+}
+
+
+/* =========================================================
+   SERVICES TOOLBAR
+   ========================================================= */
+
+.in-services-toolbar {
+    gap:
+        0.75rem;
+
+    padding-bottom:
+        1rem;
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+/* =========================================================
+   SERVICE SEARCH
+   ========================================================= */
+
+.in-services-search {
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+.in-services-search
+input {
+    min-height:
+        46px;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   RESULT COUNT
+   ========================================================= */
+
+.in-result-count {
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   CATEGORY CARDS
+   ========================================================= */
+
+.in-category-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+
+    transition:
+        transform
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        border-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-category-card:hover {
+    transform:
+        translateY(
+            -2px
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 28%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow-hover
+        );
+}
+
+
+/* =========================================================
+   SERVICE GRID
+   ========================================================= */
+
+.in-service-grid {
+    gap:
+        1rem;
+}
+
+
+/* =========================================================
+   SERVICE CARD
+   ========================================================= */
+
+.in-service-card {
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+.in-service-card:hover {
+    transform:
+        translateY(
+            -3px
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 30%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow-hover
+        );
+}
+
+
+/* =========================================================
+   SERVICE INDEX
+   ========================================================= */
+
+.in-service-index {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 10%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(
+            --in-accent
+        );
+
+    font-weight:
+        850;
+}
+
+
+/* =========================================================
+   SERVICE BODY
+   ========================================================= */
+
+.in-service-body {
+    padding:
+        1.1rem;
+}
+
+
+/* =========================================================
+   SERVICE PLATFORM
+   ========================================================= */
+
+.in-service-platform {
+    color:
+        var(
+            --in-accent
+        );
+
+    font-size:
+        0.68rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.075em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   SERVICE TITLE
+   ========================================================= */
+
+.in-service-title {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   SERVICE META
+   ========================================================= */
+
+.in-service-meta {
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   SERVICE FOOTER
+   ========================================================= */
+
+.in-service-footer {
+    padding:
+        0.8rem
+        1.1rem
+        1rem;
+
+    border-top:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--bs-border-color) 70%,
+            transparent
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 45%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   SERVICE DETAIL CARD
+   ========================================================= */
+
+.in-detail-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius-lg
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   SERVICE SYMBOL
+   ========================================================= */
+
+.in-detail-symbol {
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 10%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(
+            --in-accent
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   DETAIL TITLE
+   ========================================================= */
+
+.in-detail-content
+h1 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        860;
+
+    letter-spacing:
+        -0.045em;
+}
+
+
+/* =========================================================
+   DETAIL DESCRIPTION
+   ========================================================= */
+
+.in-detail-description {
+    max-width:
+        760px;
+
+    line-height:
+        1.7;
+}
+
+
+/* =========================================================
+   DETAIL PRICE
+   ========================================================= */
+
+.in-detail-price {
+    color:
+        var(
+            --in-accent
+        );
+
+    font-weight:
+        860;
+}
+
+
+/* =========================================================
+   DETAIL INFO GRID
+   ========================================================= */
+
+.in-detail-info-grid
+>
+div {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+}
+
+
+/* =========================================================
+   DETAIL POINTS
+   ========================================================= */
+
+.in-detail-points
+li {
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   DIRECT REQUEST BOX
+   ========================================================= */
+
+.in-direct-request-box {
+    border:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--in-accent) 25%,
+            var(--bs-border-color)
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 5%,
+            var(--bs-body-bg)
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   CALL OUT
+   ========================================================= */
+
+.in-callout {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   CHECKOUT LAYOUT
+   ========================================================= */
+
+.in-checkout-layout {
+    gap:
+        1.25rem;
+}
+
+
+/* =========================================================
+   CHECKOUT FORM CARD
+   ========================================================= */
+
+.in-checkout-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius-lg
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   CHECKOUT FIELDS
+   ========================================================= */
+
+.in-field {
+    margin-bottom:
+        1.3rem;
+}
+
+
+.in-field
+label {
+    margin-bottom:
+        0.42rem;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        700;
+}
+
+
+.in-field
+.form-control,
+.in-field
+.form-select {
+    min-height:
+        46px;
+}
+
+
+.in-field
+textarea.form-control {
+    min-height:
+        120px;
+}
+
+
+.in-field
+small {
+    display:
+        block;
+
+    margin-top:
+        0.4rem;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.76rem;
+
+    line-height:
+        1.45;
+}
+
+
+/* =========================================================
+   CHECKOUT SUMMARY
+   ========================================================= */
+
+.in-summary-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+.in-summary-card
+h2 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+/* =========================================================
+   SUMMARY ROW
+   ========================================================= */
+
+.in-summary-row {
+    padding:
+        0.75rem
+        0;
+}
+
+
+.in-summary-total {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        1.08rem;
+
+    font-weight:
+        850;
+}
+
+
+/* =========================================================
+   CHECKOUT NOTE
+   ========================================================= */
+
+.in-checkout-note {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   PROJECT LIST CARD
+   ========================================================= */
+
+.in-project-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+.in-project-card:hover {
+    transform:
+        translateY(
+            -2px
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 28%,
+            var(--bs-border-color)
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow-hover
+        );
+}
+
+
+/* =========================================================
+   PROJECT NAME
+   ========================================================= */
+
+.in-project-name {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        820;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+/* =========================================================
+   PROJECT STATUS
+   ========================================================= */
+
+.in-project-status {
+    border-radius:
+        var(
+            --om-radius-pill,
+            999px
+        );
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   PROJECT TABLE CARD
+   ========================================================= */
+
+.in-table-card,
+.in-main
+.card.shadow-sm {
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        )
+        !important;
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        )
+        !important;
+}
+
+
+/* =========================================================
+   PROJECT TABLE CARD HEADER
+   ========================================================= */
+
+.in-table-card-header,
+.in-main
+.card-header {
+    min-height:
+        68px;
+
+    background:
+        var(
+            --bs-body-bg
+        )
+        !important;
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+/* =========================================================
+   PROJECT TABLE HEADER
+   ========================================================= */
+
+.in-main
+.table
+thead
+th {
+    padding-top:
+        0.8rem;
+
+    padding-bottom:
+        0.8rem;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bs-tertiary-bg) 74%,
+            var(--bs-body-bg)
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.69rem;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.05em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   PROJECT TABLE BODY
+   ========================================================= */
+
+.in-main
+.table
+tbody
+td {
+    padding-top:
+        0.85rem;
+
+    padding-bottom:
+        0.85rem;
+
+    font-size:
+        0.87rem;
+}
+
+
+.in-main
+.table-hover
+tbody
+tr:hover
+>
+* {
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 3.5%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   PROJECT NUMBER
+   ========================================================= */
+
+.in-project-table-number {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   PROJECT AMOUNT
+   ========================================================= */
+
+.in-project-table-amount {
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   PROJECT DETAIL
+   ========================================================= */
+
+.in-project-detail-grid {
+    gap:
+        1rem;
+}
+
+
+.in-project-main-card,
+.in-project-services {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+/* =========================================================
+   PROJECT DETAIL HEADER
+   ========================================================= */
+
+.in-project-detail-head {
+    padding-bottom:
+        1rem;
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+/* =========================================================
+   PROJECT SERVICE ROW
+   ========================================================= */
+
+.in-project-service-row {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    transition:
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-project-service-row:hover {
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+}
+
+
+/* =========================================================
+   PROGRESS TRACK
+   ========================================================= */
+
+.in-progress-track {
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+}
+
+
+/* =========================================================
+   SUCCESS CARD
+   ========================================================= */
+
+.in-success-card {
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius-lg
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-md
+        );
+}
+
+
+/* =========================================================
+   SUCCESS ICON
+   ========================================================= */
+
+.in-success-icon {
+    box-shadow:
+        0
+        8px
+        22px
+        rgba(
+            25,
+            135,
+            84,
+            0.16
+        );
+}
+
+
+/* =========================================================
+   SUCCESS TITLE
+   ========================================================= */
+
+.in-success-card
+h1 {
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        860;
+
+    letter-spacing:
+        -0.04em;
+}
+
+
+/* =========================================================
+   SUCCESS META
+   ========================================================= */
+
+.in-success-meta
+>
+div {
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+}
+
+
+/* =========================================================
+   SUCCESS ITEMS
+   ========================================================= */
+
+.in-success-items {
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --in-console-radius
+        );
+}
+
+
+.in-success-items-head {
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+}
+
+
+.in-success-item {
+    transition:
+        background-color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-success-item:hover {
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 3%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.in-empty-state {
+    border-radius:
+        var(
+            --in-console-radius
+        );
+
+    box-shadow:
+        var(
+            --in-console-shadow
+        );
+}
+
+
+.in-empty-state-icon {
+    color:
+        var(
+            --in-accent
+        );
+}
+
+
+/* =========================================================
+   BACK LINKS
+   ========================================================= */
+
+.in-back-link {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        0.35rem;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-weight:
+        650;
+
+    text-decoration:
+        none;
+
+    transition:
+        color
+        var(
+            --om-transition-fast,
+            160ms ease
+        );
+}
+
+
+.in-back-link:hover {
+    color:
+        var(
+            --in-accent
+        );
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.in-footer {
+    border-top:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+}
+
+
+.in-footer-inner {
+    min-height:
+        70px;
+}
+
+
+/* =========================================================
+   MOBILE NAVIGATION
+   ========================================================= */
+
+.in-mobile-nav {
+    display:
+        grid;
+
+    gap:
+        0.35rem;
+}
+
+
+.in-mobile-nav
+a {
+    min-height:
+        44px;
+
+    padding:
+        0.65rem
+        0.75rem;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+
+    font-weight:
+        650;
+}
+
+
+.in-mobile-nav
+a:hover {
+    color:
+        var(
+            --in-accent
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--in-accent) 22%,
+            var(--bs-border-color)
+        );
+
+    background:
+        color-mix(
+            in srgb,
+            var(--in-accent) 6%,
+            var(--bs-body-bg)
+        );
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (
+    max-width: 991.98px
+) {
+
+    .in-hero-panel {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-overview-card {
+        max-width:
+            none;
+    }
+
+
+    .in-checkout-layout {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-summary-card {
+        position:
+            static;
+    }
+
+
+    .in-project-detail-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .in-main {
+        padding-bottom:
+            2rem;
+    }
+
+
+    .in-page-header {
+        gap:
+            1rem;
+    }
+
+
+    .in-page-header
+    .btn {
+        width:
+            100%;
+    }
+
+
+    .in-hero-copy,
+    .in-overview-card {
+        padding:
+            1.3rem;
+    }
+
+
+    .in-hero-copy
+    h1 {
+        font-size:
+            clamp(
+                2rem,
+                9vw,
+                2.7rem
+            );
+    }
+
+
+    .in-hero-actions {
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-hero-actions
+    .btn {
+        width:
+            100%;
+    }
+
+
+    .in-services-toolbar {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .in-services-search {
+        width:
+            100%;
+    }
+
+
+    .in-section-header-row {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .in-section-header-row
+    .btn {
+        width:
+            100%;
+    }
+
+
+    .in-main
+    .table-responsive {
+        margin-inline:
+            -0.25rem;
+    }
+
+
+    .in-main
+    .table {
+        min-width:
+            760px;
+    }
+
+
+    .in-checkout-card,
+    .in-summary-card {
+        padding:
+            1.1rem;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    .in-hero-copy,
+    .in-overview-card,
+    .in-detail-card,
+    .in-checkout-card,
+    .in-summary-card,
+    .in-success-card {
+        border-radius:
+            var(
+                --in-console-radius
+            );
+    }
+
+
+    .in-service-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-service-body {
+        padding:
+            1rem;
+    }
+
+
+    .in-service-footer {
+        padding:
+            0.75rem
+            1rem
+            0.9rem;
+    }
+
+
+    .in-success-actions {
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-success-actions
+    .btn {
+        width:
+            100%;
+    }
+
+}
+
+/* =========================================================
+   UI-7E ALIGNMENT FIX
+   HERO + SERVICE CARDS
+   ========================================================= */
+
+
+/* =========================================================
+   HERO ALIGNMENT
+   ========================================================= */
+
+.in-hero-panel {
+    align-items:
+        stretch;
+}
+
+
+/* =========================================================
+   HERO CARDS SAME HEIGHT
+   ========================================================= */
+
+.in-hero-copy,
+.in-overview-card {
+    height:
+        100%;
+}
+
+
+/* =========================================================
+   HERO COPY LAYOUT
+   ========================================================= */
+
+.in-hero-copy {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        flex-start;
+}
+
+
+/* =========================================================
+   PUSH HERO ACTIONS TO BOTTOM
+   ========================================================= */
+
+.in-hero-actions {
+    margin-top:
+        auto;
+
+    padding-top:
+        1.6rem;
+}
+
+
+/* =========================================================
+   WORKFLOW CARD LAYOUT
+   ========================================================= */
+
+.in-overview-card {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+/* =========================================================
+   WORKFLOW STEPS FILL AVAILABLE HEIGHT
+   ========================================================= */
+
+.in-workflow {
+    flex:
+        1;
+
+    display:
+        grid;
+
+    grid-template-rows:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        0.75rem;
+}
+
+
+/* =========================================================
+   WORKFLOW STEP ALIGNMENT
+   ========================================================= */
+
+.in-workflow
+>
+div {
+    min-height:
+        66px;
+
+    align-items:
+        center;
+}
+
+
+/* =========================================================
+   WORKFLOW TEXT ALIGNMENT
+   ========================================================= */
+
+.in-workflow
+>
+div
+>
+div {
+    min-width:
+        0;
+}
+
+
+.in-workflow
+strong {
+    line-height:
+        1.3;
+}
+
+
+.in-workflow
+small {
+    line-height:
+        1.35;
+}
+
+
+/* =========================================================
+   SERVICE GRID
+   ========================================================= */
+
+.in-service-grid {
+    align-items:
+        stretch;
+}
+
+
+/* =========================================================
+   SERVICE CARD
+   ========================================================= */
+
+.in-service-card {
+    height:
+        100%;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+/* =========================================================
+   SERVICE INDEX
+   ========================================================= */
+
+.in-service-index {
+    min-height:
+        54px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        0
+        1rem;
+
+    flex:
+        0
+        0
+        54px;
+}
+
+
+/* =========================================================
+   SERVICE BODY
+   ========================================================= */
+
+.in-service-body {
+    display:
+        flex;
+
+    flex:
+        1;
+
+    flex-direction:
+        column;
+
+    padding:
+        1rem;
+}
+
+
+/* =========================================================
+   SERVICE META ROW
+   ========================================================= */
+
+.in-service-meta {
+    min-height:
+        28px;
+
+    flex:
+        0
+        0
+        auto;
+}
+
+
+/* =========================================================
+   SERVICE TITLE
+   ========================================================= */
+
+.in-service-title {
+    display:
+        -webkit-box;
+
+    min-height:
+        2.6rem;
+
+    margin-top:
+        0.75rem;
+
+    overflow:
+        hidden;
+
+    -webkit-line-clamp:
+        2;
+
+    -webkit-box-orient:
+        vertical;
+
+    line-height:
+        1.3;
+}
+
+
+/* =========================================================
+   SERVICE DESCRIPTION
+   ========================================================= */
+
+.in-service-body
+p {
+    display:
+        -webkit-box;
+
+    min-height:
+        3.7rem;
+
+    margin:
+        0.5rem
+        0
+        0;
+
+    overflow:
+        hidden;
+
+    -webkit-line-clamp:
+        3;
+
+    -webkit-box-orient:
+        vertical;
+
+    line-height:
+        1.55;
+}
+
+
+/* =========================================================
+   SERVICE FOOTER
+
+   Price gets its own row.
+   Buttons get a full-width row beneath it.
+   ========================================================= */
+
+.in-service-footer {
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr;
+
+    gap:
+        0.75rem;
+
+    margin-top:
+        auto;
+
+    padding-top:
+        1rem;
+
+    border-top:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+/* =========================================================
+   SERVICE PRICE
+   ========================================================= */
+
+.in-service-footer
+>
+strong {
+    display:
+        block;
+
+    margin:
+        0;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        1.15rem;
+
+    font-weight:
+        850;
+
+    line-height:
+        1.2;
+}
+
+
+/* =========================================================
+   SERVICE ACTIONS
+   ========================================================= */
+
+.in-service-actions {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        0.5rem;
+
+    width:
+        100%;
+}
+
+
+/* =========================================================
+   SERVICE ACTION BUTTONS
+   ========================================================= */
+
+.in-service-actions
+.btn {
+    width:
+        100%;
+
+    min-width:
+        0;
+
+    min-height:
+        38px;
+
+    padding:
+        0.45rem
+        0.65rem;
+
+    overflow:
+        hidden;
+
+    font-size:
+        0.76rem;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   SERVICE ACTION FORMS
+   ========================================================= */
+
+.in-service-actions
+form {
+    width:
+        100%;
+
+    margin:
+        0;
+}
+
+
+.in-service-actions
+form
+.btn {
+    width:
+        100%;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP SERVICE GRID
+   ========================================================= */
+
+@media (
+    min-width: 1400px
+) {
+
+    .in-service-grid {
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MEDIUM DESKTOP
+
+   Use 3 columns before cards become cramped.
+   ========================================================= */
+
+@media (
+    min-width: 992px
+)
+and
+(
+    max-width: 1399.98px
+) {
+
+    .in-service-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (
+    min-width: 576px
+)
+and
+(
+    max-width: 991.98px
+) {
+
+    .in-service-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    .in-service-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-service-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .in-hero-actions {
+        width:
+            100%;
+    }
+
+
+    .in-hero-actions
+    .btn {
+        width:
+            100%;
+    }
+
+}
+/* =========================================================
+   UI-7E
+   HERO INTERNAL ALIGNMENT FIX
+   ========================================================= */
+
+
+/* =========================================================
+   HERO GRID
+   ========================================================= */
+
+.in-hero-panel {
+    align-items:
+        stretch;
+
+    gap:
+        1.25rem;
+}
+
+
+/* =========================================================
+   BOTH HERO CARDS
+   ========================================================= */
+
+.in-hero-copy,
+.in-overview-card {
+    box-sizing:
+        border-box;
+
+    height:
+        100%;
+
+    padding:
+        1.75rem;
+
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+}
+
+
+/* =========================================================
+   LEFT HERO CARD
+   ========================================================= */
+
+.in-hero-copy {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        flex-start;
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   LEFT BLUE ACCENT
+
+   Keep it inside the card rather than allowing
+   the text to visually compete with the border.
+   ========================================================= */
+
+.in-hero-copy::before {
+    width:
+        4px;
+
+    border-radius:
+        4px;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.in-hero-copy
+.in-eyebrow {
+    display:
+        block;
+
+    margin:
+        0
+        0
+        1rem;
+
+    padding:
+        0;
+
+    line-height:
+        1;
+
+}
+
+
+/* =========================================================
+   HERO TITLE
+   ========================================================= */
+
+.in-hero-copy
+h1 {
+    max-width:
+        100%;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    font-size:
+        clamp(
+            3rem,
+            5vw,
+            4.3rem
+        );
+
+    font-weight:
+        860;
+
+    letter-spacing:
+        -0.055em;
+
+    line-height:
+        1.03;
+
+    overflow-wrap:
+        normal;
+
+    word-break:
+        normal;
+}
+
+
+/* =========================================================
+   TITLE ACCENT LINE
+   ========================================================= */
+
+.in-hero-copy
+h1
+span {
+    display:
+        block;
+
+    color:
+        var(
+            --in-accent
+        );
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.in-hero-copy
+>
+p {
+    max-width:
+        650px;
+
+    margin:
+        1.35rem
+        0
+        0;
+
+    padding:
+        0;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.95rem;
+
+    line-height:
+        1.75;
+}
+
+
+/* =========================================================
+   HERO ACTIONS
+   ========================================================= */
+
+.in-hero-actions {
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        0.65rem;
+
+    margin-top:
+        auto;
+
+    padding-top:
+        1.75rem;
+}
+
+
+/* =========================================================
+   RIGHT WORKFLOW CARD
+   ========================================================= */
+
+.in-overview-card {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+/* =========================================================
+   RIGHT CARD HEADER
+   ========================================================= */
+
+.in-overview-card
+.in-card-head {
+    margin:
+        0;
+
+    padding:
+        0
+        0
+        1.25rem;
+
+    border-bottom:
+        1px solid
+        var(
+            --bs-border-color
+        );
+}
+
+
+/* =========================================================
+   RIGHT CARD TITLE
+   ========================================================= */
+
+.in-overview-card
+.in-card-head
+h2 {
+    margin:
+        0.3rem
+        0
+        0;
+
+    line-height:
+        1.25;
+}
+
+
+/* =========================================================
+   WORKFLOW LIST
+   ========================================================= */
+
+.in-overview-card
+.in-workflow {
+    flex:
+        1;
+
+    display:
+        grid;
+
+    grid-template-rows:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        0.75rem;
+
+    margin-top:
+        1.15rem;
+}
+
+
+/* =========================================================
+   WORKFLOW ITEM
+   ========================================================= */
+
+.in-overview-card
+.in-workflow
+>
+div {
+    min-height:
+        66px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        0.8rem;
+
+    border-radius:
+        var(
+            --om-radius-sm,
+            0.75rem
+        );
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (
+    max-width: 991.98px
+) {
+
+    .in-hero-copy,
+    .in-overview-card {
+        padding:
+            1.5rem;
+    }
+
+
+    .in-hero-copy
+    h1 {
+        font-size:
+            clamp(
+                2.7rem,
+                8vw,
+                4rem
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    .in-hero-copy,
+    .in-overview-card {
+        padding:
+            1.2rem;
+    }
+
+
+    .in-hero-copy
+    h1 {
+        font-size:
+            clamp(
+                2.3rem,
+                11vw,
+                3.2rem
+            );
+
+        line-height:
+            1.04;
+    }
+
+
+    .in-hero-copy
+    >
+    p {
+        margin-top:
+            1rem;
+
+        font-size:
+            0.9rem;
+    }
+
+
+    .in-hero-actions {
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr;
+
+        width:
+            100%;
+
+        padding-top:
+            1.25rem;
+    }
+
+
+    .in-hero-actions
+    .btn {
+        width:
+            100%;
+    }
+
+}
