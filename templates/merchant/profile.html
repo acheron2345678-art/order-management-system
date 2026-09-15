@@ -114,28 +114,6 @@ Restaurant Profile | {{ restaurant.name }}
             </a>
 
 
-            {% if restaurant.is_active %}
-
-            <a
-                href="/swiggy/restaurants/{{ restaurant.id }}"
-                class="btn btn-outline-primary"
-            >
-                Preview Restaurant
-            </a>
-
-            {% else %}
-
-            <button
-                type="button"
-                class="btn btn-outline-secondary"
-                disabled
-            >
-                Preview Unavailable
-            </button>
-
-            {% endif %}
-
-
         </div>
 
 

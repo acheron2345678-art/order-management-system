@@ -1,86 +1,62 @@
 {% extends "merchant/base.html" %}
-
 {% block title %}
 {{ restaurant.name }} | Merchant Console
 {% endblock %}
-
 {% block content %}
-
 <section class="merchant-page">
-
     <!-- ========================================= -->
     <!-- HEADER -->
     <!-- ========================================= -->
-
     <div class="merchant-page-header">
-
         <div>
-
             <span class="merchant-eyebrow">
                 RESTAURANT OVERVIEW
             </span>
-
             <h1>
                 {{ restaurant.name }}
             </h1>
-
             <p>
                 Review your restaurant's Swiggy
                 profile, menu, inventory and orders.
-
                 Your Merchant account is restricted
                 to this restaurant.
             </p>
-
         </div>
-
         <div class="merchant-header-actions">
-
             <a
                 href="/merchant/profile"
                 class="btn btn-outline-secondary"
             >
                 Edit Restaurant
             </a>
-
             <a
                 href="/merchant/menu"
                 class="btn btn-outline-secondary"
             >
                 Manage Menu
             </a>
-
             <a
                 href="/merchant/inventory"
                 class="btn btn-outline-secondary"
             >
                 Inventory
             </a>
-
             <a
                 href="/merchant/orders"
                 class="btn btn-outline-secondary"
             >
                 Orders
             </a>
-
         </div>
-
     </div>
-
-
     <!-- ========================================= -->
     <!-- STATUS -->
     <!-- ========================================= -->
-
     <div class="merchant-status-banner">
-
         <div>
-
             <span
                 class="
                     merchant-status-dot
-
                     {% if restaurant.is_active %}
                     active
                     {% else %}
@@ -89,516 +65,328 @@
                 "
             >
             </span>
-
             <span>
                 Restaurant status
             </span>
-
             <strong>
-
                 {% if restaurant.is_active %}
-
                     Active
-
                 {% else %}
-
                     Inactive
-
                 {% endif %}
-
             </strong>
-
         </div>
-
         <small>
             Restaurant assignment is locked
             to this Merchant account.
-
             Only an administrator can reassign it.
         </small>
-
     </div>
-
-
     <!-- ========================================= -->
     <!-- ORDER SUMMARY -->
     <!-- ========================================= -->
-
     <article class="merchant-panel mb-4">
-
         <div class="merchant-panel-header">
-
             <div>
-
                 <span class="merchant-eyebrow">
                     ORDER SUMMARY
                 </span>
-
                 <h2>
                     Restaurant Orders
                 </h2>
-
             </div>
-
             <a
                 href="/merchant/orders"
                 class="btn btn-sm btn-outline-primary"
             >
                 View All Orders
             </a>
-
         </div>
-
         <div class="merchant-order-summary-grid">
-
             <a
                 href="/merchant/orders"
                 class="merchant-order-summary-card"
             >
-
                 <span>
                     Total Orders
                 </span>
-
                 <strong>
                     {{ summary.total_orders }}
                 </strong>
-
             </a>
-
-
             <a
                 href="/merchant/orders?status=pending"
                 class="merchant-order-summary-card"
             >
-
                 <span>
                     Pending
                 </span>
-
                 <strong>
                     {{ summary.pending_orders }}
                 </strong>
-
             </a>
-
-
             <a
                 href="/merchant/orders?status=processing"
                 class="merchant-order-summary-card"
             >
-
                 <span>
                     Processing
                 </span>
-
                 <strong>
                     {{ summary.processing_orders }}
                 </strong>
-
             </a>
-
-
             <a
                 href="/merchant/orders?status=completed"
                 class="merchant-order-summary-card"
             >
-
                 <span>
                     Completed
                 </span>
-
                 <strong>
                     {{ summary.completed_orders }}
                 </strong>
-
             </a>
-
-
             <a
                 href="/merchant/orders?status=cancelled"
                 class="merchant-order-summary-card"
             >
-
                 <span>
                     Cancelled
                 </span>
-
                 <strong>
                     {{ summary.cancelled_orders }}
                 </strong>
-
             </a>
-
-
             <article class="merchant-order-summary-card">
-
                 <span>
                     Completed Revenue
                 </span>
-
                 <strong>
                     ₹{{ "%.2f"|format(summary.completed_revenue) }}
                 </strong>
-
             </article>
-
         </div>
-
     </article>
-
-
     <!-- ========================================= -->
     <!-- MENU / INVENTORY METRICS -->
     <!-- ========================================= -->
-
     <div class="merchant-metric-grid">
-
         <article class="merchant-metric-card">
-
             <span>
                 Total Menu Items
             </span>
-
             <strong>
                 {{ summary.total_items }}
             </strong>
-
             <small>
                 Swiggy dishes registered
                 to this restaurant
             </small>
-
         </article>
-
-
         <article class="merchant-metric-card">
-
             <span>
                 Active Items
             </span>
-
             <strong>
                 {{ summary.active_items }}
             </strong>
-
             <small>
                 Currently enabled menu items
             </small>
-
         </article>
-
-
         <article class="merchant-metric-card">
-
             <span>
                 Menu Categories
             </span>
-
             <strong>
                 {{ summary.category_count }}
             </strong>
-
             <small>
                 Categories currently used by your menu
             </small>
-
         </article>
-
-
         <article class="merchant-metric-card">
-
             <span>
                 Bestsellers
             </span>
-
             <strong>
                 {{ summary.bestseller_items }}
             </strong>
-
             <small>
                 Items marked as bestseller
             </small>
-
         </article>
-
-
         <article
             class="
                 merchant-metric-card
                 merchant-metric-warning
             "
         >
-
             <span>
                 Low Stock
             </span>
-
             <strong>
                 {{ summary.low_stock_items }}
             </strong>
-
             <small>
                 At or below reorder level
             </small>
-
         </article>
-
-
         <article
             class="
                 merchant-metric-card
                 merchant-metric-danger
             "
         >
-
             <span>
                 Out of Stock
             </span>
-
             <strong>
                 {{ summary.out_of_stock_items }}
             </strong>
-
             <small>
                 Items with no stock remaining
             </small>
-
         </article>
-
     </div>
-
-
     <!-- ========================================= -->
     <!-- OPERATIONS -->
     <!-- ========================================= -->
-
     <div class="merchant-dashboard-grid">
-
         <!-- ===================================== -->
         <!-- RECENT ORDERS -->
         <!-- ===================================== -->
-
         <article class="merchant-panel">
-
             <div class="merchant-panel-header">
-
                 <div>
-
                     <span class="merchant-eyebrow">
                         LIVE OPERATIONS
                     </span>
-
                     <h2>
                         Recent Orders
                     </h2>
-
                 </div>
-
                 <a
                     href="/merchant/orders"
                     class="btn btn-sm btn-outline-primary"
                 >
                     View All
                 </a>
-
             </div>
-
-
             {% if summary.recent_orders %}
-
             <div class="table-responsive">
-
                 <table class="table table-hover align-middle mb-0">
-
                     <thead>
-
                         <tr>
-
                             <th>
                                 Order
                             </th>
-
                             <th>
                                 Customer
                             </th>
-
                             <th>
                                 Items
                             </th>
-
                             <th>
                                 Status
                             </th>
-
                             <th class="text-end">
                                 Total
                             </th>
-
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         {% for order in summary.recent_orders %}
-
                         <tr>
-
                             <td>
-
                                 <a
                                     href="/merchant/orders/{{ order.id }}"
                                     class="fw-semibold text-decoration-none"
                                 >
                                     {{ order.order_number }}
                                 </a>
-
-
                                 {% if order.sort_created_at %}
-
                                 <small class="d-block text-body-secondary">
-
                                     {{ order.sort_created_at.strftime('%d %b, %I:%M %p') }}
-
                                 </small>
-
                                 {% else %}
-
                                 <small class="d-block text-body-secondary">
-
                                     {{ order.order_date.strftime('%d %b %Y') }}
-
                                 </small>
-
                                 {% endif %}
-
                             </td>
-
-
                             <td>
                                 {{ order.customer_name }}
                             </td>
-
-
                             <td>
                                 {{ order.item_count }}
                             </td>
-
-
                             <td>
-
                                 {% if order.status == "pending" %}
-
                                 <span class="badge text-bg-warning">
                                     Pending
                                 </span>
-
-
                                 {% elif order.status == "processing" %}
-
                                 <span class="badge text-bg-info">
                                     Processing
                                 </span>
-
-
                                 {% elif order.status == "completed" %}
-
                                 <span class="badge text-bg-success">
                                     Completed
                                 </span>
-
-
                                 {% elif order.status == "cancelled" %}
-
                                 <span class="badge text-bg-danger">
                                     Cancelled
                                 </span>
-
-
                                 {% else %}
-
                                 <span class="badge text-bg-secondary">
                                     {{ order.status|capitalize }}
                                 </span>
-
                                 {% endif %}
-
                             </td>
-
-
                             <td class="text-end fw-semibold">
-
                                 ₹{{ "%.2f"|format(order.amount) }}
-
                             </td>
-
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
-
-
             {% else %}
-
             <div class="text-center py-4">
-
                 <strong class="d-block mb-1">
                     No restaurant orders yet
                 </strong>
-
                 <small class="text-body-secondary">
                     New Swiggy orders will appear here.
                 </small>
-
             </div>
-
             {% endif %}
-
         </article>
-
-
         <!-- ===================================== -->
         <!-- STOCK ATTENTION -->
         <!-- ===================================== -->
-
         <article class="merchant-panel">
-
             <div class="merchant-panel-header">
-
                 <div>
-
                     <span class="merchant-eyebrow">
                         INVENTORY ATTENTION
                     </span>
-
                     <h2>
                         Stock Attention
                     </h2>
-
                 </div>
-
                 <a
                     href="/merchant/inventory"
                     class="btn btn-sm btn-outline-primary"
                 >
                     Inventory
                 </a>
-
             </div>
-
-
             {% if summary.stock_alert_items %}
-
             <div class="d-grid gap-2">
-
                 {% for product in summary.stock_alert_items %}
-
                 <div
                     class="
                         border
@@ -610,488 +398,277 @@
                         gap-3
                     "
                 >
-
                     <div class="min-w-0">
-
                         <strong class="d-block text-truncate">
                             {{ product.product_name }}
                         </strong>
-
                         <small class="text-body-secondary">
-
                             Reorder at
                             {{ product.reorder_level }}
-
                         </small>
-
                     </div>
-
-
                     <div class="text-end flex-shrink-0">
-
                         {% if product.stock_quantity <= 0 %}
-
                         <span class="badge text-bg-danger">
                             Out of stock
                         </span>
-
                         {% else %}
-
                         <span class="badge text-bg-warning">
-
                             {{ product.stock_quantity }}
                             left
-
                         </span>
-
                         {% endif %}
-
                     </div>
-
                 </div>
-
                 {% endfor %}
-
             </div>
-
-
             {% else %}
-
             <div class="text-center py-4">
-
                 <strong class="d-block mb-1">
                     Stock levels look healthy
                 </strong>
-
                 <small class="text-body-secondary">
-
                     No active dish is currently
                     at or below its reorder level.
-
                 </small>
-
             </div>
-
             {% endif %}
-
         </article>
-
     </div>
-
-
     <!-- ========================================= -->
     <!-- DETAILS -->
     <!-- ========================================= -->
-
     <div class="merchant-dashboard-grid mt-4">
-
         <!-- ===================================== -->
         <!-- RESTAURANT INFORMATION -->
         <!-- ===================================== -->
-
         <article class="merchant-panel">
-
             <div class="merchant-panel-header">
-
                 <div>
-
                     <span class="merchant-eyebrow">
                         PUBLIC PROFILE
                     </span>
-
                     <h2>
                         Restaurant Information
                     </h2>
-
                 </div>
-
                 <a
                     href="/merchant/profile"
                     class="btn btn-sm btn-outline-primary"
                 >
                     Edit Profile
                 </a>
-
             </div>
-
-
             <dl class="merchant-detail-list">
-
                 <div>
-
                     <dt>
                         Restaurant
                     </dt>
-
                     <dd>
                         {{ restaurant.name }}
                     </dd>
-
                 </div>
-
-
                 <div>
-
                     <dt>
                         Cuisines
                     </dt>
-
                     <dd>
                         {{ restaurant.cuisines or "Not configured" }}
                     </dd>
-
                 </div>
-
-
                 <div>
-
                     <dt>
                         Location
                     </dt>
-
                     <dd>
                         {{ restaurant.location or "Not configured" }}
                     </dd>
-
                 </div>
-
-
                 <div>
-
                     <dt>
                         Delivery Window
                     </dt>
-
                     <dd>
-
                         {{ restaurant.delivery_min_minutes }}
                         -
                         {{ restaurant.delivery_max_minutes }}
                         min
-
                     </dd>
-
                 </div>
-
-
                 <div>
-
                     <dt>
                         Rating
                     </dt>
-
                     <dd>
-
                         {% if restaurant.rating is not none %}
-
                             ★ {{ "%.1f"|format(restaurant.rating) }}
-
                         {% else %}
-
                             Not rated
-
                         {% endif %}
-
                     </dd>
-
                 </div>
-
-
                 <div>
-
                     <dt>
                         Offer
                     </dt>
-
                     <dd>
                         {{ restaurant.offer_text or "No active offer" }}
                     </dd>
-
                 </div>
-
             </dl>
-
         </article>
-
-
         <!-- ===================================== -->
         <!-- PERMISSIONS -->
         <!-- ===================================== -->
-
         <article class="merchant-panel">
-
             <div class="merchant-panel-header">
-
                 <div>
-
                     <span class="merchant-eyebrow">
                         MERCHANT ACCESS
                     </span>
-
                     <h2>
                         Your Permission Boundary
                     </h2>
-
                 </div>
-
             </div>
-
-
             <div class="merchant-permission-list">
-
                 <div class="allowed">
-
                     <span>
                         ✓
                     </span>
-
                     <p>
-
                         <strong>
                             Restaurant Profile
                         </strong>
-
                         <small>
                             Manage your restaurant's public information.
                         </small>
-
                     </p>
-
                 </div>
-
-
                 <div class="allowed">
-
                     <span>
                         ✓
                     </span>
-
                     <p>
-
                         <strong>
                             Menu
                         </strong>
-
                         <small>
                             Add and manage dishes belonging to your restaurant.
                         </small>
-
                     </p>
-
                 </div>
-
-
                 <div class="allowed">
-
                     <span>
                         ✓
                     </span>
-
                     <p>
-
                         <strong>
                             Inventory
                         </strong>
-
                         <small>
                             Monitor stock and restock your restaurant's dishes.
                         </small>
-
                     </p>
-
                 </div>
-
-
                 <div class="allowed">
-
                     <span>
                         ✓
                     </span>
-
                     <p>
-
                         <strong>
                             Restaurant Orders
                         </strong>
-
                         <small>
                             Process only orders permanently assigned to your restaurant.
                         </small>
-
                     </p>
-
                 </div>
-
-
-                <div class="allowed">
-
-                    <span>
-                        ✓
-                    </span>
-
-                    <p>
-
-                        <strong>
-                            Swiggy Preview
-                        </strong>
-
-                        <small>
-                            View your customer-facing restaurant page in read-only mode.
-                        </small>
-
-                    </p>
-
-                </div>
-
-
                 <div class="blocked">
-
                     <span>
                         ×
                     </span>
-
                     <p>
-
                         <strong>
                             Customer Ordering
                         </strong>
-
                         <small>
                             Merchant accounts cannot add to cart or checkout.
                         </small>
-
                     </p>
-
                 </div>
-
-
                 <div class="blocked">
-
                     <span>
                         ×
                     </span>
-
                     <p>
-
                         <strong>
                             Other Restaurants
                         </strong>
-
                         <small>
                             Merchant management privileges apply only to your assigned restaurant.
                         </small>
-
                     </p>
-
                 </div>
-
-
                 <div class="blocked">
-
                     <span>
                         ×
                     </span>
-
                     <p>
-
                         <strong>
                             Admin Areas
                         </strong>
-
                         <small>
                             No global administration or user-management privileges.
                         </small>
-
                     </p>
-
                 </div>
-
             </div>
-
         </article>
-
     </div>
-
-
     <!-- ========================================= -->
     <!-- MANAGEMENT TOOLS -->
     <!-- ========================================= -->
-
     <article class="merchant-next-panel mt-4">
-
         <div>
-
             <span class="merchant-eyebrow">
                 MERCHANT WORKSPACE
             </span>
-
             <h2>
                 Restaurant management tools
             </h2>
-
             <p>
-
                 Profile, menu, inventory and restaurant
-                order management are available.
-
-                Use Swiggy Preview to verify the
-                customer-facing result without entering
-                the client ordering workflow.
-
+                order management are available from this
+                Merchant workspace.
             </p>
-
         </div>
-
-
         <div class="merchant-next-actions">
-
             <a
                 href="/merchant/profile"
                 class="btn btn-outline-primary"
             >
                 Profile
             </a>
-
-
             <a
                 href="/merchant/menu"
                 class="btn btn-outline-primary"
             >
                 Menu
             </a>
-
-
             <a
                 href="/merchant/inventory"
                 class="btn btn-outline-primary"
             >
                 Inventory
             </a>
-
-
             <a
                 href="/merchant/orders"
                 class="btn btn-outline-primary"
             >
                 Orders
             </a>
-
-
-            {% if restaurant.is_active %}
-
-            <a
-                href="/swiggy/restaurants/{{ restaurant.id }}"
-                class="btn btn-primary"
-            >
-                Preview on Swiggy
-            </a>
-
-            {% endif %}
-
         </div>
-
     </article>
-
 </section>
-
 {% endblock %}
