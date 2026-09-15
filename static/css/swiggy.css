@@ -1,6 +1,9 @@
+@import url("/static/css/design-system.css?v=1");
 :root {
     --sw-orange: #fc8019;
     --sw-orange-rgb: 252, 128, 25;
+    --om-accent-rgb:
+        var(--sw-orange-rgb);
     --sw-orange-dark: #e66d06;
 
     --sw-page-bg: #e9ecef;

@@ -1,3 +1,5 @@
+@import url("/static/css/design-system.css?v=1");
+
 :root {
     --merchant-sidebar-width: 270px;
 }

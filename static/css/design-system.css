@@ -1,0 +1,1655 @@
+/* =========================================================
+   ORDER MANAGEMENT DESIGN SYSTEM
+
+   Shared visual foundation for:
+   - Admin
+   - Client
+   - Merchant
+   - Swiggy
+   - Insights
+   ========================================================= */
+
+
+/* =========================================================
+   DESIGN TOKENS
+   ========================================================= */
+
+:root {
+
+    /* =====================================
+       SPACING
+       ===================================== */
+
+    --om-space-1: 0.25rem;
+
+    --om-space-2: 0.5rem;
+
+    --om-space-3: 0.75rem;
+
+    --om-space-4: 1rem;
+
+    --om-space-5: 1.5rem;
+
+    --om-space-6: 2rem;
+
+    --om-space-7: 3rem;
+
+
+    /* =====================================
+       BORDER RADII
+       ===================================== */
+
+    --om-radius-xs: 0.5rem;
+
+    --om-radius-sm: 0.75rem;
+
+    --om-radius-md: 1rem;
+
+    --om-radius-lg: 1.25rem;
+
+    --om-radius-xl: 1.5rem;
+
+    --om-radius-pill: 999px;
+
+
+    /* =====================================
+       SHADOWS
+       ===================================== */
+
+    --om-shadow-sm:
+        0
+        3px
+        12px
+        rgba(
+            15,
+            23,
+            42,
+            0.06
+        );
+
+
+    --om-shadow-md:
+        0
+        12px
+        30px
+        rgba(
+            15,
+            23,
+            42,
+            0.08
+        );
+
+
+    --om-shadow-lg:
+        0
+        20px
+        44px
+        rgba(
+            15,
+            23,
+            42,
+            0.11
+        );
+
+
+    /* =====================================
+       CONTROLS
+       ===================================== */
+
+    --om-control-height-sm:
+        36px;
+
+    --om-control-height:
+        44px;
+
+    --om-control-height-lg:
+        50px;
+
+
+    /* =====================================
+       CONTENT WIDTHS
+       ===================================== */
+
+    --om-content-width:
+        1600px;
+
+    --om-copy-width:
+        720px;
+
+
+    /* =====================================
+       ACCENT
+       ===================================== */
+
+    --om-accent-rgb:
+        var(
+            --bs-primary-rgb
+        );
+
+
+    --om-focus-ring:
+        0
+        0
+        0
+        0.2rem
+        rgba(
+            var(--om-accent-rgb),
+            0.16
+        );
+
+
+    /* =====================================
+       ANIMATION
+       ===================================== */
+
+    --om-transition-fast:
+        160ms ease;
+
+    --om-transition-base:
+        220ms ease;
+
+}
+
+
+/* =========================================================
+   DARK MODE TOKENS
+   ========================================================= */
+
+[data-bs-theme="dark"] {
+
+    --om-shadow-sm:
+        0
+        3px
+        12px
+        rgba(
+            0,
+            0,
+            0,
+            0.16
+        );
+
+
+    --om-shadow-md:
+        0
+        12px
+        30px
+        rgba(
+            0,
+            0,
+            0,
+            0.22
+        );
+
+
+    --om-shadow-lg:
+        0
+        20px
+        44px
+        rgba(
+            0,
+            0,
+            0,
+            0.28
+        );
+
+}
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+html {
+
+    scroll-behavior:
+        smooth;
+
+}
+
+
+body {
+
+    -webkit-font-smoothing:
+        antialiased;
+
+    text-rendering:
+        optimizeLegibility;
+
+}
+
+
+/* =========================================================
+   GENERAL BUTTON FOUNDATION
+   ========================================================= */
+
+.btn {
+
+    min-height:
+        var(
+            --om-control-height
+        );
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        0.45rem;
+
+    border-radius:
+        var(
+            --om-radius-sm
+        );
+
+    font-weight:
+        700;
+
+    line-height:
+        1.2;
+
+    text-align:
+        center;
+
+    white-space:
+        nowrap;
+
+    transition:
+        color
+        var(
+            --om-transition-fast
+        ),
+
+        background-color
+        var(
+            --om-transition-fast
+        ),
+
+        border-color
+        var(
+            --om-transition-fast
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast
+        ),
+
+        transform
+        var(
+            --om-transition-fast
+        );
+
+}
+
+
+/* =========================================================
+   BUTTON SIZES
+   ========================================================= */
+
+.btn-sm {
+
+    min-height:
+        var(
+            --om-control-height-sm
+        );
+
+    padding:
+        0.4rem
+        0.75rem;
+
+    font-size:
+        0.82rem;
+
+}
+
+
+.btn-lg {
+
+    min-height:
+        var(
+            --om-control-height-lg
+        );
+
+    padding:
+        0.7rem
+        1.15rem;
+
+}
+
+
+/* =========================================================
+   BUTTON INTERACTION
+   ========================================================= */
+
+.btn:hover:not(
+    :disabled
+):not(
+    .disabled
+) {
+
+    transform:
+        translateY(
+            -1px
+        );
+
+}
+
+
+.btn:active:not(
+    :disabled
+):not(
+    .disabled
+) {
+
+    transform:
+        translateY(
+            0
+        );
+
+}
+
+
+.btn:disabled,
+.btn.disabled {
+
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.58;
+
+    transform:
+        none;
+
+}
+
+
+/* =========================================================
+   PRIMARY ACTION
+
+   Use for:
+   - Save
+   - Create
+   - Checkout
+   - Add item
+   - Main page action
+   - Confirm important workflow
+   ========================================================= */
+
+.btn-primary {
+
+    box-shadow:
+        0
+        4px
+        12px
+        rgba(
+            var(--bs-primary-rgb),
+            0.16
+        );
+
+}
+
+
+.btn-primary:hover:not(
+    :disabled
+):not(
+    .disabled
+) {
+
+    box-shadow:
+        0
+        7px
+        16px
+        rgba(
+            var(--bs-primary-rgb),
+            0.2
+        );
+
+}
+
+
+/* =========================================================
+   ACCENT SECONDARY ACTION
+
+   Use for:
+   - View details
+   - Edit
+   - Manage
+   - Supporting action related to primary workflow
+   ========================================================= */
+
+.btn-outline-primary {
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    font-weight:
+        700;
+
+}
+
+
+.btn-outline-primary:hover {
+
+    box-shadow:
+        0
+        4px
+        12px
+        rgba(
+            var(--bs-primary-rgb),
+            0.1
+        );
+
+}
+
+
+/* =========================================================
+   NEUTRAL SECONDARY ACTION
+
+   Use for:
+   - Back
+   - Cancel
+   - Close
+   - Return
+   - Alternate navigation
+   ========================================================= */
+
+.btn-outline-secondary {
+
+    color:
+        var(
+            --bs-body-color
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    border-color:
+        var(
+            --bs-border-color
+        );
+
+}
+
+
+.btn-outline-secondary:hover {
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    border-color:
+        var(
+            --bs-secondary-border-subtle
+        );
+
+}
+
+
+/* =========================================================
+   SOLID SECONDARY
+
+   Intentionally less prominent than primary.
+   ========================================================= */
+
+.btn-secondary {
+
+    box-shadow:
+        none;
+
+}
+
+
+/* =========================================================
+   POSITIVE ACTION
+
+   Use only when an operation represents:
+   - Enable
+   - Approve
+   - Activate
+   - Successful transition
+   ========================================================= */
+
+.btn-success {
+
+    box-shadow:
+        0
+        4px
+        12px
+        rgba(
+            25,
+            135,
+            84,
+            0.14
+        );
+
+}
+
+
+.btn-outline-success {
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+}
+
+
+/* =========================================================
+   DESTRUCTIVE ACTION
+
+   Use for:
+   - Delete
+   - Cancel order
+   - Disable
+   - Deactivate
+   - Remove ownership
+   ========================================================= */
+
+.btn-danger {
+
+    box-shadow:
+        0
+        4px
+        12px
+        rgba(
+            220,
+            53,
+            69,
+            0.15
+        );
+
+}
+
+
+.btn-outline-danger {
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+}
+
+
+.btn-danger:hover,
+.btn-outline-danger:hover {
+
+    box-shadow:
+        0
+        6px
+        14px
+        rgba(
+            220,
+            53,
+            69,
+            0.18
+        );
+
+}
+
+
+/* =========================================================
+   LINK BUTTONS
+
+   Do not force normal button dimensions onto inline
+   actions such as "Remove".
+   ========================================================= */
+
+.btn-link {
+
+    min-height:
+        auto;
+
+    padding:
+        0;
+
+    border-radius:
+        0;
+
+    box-shadow:
+        none;
+
+    font-weight:
+        650;
+
+}
+
+
+.btn-link:hover {
+
+    transform:
+        none;
+
+}
+
+
+/* =========================================================
+   ICON-ONLY BUTTON
+
+   Available for future icon controls.
+   ========================================================= */
+
+.om-icon-button {
+
+    width:
+        var(
+            --om-control-height
+        );
+
+    min-width:
+        var(
+            --om-control-height
+        );
+
+    height:
+        var(
+            --om-control-height
+        );
+
+    padding:
+        0;
+
+    border-radius:
+        var(
+            --om-radius-sm
+        );
+
+}
+
+
+.om-icon-button.btn-sm {
+
+    width:
+        var(
+            --om-control-height-sm
+        );
+
+    min-width:
+        var(
+            --om-control-height-sm
+        );
+
+    height:
+        var(
+            --om-control-height-sm
+        );
+
+}
+
+
+/* =========================================================
+   ACTION GROUP
+
+   Can be used later for standardized header/form actions.
+   ========================================================= */
+
+.om-actions {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    align-items:
+        center;
+
+    gap:
+        var(
+            --om-space-2
+        );
+
+}
+
+
+/* =========================================================
+   SWIGGY BUTTON HIERARCHY
+
+   Every Swiggy primary action now uses the Swiggy orange,
+   even when the template only contains "btn-primary".
+   ========================================================= */
+
+.sw-app-shell
+.btn-primary,
+
+.sw-app-shell
+.sw-primary-action,
+
+.sw-app-shell
+.sw-add-btn {
+
+    --bs-btn-color:
+        #ffffff;
+
+    --bs-btn-bg:
+        var(
+            --sw-orange
+        );
+
+    --bs-btn-border-color:
+        var(
+            --sw-orange
+        );
+
+    --bs-btn-hover-color:
+        #ffffff;
+
+    --bs-btn-hover-bg:
+        var(
+            --sw-orange-dark
+        );
+
+    --bs-btn-hover-border-color:
+        var(
+            --sw-orange-dark
+        );
+
+    --bs-btn-active-color:
+        #ffffff;
+
+    --bs-btn-active-bg:
+        var(
+            --sw-orange-dark
+        );
+
+    --bs-btn-active-border-color:
+        var(
+            --sw-orange-dark
+        );
+
+    --bs-btn-disabled-color:
+        #ffffff;
+
+    --bs-btn-disabled-bg:
+        var(
+            --sw-orange
+        );
+
+    --bs-btn-disabled-border-color:
+        var(
+            --sw-orange
+        );
+
+    box-shadow:
+        0
+        4px
+        12px
+        rgba(
+            var(--sw-orange-rgb),
+            0.18
+        );
+
+}
+
+
+.sw-app-shell
+.btn-primary:hover,
+
+.sw-app-shell
+.sw-primary-action:hover,
+
+.sw-app-shell
+.sw-add-btn:hover {
+
+    box-shadow:
+        0
+        7px
+        16px
+        rgba(
+            var(--sw-orange-rgb),
+            0.23
+        );
+
+}
+
+
+/* =========================================================
+   SWIGGY OUTLINE PRIMARY
+   ========================================================= */
+
+.sw-app-shell
+.btn-outline-primary {
+
+    --bs-btn-color:
+        var(
+            --sw-orange-dark
+        );
+
+    --bs-btn-border-color:
+        var(
+            --sw-orange
+        );
+
+    --bs-btn-hover-color:
+        #ffffff;
+
+    --bs-btn-hover-bg:
+        var(
+            --sw-orange
+        );
+
+    --bs-btn-hover-border-color:
+        var(
+            --sw-orange
+        );
+
+    --bs-btn-active-color:
+        #ffffff;
+
+    --bs-btn-active-bg:
+        var(
+            --sw-orange-dark
+        );
+
+    --bs-btn-active-border-color:
+        var(
+            --sw-orange-dark
+        );
+
+    background:
+        transparent;
+
+}
+
+
+/* =========================================================
+   INSIGHTS BUTTON HIERARCHY
+
+   Every Insights primary action now follows the
+   Insights accent automatically.
+   ========================================================= */
+
+.in-app-shell
+.btn-primary,
+
+.in-app-shell
+.in-primary-btn {
+
+    --bs-btn-color:
+        #ffffff;
+
+    --bs-btn-bg:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-border-color:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-hover-color:
+        #ffffff;
+
+    --bs-btn-hover-bg:
+        var(
+            --in-accent-dark
+        );
+
+    --bs-btn-hover-border-color:
+        var(
+            --in-accent-dark
+        );
+
+    --bs-btn-active-color:
+        #ffffff;
+
+    --bs-btn-active-bg:
+        var(
+            --in-accent-dark
+        );
+
+    --bs-btn-active-border-color:
+        var(
+            --in-accent-dark
+        );
+
+    --bs-btn-disabled-color:
+        #ffffff;
+
+    --bs-btn-disabled-bg:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-disabled-border-color:
+        var(
+            --in-accent
+        );
+
+    box-shadow:
+        0
+        4px
+        12px
+        rgba(
+            var(--in-accent-rgb),
+            0.17
+        );
+
+}
+
+
+.in-app-shell
+.btn-primary:hover,
+
+.in-app-shell
+.in-primary-btn:hover {
+
+    box-shadow:
+        0
+        7px
+        16px
+        rgba(
+            var(--in-accent-rgb),
+            0.22
+        );
+
+}
+
+
+/* =========================================================
+   INSIGHTS OUTLINE PRIMARY
+   ========================================================= */
+
+.in-app-shell
+.btn-outline-primary {
+
+    --bs-btn-color:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-border-color:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-hover-color:
+        #ffffff;
+
+    --bs-btn-hover-bg:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-hover-border-color:
+        var(
+            --in-accent
+        );
+
+    --bs-btn-active-color:
+        #ffffff;
+
+    --bs-btn-active-bg:
+        var(
+            --in-accent-dark
+        );
+
+    --bs-btn-active-border-color:
+        var(
+            --in-accent-dark
+        );
+
+    background:
+        transparent;
+
+}
+
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+.form-control,
+.form-select {
+
+    min-height:
+        var(
+            --om-control-height
+        );
+
+    border-radius:
+        var(
+            --om-radius-sm
+        );
+
+    transition:
+        border-color
+        var(
+            --om-transition-fast
+        ),
+
+        box-shadow
+        var(
+            --om-transition-fast
+        ),
+
+        background-color
+        var(
+            --om-transition-fast
+        );
+
+}
+
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+
+    border-color:
+        rgba(
+            var(--om-accent-rgb),
+            0.72
+        );
+
+    box-shadow:
+        var(
+            --om-focus-ring
+        );
+
+}
+
+
+textarea.form-control {
+
+    min-height:
+        112px;
+
+    resize:
+        vertical;
+
+}
+
+
+/* =========================================================
+   CARDS / SURFACES
+   ========================================================= */
+
+.card {
+
+    --bs-card-border-radius:
+        var(
+            --om-radius-md
+        );
+
+}
+
+
+.alert {
+
+    border-radius:
+        var(
+            --om-radius-md
+        );
+
+}
+
+
+.modal-content,
+.dropdown-menu {
+
+    border-radius:
+        var(
+            --om-radius-md
+        );
+
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.table {
+
+    vertical-align:
+        middle;
+
+}
+
+
+.table
+>
+:not(caption)
+>
+*
+>
+* {
+
+    padding-top:
+        0.8rem;
+
+    padding-bottom:
+        0.8rem;
+
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge {
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.01em;
+
+}
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.pagination {
+
+    gap:
+        0.25rem;
+
+}
+
+
+.pagination
+.page-link {
+
+    min-width:
+        36px;
+
+    min-height:
+        36px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        var(
+            --om-radius-xs
+        )
+        !important;
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / FOCUS
+   ========================================================= */
+
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+
+    outline:
+        3px
+        solid
+        rgba(
+            var(--om-accent-rgb),
+            0.28
+        );
+
+    outline-offset:
+        2px;
+
+}
+
+
+/* =========================================================
+   CONTENT WIDTH
+   ========================================================= */
+
+.om-content-width {
+
+    width:
+        100%;
+
+    max-width:
+        var(
+            --om-content-width
+        );
+
+    margin-inline:
+        auto;
+
+}
+
+
+/* =========================================================
+   STANDARD PAGE HEADER
+   ========================================================= */
+
+.om-page-header {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        var(
+            --om-space-5
+        );
+
+    margin-bottom:
+        var(
+            --om-space-5
+        );
+
+}
+
+
+.om-page-header-copy {
+
+    min-width:
+        0;
+
+    max-width:
+        var(
+            --om-copy-width
+        );
+
+}
+
+
+.om-page-eyebrow {
+
+    display:
+        block;
+
+    margin-bottom:
+        var(
+            --om-space-2
+        );
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.72rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.1em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.om-page-title {
+
+    margin:
+        0;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        clamp(
+            1.7rem,
+            3vw,
+            2.35rem
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.03em;
+
+    line-height:
+        1.08;
+
+}
+
+
+.om-page-description {
+
+    max-width:
+        var(
+            --om-copy-width
+        );
+
+    margin:
+        var(
+            --om-space-2
+        )
+        0
+        0;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    line-height:
+        1.65;
+
+}
+
+
+.om-page-actions {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        var(
+            --om-space-2
+        );
+
+}
+
+
+/* =========================================================
+   STANDARD SURFACE
+   ========================================================= */
+
+.om-surface {
+
+    border:
+        1px
+        solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-sm
+        );
+
+}
+
+
+.om-surface-header {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        var(
+            --om-space-4
+        );
+
+    padding:
+        var(
+            --om-space-5
+        );
+
+    border-bottom:
+        1px
+        solid
+        var(
+            --bs-border-color
+        );
+
+}
+
+
+.om-surface-body {
+
+    padding:
+        var(
+            --om-space-5
+        );
+
+}
+
+
+/* =========================================================
+   STANDARD EMPTY STATE
+   ========================================================= */
+
+.om-empty-state {
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    min-height:
+        220px;
+
+    padding:
+        var(
+            --om-space-6
+        );
+
+    border:
+        1px
+        dashed
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md
+        );
+
+    background:
+        var(
+            --bs-tertiary-bg
+        );
+
+    text-align:
+        center;
+
+}
+
+
+.om-empty-state-copy {
+
+    max-width:
+        520px;
+
+}
+
+
+.om-empty-state h2,
+.om-empty-state h3 {
+
+    margin:
+        0
+        0
+        var(
+            --om-space-2
+        );
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-weight:
+        800;
+
+}
+
+
+.om-empty-state p {
+
+    margin:
+        0;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+}
+
+
+/* =========================================================
+   STANDARD ACTION BAR
+   ========================================================= */
+
+.om-action-bar {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        var(
+            --om-space-3
+        );
+
+    padding:
+        var(
+            --om-space-4
+        );
+
+    border:
+        1px
+        solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-md
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+}
+
+
+/* =========================================================
+   MOBILE BUTTON BEHAVIOUR
+   ========================================================= */
+
+@media (
+    max-width: 767.98px
+) {
+
+    .om-page-header {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .om-page-actions {
+
+        width:
+            100%;
+
+        justify-content:
+            flex-start;
+
+    }
+
+
+    .om-page-actions
+    .btn {
+
+        flex:
+            1
+            1
+            150px;
+
+    }
+
+
+    .om-surface-header,
+    .om-surface-body {
+
+        padding:
+            var(
+                --om-space-4
+            );
+
+    }
+
+
+    .om-action-bar {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .om-action-bar
+    .btn {
+
+        width:
+            100%;
+
+    }
+
+}
