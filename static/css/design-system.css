@@ -2638,3 +2638,379 @@ strong {
     }
 
 }
+
+/* =========================================================
+   UI-5
+   CONFIRMATION DIALOGS
+   ========================================================= */
+
+
+/* =========================================================
+   DIALOG
+   ========================================================= */
+
+.om-confirm-dialog {
+    width:
+        min(
+            calc(
+                100% - 2rem
+            ),
+            470px
+        );
+
+    max-width:
+        470px;
+
+    padding:
+        0;
+
+    overflow:
+        visible;
+
+    border:
+        0;
+
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    background:
+        transparent;
+
+    color:
+        var(
+            --bs-body-color
+        );
+}
+
+
+.om-confirm-dialog::backdrop {
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.55
+        );
+
+    backdrop-filter:
+        blur(
+            3px
+        );
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.om-confirm-card {
+    overflow:
+        hidden;
+
+    padding:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+
+    border:
+        1px solid
+        var(
+            --bs-border-color
+        );
+
+    border-radius:
+        var(
+            --om-radius-lg,
+            1.25rem
+        );
+
+    background:
+        var(
+            --bs-body-bg
+        );
+
+    box-shadow:
+        var(
+            --om-shadow-lg
+        );
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.om-confirm-icon {
+    width:
+        52px;
+
+    height:
+        52px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    margin-bottom:
+        var(
+            --om-space-4,
+            1rem
+        );
+
+    border-radius:
+        var(
+            --om-radius-md,
+            1rem
+        );
+
+    background:
+        var(
+            --bs-danger-bg-subtle
+        );
+
+    color:
+        var(
+            --bs-danger
+        );
+
+    border:
+        1px solid
+        var(
+            --bs-danger-border-subtle
+        );
+
+    font-size:
+        1.35rem;
+
+    font-weight:
+        900;
+}
+
+
+/* =========================================================
+   WARNING VARIANT
+   ========================================================= */
+
+.om-confirm-dialog[
+    data-tone="warning"
+]
+.om-confirm-icon {
+    background:
+        var(
+            --bs-warning-bg-subtle
+        );
+
+    color:
+        var(
+            --bs-warning-text-emphasis
+        );
+
+    border-color:
+        var(
+            --bs-warning-border-subtle
+        );
+}
+
+
+/* =========================================================
+   COPY
+   ========================================================= */
+
+.om-confirm-copy {
+    margin-bottom:
+        var(
+            --om-space-5,
+            1.5rem
+        );
+}
+
+
+.om-confirm-eyebrow {
+    display:
+        block;
+
+    margin-bottom:
+        0.35rem;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.68rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.1em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.om-confirm-title {
+    margin:
+        0;
+
+    color:
+        var(
+            --bs-emphasis-color
+        );
+
+    font-size:
+        1.3rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.025em;
+}
+
+
+.om-confirm-message {
+    margin:
+        var(
+            --om-space-2,
+            0.5rem
+        )
+        0
+        0;
+
+    color:
+        var(
+            --bs-secondary-color
+        );
+
+    font-size:
+        0.9rem;
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.om-confirm-actions {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        var(
+            --om-space-3,
+            0.75rem
+        );
+}
+
+
+.om-confirm-actions
+.btn {
+    width:
+        100%;
+}
+
+
+/* =========================================================
+   DIALOG OPENING ANIMATION
+   ========================================================= */
+
+.om-confirm-dialog[
+    open
+] {
+    animation:
+        om-confirm-enter
+        160ms
+        ease-out;
+}
+
+
+@keyframes om-confirm-enter {
+
+    from {
+        opacity:
+            0;
+
+        transform:
+            translateY(
+                8px
+            )
+            scale(
+                0.985
+            );
+    }
+
+    to {
+        opacity:
+            1;
+
+        transform:
+            translateY(
+                0
+            )
+            scale(
+                1
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575.98px
+) {
+
+    .om-confirm-dialog {
+        width:
+            calc(
+                100% - 1.25rem
+            );
+    }
+
+
+    .om-confirm-card {
+        padding:
+            var(
+                --om-space-4,
+                1rem
+            );
+    }
+
+
+    .om-confirm-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .om-confirm-actions
+    #om-confirm-submit {
+        order:
+            -1;
+    }
+
+}
