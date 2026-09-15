@@ -60,8 +60,16 @@
     {% endblock %}
 
 
-    <!-- Prototype B visual layer (keeps original application behavior) -->
-    <link rel="stylesheet" href="/static/css/prototype-merge.css?v=1">
+    <link
+        rel="stylesheet"
+        href="/static/css/prototype-merge.css?v=5"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="/static/css/sidebar-scroll.css?v=1"
+    >
 
 </head>
 
@@ -98,7 +106,6 @@
             "
         >
 
-
             <span class="merchant-brand-mark">
                 M
             </span>
@@ -106,151 +113,142 @@
 
             <span>
 
-
                 <strong>
                     Merchant Console
                 </strong>
-
 
                 <small>
                     {{ restaurant.name }}
                 </small>
 
-
             </span>
-
 
         </a>
 
 
-
         <!-- ===================================== -->
-        <!-- RESTAURANT -->
+        <!-- SCROLLABLE NAVIGATION -->
         <!-- ===================================== -->
 
-        <div class="merchant-nav-label">
-            Restaurant
+        <div class="merchant-sidebar-scroll">
+
+
+            <div class="merchant-nav-label">
+                Restaurant
+            </div>
+
+
+            <nav class="merchant-nav">
+
+
+                <!-- DASHBOARD -->
+
+                <a
+                    href="/merchant"
+                    class="
+                        {% if current_path == '/merchant' %}
+                        active
+                        {% endif %}
+                    "
+                >
+
+                    <span>
+                        ◫
+                    </span>
+
+                    Dashboard
+
+                </a>
+
+
+                <!-- PROFILE -->
+
+                <a
+                    href="/merchant/profile"
+                    class="
+                        {% if current_path.startswith('/merchant/profile') %}
+                        active
+                        {% endif %}
+                    "
+                >
+
+                    <span>
+                        ○
+                    </span>
+
+                    Restaurant Profile
+
+                </a>
+
+
+                <!-- MENU -->
+
+                <a
+                    href="/merchant/menu"
+                    class="
+                        {% if current_path.startswith('/merchant/menu') %}
+                        active
+                        {% endif %}
+                    "
+                >
+
+                    <span>
+                        ≡
+                    </span>
+
+                    Menu
+
+                </a>
+
+
+                <!-- INVENTORY -->
+
+                <a
+                    href="/merchant/inventory"
+                    class="
+                        {% if current_path.startswith('/merchant/inventory') %}
+                        active
+                        {% endif %}
+                    "
+                >
+
+                    <span>
+                        ▣
+                    </span>
+
+                    Inventory
+
+                </a>
+
+
+                <!-- ORDERS -->
+
+                <a
+                    href="/merchant/orders"
+                    class="
+                        {% if current_path.startswith('/merchant/orders') %}
+                        active
+                        {% endif %}
+                    "
+                >
+
+                    <span>
+                        ◇
+                    </span>
+
+                    Orders
+
+                </a>
+
+
+            </nav>
+
+
         </div>
 
 
-        <nav class="merchant-nav">
-
-
-            <!-- DASHBOARD -->
-
-            <a
-                href="/merchant"
-                class="
-                    {% if current_path == '/merchant' %}
-                    active
-                    {% endif %}
-                "
-            >
-
-                <span>
-                    ◫
-                </span>
-
-                Dashboard
-
-            </a>
-
-
-
-            <!-- PROFILE -->
-
-            <a
-                href="/merchant/profile"
-                class="
-                    {% if current_path.startswith('/merchant/profile') %}
-                    active
-                    {% endif %}
-                "
-            >
-
-                <span>
-                    ○
-                </span>
-
-                Restaurant Profile
-
-            </a>
-
-
-
-            <!-- MENU -->
-
-            <a
-                href="/merchant/menu"
-                class="
-                    {% if current_path.startswith('/merchant/menu') %}
-                    active
-                    {% endif %}
-                "
-            >
-
-                <span>
-                    ≡
-                </span>
-
-                Menu
-
-            </a>
-
-
-
-            <!-- INVENTORY -->
-
-            <a
-                href="/merchant/inventory"
-                class="
-                    {% if current_path.startswith('/merchant/inventory') %}
-                    active
-                    {% endif %}
-                "
-            >
-
-                <span>
-                    ▣
-                </span>
-
-                Inventory
-
-            </a>
-
-
-
-            <!-- ORDERS -->
-
-            <a
-                href="/merchant/orders"
-                class="
-                    {% if current_path.startswith('/merchant/orders') %}
-                    active
-                    {% endif %}
-                "
-            >
-
-                <span>
-                    ◇
-                </span>
-
-                Orders
-
-            </a>
-
-
-        </nav>
-
-
-
-        <div class="merchant-sidebar-spacer">
-        </div>
-
-
-
         <!-- ===================================== -->
-        <!-- USER -->
+        <!-- FIXED USER AREA -->
         <!-- ===================================== -->
 
         <div class="merchant-sidebar-user">
@@ -268,16 +266,13 @@
 
                 <span>
 
-
                     <strong>
                         {{ current_user.username }}
                     </strong>
 
-
                     <small>
                         Merchant
                     </small>
-
 
                 </span>
 
@@ -285,12 +280,10 @@
             </div>
 
 
-
             <form
                 method="post"
                 action="/logout"
             >
-
 
                 <button
                     type="submit"
@@ -304,7 +297,6 @@
                     Logout
                 </button>
 
-
             </form>
 
 
@@ -312,7 +304,6 @@
 
 
     </aside>
-
 
 
     <!-- ========================================= -->
@@ -355,24 +346,19 @@
                 </button>
 
 
-
                 <!-- TITLE -->
 
                 <div class="merchant-topbar-title">
-
 
                     <small>
                         Merchant Account
                     </small>
 
-
                     <strong>
                         {{ restaurant.name }}
                     </strong>
 
-
                 </div>
-
 
 
                 <!-- ACTIONS -->
@@ -381,7 +367,6 @@
 
 
                     {% if restaurant.is_active %}
-
 
                     <a
                         href="/swiggy/restaurants/{{ restaurant.id }}"
@@ -395,9 +380,7 @@
                         Preview on Swiggy
                     </a>
 
-
                     {% else %}
-
 
                     <button
                         type="button"
@@ -412,9 +395,7 @@
                         Restaurant Inactive
                     </button>
 
-
                     {% endif %}
-
 
 
                     <button
@@ -444,7 +425,6 @@
         </header>
 
 
-
         <!-- ===================================== -->
         <!-- CONTENT -->
         <!-- ===================================== -->
@@ -461,7 +441,6 @@
 
 
 </div>
-
 
 
 <!-- ========================================= -->
@@ -484,19 +463,15 @@
 
         <div id="merchantMobileNavLabel">
 
-
             <strong class="d-block">
                 Merchant Console
             </strong>
-
 
             <small class="text-body-secondary">
                 {{ restaurant.name }}
             </small>
 
-
         </div>
-
 
 
         <button
@@ -509,7 +484,6 @@
 
 
     </div>
-
 
 
     <div
@@ -552,10 +526,7 @@
         </nav>
 
 
-
-        <!-- ===================================== -->
         <!-- OWNERSHIP NOTICE -->
-        <!-- ===================================== -->
 
         <div class="merchant-mobile-lock mt-4">
 
@@ -576,10 +547,7 @@
         </div>
 
 
-
-        <!-- ===================================== -->
         <!-- USER -->
-        <!-- ===================================== -->
 
         <div class="mt-auto pt-4">
 
@@ -601,16 +569,13 @@
 
                 <span>
 
-
                     <strong>
                         {{ current_user.username }}
                     </strong>
 
-
                     <small>
                         Merchant
                     </small>
-
 
                 </span>
 
@@ -618,12 +583,10 @@
             </div>
 
 
-
             <form
                 method="post"
                 action="/logout"
             >
-
 
                 <button
                     type="submit"
@@ -635,7 +598,6 @@
                 >
                     Logout
                 </button>
-
 
             </form>
 
@@ -649,14 +611,14 @@
 </div>
 
 
-
 <!-- ========================================= -->
 <!-- BOOTSTRAP -->
 <!-- ========================================= -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-></script>
+>
+</script>
 
 
 <!-- ========================================= -->
@@ -665,7 +627,8 @@
 
 <script
     src="/static/js/csrf.js?v=1"
-></script>
+>
+</script>
 
 
 <!-- ========================================= -->
@@ -693,7 +656,6 @@
             );
 
 
-
         function updateThemeIcon() {
 
 
@@ -716,7 +678,6 @@
 
 
         }
-
 
 
         if (themeButton) {
@@ -771,9 +732,12 @@
 {% endblock %}
 
 
+<script
+    src="/static/js/prototype-merge.js?v=1"
+    defer
+>
+</script>
 
-    <!-- Prototype B micro-interactions (non-destructive enhancement) -->
-    <script src="/static/js/prototype-merge.js?v=1" defer></script>
 
 </body>
 
