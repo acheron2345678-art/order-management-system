@@ -21,6 +21,7 @@ from app.users.models import (
 
 from app.users.service import (
     set_user_active_status,
+    update_user
 )
 
 
@@ -516,6 +517,64 @@ def reassign_merchant_restaurant(
 
         raise
 
+# =========================================================
+# UPDATE MERCHANT ACCOUNT
+# =========================================================
+
+def update_admin_merchant_account(
+    db: Session,
+    merchant_id: int,
+    *,
+    username: str,
+    email: str,
+):
+    merchant_id = (
+        validate_positive_id(
+            merchant_id,
+            "Merchant ID",
+        )
+    )
+
+
+    merchant = (
+        db.query(
+            User
+        )
+
+        .filter(
+            User.id
+            ==
+            merchant_id,
+
+            User.role
+            ==
+            MERCHANT_ROLE,
+        )
+
+        .first()
+    )
+
+
+    if merchant is None:
+
+        raise ValueError(
+            "Merchant account not found."
+        )
+
+
+    return update_user(
+        db=db,
+
+        user=merchant,
+
+        username=username,
+
+        email=email,
+
+        role=MERCHANT_ROLE,
+
+        new_password=None,
+    )
 
 # =========================================================
 # ENABLE / DISABLE MERCHANT

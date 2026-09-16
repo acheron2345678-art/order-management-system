@@ -30,6 +30,7 @@ from app.merchants.admin_service import (
     get_available_restaurants_for_merchant,
     reassign_merchant_restaurant,
     set_admin_merchant_active_state,
+    update_admin_merchant_account,
 )
 
 from app.users.models import (
@@ -214,6 +215,86 @@ def admin_merchant_edit_page(
         merchant_id=merchant_id,
     )
 
+# =========================================================
+# UPDATE MERCHANT ACCOUNT
+# =========================================================
+
+@router.post(
+    "/{merchant_id}/account",
+    response_class=HTMLResponse,
+)
+def admin_update_merchant_account(
+    merchant_id: int,
+
+    request: Request,
+
+    username: str = Form(...),
+
+    email: str = Form(...),
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    current_user: User = Depends(
+        require_admin
+    ),
+):
+    username = (
+        username
+        or
+        ""
+    ).strip()
+
+
+    email = (
+        email
+        or
+        ""
+    ).strip().lower()
+
+
+    try:
+
+        update_admin_merchant_account(
+            db=db,
+
+            merchant_id=merchant_id,
+
+            username=username,
+
+            email=email,
+        )
+
+
+    except ValueError as error:
+
+        return render_admin_merchant_edit(
+            request=request,
+
+            db=db,
+
+            current_user=current_user,
+
+            merchant_id=merchant_id,
+
+            error=str(
+                error
+            ),
+
+            status_code=400,
+        )
+
+
+    return RedirectResponse(
+        url=(
+            f"/admin/merchants/"
+            f"{merchant_id}/edit"
+            "?account_saved=1"
+        ),
+
+        status_code=303,
+    )
 
 # =========================================================
 # REASSIGN MERCHANT

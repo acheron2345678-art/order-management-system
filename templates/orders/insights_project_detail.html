@@ -4,7 +4,6 @@
 {{ order.order_number }} - Insights Project
 {% endblock %}
 
-
 {% block content %}
 
 {% set is_legacy_project =
@@ -39,13 +38,14 @@
 
         </div>
 
+
         <h1 class="h2 fw-bold mb-1">
             {{ order.order_number }}
         </h1>
 
+
         <p class="text-body-secondary mb-0">
-            Review project information, client details,
-            requirements, workflow and activity history.
+            Project details, workflow and client information.
         </p>
 
     </div>
@@ -73,86 +73,125 @@
 
 
 <!-- ========================================= -->
-<!-- TOP SUMMARY -->
+<!-- SUMMARY -->
 <!-- ========================================= -->
 
 <div class="row g-3 g-xl-4 mb-4">
 
     <div class="col-sm-6 col-xl-3">
+
         <div class="card border-0 shadow-sm h-100">
+
             <div class="card-body p-4">
+
                 <div class="small text-body-secondary mb-2">
                     Project Status
                 </div>
 
-                <span class="status-badge status-{{ order.status }}">
-                    {% if order.status == "pending" %}
-                        Pending
-                    {% else %}
-                        {{ order.status|capitalize }}
-                    {% endif %}
+                <span
+                    class="status-badge status-{{ order.status }}"
+                >
+                    {{ order.status|capitalize }}
                 </span>
+
             </div>
+
         </div>
+
     </div>
 
 
     <div class="col-sm-6 col-xl-3">
+
         <div class="card border-0 shadow-sm h-100">
+
             <div class="card-body p-4">
+
                 <div class="small text-body-secondary mb-1">
                     Project Value
                 </div>
+
                 <div class="h4 fw-bold mb-0">
                     ₹{{ "{:,.2f}".format(order.amount) }}
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
 
     <div class="col-sm-6 col-xl-3">
+
         <div class="card border-0 shadow-sm h-100">
+
             <div class="card-body p-4">
+
                 <div class="small text-body-secondary mb-1">
                     Request Date
                 </div>
+
                 <div class="fw-bold">
+
                     {% if order.order_date %}
+
                         {{ order.order_date.strftime("%d %b %Y") }}
+
                     {% else %}
+
                         Not available
+
                     {% endif %}
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
 
     <div class="col-sm-6 col-xl-3">
+
         <div class="card border-0 shadow-sm h-100">
+
             <div class="card-body p-4">
+
                 <div class="small text-body-secondary mb-1">
                     Preferred Completion
                 </div>
+
                 <div class="fw-bold">
+
                     {% if order.preferred_completion_date %}
+
                         {{ order.preferred_completion_date.strftime("%d %b %Y") }}
+
                     {% elif is_legacy_project %}
+
                         Not recorded
+
                     {% else %}
+
                         Not specified
+
                     {% endif %}
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
 </div>
 
 
 <!-- ========================================= -->
-<!-- LEGACY PROJECT NOTICE -->
+<!-- LEGACY PROJECT -->
 <!-- ========================================= -->
 
 {% if is_legacy_project %}
@@ -162,29 +201,12 @@
     role="alert"
 >
 
-    <div class="d-flex gap-3 align-items-start">
+    <strong class="d-block mb-1">
+        Legacy Project
+    </strong>
 
-        <div
-            class="quick-icon bg-body text-body-secondary flex-shrink-0"
-        >
-            i
-        </div>
-
-        <div>
-
-            <strong class="d-block mb-1">
-                Legacy Project
-            </strong>
-
-            <div class="small">
-                This project was created before detailed
-                Insights project requirements were stored.
-                Core order information and any available
-                service details are still shown below.
-            </div>
-
-        </div>
-
+    <div class="small">
+        Detailed project requirements were not stored for this older project.
     </div>
 
 </div>
@@ -213,34 +235,20 @@
         <div class="card border-0 shadow-sm mb-4">
 
             <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
+                class="card-header bg-body border-bottom insights-detail-card-header"
             >
 
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Request Details
-                </div>
-
-                <h2 class="h5 fw-bold mb-1">
+                <h2 class="h5 fw-bold mb-0">
                     Project Requirements
                 </h2>
-
-                <p class="small text-body-secondary mb-0">
-                    Client-provided scope, objective and
-                    supporting context for this project.
-                </p>
 
             </div>
 
 
             <div class="card-body p-4 p-lg-5">
 
-                <!-- PROJECT BRIEF -->
 
                 <section class="pb-4 mb-4 border-bottom">
-
-                    <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                        Project Scope
-                    </div>
 
                     <h3 class="h6 fw-bold mb-3">
                         Project Brief
@@ -250,19 +258,16 @@
 
                     <div
                         class="text-body-secondary"
-                        style="white-space: pre-wrap; line-height: 1.8;"
+                        style="
+                            white-space: pre-wrap;
+                            line-height: 1.8;
+                        "
                     >{{ order.project_brief }}</div>
 
                     {% else %}
 
                     <div class="alert alert-secondary mb-0">
-                        {% if is_legacy_project %}
-                            Project brief unavailable for this
-                            older project.
-                        {% else %}
-                            No project brief was provided for
-                            this project.
-                        {% endif %}
+                        Project brief unavailable.
                     </div>
 
                     {% endif %}
@@ -270,13 +275,7 @@
                 </section>
 
 
-                <!-- BUSINESS GOAL -->
-
                 <section class="pb-4 mb-4 border-bottom">
-
-                    <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                        Business Objective
-                    </div>
 
                     <h3 class="h6 fw-bold mb-3">
                         Business Goal
@@ -286,19 +285,16 @@
 
                     <div
                         class="text-body-secondary"
-                        style="white-space: pre-wrap; line-height: 1.8;"
+                        style="
+                            white-space: pre-wrap;
+                            line-height: 1.8;
+                        "
                     >{{ order.business_goal }}</div>
 
                     {% else %}
 
                     <div class="alert alert-secondary mb-0">
-                        {% if is_legacy_project %}
-                            Business goal unavailable for this
-                            older project.
-                        {% else %}
-                            No business goal was provided for
-                            this project.
-                        {% endif %}
+                        Business goal unavailable.
                     </div>
 
                     {% endif %}
@@ -306,13 +302,7 @@
                 </section>
 
 
-                <!-- ADDITIONAL NOTES -->
-
                 <section>
-
-                    <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                        Supporting Context
-                    </div>
 
                     <h3 class="h6 fw-bold mb-3">
                         Additional Notes
@@ -322,18 +312,16 @@
 
                     <div
                         class="text-body-secondary"
-                        style="white-space: pre-wrap; line-height: 1.8;"
+                        style="
+                            white-space: pre-wrap;
+                            line-height: 1.8;
+                        "
                     >{{ order.additional_notes }}</div>
 
                     {% else %}
 
                     <p class="text-body-secondary mb-0">
-                        {% if is_legacy_project %}
-                            Additional notes unavailable for this
-                            older project.
-                        {% else %}
-                            No additional notes were provided.
-                        {% endif %}
+                        No additional notes.
                     </p>
 
                     {% endif %}
@@ -351,7 +339,6 @@
 
         {% include "orders/_history_timeline.html" %}
 
-
     </div>
 
 
@@ -359,7 +346,7 @@
     <!-- RIGHT COLUMN -->
     <!-- ===================================== -->
 
-    <div class="col-xl-4">
+    <div class="col-xl-4 order-detail-sidebar">
 
 
         <!-- ================================= -->
@@ -369,12 +356,8 @@
         <div class="card border-0 shadow-sm mb-4">
 
             <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
+                class="card-header bg-body border-bottom insights-detail-card-header"
             >
-
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Project
-                </div>
 
                 <h2 class="h5 fw-bold mb-0">
                     Project Information
@@ -382,70 +365,116 @@
 
             </div>
 
+
             <div class="card-body p-4">
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Project Number
                     </span>
+
                     <strong class="text-end">
                         {{ order.order_number }}
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Service
                     </span>
+
                     <strong class="text-end">
                         {{ order.product_name or "Insights Service" }}
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Platform
                     </span>
-                    <strong>
+
+                    <strong class="text-end">
                         Insights
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Request Date
                     </span>
+
                     <strong class="text-end">
+
                         {% if order.order_date %}
+
                             {{ order.order_date.strftime("%d %b %Y") }}
+
                         {% else %}
+
                             Not available
+
                         {% endif %}
+
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Preferred Completion
                     </span>
+
                     <strong class="text-end">
+
                         {% if order.preferred_completion_date %}
+
                             {{ order.preferred_completion_date.strftime("%d %b %Y") }}
-                        {% elif is_legacy_project %}
-                            Not recorded
+
                         {% else %}
+
                             Not specified
+
                         {% endif %}
+
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3"
+                >
+
                     <span class="text-body-secondary">
                         Project Value
                     </span>
-                    <strong>
+
+                    <strong class="text-end text-primary">
                         ₹{{ "{:,.2f}".format(order.amount) }}
                     </strong>
+
                 </div>
 
             </div>
@@ -460,12 +489,8 @@
         <div class="card border-0 shadow-sm mb-4">
 
             <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
+                class="card-header bg-body border-bottom insights-detail-card-header"
             >
-
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Client
-                </div>
 
                 <h2 class="h5 fw-bold mb-0">
                     Client Information
@@ -473,41 +498,71 @@
 
             </div>
 
+
             <div class="card-body p-4">
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Client / Company
                     </span>
+
                     <strong class="text-end">
                         {{ order.customer_name }}
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3 border-bottom">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3 border-bottom"
+                >
+
                     <span class="text-body-secondary">
                         Account
                     </span>
+
                     <strong class="text-end">
+
                         {% if client %}
+
                             {{ client.username }}
+
                         {% else %}
+
                             Unassigned
+
                         {% endif %}
+
                     </strong>
+
                 </div>
 
-                <div class="d-flex justify-content-between gap-3 py-3">
+
+                <div
+                    class="d-flex justify-content-between gap-3 py-3"
+                >
+
                     <span class="text-body-secondary">
                         Email
                     </span>
+
                     <strong class="text-end text-break">
+
                         {% if client %}
+
                             {{ client.email }}
+
                         {% else %}
+
                             Not available
+
                         {% endif %}
+
                     </strong>
+
                 </div>
 
             </div>
@@ -516,64 +571,91 @@
 
 
         <!-- ================================= -->
-        <!-- STATUS WORKFLOW -->
+        <!-- PROJECT STATUS -->
         <!-- ================================= -->
 
         <div class="card border-0 shadow-sm mb-4">
 
             <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
+                class="card-header bg-body border-bottom insights-detail-card-header"
             >
 
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Workflow
-                </div>
-
-                <h2 class="h5 fw-bold mb-1">
-                    Project Status Workflow
+                <h2 class="h5 fw-bold mb-0">
+                    Project Status
                 </h2>
 
-                <p class="small text-body-secondary mb-0">
-                    Current project stage and valid next statuses.
-                </p>
-
             </div>
+
 
             <div class="card-body p-4">
 
                 <div class="mb-4">
+
                     <div class="detail-label mb-2">
                         Current Status
                     </div>
-                    <span class="status-badge status-{{ order.status }}">
+
+                    <span
+                        class="status-badge status-{{ order.status }}"
+                    >
                         {{ order.status|capitalize }}
                     </span>
+
                 </div>
+
 
                 {% if order.status != "cancelled" %}
 
-                <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
+                <div
+                    class="d-flex align-items-center gap-2 flex-wrap mb-4"
+                >
 
                     <span
-                        class="badge {% if order.status in ['pending', 'processing', 'completed'] %}text-bg-primary{% else %}bg-body-tertiary text-body border{% endif %}"
+                        class="
+                            badge
+                            {% if order.status in ['pending', 'processing', 'completed'] %}
+                                text-bg-primary
+                            {% else %}
+                                bg-body-tertiary text-body border
+                            {% endif %}
+                        "
                     >
-                        1. Pending
+                        Pending
                     </span>
 
-                    <span class="text-body-secondary">→</span>
-
-                    <span
-                        class="badge {% if order.status in ['processing', 'completed'] %}text-bg-info{% else %}bg-body-tertiary text-body border{% endif %}"
-                    >
-                        2. Processing
+                    <span class="text-body-secondary">
+                        →
                     </span>
 
-                    <span class="text-body-secondary">→</span>
 
                     <span
-                        class="badge workflow-completed-step {% if order.status == 'completed' %}active{% endif %}"
+                        class="
+                            badge
+                            {% if order.status in ['processing', 'completed'] %}
+                                text-bg-info
+                            {% else %}
+                                bg-body-tertiary text-body border
+                            {% endif %}
+                        "
                     >
-                        3. Completed
+                        Processing
+                    </span>
+
+                    <span class="text-body-secondary">
+                        →
+                    </span>
+
+
+                    <span
+                        class="
+                            badge
+                            workflow-completed-step
+                            {% if order.status == 'completed' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        Completed
                     </span>
 
                 </div>
@@ -585,46 +667,43 @@
 
                 <div class="border-top pt-3">
 
-                    <div class="small text-body-secondary mb-2">
-                        Available next actions
-                    </div>
-
                     <div class="d-grid gap-2">
 
                         {% if "processing" in allowed_next_statuses %}
+
                         <a
                             href="/insights/orders/edit/{{ order.id }}#status"
                             class="btn btn-primary"
                         >
                             Start Project
                         </a>
+
                         {% endif %}
 
+
                         {% if "completed" in allowed_next_statuses %}
+
                         <a
                             href="/insights/orders/edit/{{ order.id }}#status"
                             class="btn btn-success"
                         >
                             Mark Completed
                         </a>
+
                         {% endif %}
 
+
                         {% if "cancelled" in allowed_next_statuses %}
+
                         <a
                             href="/insights/orders/edit/{{ order.id }}#status"
                             class="btn btn-outline-danger"
                         >
                             Cancel Project
                         </a>
+
                         {% endif %}
 
-                    </div>
-
-                    <div class="small text-body-secondary mt-2">
-                        Status changes continue through the
-                        existing management flow so transition
-                        validation, audit history and client email
-                        notifications remain unchanged.
                     </div>
 
                 </div>
@@ -632,17 +711,31 @@
                 {% else %}
 
                 <div
-                    class="alert {% if order.status == 'completed' %}alert-success{% else %}alert-secondary{% endif %} mb-0"
+                    class="
+                        alert
+                        {% if order.status == 'completed' %}
+                            alert-success
+                        {% else %}
+                            alert-secondary
+                        {% endif %}
+                        mb-0
+                    "
                 >
+
                     {% if order.status == "completed" %}
-                        This project is complete. No further
-                        status changes are available.
+
+                        Project completed.
+
                     {% elif order.status == "cancelled" %}
-                        This project has been cancelled. No
-                        further status changes are available.
+
+                        Project cancelled.
+
                     {% else %}
-                        No further status changes are available.
+
+                        No further status changes available.
+
                     {% endif %}
+
                 </div>
 
                 {% endif %}
@@ -659,18 +752,15 @@
         <div class="card border-0 shadow-sm mb-4">
 
             <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
+                class="card-header bg-body border-bottom insights-detail-card-header"
             >
-
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Deliverable
-                </div>
 
                 <h2 class="h5 fw-bold mb-0">
                     Selected Service
                 </h2>
 
             </div>
+
 
             <div class="card-body p-4">
 
@@ -679,22 +769,31 @@
                     {% for item in order_items %}
 
                     <div
-                        class="py-3 {% if not loop.last %}border-bottom{% endif %}"
+                        class="
+                            py-3
+                            {% if not loop.last %}
+                                border-bottom
+                            {% endif %}
+                        "
                     >
 
                         <div class="fw-semibold">
                             {{ item.product_name }}
                         </div>
 
+
                         <div
                             class="d-flex justify-content-between gap-3 mt-2 small text-body-secondary"
                         >
+
                             <span>
                                 Service Value
                             </span>
+
                             <span>
                                 ₹{{ "{:,.2f}".format(item.line_total) }}
                             </span>
+
                         </div>
 
                     </div>
@@ -703,16 +802,18 @@
 
                 {% else %}
 
-                <div class="alert alert-secondary mb-0">
-                    {% if is_legacy_project %}
-                        Service-line details are unavailable for
-                        this older project. The original service
-                        name and project value remain visible in
-                        Project Information.
-                    {% else %}
-                        No service-line information is available
-                        for this project.
-                    {% endif %}
+                <div
+                    class="d-flex justify-content-between gap-3"
+                >
+
+                    <span class="text-body-secondary">
+                        {{ order.product_name or "Insights Service" }}
+                    </span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(order.amount) }}
+                    </strong>
+
                 </div>
 
                 {% endif %}
@@ -729,24 +830,17 @@
         <div class="card border-0 shadow-sm">
 
             <div
-                class="card-header bg-body border-bottom p-3 p-md-4"
+                class="card-header bg-body border-bottom insights-detail-card-header"
             >
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Management
-                </div>
+
                 <h2 class="h5 fw-bold mb-0">
                     Admin Actions
                 </h2>
+
             </div>
 
-            <div class="card-body p-4">
 
-                <p class="small text-body-secondary mb-3">
-                    Review project information before making
-                    changes. Status changes automatically keep
-                    the audit trail and client email notification
-                    flow intact.
-                </p>
+            <div class="card-body p-4">
 
                 <div class="d-grid gap-2">
 
@@ -754,7 +848,7 @@
                         href="/insights/orders/edit/{{ order.id }}"
                         class="btn btn-primary"
                     >
-                        Manage Project
+                        Edit Project
                     </a>
 
                     <a
@@ -770,36 +864,8 @@
 
         </div>
 
-
     </div>
 
-
 </div>
-
-
-<!-- ========================================= -->
-<!-- FOOTER ACTION -->
-<!-- ========================================= -->
-
-<div
-    class="d-flex justify-content-between flex-wrap gap-2 mt-4"
->
-
-    <a
-        href="/insights/orders"
-        class="btn btn-outline-secondary"
-    >
-        ← Back to Insights Projects
-    </a>
-
-    <a
-        href="/insights/orders/edit/{{ order.id }}"
-        class="btn btn-primary"
-    >
-        Edit Project
-    </a>
-
-</div>
-
 
 {% endblock %}

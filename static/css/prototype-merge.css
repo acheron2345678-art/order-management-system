@@ -5192,3 +5192,109 @@ button:focus-visible {
    Dark
    #0F172A
    ========================================================= */
+
+   /* =========================================================
+   ORDER DETAIL RIGHT SIDEBAR
+   ========================================================= */
+
+.order-detail-sidebar .card-header {
+    min-height: 54px;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        0.95rem
+        1.1rem !important;
+}
+
+
+.order-detail-sidebar .card-header h2 {
+    margin:
+        0 !important;
+
+    font-size:
+        1rem !important;
+
+    line-height:
+        1.25 !important;
+
+    letter-spacing:
+        -0.015em;
+
+    white-space:
+        normal;
+
+    overflow-wrap:
+        anywhere;
+}
+
+
+.order-detail-sidebar .card-body {
+    padding:
+        1.1rem !important;
+}
+
+
+.order-detail-sidebar .detail-label {
+    margin-bottom:
+        0.3rem;
+}
+
+
+.order-detail-sidebar .mb-4 {
+    margin-bottom:
+        1rem !important;
+}
+
+
+@media (min-width: 1200px) {
+
+    .order-detail-sidebar {
+        align-self:
+            start;
+    }
+
+}
+
+/* =========================================================
+   DETAIL / ADMIN CARD HEADER CLEANUP
+   ========================================================= */
+
+.card-header > h2:first-child,
+.card-header > h3:first-child {
+    margin-top: 0 !important;
+}
+
+
+/* =========================================================
+   ADMIN MERCHANT + INSIGHTS HEADERS
+   ========================================================= */
+
+.merchant-management-card-header,
+.insights-detail-card-header {
+    min-height: 54px;
+
+    display: flex !important;
+    align-items: center !important;
+
+    padding:
+        0.95rem
+        1.1rem !important;
+}
+
+
+.merchant-management-card-header h2,
+.insights-detail-card-header h2 {
+    margin: 0 !important;
+
+    font-size: 1rem;
+
+    line-height: 1.25;
+
+    letter-spacing: -0.015em;
+
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+}

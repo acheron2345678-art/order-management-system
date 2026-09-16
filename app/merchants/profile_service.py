@@ -9,6 +9,42 @@ from app.restaurants.service import (
     update_restaurant,
 )
 
+from app.users.models import (
+    User,
+)
+
+from app.users.service import (
+    update_user,
+)
+
+def update_merchant_account_profile(
+    db: Session,
+    merchant: User,
+    *,
+    username: str,
+    email: str,
+):
+    """
+    Allow a Merchant to update only their
+    own account username and email.
+
+    Role, active state and restaurant assignment
+    cannot be changed by the Merchant.
+    """
+
+    if merchant.role != "merchant":
+        raise ValueError(
+            "Only Merchant accounts can be updated here."
+        )
+
+    return update_user(
+        db=db,
+        user=merchant,
+        username=username,
+        email=email,
+        role="merchant",
+        new_password=None,
+    )
 
 def update_merchant_restaurant_profile(
     db: Session,

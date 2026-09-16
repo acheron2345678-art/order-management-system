@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 
-
 {% block title %}
-
 Manage {{ merchant.username }} - Merchant Management
-
 {% endblock %}
 
-
 {% block content %}
+
+{% set entered_username =
+    account_form_data.username
+    if account_form_data
+    else merchant.username
+%}
+
+{% set entered_email =
+    account_form_data.email
+    if account_form_data
+    else merchant.email
+%}
 
 
 <!-- ========================================= -->
@@ -16,184 +24,109 @@ Manage {{ merchant.username }} - Merchant Management
 <!-- ========================================= -->
 
 <div
-    class="
-        d-flex
-        flex-column
-        flex-lg-row
-        align-items-lg-center
-        justify-content-between
-        gap-3
-        mb-4
-    "
+    class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4"
 >
-
 
     <div>
 
-
         <a
             href="/admin/merchants"
-            class="
-                text-decoration-none
-                small
-                fw-semibold
-            "
+            class="text-decoration-none small fw-semibold"
         >
             ← Merchant Management
         </a>
 
-
         <h1 class="h2 mt-2 mb-1">
-
             {{ merchant.username }}
-
         </h1>
 
-
         <p class="text-body-secondary mb-0">
-
-            Manage this Merchant account and
-            its restaurant ownership.
-
+            Manage the Merchant account and restaurant assignment.
         </p>
 
-
     </div>
-
 
 
     <div>
 
-
         {% if merchant.is_active %}
 
-
-        <span
-            class="
-                badge
-                text-bg-success
-                fs-6
-            "
-        >
+        <span class="badge text-bg-success fs-6">
             Account Enabled
         </span>
 
-
         {% else %}
 
-
-        <span
-            class="
-                badge
-                text-bg-danger
-                fs-6
-            "
-        >
+        <span class="badge text-bg-danger fs-6">
             Account Disabled
         </span>
 
-
         {% endif %}
 
-
     </div>
-
 
 </div>
 
 
-
 <!-- ========================================= -->
-<!-- SUCCESS / ERROR -->
+<!-- MESSAGES -->
 <!-- ========================================= -->
 
 {% if request.query_params.get("reassigned") == "1" %}
 
-
-<div
-    class="
-        alert
-        alert-success
-    "
->
-
-
+<div class="alert alert-success">
     <strong>
         ✓ Restaurant assignment updated.
     </strong>
-
-
-    The Merchant now manages the selected restaurant.
-
-
 </div>
-
 
 {% endif %}
 
+
+{% if request.query_params.get("account_saved") == "1" %}
+
+<div class="alert alert-success">
+    <strong>
+        ✓ Merchant profile updated.
+    </strong>
+</div>
+
+{% endif %}
 
 
 {% if request.query_params.get("status") == "active" %}
 
-
 <div class="alert alert-success">
-
-
     <strong>
         ✓ Merchant account enabled.
     </strong>
-
-
-    The Merchant can sign in again.
-
-
 </div>
-
 
 {% elif request.query_params.get("status") == "inactive" %}
 
-
 <div class="alert alert-warning">
-
-
     <strong>
         Merchant account disabled.
     </strong>
-
-
-    Restaurant ownership remains reserved
-    to this account.
-
-
 </div>
 
-
 {% endif %}
-
 
 
 {% if error %}
 
-
-<div
-    class="
-        alert
-        alert-danger
-    "
->
+<div class="alert alert-danger">
     {{ error }}
 </div>
 
-
 {% endif %}
-
 
 
 <div class="row g-4">
 
 
     <!-- ===================================== -->
-    <!-- LEFT -->
+    <!-- LEFT COLUMN -->
     <!-- ===================================== -->
 
     <div class="col-lg-8">
@@ -205,77 +138,37 @@ Manage {{ merchant.username }} - Merchant Management
 
         <div class="card shadow-sm mb-4">
 
+            <div
+                class="card-header bg-body merchant-management-card-header"
+            >
 
-            <div class="card-header bg-body py-3">
-
-
-                <span
-                    class="
-                        text-primary
-                        fw-bold
-                        small
-                        text-uppercase
-                    "
-                >
-                    Restaurant Ownership
-                </span>
-
-
-                <h2 class="h5 mt-1 mb-0">
+                <h2 class="h5 fw-bold mb-0">
                     Restaurant Assignment
                 </h2>
-
 
             </div>
 
 
-
             <div class="card-body">
-
 
                 {% if restaurant %}
 
+                <div class="border rounded-3 p-3 mb-4">
 
-                <div
-                    class="
-                        border
-                        rounded-3
-                        p-3
-                        mb-4
-                    "
-                >
-
-
-                    <small
-                        class="
-                            text-body-secondary
-                            d-block
-                        "
-                    >
+                    <small class="text-body-secondary d-block">
                         Currently Assigned
                     </small>
 
 
                     <div
-                        class="
-                            d-flex
-                            flex-column
-                            flex-md-row
-                            align-items-md-center
-                            justify-content-between
-                            gap-3
-                            mt-1
-                        "
+                        class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mt-1"
                     >
 
-
                         <div>
-
 
                             <strong class="fs-5 d-block">
                                 {{ restaurant.name }}
                             </strong>
-
 
                             <span class="text-body-secondary">
 
@@ -289,62 +182,40 @@ Manage {{ merchant.username }} - Merchant Management
 
                             </span>
 
-
                         </div>
-
 
 
                         <div>
 
-
                             {% if restaurant.is_active %}
-
 
                             <span class="badge text-bg-success">
                                 Active Restaurant
                             </span>
 
-
                             {% else %}
-
 
                             <span class="badge text-bg-secondary">
                                 Inactive Restaurant
                             </span>
 
-
                             {% endif %}
-
 
                         </div>
 
-
                     </div>
 
-
                 </div>
-
 
                 {% else %}
 
-
                 <div class="alert alert-warning">
-
-
                     <strong>
                         No restaurant assigned.
                     </strong>
-
-
-                    Select an available restaurant below
-                    to repair this Merchant account.
-
-
                 </div>
 
-
                 {% endif %}
-
 
 
                 <form
@@ -352,20 +223,14 @@ Manage {{ merchant.username }} - Merchant Management
                     action="/admin/merchants/{{ merchant.id }}/reassign"
                 >
 
-
                     <div class="mb-3">
-
 
                         <label
                             for="restaurant_id"
-                            class="
-                                form-label
-                                fw-semibold
-                            "
+                            class="form-label fw-semibold"
                         >
                             Assign Restaurant
                         </label>
-
 
 
                         <select
@@ -375,15 +240,12 @@ Manage {{ merchant.username }} - Merchant Management
                             required
                         >
 
-
                             <option value="">
                                 Select restaurant
                             </option>
 
 
-
                             {% for available_restaurant in available_restaurants %}
-
 
                             <option
                                 value="{{ available_restaurant.id }}"
@@ -392,10 +254,9 @@ Manage {{ merchant.username }} - Merchant Management
                                     and
                                     available_restaurant.id == restaurant.id
                                 %}
-                                selected
+                                    selected
                                 {% endif %}
                             >
-
 
                                 {{ available_restaurant.name }}
 
@@ -403,36 +264,21 @@ Manage {{ merchant.username }} - Merchant Management
                                     — Inactive
                                 {% endif %}
 
-
                             </option>
 
-
                             {% endfor %}
-
 
                         </select>
 
 
-
                         <div class="form-text">
-
-
-                            Restaurants owned by another
-                            Merchant are automatically excluded.
-
-                            The Merchant cannot change this
-                            assignment themselves.
-
-
+                            Restaurants assigned to another Merchant are excluded.
                         </div>
-
 
                     </div>
 
 
-
                     {% if available_restaurants %}
-
 
                     <button
                         type="submit"
@@ -441,9 +287,7 @@ Manage {{ merchant.username }} - Merchant Management
                         Save Restaurant Assignment
                     </button>
 
-
                     {% else %}
-
 
                     <button
                         type="button"
@@ -453,441 +297,293 @@ Manage {{ merchant.username }} - Merchant Management
                         No Restaurants Available
                     </button>
 
-
                     {% endif %}
-
 
                 </form>
 
-
             </div>
-
 
         </div>
 
 
-
         <!-- ================================= -->
-        <!-- REASSIGNMENT INFORMATION -->
+        <!-- REASSIGNMENT RULES -->
         <!-- ================================= -->
 
         <div class="card shadow-sm">
 
+            <div
+                class="card-header bg-body merchant-management-card-header"
+            >
 
-            <div class="card-header bg-body py-3">
-
-
-                <span
-                    class="
-                        text-primary
-                        fw-bold
-                        small
-                        text-uppercase
-                    "
-                >
-                    Important
-                </span>
-
-
-                <h2 class="h5 mt-1 mb-0">
-                    What Reassignment Changes
+                <h2 class="h5 fw-bold mb-0">
+                    Reassignment Rules
                 </h2>
 
-
             </div>
-
 
 
             <div class="card-body">
 
+                <div class="d-grid gap-3">
 
-                <div
-                    class="
-                        d-grid
-                        gap-3
-                    "
-                >
+                    <div class="border rounded-3 p-3">
 
-
-                    <div
-                        class="
-                            border
-                            rounded-3
-                            p-3
-                        "
-                    >
-
-
-                        <strong class="d-block">
+                        <strong class="d-block mb-1">
                             Merchant Console
                         </strong>
 
-
                         <small class="text-body-secondary">
-
-                            The Merchant immediately begins
-                            managing the new restaurant's
-                            profile, menu and inventory.
-
+                            The Merchant immediately manages the newly assigned restaurant.
                         </small>
-
 
                     </div>
 
 
+                    <div class="border rounded-3 p-3">
 
-                    <div
-                        class="
-                            border
-                            rounded-3
-                            p-3
-                        "
-                    >
-
-
-                        <strong class="d-block">
+                        <strong class="d-block mb-1">
                             Existing Orders
                         </strong>
 
-
                         <small class="text-body-secondary">
-
-                            Swiggy orders remain permanently
-                            attached to the restaurant that
-                            received them at checkout.
-
+                            Existing Swiggy orders stay with the restaurant that received them.
                         </small>
-
 
                     </div>
 
 
+                    <div class="border rounded-3 p-3">
 
-                    <div
-                        class="
-                            border
-                            rounded-3
-                            p-3
-                        "
-                    >
-
-
-                        <strong class="d-block">
+                        <strong class="d-block mb-1">
                             Previous Restaurant
                         </strong>
 
-
                         <small class="text-body-secondary">
-
-                            After reassignment, the previous
-                            restaurant becomes unclaimed and
-                            may later be assigned to another
-                            Merchant.
-
+                            The previous restaurant becomes available for another Merchant.
                         </small>
-
 
                     </div>
 
 
+                    <div class="border rounded-3 p-3">
 
-                    <div
-                        class="
-                            border
-                            rounded-3
-                            p-3
-                        "
-                    >
-
-
-                        <strong class="d-block">
+                        <strong class="d-block mb-1">
                             Ownership Rule
                         </strong>
 
-
                         <small class="text-body-secondary">
-
-                            A restaurant can never be assigned
-                            to two Merchant accounts at the
-                            same time.
-
+                            One restaurant can belong to only one Merchant account at a time.
                         </small>
-
 
                     </div>
 
-
                 </div>
-
 
             </div>
 
-
         </div>
-
 
     </div>
 
 
-
     <!-- ===================================== -->
-    <!-- RIGHT -->
+    <!-- RIGHT COLUMN -->
     <!-- ===================================== -->
 
     <div class="col-lg-4">
 
 
         <!-- ================================= -->
-        <!-- ACCOUNT -->
+        <!-- MERCHANT ACCOUNT -->
         <!-- ================================= -->
 
         <div class="card shadow-sm mb-4">
 
+            <div
+                class="card-header bg-body merchant-management-card-header"
+            >
 
-            <div class="card-header bg-body py-3">
-
-
-                <span
-                    class="
-                        text-primary
-                        fw-bold
-                        small
-                        text-uppercase
-                    "
-                >
+                <h2 class="h5 fw-bold mb-0">
                     Merchant Account
-                </span>
-
-
-                <h2 class="h5 mt-1 mb-0">
-                    Account Information
                 </h2>
 
-
             </div>
-
 
 
             <div class="card-body">
 
+                <form
+                    method="post"
+                    action="/admin/merchants/{{ merchant.id }}/account"
+                >
 
-                <dl class="mb-0">
+                    <div class="mb-3">
 
-
-                    <div
-                        class="
-                            d-flex
-                            justify-content-between
-                            gap-3
-                            py-2
-                            border-bottom
-                        "
-                    >
-
-
-                        <dt class="text-body-secondary">
-                            Username
-                        </dt>
-
-
-                        <dd class="mb-0 fw-semibold text-end">
-                            {{ merchant.username }}
-                        </dd>
-
-
-                    </div>
-
-
-
-                    <div
-                        class="
-                            d-flex
-                            justify-content-between
-                            gap-3
-                            py-2
-                            border-bottom
-                        "
-                    >
-
-
-                        <dt class="text-body-secondary">
-                            Email
-                        </dt>
-
-
-                        <dd
-                            class="
-                                mb-0
-                                fw-semibold
-                                text-end
-                                text-break
-                            "
+                        <label
+                            for="merchant_username"
+                            class="form-label fw-semibold"
                         >
-                            {{ merchant.email }}
-                        </dd>
+                            Username
+                        </label>
 
-
-                    </div>
-
-
-
-                    <div
-                        class="
-                            d-flex
-                            justify-content-between
-                            gap-3
-                            py-2
-                            border-bottom
-                        "
-                    >
-
-
-                        <dt class="text-body-secondary">
-                            Role
-                        </dt>
-
-
-                        <dd class="mb-0 fw-semibold">
-                            Merchant
-                        </dd>
-
+                        <input
+                            id="merchant_username"
+                            name="username"
+                            type="text"
+                            class="form-control"
+                            value="{{ entered_username }}"
+                            maxlength="100"
+                            required
+                        >
 
                     </div>
 
 
+                    <div class="mb-3">
 
-                    <div
-                        class="
-                            d-flex
-                            justify-content-between
-                            gap-3
-                            py-2
-                            border-bottom
-                        "
-                    >
+                        <label
+                            for="merchant_email"
+                            class="form-label fw-semibold"
+                        >
+                            Gmail Address
+                        </label>
 
-
-                        <dt class="text-body-secondary">
-                            User ID
-                        </dt>
-
-
-                        <dd class="mb-0 fw-semibold">
-                            #{{ merchant.id }}
-                        </dd>
-
+                        <input
+                            id="merchant_email"
+                            name="email"
+                            type="email"
+                            class="form-control"
+                            value="{{ entered_email }}"
+                            maxlength="255"
+                            required
+                        >
 
                     </div>
 
 
+                    <div class="mb-3">
 
-                    <div
-                        class="
-                            d-flex
-                            justify-content-between
-                            gap-3
-                            py-2
-                        "
-                    >
+                        <label
+                            for="merchant_new_password"
+                            class="form-label fw-semibold"
+                        >
+                            New Password
+                        </label>
+
+                        <input
+                            id="merchant_new_password"
+                            name="new_password"
+                            type="password"
+                            class="form-control"
+                            minlength="8"
+                            autocomplete="new-password"
+                            placeholder="Leave blank to keep current password"
+                        >
+
+                    </div>
 
 
-                        <dt class="text-body-secondary">
+                    <div class="row g-3 mb-3">
+
+                        <div class="col-sm-6">
+
+                            <label class="form-label fw-semibold">
+                                Role
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="Merchant"
+                                disabled
+                            >
+
+                        </div>
+
+
+                        <div class="col-sm-6">
+
+                            <label class="form-label fw-semibold">
+                                User ID
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="#{{ merchant.id }}"
+                                disabled
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
                             Created
-                        </dt>
+                        </label>
 
-
-                        <dd class="mb-0 fw-semibold text-end">
-
-
-                            {% if merchant.created_at %}
-
-                                {{ merchant.created_at.strftime('%d %b %Y') }}
-
-                            {% else %}
-
-                                —
-
-                            {% endif %}
-
-
-                        </dd>
-
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{% if merchant.created_at %}{{ merchant.created_at.strftime('%d %b %Y') }}{% else %}—{% endif %}"
+                            disabled
+                        >
 
                     </div>
 
 
-                </dl>
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        Save Merchant Profile
+                    </button>
 
+                </form>
 
             </div>
-
 
         </div>
 
 
-
         <!-- ================================= -->
-        <!-- STATUS -->
+        <!-- ACCOUNT STATUS -->
         <!-- ================================= -->
 
         <div class="card shadow-sm mb-4">
 
+            <div
+                class="card-header bg-body merchant-management-card-header"
+            >
 
-            <div class="card-header bg-body py-3">
-
-
-                <span
-                    class="
-                        text-primary
-                        fw-bold
-                        small
-                        text-uppercase
-                    "
-                >
-                    Authentication
-                </span>
-
-
-                <h2 class="h5 mt-1 mb-0">
+                <h2 class="h5 fw-bold mb-0">
                     Account Status
                 </h2>
-
 
             </div>
 
 
-
             <div class="card-body">
-
 
                 {% if merchant.is_active %}
 
-
                 <div class="alert alert-success">
-
 
                     <strong class="d-block">
                         Enabled
                     </strong>
 
-
-                    <small>
-
-                        The Merchant can currently
-                        sign in and use their console.
-
-                    </small>
-
-
                 </div>
-
 
 
                 <form
                     method="post"
                     action="/admin/merchants/{{ merchant.id }}/status"
                 >
-
 
                     <input
                         type="hidden"
@@ -895,46 +591,24 @@ Manage {{ merchant.username }} - Merchant Management
                         value="inactive"
                     >
 
-
                     <button
                         type="submit"
-                        class="
-                            btn
-                            btn-outline-danger
-                            w-100
-                        "
+                        class="btn btn-outline-danger w-100"
                     >
                         Disable Merchant
                     </button>
 
-
                 </form>
-
 
                 {% else %}
 
-
                 <div class="alert alert-danger">
-
 
                     <strong class="d-block">
                         Disabled
                     </strong>
 
-
-                    <small>
-
-                        This Merchant cannot currently
-                        authenticate.
-
-                        Restaurant ownership is still
-                        reserved to this account.
-
-                    </small>
-
-
                 </div>
-
 
 
                 <form
@@ -942,116 +616,65 @@ Manage {{ merchant.username }} - Merchant Management
                     action="/admin/merchants/{{ merchant.id }}/status"
                 >
 
-
                     <input
                         type="hidden"
                         name="state"
                         value="active"
                     >
 
-
                     <button
                         type="submit"
-                        class="
-                            btn
-                            btn-outline-success
-                            w-100
-                        "
+                        class="btn btn-outline-success w-100"
                     >
                         Enable Merchant
                     </button>
 
-
                 </form>
-
 
                 {% endif %}
 
-
             </div>
-
 
         </div>
 
 
-
         <!-- ================================= -->
-        <!-- OWNERSHIP -->
+        <!-- ASSIGNMENT SECURITY -->
         <!-- ================================= -->
 
         <div class="card shadow-sm">
 
+            <div
+                class="card-header bg-body merchant-management-card-header"
+            >
 
-            <div class="card-header bg-body py-3">
-
-
-                <span
-                    class="
-                        text-primary
-                        fw-bold
-                        small
-                        text-uppercase
-                    "
-                >
-                    Ownership
-                </span>
-
-
-                <h2 class="h5 mt-1 mb-0">
+                <h2 class="h5 fw-bold mb-0">
                     Assignment Security
                 </h2>
 
-
             </div>
-
 
 
             <div class="card-body">
 
-
-                <p class="text-body-secondary small">
-
-
-                    Restaurant assignment can only
-                    be changed by an administrator.
-
-
+                <p class="text-body-secondary small mb-3">
+                    Restaurant assignment can only be changed by an administrator.
                 </p>
 
-
-
-                <p class="text-body-secondary small">
-
-
-                    Merchant forms never accept a
-                    restaurant ID for ownership changes.
-
-
+                <p class="text-body-secondary small mb-3">
+                    Merchant forms never accept a restaurant ID for ownership changes.
                 </p>
-
-
 
                 <p class="text-body-secondary small mb-0">
-
-
-                    Database uniqueness rules prevent
-                    one restaurant from having multiple
-                    Merchant owners.
-
-
+                    Database uniqueness rules prevent multiple Merchant owners for the same restaurant.
                 </p>
-
 
             </div>
 
-
         </div>
-
 
     </div>
 
-
 </div>
-
 
 {% endblock %}

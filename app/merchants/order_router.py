@@ -5,6 +5,7 @@ from fastapi import (
     HTTPException,
     Query,
     Request,
+    BackgroundTasks
 )
 
 from fastapi.responses import (
@@ -30,6 +31,9 @@ from app.database import (
 
 from app.merchants.dependencies import (
     require_merchant_assignment,
+)
+from app.notifications.order_email_service import (
+    send_client_status_change_notification,
 )
 
 from app.merchants.models import (
@@ -279,6 +283,8 @@ def merchant_update_order_status(
 
     order_id: int,
 
+    background_tasks: BackgroundTasks,
+
     status: str = Form(
         ...
     ),
@@ -300,6 +306,74 @@ def merchant_update_order_status(
         assignment.restaurant
     )
 
+
+    # =========================================
+    # CAPTURE CURRENT STATE
+    # =========================================
+
+    current_result = (
+        get_merchant_order(
+
+            db=db,
+
+            restaurant_id=(
+                restaurant.id
+            ),
+
+            order_id=(
+                order_id
+            ),
+        )
+    )
+
+
+    if current_result is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Restaurant order not found."
+            ),
+        )
+
+
+    current_order, _ = (
+        current_result
+    )
+
+
+    old_status = (
+
+        current_order.status
+        or
+        ""
+
+    ).strip().lower()
+
+
+    client_email = (
+
+        current_order.client.email
+
+        if current_order.client
+
+        else ""
+    )
+
+
+    client_name = (
+
+        current_order.client.username
+
+        if current_order.client
+
+        else current_order.customer_name
+    )
+
+
+    # =========================================
+    # UPDATE STATUS
+    # =========================================
 
     try:
 
@@ -351,6 +425,56 @@ def merchant_update_order_status(
             ),
         )
 
+
+    # =========================================
+    # CLIENT STATUS EMAIL
+    # =========================================
+
+    new_status = (
+
+        order.status
+        or
+        ""
+
+    ).strip().lower()
+
+
+    if (
+        old_status != new_status
+        and
+        client_email
+    ):
+
+        background_tasks.add_task(
+            send_client_status_change_notification,
+
+            platform="swiggy",
+
+            client_email=(
+                client_email
+            ),
+
+            client_name=(
+                client_name
+            ),
+
+            order_number=(
+                order.order_number
+            ),
+
+            old_status=(
+                old_status
+            ),
+
+            new_status=(
+                new_status
+            ),
+        )
+
+
+    # =========================================
+    # REDIRECT
+    # =========================================
 
     return RedirectResponse(
 

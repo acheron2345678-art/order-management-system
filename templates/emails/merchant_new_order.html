@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ title }}
+    </title>
+
+</head>
+
+
+<body
+    style="
+        margin: 0;
+        padding: 0;
+        background: #f4f6f8;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #212529;
+    "
+>
+
+
+<table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+        padding: 32px 16px;
+        background: #f4f6f8;
+    "
+>
+
+<tr>
+
+<td align="center">
+
+
+<table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+        max-width: 640px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: hidden;
+    "
+>
+
+
+<tr>
+
+<td
+    style="
+        padding: 26px 32px;
+        background: #FFC107;
+        color: #2B2300;
+    "
+>
+
+    <div
+        style="
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        "
+    >
+        MERCHANT CONSOLE
+    </div>
+
+
+    <h1
+        style="
+            margin: 8px 0 0;
+            font-size: 24px;
+        "
+    >
+        New Restaurant Order
+    </h1>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td
+    style="
+        padding: 32px;
+    "
+>
+
+    <p
+        style="
+            margin: 0 0 22px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #495057;
+        "
+    >
+
+        Hi {{ merchant_name }},
+
+        a new Swiggy order has been
+        placed for
+
+        <strong>
+            {{ restaurant_name }}
+        </strong>.
+
+    </p>
+
+
+    <table
+        role="presentation"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        style="
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        "
+    >
+
+        <tr>
+
+            <td
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    color: #6c757d;
+                    font-size: 13px;
+                "
+            >
+                Order
+            </td>
+
+            <td
+                align="right"
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-weight: 700;
+                "
+            >
+                {{ order_number }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    color: #6c757d;
+                    font-size: 13px;
+                "
+            >
+                Customer
+            </td>
+
+            <td
+                align="right"
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-weight: 600;
+                "
+            >
+                {{ customer_name }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    color: #6c757d;
+                    font-size: 13px;
+                "
+            >
+                Date
+            </td>
+
+            <td
+                align="right"
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-weight: 600;
+                "
+            >
+                {{ order_date }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    color: #6c757d;
+                    font-size: 13px;
+                "
+            >
+                Status
+            </td>
+
+            <td
+                align="right"
+                style="
+                    padding: 14px 18px;
+                    border-bottom: 1px solid #e9ecef;
+                    font-weight: 600;
+                "
+            >
+                {{ status|capitalize }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td
+                style="
+                    padding: 14px 18px;
+                    color: #6c757d;
+                    font-size: 13px;
+                "
+            >
+                Total
+            </td>
+
+            <td
+                align="right"
+                style="
+                    padding: 14px 18px;
+                    font-weight: 800;
+                    font-size: 18px;
+                "
+            >
+                ₹{{ "{:,.2f}".format(amount) }}
+            </td>
+
+        </tr>
+
+    </table>
+
+
+    <h2
+        style="
+            margin: 0 0 12px;
+            font-size: 16px;
+        "
+    >
+        Items
+    </h2>
+
+
+    <table
+        role="presentation"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        style="
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        "
+    >
+
+        {% for item in items %}
+
+        <tr>
+
+            <td
+                style="
+                    padding: 13px 16px;
+                    {% if not loop.last %}
+                    border-bottom: 1px solid #e9ecef;
+                    {% endif %}
+                "
+            >
+
+                <strong>
+                    {{ item.product_name }}
+                </strong>
+
+                <span style="color: #6c757d;">
+                    × {{ item.quantity }}
+                </span>
+
+            </td>
+
+
+            <td
+                align="right"
+                style="
+                    padding: 13px 16px;
+                    {% if not loop.last %}
+                    border-bottom: 1px solid #e9ecef;
+                    {% endif %}
+                    font-weight: 600;
+                "
+            >
+
+                ₹{{ "{:,.2f}".format(item.line_total) }}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+
+    <p
+        style="
+            margin: 24px 0 0;
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.6;
+        "
+    >
+        Sign in to the Merchant Console to
+        review the delivery details and process
+        this order.
+    </p>
+
+</td>
+
+</tr>
+
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+
+</body>
+
+</html>

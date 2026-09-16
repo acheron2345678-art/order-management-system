@@ -46,6 +46,7 @@ from app.merchants.models import (
 
 from app.merchants.profile_service import (
     set_merchant_restaurant_status,
+    update_merchant_account_profile,
     update_merchant_restaurant_profile,
 )
 
@@ -131,6 +132,8 @@ def render_merchant_profile(
     assignment: MerchantRestaurant,
     error: str | None = None,
     form_data: dict | None = None,
+    account_error: str | None = None,
+    account_form_data: dict | None = None,
     status_code: int = 200,
 ):
     return templates.TemplateResponse(
@@ -156,6 +159,12 @@ def render_merchant_profile(
 
             "form_data":
                 form_data,
+
+            "account_error":
+                account_error,
+
+            "account_form_data":
+                account_form_data,
         },
 
         status_code=status_code,
@@ -189,6 +198,100 @@ def merchant_profile_page(
         assignment=assignment,
     )
 
+# =========================================================
+# UPDATE MERCHANT ACCOUNT PROFILE
+# =========================================================
+
+@router.post(
+    "/profile/account",
+    response_class=HTMLResponse,
+)
+def update_merchant_account(
+    request: Request,
+
+    username: str = Form(...),
+
+    email: str = Form(...),
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    current_user: User = Depends(
+        require_merchant
+    ),
+
+    assignment: MerchantRestaurant = Depends(
+        require_merchant_assignment
+    ),
+):
+    account_form_data = {
+        "username":
+            (
+                username
+                or
+                ""
+            ).strip(),
+
+        "email":
+            (
+                email
+                or
+                ""
+            ).strip().lower(),
+    }
+
+
+    try:
+
+        update_merchant_account_profile(
+            db=db,
+
+            merchant=current_user,
+
+            username=(
+                account_form_data[
+                    "username"
+                ]
+            ),
+
+            email=(
+                account_form_data[
+                    "email"
+                ]
+            ),
+        )
+
+
+    except ValueError as error:
+
+        return render_merchant_profile(
+            request=request,
+
+            current_user=current_user,
+
+            assignment=assignment,
+
+            account_error=str(
+                error
+            ),
+
+            account_form_data=(
+                account_form_data
+            ),
+
+            status_code=400,
+        )
+
+
+    return RedirectResponse(
+        url=(
+            "/merchant/profile"
+            "?account_saved=1"
+        ),
+
+        status_code=303,
+    )
 
 # =========================================================
 # UPDATE PROFILE

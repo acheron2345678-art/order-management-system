@@ -481,6 +481,181 @@ Review this item from Order Management.
 
         return False
 
+def send_merchant_new_order_notification(
+    merchant_email: str,
+    merchant_name: str,
+    restaurant_name: str,
+    client_email: str,
+    client_name: str,
+    customer_name: str,
+    order_number: str,
+    order_date,
+    status: str,
+    amount,
+    items,
+):
+    """
+    Send the assigned restaurant merchant
+    a new Swiggy order notification.
+    """
+
+    try:
+
+        normalized_items = (
+            normalize_items(
+                items
+            )
+        )
+
+
+        formatted_date = (
+            format_order_date(
+                order_date
+            )
+        )
+
+
+        amount = float(
+            amount
+        )
+
+
+        title = (
+            f"New Order - "
+            f"{order_number}"
+        )
+
+
+        subject = (
+            f"New Swiggy Order for "
+            f"{restaurant_name} - "
+            f"{order_number}"
+        )
+
+
+        html_body = (
+            render_email_template(
+                "merchant_new_order.html",
+
+                title=title,
+
+                merchant_name=(
+                    merchant_name
+                ),
+
+                restaurant_name=(
+                    restaurant_name
+                ),
+
+                client_name=(
+                    client_name
+                ),
+
+                client_email=(
+                    client_email
+                ),
+
+                customer_name=(
+                    customer_name
+                ),
+
+                order_number=(
+                    order_number
+                ),
+
+                order_date=(
+                    formatted_date
+                ),
+
+                status=(
+                    status
+                ),
+
+                amount=(
+                    amount
+                ),
+
+                items=(
+                    normalized_items
+                ),
+            )
+        )
+
+
+        items_text = (
+            build_items_text(
+                normalized_items,
+                "swiggy",
+            )
+        )
+
+
+        text_body = f"""
+SWIGGY MERCHANT
+
+A new order has been placed for {restaurant_name}.
+
+Hi {merchant_name},
+
+Order Number:
+{order_number}
+
+Customer:
+{customer_name}
+
+Client Account:
+{client_name}
+
+Client Email:
+{client_email}
+
+Date:
+{formatted_date}
+
+Status:
+{status.capitalize()}
+
+Items:
+{items_text}
+
+Order Total:
+₹{amount:,.2f}
+
+Open the Merchant Console to review and process this order.
+
+Order Management
+""".strip()
+
+
+        return send_email(
+            recipient_email=(
+                merchant_email
+            ),
+
+            subject=(
+                subject
+            ),
+
+            html_body=(
+                html_body
+            ),
+
+            text_body=(
+                text_body
+            ),
+        )
+
+
+    except Exception:
+
+        logger.exception(
+            "Failed to build or send "
+            "merchant notification "
+            "for %s.",
+            order_number,
+        )
+
+        return False
 
 def send_client_status_change_notification(
     platform: str,

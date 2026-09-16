@@ -36,19 +36,32 @@
 
         </div>
 
+
         <h1 class="h2 fw-bold mb-1">
+
             {% if platform_url == "swiggy" %}
+
                 Swiggy Order Details
+
             {% else %}
+
                 Order Details
+
             {% endif %}
+
         </h1>
 
+
         <p class="text-body-secondary mb-0">
+
             {{ order.order_number }}
-            <span class="mx-1">•</span>
-            Review order information, client details,
-            workflow and activity history.
+
+            <span class="mx-1">
+                •
+            </span>
+
+            Review order information, products and activity history.
+
         </p>
 
     </div>
@@ -112,17 +125,19 @@
             i
         </div>
 
+
         <div>
 
             <strong class="d-block mb-1">
                 Legacy Order
             </strong>
 
+
             <div class="small">
+
                 This order was created before detailed
                 product-line information was stored.
-                The original order summary is preserved
-                below whenever that information is available.
+
             </div>
 
         </div>
@@ -160,19 +175,16 @@
 
                     <div>
 
-                        <div
-                            class="small text-body-secondary text-uppercase fw-semibold mb-1"
-                        >
-                            Order Contents
-                        </div>
-
                         <h2 class="h5 fw-bold mb-1">
                             Purchased Products
                         </h2>
 
+
                         <p class="small text-body-secondary mb-0">
-                            Products, quantities and values
-                            captured for this order.
+
+                            Products and quantities included
+                            in this order.
+
                         </p>
 
                     </div>
@@ -181,8 +193,11 @@
                     {% if order_items %}
 
                     <span class="badge text-bg-primary">
+
                         {{ order_items|length }}
+
                         product{% if order_items|length != 1 %}s{% endif %}
+
                     </span>
 
                     {% else %}
@@ -210,6 +225,9 @@
 
                         <div class="row g-3 align-items-center">
 
+
+                            <!-- PRODUCT -->
+
                             <div class="col-md-5">
 
                                 <div class="d-flex align-items-center gap-3">
@@ -220,15 +238,19 @@
                                         ◇
                                     </div>
 
+
                                     <div class="min-w-0">
 
                                         <div class="fw-bold text-truncate">
                                             {{ item.product_name }}
                                         </div>
 
+
                                         <div class="small text-body-secondary">
+
                                             Product ID:
                                             {{ item.product_id }}
+
                                         </div>
 
                                     </div>
@@ -238,24 +260,32 @@
                             </div>
 
 
+                            <!-- UNIT PRICE -->
+
                             <div class="col-4 col-md-2">
 
                                 <div class="small text-body-secondary mb-1">
                                     Unit Price
                                 </div>
 
+
                                 <div class="fw-semibold">
+
                                     ₹{{ "{:,.2f}".format(item.unit_price) }}
+
                                 </div>
 
                             </div>
 
+
+                            <!-- QUANTITY -->
 
                             <div class="col-4 col-md-2">
 
                                 <div class="small text-body-secondary mb-1">
                                     Quantity
                                 </div>
+
 
                                 <div class="fw-semibold">
                                     {{ item.quantity }}
@@ -264,14 +294,19 @@
                             </div>
 
 
+                            <!-- TOTAL -->
+
                             <div class="col-4 col-md-3 text-end">
 
                                 <div class="small text-body-secondary mb-1">
                                     Total
                                 </div>
 
+
                                 <div class="h5 fw-bold text-primary mb-0">
+
                                     ₹{{ "{:,.2f}".format(item.line_total) }}
+
                                 </div>
 
                             </div>
@@ -283,7 +318,11 @@
                     {% endfor %}
 
 
-                    <div class="p-3 p-md-4 border-top bg-body-tertiary">
+                    <!-- ORDER TOTAL -->
+
+                    <div
+                        class="p-3 p-md-4 border-top bg-body-tertiary"
+                    >
 
                         <div
                             class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
@@ -295,45 +334,58 @@
                                     Order Total
                                 </div>
 
+
                                 <div class="small text-body-secondary">
 
                                     {% set ns = namespace(total_quantity=0) %}
 
                                     {% for item in order_items %}
-                                        {% set ns.total_quantity = ns.total_quantity + item.quantity %}
+
+                                        {% set ns.total_quantity =
+                                            ns.total_quantity + item.quantity
+                                        %}
+
                                     {% endfor %}
 
+
                                     {{ ns.total_quantity }}
+
                                     item{% if ns.total_quantity != 1 %}s{% endif %}
+
                                     across
+
                                     {{ order_items|length }}
+
                                     product{% if order_items|length != 1 %}s{% endif %}
 
                                 </div>
 
                             </div>
 
+
                             <div class="h3 fw-bold text-primary mb-0">
+
                                 ₹{{ "{:,.2f}".format(order.amount) }}
+
                             </div>
 
                         </div>
 
                     </div>
 
+
                 {% else %}
+
+                <!-- LEGACY INFORMATION -->
 
                 <div class="p-4">
 
-                    <div class="border rounded-3 p-3 p-md-4 bg-body-tertiary">
-
-                        <div
-                            class="small text-body-secondary text-uppercase fw-semibold mb-2"
-                        >
-                            Available Legacy Information
-                        </div>
+                    <div
+                        class="border rounded-3 p-3 p-md-4 bg-body-tertiary"
+                    >
 
                         <div class="row g-3">
+
 
                             <div class="col-md-7">
 
@@ -341,15 +393,27 @@
                                     Product
                                 </div>
 
+
                                 <div class="detail-value">
-                                    {% if order.product_name and order.product_name != "Multiple Products" %}
+
+                                    {% if
+                                        order.product_name
+                                        and
+                                        order.product_name != "Multiple Products"
+                                    %}
+
                                         {{ order.product_name }}
+
                                     {% else %}
+
                                         Product details unavailable
+
                                     {% endif %}
+
                                 </div>
 
                             </div>
+
 
                             <div class="col-md-5">
 
@@ -357,8 +421,11 @@
                                     Order Value
                                 </div>
 
+
                                 <div class="h5 fw-bold text-primary mb-0">
+
                                     ₹{{ "{:,.2f}".format(order.amount) }}
+
                                 </div>
 
                             </div>
@@ -390,7 +457,7 @@
     <!-- RIGHT COLUMN -->
     <!-- ===================================== -->
 
-    <div class="col-xl-4">
+    <div class="col-xl-4 order-detail-sidebar">
 
 
         <!-- ================================= -->
@@ -403,64 +470,93 @@
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
 
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Summary
-                </div>
-
                 <h2 class="h5 fw-bold mb-0">
                     Order Information
                 </h2>
 
             </div>
 
+
             <div class="card-body p-4">
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Order Number
                     </div>
+
                     <div class="detail-value">
                         {{ order.order_number }}
                     </div>
+
                 </div>
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Platform
                     </div>
+
+
                     <div class="d-flex align-items-center gap-2">
+
                         <span
                             class="platform-dot platform-{{ platform_url }}"
                         >
                             {{ 'S' if platform_url == 'swiggy' else 'I' }}
                         </span>
+
+
                         <strong>
                             {{ platform }}
                         </strong>
+
                     </div>
+
                 </div>
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Order Date
                     </div>
+
+
                     <div class="detail-value">
+
                         {% if order.order_date %}
+
                             {{ order.order_date.strftime("%d %b %Y") }}
+
                         {% else %}
+
                             Not available
+
                         {% endif %}
+
                     </div>
+
                 </div>
 
+
                 <div>
+
                     <div class="detail-label">
                         Order Value
                     </div>
+
+
                     <div class="h3 fw-bold text-primary mb-0">
+
                         ₹{{ "{:,.2f}".format(order.amount) }}
+
                     </div>
+
                 </div>
+
 
             </div>
 
@@ -477,52 +573,77 @@
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
 
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Client
-                </div>
-
                 <h2 class="h5 fw-bold mb-0">
                     Client Information
                 </h2>
 
             </div>
 
+
             <div class="card-body p-4">
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Customer
                     </div>
+
+
                     <div class="detail-value">
                         {{ order.customer_name }}
                     </div>
+
                 </div>
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Account
                     </div>
+
+
                     <div class="detail-value">
+
                         {% if client %}
+
                             {{ client.username }}
+
                         {% else %}
+
                             Unassigned
+
                         {% endif %}
+
                     </div>
+
                 </div>
 
+
                 <div>
+
                     <div class="detail-label">
                         Email
                     </div>
+
+
                     <div class="detail-value text-break">
+
                         {% if client %}
+
                             {{ client.email }}
+
                         {% else %}
+
                             Not available
+
                         {% endif %}
+
                     </div>
+
                 </div>
+
 
             </div>
 
@@ -535,6 +656,7 @@
 
         {% if platform_url == "swiggy" %}
 
+
         {% set has_delivery_details =
             order.delivery_name
             or order.delivery_phone
@@ -546,110 +668,169 @@
             or order.delivery_country
         %}
 
+
         <div class="card border-0 shadow-sm mb-4">
 
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
 
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Fulfilment
-                </div>
-
-                <h2 class="h5 fw-bold mb-1">
+                <h2 class="h5 fw-bold mb-0">
                     Delivery Details
                 </h2>
 
-                <p class="small text-body-secondary mb-0">
-                    Delivery snapshot captured when this
-                    order was placed.
-                </p>
-
             </div>
+
 
             <div class="card-body p-4">
 
+
                 {% if has_delivery_details %}
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Deliver To
                     </div>
+
+
                     <div class="detail-value">
+
                         {{ order.delivery_name or order.customer_name }}
+
                     </div>
+
                 </div>
 
+
                 <div class="mb-4">
+
                     <div class="detail-label">
                         Phone
                     </div>
+
+
                     <div class="detail-value">
+
                         {{ order.delivery_phone or "Not available" }}
+
                     </div>
+
                 </div>
 
+
                 <div>
+
                     <div class="detail-label">
                         Delivery Address
                     </div>
 
+
                     <div class="detail-value lh-lg">
 
+
                         {% if order.delivery_address_line1 %}
-                        <div>{{ order.delivery_address_line1 }}</div>
+
+                        <div>
+                            {{ order.delivery_address_line1 }}
+                        </div>
+
                         {% endif %}
+
 
                         {% if order.delivery_address_line2 %}
-                        <div>{{ order.delivery_address_line2 }}</div>
+
+                        <div>
+                            {{ order.delivery_address_line2 }}
+                        </div>
+
                         {% endif %}
 
-                        {% if order.delivery_city or order.delivery_state or order.delivery_postal_code %}
+
+                        {% if
+                            order.delivery_city
+                            or
+                            order.delivery_state
+                            or
+                            order.delivery_postal_code
+                        %}
+
                         <div>
+
                             {% if order.delivery_city %}
+
                                 {{ order.delivery_city }}
+
                             {% endif %}
-                            {% if order.delivery_city and order.delivery_state %}, {% endif %}
+
+
+                            {% if
+                                order.delivery_city
+                                and
+                                order.delivery_state
+                            %}
+
+                                ,
+
+                            {% endif %}
+
+
                             {% if order.delivery_state %}
+
                                 {{ order.delivery_state }}
+
                             {% endif %}
+
+
                             {% if order.delivery_postal_code %}
+
                                 {{ order.delivery_postal_code }}
+
                             {% endif %}
+
                         </div>
+
                         {% endif %}
+
 
                         {% if order.delivery_country %}
-                        <div>{{ order.delivery_country }}</div>
+
+                        <div>
+                            {{ order.delivery_country }}
+                        </div>
+
                         {% endif %}
+
 
                     </div>
 
                 </div>
+
 
                 {% else %}
 
+
                 <div class="alert alert-secondary mb-0">
-                    <strong class="d-block mb-1">
-                        Delivery details unavailable
-                    </strong>
-                    <div class="small">
-                        This older order was created before
-                        permanent delivery snapshots were stored.
-                    </div>
+
+                    Delivery details unavailable.
+
                 </div>
 
+
                 {% endif %}
+
 
             </div>
 
         </div>
 
+
         {% endif %}
 
 
         <!-- ================================= -->
-        <!-- STATUS WORKFLOW -->
+        <!-- ORDER STATUS -->
         <!-- ================================= -->
 
         <div class="card border-0 shadow-sm mb-4">
@@ -658,131 +839,190 @@
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
 
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Workflow
-                </div>
-
-                <h2 class="h5 fw-bold mb-1">
-                    Order Status Workflow
+                <h2 class="h5 fw-bold mb-0">
+                    Order Status
                 </h2>
-
-                <p class="small text-body-secondary mb-0">
-                    Current order stage and valid next statuses.
-                </p>
 
             </div>
 
+
             <div class="card-body p-4">
 
+
+                <!-- CURRENT STATUS -->
+
                 <div class="mb-4">
+
                     <div class="detail-label mb-2">
                         Current Status
                     </div>
-                    <span class="status-badge status-{{ order.status }}">
+
+
+                    <span
+                        class="status-badge status-{{ order.status }}"
+                    >
                         {{ order.status|capitalize }}
                     </span>
+
                 </div>
+
+
+                <!-- WORKFLOW -->
 
                 {% if order.status != "cancelled" %}
 
-                <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
+                <div
+                    class="d-flex align-items-center gap-2 flex-wrap mb-4"
+                >
+
 
                     <span
-                        class="badge {% if order.status in ['pending', 'processing', 'completed'] %}text-bg-primary{% else %}bg-body-tertiary text-body border{% endif %}"
+                        class="
+                            badge
+                            {% if order.status in ['pending', 'processing', 'completed'] %}
+                                text-bg-primary
+                            {% else %}
+                                bg-body-tertiary text-body border
+                            {% endif %}
+                        "
                     >
-                        1. Pending
+                        Pending
                     </span>
 
-                    <span class="text-body-secondary">→</span>
+
+                    <span class="text-body-secondary">
+                        →
+                    </span>
+
 
                     <span
-                        class="badge {% if order.status in ['processing', 'completed'] %}text-bg-info{% else %}bg-body-tertiary text-body border{% endif %}"
+                        class="
+                            badge
+                            {% if order.status in ['processing', 'completed'] %}
+                                text-bg-info
+                            {% else %}
+                                bg-body-tertiary text-body border
+                            {% endif %}
+                        "
                     >
-                        2. Processing
+                        Processing
                     </span>
 
-                    <span class="text-body-secondary">→</span>
+
+                    <span class="text-body-secondary">
+                        →
+                    </span>
+
 
                     <span
-                        class="badge workflow-completed-step {% if order.status == 'completed' %}active{% endif %}"
+                        class="
+                            badge
+                            workflow-completed-step
+                            {% if order.status == 'completed' %}
+                                active
+                            {% endif %}
+                        "
                     >
-                        3. Completed
+                        Completed
                     </span>
+
 
                 </div>
 
                 {% endif %}
 
 
+                <!-- ADMIN STATUS ACTIONS -->
+
                 {% if current_user.role == "admin" %}
+
 
                     {% if allowed_next_statuses %}
 
                     <div class="border-top pt-3">
 
-                        <div class="small text-body-secondary mb-2">
-                            Available next actions
-                        </div>
 
                         <div class="d-grid gap-2">
 
+
                             {% if "processing" in allowed_next_statuses %}
+
                             <a
                                 href="/{{ platform_url }}/orders/edit/{{ order.id }}#status"
                                 class="btn btn-primary"
                             >
                                 Start Processing
                             </a>
+
                             {% endif %}
 
+
                             {% if "completed" in allowed_next_statuses %}
+
                             <a
                                 href="/{{ platform_url }}/orders/edit/{{ order.id }}#status"
                                 class="btn btn-success"
                             >
                                 Mark Completed
                             </a>
+
                             {% endif %}
 
+
                             {% if "cancelled" in allowed_next_statuses %}
+
                             <a
                                 href="/{{ platform_url }}/orders/edit/{{ order.id }}#status"
                                 class="btn btn-outline-danger"
                             >
                                 Cancel Order
                             </a>
+
                             {% endif %}
 
-                        </div>
 
-                        <div class="small text-body-secondary mt-2">
-                            Status changes continue through the
-                            existing edit flow so validation,
-                            audit history and client email
-                            notifications remain unchanged.
                         </div>
 
                     </div>
+
 
                     {% else %}
 
+
                     <div
-                        class="alert {% if order.status == 'completed' %}alert-success{% else %}alert-secondary{% endif %} mb-0"
+                        class="
+                            alert
+                            {% if order.status == 'completed' %}
+                                alert-success
+                            {% else %}
+                                alert-secondary
+                            {% endif %}
+                            mb-0
+                        "
                     >
+
                         {% if order.status == "completed" %}
-                            This order is complete. No further
-                            status changes are available.
+
+                            Order completed.
+
                         {% elif order.status == "cancelled" %}
-                            This order has been cancelled. No
-                            further status changes are available.
+
+                            Order cancelled.
+
                         {% else %}
-                            No further status changes are available.
+
+                            No further status changes available.
+
                         {% endif %}
+
                     </div>
+
 
                     {% endif %}
 
+
                 {% endif %}
+
 
             </div>
 
@@ -800,17 +1040,19 @@
             <div
                 class="card-header bg-body border-bottom p-3 p-md-4"
             >
-                <div class="small text-body-secondary text-uppercase fw-semibold mb-1">
-                    Management
-                </div>
+
                 <h2 class="h5 fw-bold mb-0">
                     Admin Actions
                 </h2>
+
             </div>
+
 
             <div class="card-body p-4">
 
+
                 <div class="d-grid gap-2">
+
 
                     <a
                         href="/{{ platform_url }}/orders/edit/{{ order.id }}"
@@ -819,20 +1061,25 @@
                         Edit Order
                     </a>
 
+
                     <form
                         method="post"
                         action="/{{ platform_url }}/orders/delete/{{ order.id }}"
                         onsubmit="return confirm('Are you sure you want to delete this order?');"
                     >
+
                         <button
                             type="submit"
                             class="btn btn-outline-danger w-100"
                         >
                             Delete Order
                         </button>
+
                     </form>
 
+
                 </div>
+
 
             </div>
 

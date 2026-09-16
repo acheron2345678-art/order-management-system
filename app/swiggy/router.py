@@ -31,6 +31,14 @@ from app.database import (
 from app.notifications.order_email_service import (
     send_admin_new_order_notification,
     send_client_order_confirmation,
+    send_merchant_new_order_notification
+)
+from app.merchants.models import (
+    MerchantRestaurant,
+)
+
+from app.utils.email_rules import (
+    is_gmail_address,
 )
 
 from app.orders.history_service import (
@@ -1579,6 +1587,111 @@ def swiggy_checkout_submit(
             email_items
         ),
     )
+
+# =========================================
+# MERCHANT EMAIL
+# =========================================
+
+    if order.restaurant_id is not None:
+
+        merchant_assignment = (
+
+            db.query(
+                MerchantRestaurant
+            )
+
+            .filter(
+                MerchantRestaurant.restaurant_id
+                ==
+                order.restaurant_id
+            )
+
+            .first()
+        )
+
+
+        merchant_user = (
+
+            merchant_assignment.user
+
+            if merchant_assignment
+
+            else None
+        )
+
+
+        merchant_restaurant = (
+
+            merchant_assignment.restaurant
+
+            if merchant_assignment
+
+            else None
+        )
+
+
+        if (
+            merchant_user
+            and
+            merchant_user.is_active
+            and
+            is_gmail_address(
+                merchant_user.email
+            )
+        ):
+
+            background_tasks.add_task(
+                send_merchant_new_order_notification,
+
+                merchant_email=(
+                    merchant_user.email
+                ),
+
+                merchant_name=(
+                    merchant_user.username
+                ),
+
+                restaurant_name=(
+                    merchant_restaurant.name
+                    if merchant_restaurant
+                    else
+                    "Restaurant"
+                ),
+
+                client_email=(
+                    current_user.email
+                ),
+
+                client_name=(
+                    current_user.username
+                ),
+
+                customer_name=(
+                    order.customer_name
+                ),
+
+                order_number=(
+                    order.order_number
+                ),
+
+                order_date=(
+                    order.order_date
+                ),
+
+                status=(
+                    order.status
+                ),
+
+                amount=(
+                    float(
+                        order.amount
+                    )
+                ),
+
+                items=(
+                    email_items
+                ),
+            )
 
 
     # =========================================
