@@ -91,6 +91,14 @@ Manage {{ merchant.username }} - Merchant Management
     </strong>
 </div>
 
+{% elif request.query_params.get("password_saved") == "1" %}
+
+<div class="alert alert-success">
+    <strong>
+        ✓ Merchant account and password updated. Existing refresh sessions have been revoked.
+    </strong>
+</div>
+
 {% endif %}
 
 
@@ -476,10 +484,17 @@ Manage {{ merchant.username }} - Merchant Management
                             name="new_password"
                             type="password"
                             class="form-control"
-                            minlength="8"
+                            minlength="12"
+                            maxlength="128"
                             autocomplete="new-password"
+                            aria-describedby="merchant_password_help"
                             placeholder="Leave blank to keep current password"
                         >
+
+                        <div id="merchant_password_help" class="form-text">
+                            Optional. Use 12–128 characters and avoid the username or email name.
+                            Changing the password revokes the merchant's existing refresh sessions.
+                        </div>
 
                     </div>
 

@@ -527,6 +527,7 @@ def update_admin_merchant_account(
     *,
     username: str,
     email: str,
+    new_password: str | None = None,
 ):
     merchant_id = (
         validate_positive_id(
@@ -573,7 +574,7 @@ def update_admin_merchant_account(
 
         role=MERCHANT_ROLE,
 
-        new_password=None,
+        new_password=new_password,
     )
 
 # =========================================================

@@ -59,6 +59,7 @@ def render_admin_merchant_edit(
     current_user: User,
     merchant_id: int,
     error: str | None = None,
+    account_form_data: dict | None = None,
     status_code: int = 200,
 ):
 
@@ -117,6 +118,9 @@ def render_admin_merchant_edit(
 
             "error":
                 error,
+
+            "account_form_data":
+                account_form_data,
         },
 
         status_code=status_code,
@@ -232,6 +236,8 @@ def admin_update_merchant_account(
 
     email: str = Form(...),
 
+    new_password: str = Form(""),
+
     db: Session = Depends(
         get_db
     ),
@@ -264,6 +270,8 @@ def admin_update_merchant_account(
             username=username,
 
             email=email,
+
+            new_password=(new_password if new_password else None),
         )
 
 
@@ -282,15 +290,25 @@ def admin_update_merchant_account(
                 error
             ),
 
+            account_form_data={
+                "username": username,
+                "email": email,
+            },
+
             status_code=400,
         )
 
+
+    saved_flag = (
+        "password_saved=1" if new_password
+        else "account_saved=1"
+    )
 
     return RedirectResponse(
         url=(
             f"/admin/merchants/"
             f"{merchant_id}/edit"
-            "?account_saved=1"
+            f"?{saved_flag}"
         ),
 
         status_code=303,
