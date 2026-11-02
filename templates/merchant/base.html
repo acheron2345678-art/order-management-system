@@ -160,6 +160,15 @@
 
                 </a>
 
+                <!-- OFFLINE AI ASSISTANT -->
+                <a
+                    href="/ai/assistant"
+                    class="{% if current_path.startswith('/ai/') %}active{% endif %}"
+                >
+                    <span>✦</span>
+                    AI Assistant
+                </a>
+
 
                 <!-- PROFILE -->
 
@@ -520,6 +529,11 @@
 
             <a href="/merchant/orders">
                 Orders
+            </a>
+
+
+            <a href="/ai/assistant" class="{% if current_path.startswith('/ai/') %}active{% endif %}">
+                AI Assistant
             </a>
 
 

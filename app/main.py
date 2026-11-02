@@ -29,6 +29,10 @@ from starlette.middleware.trustedhost import (
     TrustedHostMiddleware,
 )
 
+from app.ai.router import (
+    router as ai_router,
+)
+
 from app.auth.csrf import (
     validate_csrf,
 )
@@ -407,6 +411,15 @@ app.mount(
 
 Base.metadata.create_all(
     bind=engine
+)
+
+
+# =========================================================
+# LOCAL AI ASSISTANT
+# =========================================================
+
+app.include_router(
+    ai_router
 )
 
 

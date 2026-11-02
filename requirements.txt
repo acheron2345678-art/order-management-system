@@ -1,11 +1,25 @@
+# Order Management — FastAPI application + offline AI assistant
+
+# API server and form handling
 fastapi
-uvicorn
+uvicorn[standard]
+python-multipart
+
+# Database
 sqlalchemy
 pymysql
+
+# Templates and validation
 jinja2
-python-multipart
 pydantic
-pwdlib
+
+# Authentication and application security
+pwdlib[argon2]
 PyJWT
 itsdangerous
+
+# Environment configuration
 python-dotenv
+
+# Local Ollama HTTP API
+httpx
