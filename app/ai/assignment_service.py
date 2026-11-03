@@ -66,7 +66,16 @@ def answer_assignment_question(
         for pattern in _RESTAURANT_CLAIMS:
             match = pattern.fullmatch(question)
             if match:
-                target = _clean_name(match.group("name"))
+                candidate = _clean_name(match.group("name"))
+                # These are predicates about business health, not names of
+                # restaurants. Let the verified analysis path handle them.
+                if re.match(
+                    r"^(?:functioning|performing|doing|running|operating|"
+                    r"healthy|profitable|successful|busy|good|bad|struggling)\b",
+                    candidate, re.I,
+                ):
+                    return None
+                target = candidate
                 break
         else:
             return None

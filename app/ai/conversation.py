@@ -17,6 +17,7 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy.orm import Session
 
 from app.ai.assignment_service import answer_assignment_question
+from app.ai.analysis_service import answer_analysis_question, is_analysis_request
 from app.ai.data_service import (
     _mentioned_restaurants,
     _select_restaurant,
@@ -32,7 +33,7 @@ from app.users.models import User
 
 MAX_QUESTIONS = 5
 CONTEXT_AGE_SECONDS = 3600
-_KINDS = {"revenue", "performance", "inventory"}
+_KINDS = {"revenue", "performance", "inventory", "analysis"}
 _serializer = URLSafeTimedSerializer(JWT_SECRET_KEY, salt="om-ai-followup-v1")
 
 _NUMBERED_LINE = re.compile(r"^\s*\d{1,2}[.)]\s+(.+?)\s*$")
@@ -297,6 +298,8 @@ def _followup_question(
             f"{_month_string(previous.period)} and {_month_string(compared)}",
             "performance",
         )
+    if kind == "analysis":
+        return f"Assess {target} performance{period_text}", kind
     if kind == "performance":
         return f"Show {target} order performance{period_text}", kind
     return f"Show {target} order summary{period_text}", kind
@@ -350,8 +353,28 @@ async def answer_conversation(
             )
             continue
 
-        result = answer_assignment_question(db=db, user=user, question=query)
+        # Interpretation questions use actual scoped metrics plus Qwen. This
+        # must run before the assignment-claim matcher and report templates.
+        # The signed previous context contains only selection metadata.
+        analysis = await answer_analysis_question(
+            db=db, user=user, question=query,
+            previous_month=prior.period if prior else None,
+            restaurant_id_hint=(prior.restaurant_id if prior and user.role == "admin" else None),
+            as_of=today,
+        ) if is_analysis_request(query) else None
+        result = None
         dispatched_kind: str | None = None
+        if analysis is not None:
+            result, analysis_period, analysis_restaurant_id = analysis
+            dispatched_kind = "analysis" if analysis_restaurant_id is not None else None
+            if dispatched_kind:
+                prior = ReportContext(
+                    kind="analysis",
+                    restaurant_id=analysis_restaurant_id if user.role == "admin" else None,
+                    period=analysis_period,
+                )
+        if result is None:
+            result = answer_assignment_question(db=db, user=user, question=query)
         if result is None:
             result = answer_performance_question(db=db, user=user, question=query, as_of=today)
             if result is not None:
@@ -370,7 +393,7 @@ async def answer_conversation(
                 history=history[-8:],
             )
 
-        if dispatched_kind is not None and not result.startswith("Please name one"):
+        if dispatched_kind is not None and dispatched_kind != "analysis" and not result.startswith("Please name one"):
             restaurant = _select_restaurant(db, user, query)
             if restaurant is not None:
                 prior = ReportContext(
