@@ -10,10 +10,18 @@ import re
 
 import httpx
 
+from app.ai.domain_service import scope_reply, validated_guidance
+
 MODEL = os.getenv("OM_AI_MODEL", "qwen3.5:4b-q4_K_M")
 OLLAMA_URL = os.getenv("OM_OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
 
-SYSTEM_PROMPT = """You are a read-only guidance assistant for the Order Management app.
+SYSTEM_PROMPT = """You are a READ-ONLY ORDER MANAGEMENT SYSTEM specialist, not a general chatbot.
+Only discuss the real app's orders, restaurant performance, revenues, inventory,
+menus, checkout, user roles, account workflows and supported features.
+Do not discuss gaming, entertainment, general topics, fictional simulations,
+or imagined product integrations. Do not write, generate or debug code, SQL,
+HTML, scripts, schemas, migrations or software implementations. If a question
+requires any of these, return a short Order Management scope reminder.
 Give accurate app-specific answers. Do not substitute generic restaurant features.
 
 TRUSTED IDENTITY
@@ -143,7 +151,11 @@ async def answer_question(
     username: str,
     history: list[dict],
 ) -> str:
-    """Return deterministic app facts or ask local Ollama for general guidance."""
+    """Return deterministic app facts or ask local Ollama for in-scope guidance."""
+    # Also guard direct callers, not only the /ai/ask conversation router.
+    blocked = scope_reply(question)
+    if blocked is not None:
+        return blocked
     fixed = _verified_answer(question, role, username)
     if fixed is not None:
         return fixed
@@ -151,7 +163,8 @@ async def answer_question(
     identity = json.dumps({"username": username, "role": role}, ensure_ascii=False)
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        *history,
+        # Client-supplied prior turns are not trusted for context or policy.
+        # Report continuity is separately enforced via signed server tokens.
         {
             "role": "system",
             "content": (
@@ -191,6 +204,6 @@ async def answer_question(
         response = result.json()["message"]["content"]
         if not isinstance(response, str) or not response.strip():
             raise ValueError("Empty AI response")
-        return response.strip()[:6000]
+        return validated_guidance(response[:6000])
     except (ValueError, KeyError, TypeError) as exc:
         raise AIServiceFailed from exc

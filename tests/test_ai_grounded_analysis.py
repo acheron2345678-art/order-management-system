@@ -131,6 +131,8 @@ def test_natural_improvement_question_uses_model(sample):
     'How is KFC performing well?',
     'How well is Unknown Cafe doing?',
     'How is KFC doing?',
+    'How is KFC doing these days?',
+    'How is Unknown Cafe doing these days?',
 ])
 def test_merchant_other_or_unknown_restaurant_denied(sample, text):
     db, _, merchant, _, _, captures = sample

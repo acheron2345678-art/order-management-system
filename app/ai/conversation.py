@@ -16,6 +16,7 @@ from fastapi import HTTPException
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy.orm import Session
 
+from app.ai.domain_service import scope_reply
 from app.ai.assignment_service import answer_assignment_question
 from app.ai.analysis_service import answer_analysis_question, is_analysis_request
 from app.ai.data_service import (
@@ -396,15 +397,20 @@ async def answer_conversation(
     questions = split_questions(question)
     responses: list[str] = []
     for raw in questions:
-        # A reference such as "why is that happening?" has no trustworthy
-        # referent without an unexpired, account-bound report context. Do not
-        # let generic model chat infer one from user-supplied history.
         if prior is None and _REASONING_FOLLOWUP.fullmatch(raw):
             responses.append(
                 "I need a verified report before interpreting that. Ask for "
                 "your restaurant performance for a specific month, then ask "
                 "what it means or what to check first."
             )
+            continue
+        # Enforce the application's subject boundary *before* any Ollama call,
+        # optional classifier or report resolver. Previous browser history is
+        # untrusted; only a signed, account-bound report token may authorize
+        # a contextual reporting follow-up (never another restaurant's data).
+        scope = scope_reply(raw, has_report_context=prior is not None)
+        if scope is not None:
+            responses.append(scope)
             continue
         # This also checks the first question when there is no prior context.
         if _unrecognized_report_target(db, raw):
@@ -501,9 +507,12 @@ async def answer_conversation(
             if result is not None:
                 dispatched_kind = "inventory"
         if result is None:
+            # The fallback is app guidance only. Do not pass browser-supplied
+            # previous assistant text, which can contain fake instructions or
+            # unverified claims about the app and user identity.
             result = await answer_question(
                 question=query, role=user.role, username=user.username,
-                history=history[-8:],
+                history=[],
             )
 
         if dispatched_kind is not None and dispatched_kind != "analysis" and not result.startswith("Please name one"):

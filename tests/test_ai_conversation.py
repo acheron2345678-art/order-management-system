@@ -129,7 +129,7 @@ def test_token_cannot_be_reused_by_another_account(sample):
     assert conversation.read_context(token + 'tamper', admin) is None
     later, _ = ask(db, other, 'What about August?', token)
     assert 'City Kitchen' not in later
-    assert 'General guidance only' in later
+    assert 'Please ask an Order Management question' in later
 
 
 def test_request_for_other_merchant_restaurant_is_rejected(sample):
