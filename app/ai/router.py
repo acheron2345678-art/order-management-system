@@ -7,9 +7,8 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 
-from app.ai.service import AIServiceFailed, AIServiceUnavailable, answer_question
-from app.ai.data_service import answer_data_question
-from app.ai.inventory_service import answer_inventory_question
+from app.ai.service import AIServiceFailed, AIServiceUnavailable
+from app.ai.conversation import answer_conversation
 from sqlalchemy.exc import SQLAlchemyError
 from app.auth.dependencies import get_current_user, require_authenticated_user
 from app.core import templates
@@ -28,10 +27,12 @@ class ChatTurn(BaseModel):
 class AskRequest(BaseModel):
     question: str = Field(min_length=3, max_length=1200)
     history: list[ChatTurn] = Field(default_factory=list, max_length=8)
+    context_token: str | None = Field(default=None, max_length=1500)
 
 
 class AskResponse(BaseModel):
     answer: str
+    context_token: str | None = None
 
 
 @router.get("/assistant", response_class=HTMLResponse)
@@ -87,27 +88,17 @@ async def ai_ask(
     ]
 
     try:
-        answer = answer_data_question(db=db, user=current_user, question=question)
-        if answer is None:
-            answer = answer_inventory_question(
-                db=db, user=current_user, question=question
-            )
+        answer, next_token = await answer_conversation(
+            db=db,
+            user=current_user,
+            question=question,
+            history=cleaned_history,
+            context_token=payload.context_token,
+        )
     except SQLAlchemyError as exc:
         raise HTTPException(
             status_code=503, detail="Unable to load restaurant report right now."
         ) from exc
-
-    if answer is not None:
-        response.headers["Cache-Control"] = "no-store"
-        return AskResponse(answer=answer)
-
-    try:
-        answer = await answer_question(
-            question=question,
-            role=current_user.role,
-            username=current_user.username,
-            history=cleaned_history,
-        )
     except AIServiceUnavailable as exc:
         raise HTTPException(
             status_code=503,
@@ -120,4 +111,4 @@ async def ai_ask(
         ) from exc
 
     response.headers["Cache-Control"] = "no-store"
-    return AskResponse(answer=answer)
+    return AskResponse(answer=answer, context_token=next_token)

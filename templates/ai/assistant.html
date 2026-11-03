@@ -63,10 +63,13 @@
         <div>
             <h1 class="h3 mb-1">AI Assistant</h1>
             <p class="text-body-secondary mb-0">
-                Offline guidance and authorized order reporting for Order Management.
+                Offline guidance, verified reports, and short follow-up conversations.
             </p>
         </div>
-        <span class="badge text-bg-secondary">Read-only assistant</span>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge text-bg-secondary">Read-only assistant</span>
+            <button type="button" id="om-ai-new-chat" class="btn btn-outline-secondary btn-sm">New conversation</button>
+        </div>
     </div>
 
     <div class="om-ai-presets mb-3" aria-label="Suggested questions">
@@ -74,10 +77,12 @@
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="How do I update the status of an order for my restaurant?">Update order status</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="How should I prioritize restocking low-inventory menu items?">Restock guidance</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="What is my restaurant revenue this month?">My revenue this month</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="Compare my restaurant performance this month vs last month">Performance trends</button>
         {% elif current_user.role == 'admin' %}
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="How do I manage merchants and restaurant assignments?">Manage merchants</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="How should I investigate high order cancellation rates?">Cancellation feedback</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="What is KFC revenue this month?">Restaurant revenue example</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="Compare KFC order performance this month vs last month">Restaurant performance example</button>
         {% else %}
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="How can I view the current status of my orders?">Track my orders</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-ai-question="How does the one-restaurant-per-cart rule work?">Cart guidance</button>
@@ -89,7 +94,7 @@
         <div id="om-ai-messages" class="om-ai-messages" role="log" aria-live="polite" aria-relevant="additions text">
             <div class="om-ai-bubble om-ai-assistant">
                 Hi! I can explain application features, help with workflows, and provide general feedback.
-                I can show authorized restaurant revenue and order summaries. I cannot change records.
+                I can show authorized revenue, inventory, order performance, trends, and rules-based feedback. I cannot change records.
             </div>
         </div>
 
@@ -105,8 +110,9 @@
     </section>
 
     <p class="small text-body-secondary mt-3 mb-0">
-        Responses can contain mistakes. Confirm important decisions against actual order records.
-        Do not enter passwords, access tokens, or other secrets.
+        You can ask up to five numbered questions in one message or follow a report with “What about August?”.
+        Context lasts for this page session; “New conversation” clears it. Verified data is always recalculated
+        using your signed-in account. Do not enter passwords or access tokens.
     </p>
 </div>
 {% endblock %}
@@ -121,7 +127,19 @@
     const status = document.getElementById('om-ai-status');
     const submit = document.getElementById('om-ai-submit');
     const history = [];
+    let contextToken = null;
     let busy = false;
+
+    document.getElementById('om-ai-new-chat').addEventListener('click', () => {
+        if (busy) return;
+        history.length = 0;
+        contextToken = null;
+        messages.replaceChildren();
+        bubble('New conversation started. Ask about your orders, inventory, or website features.', 'assistant');
+        status.textContent = 'Ready';
+        input.value = '';
+        input.focus();
+    });
 
     function bubble(text, kind) {
         const el = document.createElement('div');
@@ -172,7 +190,11 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-Token': token
                 },
-                body: JSON.stringify({ question, history: history.slice(-8) })
+                body: JSON.stringify({
+                    question,
+                    history: history.slice(-8),
+                    context_token: contextToken
+                })
             });
             let data = {};
             try { data = await response.json(); } catch (_) {}
@@ -185,6 +207,7 @@
             }
 
             bubble(data.answer, 'assistant');
+            contextToken = data.context_token || null;
             history.push({ role: 'user', content: question });
             history.push({ role: 'assistant', content: data.answer.slice(0, 1200) });
             while (history.length > 8) history.shift();
