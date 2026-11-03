@@ -12,6 +12,7 @@ import calendar
 import json
 import logging
 import re
+import time
 from datetime import date, timedelta
 
 import httpx
@@ -24,6 +25,7 @@ from app.ai.data_service import _mentioned_restaurants, _select_restaurant
 from app.ai.performance_service import Window, _get_metrics, _windows
 from app.ai.periods import named_months
 from app.ai.service import AIServiceFailed, AIServiceUnavailable, MODEL, OLLAMA_URL
+from app.ai.ollama_runtime import KEEP_ALIVE, log_ollama_result
 from app.orders.models import SwiggyOrders
 from app.products.models import Product, Restaurant
 from app.users.models import User
@@ -373,16 +375,20 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
         async with httpx.AsyncClient(timeout=httpx.Timeout(120.0, connect=5.0)) as client:
             for attempt in range(2):
                 payload_messages = messages if attempt == 0 else retry_messages
+                started = time.perf_counter()
                 response = await client.post(f"{OLLAMA_URL}/api/chat", json={
                     "model": MODEL,
                     "stream": False,
+                    "keep_alive": KEEP_ALIVE,
                     "think": False,
                     "messages": payload_messages,
                     "options": {"num_ctx": 4096, "num_predict": 360, "temperature": 0.2},
                 })
                 response.raise_for_status()
                 try:
-                    content = response.json()["message"]["content"]
+                    payload = response.json()
+                    log_ollama_result("analysis", payload, time.perf_counter() - started)
+                    content = payload["message"]["content"]
                     if not isinstance(content, str):
                         raise ValueError("Model content was not a string")
                     return _validate_interpretation(content, facts)

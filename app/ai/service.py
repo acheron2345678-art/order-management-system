@@ -7,10 +7,12 @@ Structured restaurant reports are answered by FastAPI; no database details are s
 import json
 import os
 import re
+import time
 
 import httpx
 
 from app.ai.domain_service import scope_reply, validated_guidance
+from app.ai.ollama_runtime import KEEP_ALIVE, log_ollama_result
 
 MODEL = os.getenv("OM_AI_MODEL", "qwen3.5:4b-q4_K_M")
 OLLAMA_URL = os.getenv("OM_OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
@@ -180,11 +182,13 @@ async def answer_question(
         async with httpx.AsyncClient(
             timeout=httpx.Timeout(120.0, connect=5.0)
         ) as client:
+            started = time.perf_counter()
             result = await client.post(
                 f"{OLLAMA_URL}/api/chat",
                 json={
                     "model": MODEL,
                     "stream": False,
+                    "keep_alive": KEEP_ALIVE,
                     "think": False,
                     "messages": messages,
                     "options": {
@@ -201,7 +205,9 @@ async def answer_question(
         raise AIServiceFailed from exc
 
     try:
-        response = result.json()["message"]["content"]
+        payload = result.json()
+        log_ollama_result("guidance", payload, time.perf_counter() - started)
+        response = payload["message"]["content"]
         if not isinstance(response, str) or not response.strip():
             raise ValueError("Empty AI response")
         return validated_guidance(response[:6000])

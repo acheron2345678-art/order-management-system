@@ -205,7 +205,7 @@ def test_classifier_declines_keeps_existing_guidance(data, monkeypatch):
     db, owner, _, _, captured = data
     async def decline(question): return False
     monkeypatch.setattr(conversation, "wants_grounded_analysis", decline)
-    result, _ = ask(db, owner, "What are the biggest problems with my restaurant?")
+    result, _ = ask(db, owner, "Should I focus on improving operations?")
     assert result == "General guidance only."
     assert captured == []
 

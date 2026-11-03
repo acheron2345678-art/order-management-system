@@ -26,7 +26,10 @@ from app.ai.data_service import (
     answer_data_question,
 )
 from app.ai.inventory_service import answer_inventory_question
-from app.ai.intent_service import eligible_for_classification, wants_grounded_analysis
+from app.ai.intent_service import (
+    eligible_for_classification, high_confidence_analysis_intent,
+    wants_grounded_analysis,
+)
 from app.ai.performance_service import answer_performance_question
 from app.ai.periods import named_months, only_date_words
 from app.ai.service import answer_question
@@ -461,7 +464,12 @@ async def answer_conversation(
                 and special is None
                 and not is_analysis_request(query)
                 and eligible_for_classification(raw, has_report_context=prior is not None)):
-            semantic_analysis = await wants_grounded_analysis(raw)
+            # Known, unambiguous analysis intents do not need an extra model
+            # classification round trip. The same authorization checks follow.
+            semantic_analysis = (
+                high_confidence_analysis_intent(raw)
+                or await wants_grounded_analysis(raw)
+            )
 
         if semantic_analysis and _unrecognized_semantic_target(db, raw):
             if user.role == "merchant":
