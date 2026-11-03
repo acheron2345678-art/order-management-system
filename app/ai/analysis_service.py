@@ -93,8 +93,10 @@ data, invent app features, or claim to have updated records.
 STRICT FACT RULES:
 - Do not write numbers of any kind: no digits, dates, percentages, currency,
   fractions or spelled-out quantities. The server prints verified figures.
-- Describe order records as RECORDED, not recent/current/active. A historical
-  pending status proves neither an ongoing delay nor that it was resolved.
+- Refer naturally to "orders on record" or "orders recorded as pending";
+  never use all-caps labels such as RECORDED. Do not describe historical
+  records as recent, current or active. A pending status in an older record
+  proves neither an ongoing delay nor that it was resolved.
 - A historical order status is not evidence of kitchen acceptance, a delivery partner,
   a cancellation request, or an order actually resolved today.
 - Today's stock flags do not establish demand, capacity, historical stock,
@@ -224,8 +226,10 @@ _UNVERIFIED_PENDING_ACTIVITY = re.compile(
     re.I,
 )
 _UNVERIFIED_RECENCY = re.compile(
-    r"\b(?:recent|last|past)\s+(?:month|week|orders?|data|sales)\b"
-    r"|\brecently\b", re.I,
+    # "past sales" and "past orders" are legitimate historical caveats;
+    # only claims about *recency* are unsupported when the latest order is old.
+    r"\b(?:recent|last|past)\s+(?:month|week)\b"
+    r"|\brecent\s+(?:orders?|data|sales)\b|\brecently\b", re.I,
 )
 # An old order date does not prove an old pending status has since been closed.
 # Match affirmative resolution claims, not careful statements such as
@@ -236,6 +240,69 @@ _UNVERIFIED_HISTORICAL_RESOLUTION = re.compile(
     r"(?:are|were|have been|had been)\s+"
     r"(?:(?:already|definitely|certainly)\s+)?"
     r"(?:no longer active|resolved|closed|fulfilled|completed|cancelled|canceled)\b",
+    re.I,
+)
+
+
+# These are response-quality hints only; they cannot change the authorized
+# restaurant, date window, SQL, or verified totals selected by FastAPI.
+def _order_investigation_question(question: str) -> bool:
+    return bool(re.search(
+        r"\b(?:which|what)\s+orders?\b.*\b(?:investigate|review|check|prioriti[sz]e)\b"
+        r"|\b(?:investigate|review|check|prioriti[sz]e)\b.*\borders?\b.*\bfirst\b",
+        question, re.I,
+    ))
+
+
+def _interpretation_focus(question: str, facts: dict) -> str:
+    """Supply a small, question-specific hint without leaking numerical facts."""
+    if _order_investigation_question(question):
+        if facts.get("pending"):
+            return (
+                "Question focus: Which records to investigate first? Recommend "
+                "reviewing orders recorded as pending before routine checks of "
+                "completed orders. Verify each status and available history; "
+                "do NOT assert the pending records are still active."
+            )
+        return (
+            "Question focus: Which records to investigate first? There are no "
+            "pending statuses in this period. Do not invent problem orders or "
+            "a priority ranking absent individual order evidence."
+        )
+    if re.search(r"\b(?:stock|inventory|supply)\b", question, re.I) and re.search(
+        r"\b(?:enough|capacity|handle|fulfil|fulfill|more orders?|demand)\b", question, re.I
+    ):
+        return (
+            "Question focus: Can current stock cover additional orders? "
+            "Discuss today's out-of-stock and reorder flags, but do not call "
+            "capacity adequate or inadequate. The crucial missing evidence "
+            "is expected item-level demand and order quantities; lack of "
+            "historical stock logs is NOT the main reason current capacity "
+            "cannot be predicted."
+        )
+    if re.search(r"\b(?:compare|comparison|versus|vs\.?)\b", question, re.I) and re.search(
+        r"\b(?:stock|inventory|supply)\b", question, re.I
+    ) and re.search(r"\b(?:sales|revenue|orders?|performance)\b", question, re.I):
+        return (
+            "Question focus: Compare recorded order outcomes with the current "
+            "inventory flags. Mention completed and pending order records "
+            "when present, and whether any products are flagged at or below "
+            "reorder level. These snapshots cannot establish past consumption "
+            "or future capacity. Use natural prose, not placeholders, all-caps "
+            "labels or tautologies."
+        )
+    return ""
+
+
+# Reject a known failure mode: recommending completed-order inspection ahead
+# of pending-status records in response to an open-ended priority question.
+_COMPLETED_ORDERS_FIRST = re.compile(
+    r"\b(?:investigate|review|check|prioriti[sz]e|start with|begin with)\s+"
+    r"(?:the\s+)?(?:recorded\s+)?completed\s+orders?\b",
+    re.I,
+)
+_COMPARISON_TAUTOLOGY = re.compile(
+    r"\brecorded\s+orders?\s+exist\s+alongside\s+recorded\s+completed\s+orders?\b",
     re.I,
 )
 
@@ -256,6 +323,12 @@ def _validate_interpretation(text: str, facts: dict | None = None) -> str:
         raise ValueError("Model output contained unsupported numeric content")
     if disallowed_generated_text(result):
         raise ValueError("Model output contained code or unrelated content")
+    if facts and facts.get("pending") and _order_investigation_question(
+        str(facts.get("original_question", ""))
+    ) and _COMPLETED_ORDERS_FIRST.search(result):
+        raise ValueError("Model prioritized completed orders ahead of recorded pending statuses")
+    if facts and facts.get("comparison_question") and _COMPARISON_TAUTOLOGY.search(result):
+        raise ValueError("Model gave a tautology instead of comparing sales and inventory")
     if _STOCK_CAUSAL_OVERCLAIM.search(result):
         raise ValueError("Model inferred historical causes from current stock")
     if _UNSUPPORTED_STOCK_JUDGMENT.search(result):
@@ -266,7 +339,8 @@ def _validate_interpretation(text: str, facts: dict | None = None) -> str:
         raise ValueError("Model described older order history as recent")
     if facts and facts.get("historical_period") and _UNVERIFIED_HISTORICAL_RESOLUTION.search(result):
         raise ValueError("Model claimed historical order statuses are definitely resolved")
-    return result[:2500]
+    # Formatting only: all-caps RECORDED is an instruction artifact, not data.
+    return re.sub(r"\bRECORDED\b", "recorded", result)[:2500]
 
 
 def _qualitative_report_flags(facts: dict) -> dict[str, bool]:
@@ -311,10 +385,19 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
         "Offer a practical next check, then explain the evidence limit."
     )
     flags = _qualitative_report_flags(facts)
+    focus = _interpretation_focus(question, facts)
+    validation_facts = {
+        **facts,
+        "original_question": question,
+        "comparison_question": bool(re.search(
+            r"\b(?:compare|comparison|versus|vs\.?)\b", question, re.I
+        ) and re.search(r"\b(?:stock|inventory|supply)\b", question, re.I)),
+    }
     messages = [
         {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
         {"role": "system", "content": style_instruction},
         {"role": "system", "content": "QUALITATIVE_REPORT_FLAGS:\n" + json.dumps(flags)},
+        *([{"role": "system", "content": focus}] if focus else []),
         {"role": "user", "content": question},
     ]
     # The second attempt receives the same safe context and a specific
@@ -359,7 +442,7 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
                     content = payload["message"]["content"]
                     if not isinstance(content, str):
                         raise ValueError("Model content was not a string")
-                    return _validate_interpretation(content, facts)
+                    return _validate_interpretation(content, validation_facts)
                 except (KeyError, TypeError, AttributeError, ValueError) as exc:
                     # Do not log model content, account data or user question.
                     rejection_reason = (
@@ -387,6 +470,20 @@ def _verified_fallback(question: str, facts: dict) -> str:
     Never rely on user-provided counts or invent operational causes.
     Verified numbers still come from FastAPI below this paragraph.
     """
+    if _order_investigation_question(question):
+        if facts.get("pending", 0):
+            return (
+                "Start by reviewing the orders recorded as pending in the "
+                "authorized merchant order list. Inspect each record's details "
+                "and any available status history to confirm what was recorded "
+                "and whether follow-up is needed. Do not assume those historical "
+                "statuses prove a current delay or an already resolved order."
+            )
+        return (
+            "No orders are recorded as pending in this reporting period. "
+            "Review the authorized order details before assigning priority "
+            "to a specific record."
+        )
     if re.search(r"\bpending\b", question, re.I):
         if facts["pending"] <= 0:
             return (
