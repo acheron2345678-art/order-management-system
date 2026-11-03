@@ -27,6 +27,11 @@ from app.users.models import User
 
 logger = logging.getLogger(__name__)
 
+
+class AIInterpretationRejected(AIServiceFailed):
+    """The local model responded, but its prose failed factual safety checks."""
+
+
 # Interpretation questions, rather than requests for raw totals or a status list.
 _ANALYSIS_INTENT = re.compile(
     r"\b(?:functioning|performing|doing|running|operating)\s+"
@@ -96,6 +101,15 @@ Trust boundary:
 - Order dates and statuses cannot establish how long preparation took.
 - If asked WHY, say the verified aggregates do not establish causes. Offer
   specific investigation steps as possibilities, clearly labeled unverified.
+- 'Pending' is only a stored application status. Do not assert that the kitchen
+  accepted or prepared an order, that a delivery partner was assigned, or
+  that a cancellation request exists. Those workflows are not evidenced by
+  these aggregates. Do not recommend changing a historical order status until
+  the merchant verifies what actually happened.
+- Do not invent access to kitchen logs, delivery tracking, or cancellation
+  requests. Suggest inspecting only records that the application actually has,
+  such as an order's details or available status history, and if those records
+  do not explain the cause, state that it remains unknown.
 - Separate observed facts, possible explanations, and practical next steps.
   Never state that inventory, staffing, demand or service was a bottleneck (or
   was not a bottleneck) based on these aggregates alone.
@@ -239,12 +253,27 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
         "Do not infer causes of historical orders from current inventory. "
         "A stock snapshot cannot confirm or rule out past stock shortages."
     )
+    # Qwen may copy dates, counts or currency amounts from the verified report.
+    # On retry, supply only qualitative flags. This reduces rejected numeric
+    # echoes while preserving the read-only scope and permission boundary.
+    retry_facts = {
+        "has_recorded_orders": bool(facts.get("total_orders", 0)),
+        "has_recorded_pending_statuses": bool(facts.get("pending", 0)),
+        "historical_period": bool(facts.get("historical_period", False)),
+        "inventory_is_current_snapshot_only": True,
+        "order_aggregates_do_not_establish_causes": True,
+    }
+    retry_messages = [
+        {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
+        {"role": "system", "content": style_instruction},
+        {"role": "system", "content": "QUALITATIVE_REPORT_FLAGS:\n" + json.dumps(retry_facts)},
+        {"role": "user", "content": question},
+        {"role": "system", "content": corrective_instruction},
+    ]
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(120.0, connect=5.0)) as client:
             for attempt in range(2):
-                payload_messages = messages if attempt == 0 else [
-                    *messages, {"role": "system", "content": corrective_instruction},
-                ]
+                payload_messages = messages if attempt == 0 else retry_messages
                 response = await client.post(f"{OLLAMA_URL}/api/chat", json={
                     "model": MODEL,
                     "stream": False,
@@ -260,8 +289,11 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
                     return _validate_interpretation(content)
                 except (KeyError, TypeError, AttributeError, ValueError) as exc:
                     # Don't log the model content or user data.
-                    logger.warning("Grounded analysis response rejected (attempt %s): %s", attempt + 1, type(exc).__name__)
-            raise AIServiceFailed("Model could not produce a valid interpretation")
+                    reason = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
+                    logger.warning("Grounded analysis response rejected (attempt %s): %s", attempt + 1, reason)
+            # Distinguish a responding model whose output is unsafe from a
+            # network failure. Both should keep the verified figures visible.
+            raise AIInterpretationRejected("Model could not produce a valid interpretation")
     except (httpx.TimeoutException, httpx.ConnectError) as exc:
         logger.warning("Ollama analysis unavailable: %s", type(exc).__name__)
         raise AIServiceUnavailable from exc
@@ -271,6 +303,47 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
     except httpx.HTTPError as exc:
         logger.warning("Ollama analysis request failed: %s", type(exc).__name__)
         raise AIServiceFailed from exc
+
+
+def _verified_fallback(question: str, facts: dict) -> str:
+    """Cautious, useful guidance if Qwen's prose fails validation.
+
+    Never rely on user-provided counts or invent operational causes.
+    Verified numbers still come from FastAPI below this paragraph.
+    """
+    if re.search(r"\bpending\b", question, re.I):
+        if facts["pending"] <= 0:
+            return (
+                "No orders are recorded as pending in this reporting period. "
+                "Check the selected date range before investigating a pending-order issue."
+            )
+        if facts["historical_period"]:
+            return (
+                "The report confirms orders were recorded as pending during this "
+                "historical period, but it does not establish why. Review those "
+                "orders' details and any available status history to check whether "
+                "their records became outdated. Do not assume kitchen delays, "
+                "delivery problems, or stock shortages without supporting records."
+            )
+        return (
+            "The report confirms orders recorded as pending, but the "
+            "aggregate data cannot establish a cause. Review their individual "
+            "details and any available status history before deciding which "
+            "follow-up action is appropriate."
+        )
+    if re.search(r"\b(?:cancelled|canceled|cancellations?|why|cause|explain)\b", question, re.I):
+        return (
+            "The verified report describes order outcomes, not their causes. "
+            "Review the relevant order details and any available status history; "
+            "treat staffing, stock and delivery explanations as unverified until "
+            "you find evidence for them."
+        )
+    return (
+        "The local model's explanation did not pass the accuracy checks. "
+        "The verified figures below remain available, but they alone cannot "
+        "establish overall business health or the causes of order outcomes. "
+        "Review individual order records before making operational decisions."
+    )
 
 
 async def answer_analysis_question(
@@ -321,13 +394,22 @@ async def answer_analysis_question(
         "historical_pending_statuses_need_verification": is_historical and counts["pending"] > 0,
         "response_style": "brief_followup" if concise else "standard",
     }
+    heading = "**AI interpretation**"
     try:
         interpretation = await _generate_interpretation(user_intent or question, facts)
-    except (AIServiceFailed, AIServiceUnavailable):
+    except AIInterpretationRejected:
+        # The model did respond; do not misleadingly report that Ollama is off.
+        heading = "**Verified guidance (AI response failed validation)**"
+        interpretation = _verified_fallback(user_intent or question, facts)
+    except AIServiceUnavailable:
+        heading = "**Verified figures (local AI unavailable)**"
         interpretation = (
             "The local AI interpretation is currently unavailable. "
             "Here are the verified figures from your database."
         )
+    except AIServiceFailed:
+        heading = "**Verified guidance (AI request failed)**"
+        interpretation = _verified_fallback(user_intent or question, facts)
 
     def rate(value):
         return "N/A (no orders)" if value is None else f"{value:.1f}%"
@@ -361,5 +443,5 @@ async def answer_analysis_question(
         if is_historical and counts["pending"]:
             context_line += ("\n*These are historical status records; "
                              "they do not confirm the orders remain active today.*")
-        return f"**AI interpretation**\n\n{interpretation}\n\n{context_line}", period_token, restaurant.id
-    return f"**AI interpretation**\n\n{interpretation}\n\n{verified}", period_token, restaurant.id
+        return f"{heading}\n\n{interpretation}\n\n{context_line}", period_token, restaurant.id
+    return f"{heading}\n\n{interpretation}\n\n{verified}", period_token, restaurant.id
