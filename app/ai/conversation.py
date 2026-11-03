@@ -65,6 +65,14 @@ _REASONING_FOLLOWUP = re.compile(
     r"^\s*(?:why\s+(?:is|was)\s+(?:that|this)\s+happening|"
     r"why\s+did\s+(?:that|this)\s+happen|"
     r"what\s+(?:might|could)\s+(?:explain|cause)\s+(?:that|this)|"
+    # Status-specific WHY questions must not fall through to generic chat;
+    # they require fresh, authorized performance aggregates.
+    r"what\s+(?:might|could)\s+(?:explain|cause)\s+"
+    r"(?:(?:the|my|our|these|those)\s+)?"
+    r"(?:pending|cancelled|canceled|incomplete|uncompleted)\s+orders?|"
+    r"why\s+(?:are|were)\s+"
+    r"(?:(?:the|my|our|these|those)\s+)?"
+    r"(?:orders?\s+pending|pending\s+orders?)|"
     r"what\s+should\s+(?:i|we)\s+(?:do|check|improve|focus\s+on|prioriti[sz]e)\s+(?:first|next)|"
     r"what(?:'s|\s+is)\s+the\s+first\s+thing\s+(?:i|we)\s+should\s+do|"
     r"what\s+does\s+(?:that|this)\s+mean\s+for\s+(?:my|our)\s+(?:restaurant|business))"
