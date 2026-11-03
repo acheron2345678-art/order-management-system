@@ -282,6 +282,13 @@ def _question_focus(question: str) -> str:
         question, re.I,
     ):
         return "planning"
+    if re.search(
+        r"\b(?:functioning|performing|doing|running|operating)\s+"
+        r"(?:well|badly|poorly|okay|ok|fine)\b"
+        r"|\b(?:restaurant|business)\b.*\b(?:healthy|successful)\b",
+        question, re.I,
+    ):
+        return "restaurant_health"
     return "general"
 
 
@@ -334,12 +341,16 @@ def _interpretation_focus(question: str, facts: dict) -> str:
         r"\b(?:stock|inventory|supply)\b", question, re.I
     ) and re.search(r"\b(?:sales|revenue|orders?|performance)\b", question, re.I):
         return (
-            "Question focus: Compare recorded order outcomes with the current "
-            "inventory flags. Mention completed and pending order records "
-            "when present, and whether any products are flagged at or below "
-            "reorder level. These snapshots cannot establish past consumption "
-            "or future capacity. Use natural prose, not placeholders, all-caps "
-            "labels or tautologies."
+            "Question focus: Compare recorded order outcomes with the current inventory flags. "
+            "Actually COMPARE the available sales proxy with today's inventory "
+            "health, rather than just saying a comparison is impossible. "
+            "Describe the recorded completed and pending order "
+            "outcomes (when present) alongside the current out-of-stock and "
+            "reorder flags. If no products are flagged, state that without "
+            "calling stock sufficient. Recorded completed-order value is not "
+            "verified paid sales. Orders and inventory are different-time "
+            "snapshots, so neither historical consumption nor future capacity "
+            "is proven. Use natural prose, not all-caps labels or tautologies."
         )
     if _question_focus(question) == "order_cause":
         return (
@@ -349,10 +360,35 @@ def _interpretation_focus(question: str, facts: dict) -> str:
             "Do not introduce inventory or staffing speculation."
         )
     if _question_focus(question) == "planning":
+        if facts.get("pending"):
+            priority = (
+                "Start by checking orders recorded as pending and reconciling "
+                "their statuses before suggesting improvements. "
+            )
+        elif facts.get("total_orders"):
+            priority = (
+                "There are recorded order outcomes to review; use them as "
+                "a limited baseline for planning. "
+            )
+        else:
+            priority = "There are no order outcomes recorded in the selected period. "
         return (
-            "Question focus: Choose a practical next operational priority, "
-            "based only on recorded status flags and current stock alerts. "
-            "Avoid speculative forecasts, promises or unrelated explanations."
+            "Question focus: The user wants a useful priority for next month, "
+            "not a prediction. " + priority +
+            "Check current reorder alerts if relevant, but do not imply that "
+            "historical performance records are unavailable when recorded "
+            "order outcomes exist. Do not prioritize completed orders over "
+            "pending-status reconciliation. No demand forecast is available."
+        )
+    if _question_focus(question) == "restaurant_health":
+        return (
+            "Question focus: Give a LIMITED operational snapshot, not a "
+            "business-health verdict. Discuss the recorded completed and pending "
+            "orders (when present), cancellation flags, and current reorder "
+            "alerts; note that this small dataset cannot establish service "
+            "quality, profitability or root causes. Historical inventory data "
+            "is NOT required to describe the order outcomes already recorded. "
+            "Provide a practical check, not a blanket 'cannot assess' refusal."
         )
     return ""
 
@@ -457,6 +493,17 @@ def _relevant_report_flags(question: str, facts: dict) -> dict[str, bool]:
         keys = {
             "orders_recorded", "pending_statuses_recorded",
             "cancelled_orders_recorded", "historical_order_period",
+            "latest_order_precedes_current_month",
+        }
+    elif focus in {"planning", "sales_inventory", "restaurant_health"}:
+        # These questions can use the recorded order outcomes as a limited
+        # baseline. Sending a broad "historical stock unavailable" flag made
+        # the model wrongly refuse even this basic comparison or assessment.
+        keys = {
+            "orders_recorded", "completed_orders_recorded",
+            "pending_statuses_recorded", "cancelled_orders_recorded",
+            "products_in_current_inventory", "any_out_of_stock_products_now",
+            "any_products_at_or_below_reorder_now", "historical_order_period",
             "latest_order_precedes_current_month",
         }
     else:

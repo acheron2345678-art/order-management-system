@@ -36,7 +36,7 @@ FACTS = {
     ("Compare my sales and inventory situation.", "sales_inventory"),
     ("What could explain the pending orders?", "order_cause"),
     ("What should I focus on next month?", "planning"),
-    ("Is my restaurant functioning well?", "general"),
+    ("Is my restaurant functioning well?", "restaurant_health"),
 ])
 def test_focus_is_about_presentation_not_report_scope(question, expected):
     assert svc._question_focus(question) == expected
