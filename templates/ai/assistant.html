@@ -34,6 +34,10 @@
                 <p class="omai-side-intro">Choose a suggestion or ask a question of your own.</p>
                 <div class="omai-suggestion-list">
                     {% if current_user.role == 'merchant' %}
+                    <button type="button" class="omai-suggestion" data-ai-question="Is my restaurant functioning well?">
+                        <span class="omai-suggestion-icon" aria-hidden="true">✦</span>
+                        <span>AI business assessment<small>Qwen interprets verified reports</small></span>
+                    </button>
                     <button type="button" class="omai-suggestion" data-ai-question="Show my restaurant performance for September 2026">
                         <span class="omai-suggestion-icon" aria-hidden="true">▥</span>
                         <span>September performance<small>Orders, revenue and trends</small></span>
@@ -85,7 +89,7 @@
             </div>
             <div class="omai-info-card">
                 <div class="omai-side-label">GOOD TO KNOW</div>
-                <p><strong>Reports are read-only.</strong> Verified totals are retrieved using your signed-in permissions.</p>
+                <p><strong>Reports are read-only.</strong> FastAPI verifies the figures; Qwen interprets them for advice. Model interpretations can still be inaccurate.</p>
                 <p class="mb-0">Ask follow-ups like <em>“What about August?”</em> or send up to five numbered questions together.</p>
             </div>
         </aside>
@@ -96,7 +100,7 @@
                     <span class="omai-avatar omai-avatar-ai" aria-hidden="true">✦</span>
                     <div>
                         <h2>Conversation</h2>
-                        <p>Guidance and database-backed insights</p>
+                        <p>Verified figures + local AI interpretation</p>
                     </div>
                 </div>
                 <button id="om-ai-new-chat" type="button" class="btn btn-outline-secondary btn-sm omai-reset">↻ <span>New conversation</span></button>
@@ -142,5 +146,5 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="/static/js/ai-assistant.js?v=1" defer></script>
+<script src="/static/js/ai-assistant.js?v=2" defer></script>
 {% endblock %}

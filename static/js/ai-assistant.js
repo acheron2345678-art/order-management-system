@@ -297,16 +297,16 @@
         avatar.textContent = kind === 'user' ? 'YOU' : '✦';
         const content = document.createElement('div'); content.className = 'omai-message-content';
         const label = document.createElement('div'); label.className = 'omai-message-label';
-        label.textContent = kind === 'user' ? 'You' : (options.error ? 'Unable to complete' : 'AI Assistant');
+        label.textContent = kind === 'user' ? 'You' : (options.denied ? 'Access restricted' : (options.error ? 'Unable to complete' : 'AI Assistant'));
         const surface = document.createElement('div'); surface.className = 'omai-message-surface';
-        if (kind === 'user' || options.error) surface.textContent = text;
+        if (kind === 'user' || options.error || options.denied) surface.textContent = text;
         else {
             const summary = reportHighlights(text);
             if (summary) { article.classList.add('omai-message-report'); surface.appendChild(summary); }
             surface.appendChild(renderMarkdown(text));
         }
         content.append(label, surface);
-        if (kind === 'assistant' && !options.pending) {
+        if (kind === 'assistant' && !options.pending && !options.denied) {
             const actions = document.createElement('div'); actions.className = 'omai-message-actions';
             if (!options.error) {
                 const copy = document.createElement('button'); copy.type = 'button';
@@ -364,6 +364,7 @@
         busyState(true);
         setStatus('Processing your request...');
         const pending = makePending();
+        let httpStatus = null;
         controller = new AbortController();
         try {
             const response = await fetch('/ai/ask', {
@@ -373,6 +374,7 @@
                 signal: controller.signal,
                 body: JSON.stringify({ question, history: history.slice(-MAX_HISTORY), context_token: contextToken }),
             });
+            httpStatus = response.status;
             let data = {};
             try { data = await response.json(); } catch (_) { /* backend errors may be non-JSON */ }
             if (!response.ok) throw new Error(errorMessage(response, data));
@@ -391,8 +393,9 @@
             const message = cancelled
                 ? 'Stopped waiting for this response. The local server may still be processing the request.'
                 : (error.message || 'Unable to reach the AI service.');
-            bubble('assistant', message, { error: true, question });
-            setStatus(cancelled ? 'Request stopped' : 'Request failed');
+            const denied = httpStatus === 403;
+            bubble('assistant', message, denied ? { denied: true } : { error: true, question });
+            setStatus(denied ? 'Access restricted' : (cancelled ? 'Request stopped' : 'Request failed'));
         } finally {
             controller = null;
             busyState(false);
