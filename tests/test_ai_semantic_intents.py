@@ -140,7 +140,11 @@ def test_flexible_questions_get_authorized_aggregates(data, question):
     reply, token = ask(db, owner, question)
     assert "AI interpretation" in reply
     assert "City Kitchen" in reply
-    assert "Verified figures" in reply
+    if analysis_service.is_focused_analysis_question(question):
+        assert "Verified context" in reply
+        assert "Verified figures" not in reply
+    else:
+        assert "Verified figures" in reply
     assert captured[-1][0] == question
     facts = captured[-1][1]
     assert facts["total_orders"] == 2

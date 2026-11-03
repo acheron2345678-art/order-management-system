@@ -112,7 +112,15 @@ def test_fast_analysis_skips_model_classification_but_rechecks_db(
     reply, token = ask(db, owner, question)
     assert "AI interpretation" in reply
     assert "City Kitchen" in reply
-    assert "Orders: 1" in reply
+    if analysis_service.is_focused_analysis_question(question):
+        assert "Verified context" in reply
+        if "stock" in question:
+            assert "Current active Swiggy products: 1" in reply
+            assert "Orders: 1" not in reply
+        else:
+            assert "Orders: 1" in reply
+    else:
+        assert "Orders: 1" in reply
     assert "9000" not in reply
     assert len(calls) == 1
     assert calls[0]["total_orders"] == 1

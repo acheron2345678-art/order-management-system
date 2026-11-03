@@ -102,6 +102,9 @@ STRICT FACT RULES:
 - Today's stock flags do not establish demand, capacity, historical stock,
   order delays, or the causes of outcomes. Never rate total inventory as low,
   adequate, enough or sufficient.
+- Stay on the user's requested subject. Do not add inventory or future-demand
+  commentary to a question about which recorded orders to review. Do not
+  introduce historical-order caveats into a question solely about today's stock.
 - Avoid profit, payment, forecast, growth, or customer-satisfaction claims.
 - If evidence is insufficient, say what cannot be determined and name a useful
   authorized check (order details, available status history or inventory view).
@@ -254,6 +257,50 @@ def _order_investigation_question(question: str) -> bool:
     ))
 
 
+def _question_focus(question: str) -> str:
+    """Choose *presentation context*, never a SQL query or authorization scope.
+
+    Keep this deliberately narrow. Unrecognized questions retain the complete
+    qualitative flags and normal report formatting rather than guessing what
+    a user meant. The original question still reaches Qwen unchanged.
+    """
+    if _order_investigation_question(question):
+        return "order_priority"
+    if (re.search(r"\b(?:compare|comparison|versus|vs\.?)\b", question, re.I)
+            and re.search(r"\b(?:stock|inventory|supply)\b", question, re.I)
+            and re.search(r"\b(?:sales|revenue|orders?|performance)\b", question, re.I)):
+        return "sales_inventory"
+    if (re.search(r"\b(?:stock|inventory|supply)\b", question, re.I)
+            and re.search(r"\b(?:enough|capacity|handle|fulfil|fulfill|more orders?|demand)\b", question, re.I)):
+        return "stock_capacity"
+    if (re.search(r"\b(?:pending|cancelled|canceled)\b", question, re.I)
+            and re.search(r"\b(?:why|reason|explain|cause|happen)\b", question, re.I)):
+        return "order_cause"
+    if re.search(
+        r"\b(?:what\s+should\s+(?:i|we)\s+focus\s+on|"
+        r"what\s+(?:should|can)\s+(?:i|we)\s+prioriti[sz]e)\b",
+        question, re.I,
+    ):
+        return "planning"
+    return "general"
+
+
+def _requests_detailed_answer(question: str) -> bool:
+    """Respect explicit requests for depth, even in a signed follow-up."""
+    return bool(re.search(
+        r"\b(?:in\s+detail|detailed|comprehensive|thorough(?:ly)?|"
+        r"full\s+(?:analysis|assessment|explanation|breakdown)|"
+        r"step[- ]by[- ]step|explain\s+fully)\b",
+        question, re.I,
+    ))
+
+
+def is_focused_analysis_question(question: str) -> bool:
+    """Short, narrow questions merit a compact answer even on the first turn."""
+    return (_question_focus(question) in {"order_priority", "stock_capacity", "order_cause", "planning"}
+            and not _requests_detailed_answer(question))
+
+
 def _interpretation_focus(question: str, facts: dict) -> str:
     """Supply a small, question-specific hint without leaking numerical facts."""
     if _order_investigation_question(question):
@@ -262,7 +309,9 @@ def _interpretation_focus(question: str, facts: dict) -> str:
                 "Question focus: Which records to investigate first? Recommend "
                 "reviewing orders recorded as pending before routine checks of "
                 "completed orders. Verify each status and available history; "
-                "do NOT assert the pending records are still active."
+                "do NOT assert the pending records are still active. "
+                "Stay on order investigation; do not discuss inventory, "
+                "stock capacity or future demand unless asked."
             )
         return (
             "Question focus: Which records to investigate first? There are no "
@@ -278,7 +327,8 @@ def _interpretation_focus(question: str, facts: dict) -> str:
             "capacity adequate or inadequate. The crucial missing evidence "
             "is expected item-level demand and order quantities; lack of "
             "historical stock logs is NOT the main reason current capacity "
-            "cannot be predicted."
+            "cannot be predicted. Do not discuss historical order statuses "
+            "unless the user asks about them."
         )
     if re.search(r"\b(?:compare|comparison|versus|vs\.?)\b", question, re.I) and re.search(
         r"\b(?:stock|inventory|supply)\b", question, re.I
@@ -290,6 +340,19 @@ def _interpretation_focus(question: str, facts: dict) -> str:
             "reorder level. These snapshots cannot establish past consumption "
             "or future capacity. Use natural prose, not placeholders, all-caps "
             "labels or tautologies."
+        )
+    if _question_focus(question) == "order_cause":
+        return (
+            "Question focus: What can explain the recorded order statuses? "
+            "The aggregate counts have no root-cause information. Give the "
+            "next relevant check using the authorized order details/history. "
+            "Do not introduce inventory or staffing speculation."
+        )
+    if _question_focus(question) == "planning":
+        return (
+            "Question focus: Choose a practical next operational priority, "
+            "based only on recorded status flags and current stock alerts. "
+            "Avoid speculative forecasts, promises or unrelated explanations."
         )
     return ""
 
@@ -370,21 +433,62 @@ def _qualitative_report_flags(facts: dict) -> dict[str, bool]:
     }
 
 
+def _relevant_report_flags(question: str, facts: dict) -> dict[str, bool]:
+    """Limit Qwen's *attention*, not FastAPI's verified database access.
+
+    The complete facts remain server-side for validation and the response.
+    Unrelated qualitative flags encourage otherwise safe models to answer a
+    question about orders with stock and demand caveats.
+    """
+    flags = _qualitative_report_flags(facts)
+    focus = _question_focus(question)
+    if focus == "order_priority":
+        keys = {
+            "orders_recorded", "pending_statuses_recorded",
+            "historical_order_period", "latest_order_precedes_current_month",
+        }
+    elif focus == "stock_capacity":
+        keys = {
+            "products_in_current_inventory", "any_out_of_stock_products_now",
+            "any_products_at_or_below_reorder_now",
+            "future_demand_and_capacity_unavailable",
+        }
+    elif focus == "order_cause":
+        keys = {
+            "orders_recorded", "pending_statuses_recorded",
+            "cancelled_orders_recorded", "historical_order_period",
+            "latest_order_precedes_current_month",
+        }
+    else:
+        return flags
+    return {key: value for key, value in flags.items() if key in keys}
+
+
 async def _generate_interpretation(question: str, facts: dict) -> str:
     """Generate short, fact-checked prose; exact totals stay in FastAPI.
 
     At most one corrective retry. A failed output is never shown to users.
     """
     brief = facts.get("response_style") == "brief_followup"
-    style_instruction = (
-        "The user asked a follow-up. Answer their EXACT question in 35-55 "
-        "words, using one paragraph. No Assessment/Priorities/Limits headings "
-        "or repeated report. Mention only the most relevant next check."
-    ) if brief else (
-        "Answer the user's EXACT question in 45-75 words in one paragraph. "
-        "Offer a practical next check, then explain the evidence limit."
-    )
-    flags = _qualitative_report_flags(facts)
+    detailed = _requests_detailed_answer(question) and not brief
+    if brief:
+        style_instruction = (
+            "Answer the user's EXACT question in 25-45 words, in one plain "
+            "paragraph. No Assessment/Priorities/Limits headings, no repeated "
+            "report, and no unrelated caveats. Mention one relevant next check."
+        )
+    elif detailed:
+        style_instruction = (
+            "The user explicitly requested a detailed explanation. Address the "
+            "requested aspects in 75-110 words, without fabricated facts or "
+            "extra topics. The server supplies verified numbers separately."
+        )
+    else:
+        style_instruction = (
+            "Answer the user's EXACT question in 45-70 words in one paragraph. "
+            "Offer a practical next check and explain only the relevant evidence limit."
+        )
+    flags = _relevant_report_flags(question, facts)
     focus = _interpretation_focus(question, facts)
     validation_facts = {
         **facts,
@@ -431,7 +535,7 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
                     "messages": payload_messages,
                     "options": {
                         "num_ctx": 4096,
-                        "num_predict": 100 if brief else 128,
+                        "num_predict": 92 if brief else 180 if detailed else 128,
                         "temperature": 0.1,
                     },
                 })
@@ -483,6 +587,27 @@ def _verified_fallback(question: str, facts: dict) -> str:
             "No orders are recorded as pending in this reporting period. "
             "Review the authorized order details before assigning priority "
             "to a specific record."
+        )
+    if _question_focus(question) == "stock_capacity":
+        inventory = facts.get("inventory_now") or {}
+        if not inventory.get("active_products"):
+            return (
+                "No active Swiggy products are present in the current inventory "
+                "snapshot. Check the authorized menu and inventory records before "
+                "accepting additional demand."
+            )
+        if inventory.get("out_of_stock_products") or inventory.get("at_or_below_reorder_level"):
+            return (
+                "The current inventory has products flagged as out of stock or "
+                "at their reorder thresholds. Review those products and expected "
+                "item-level order quantities; these flags alone cannot establish "
+                "how many additional orders can be fulfilled."
+            )
+        return (
+            "No active Swiggy products are currently flagged as out of stock "
+            "or at/below their reorder thresholds. This does not prove that "
+            "additional orders can be fulfilled: compare the current item-level "
+            "quantities with the items and quantities customers are likely to order."
         )
     if re.search(r"\bpending\b", question, re.I):
         if facts["pending"] <= 0:
@@ -657,15 +782,42 @@ async def answer_analysis_question(
     period_token = window.start.strftime("%Y-%m") if window.start and window.end and window.start.day == 1 and window.end.day == 1 else None
     if concise:
         interpretation = _compact_followup(interpretation)
-        # Avoid reprinting the complete report after every short follow-up.
-        context_line = (
-            f"*Verified context: {restaurant.name} · {window.label} · "
-            f"Orders: {metrics.total} ({counts['completed']} completed, "
-            f"{counts['pending']} recorded as pending); "
-            f"Completion: {rate(metrics.completion_rate)}; "
-            f"completed-order value ₹{metrics.revenue:,.2f}.*"
-        )
-        if is_historical and counts["pending"]:
+        # Short questions should not receive an unrelated full revenue or
+        # inventory report. Every displayed value still comes from FastAPI.
+        focus = _question_focus(user_intent or question)
+        prefix = f"*Verified context: {restaurant.name} · {window.label} · "
+        if focus == "order_priority":
+            context_line = (
+                prefix + f"Orders: {metrics.total}; Pending: {counts['pending']} "
+                f"recorded; Completed: {counts['completed']}.*"
+            )
+        elif focus == "stock_capacity":
+            context_line = (
+                prefix + f"Current active Swiggy products: {inventory['active_products']}; "
+                f"out of stock: {inventory['out_of_stock_products']}; "
+                f"at/below reorder level: {inventory['at_or_below_reorder_level']}.*"
+            )
+        elif focus == "order_cause":
+            context_line = (
+                prefix + f"Orders: {metrics.total}; Pending: {counts['pending']} "
+                f"recorded; Cancelled: {counts['cancelled']}.*"
+            )
+        elif focus == "planning":
+            context_line = (
+                prefix + f"Orders: {metrics.total}; Pending: {counts['pending']} "
+                f"recorded; products at/below reorder now: "
+                f"{inventory['at_or_below_reorder_level']}.*"
+            )
+        else:
+            # Preserve the existing concise report context for open-ended
+            # follow-ups such as "What should I do first?".
+            context_line = (
+                prefix + f"Orders: {metrics.total} ({counts['completed']} completed, "
+                f"{counts['pending']} recorded as pending); "
+                f"Completion: {rate(metrics.completion_rate)}; "
+                f"completed-order value ₹{metrics.revenue:,.2f}.*"
+            )
+        if focus != "stock_capacity" and is_historical and counts["pending"]:
             context_line += ("\n*These are historical status records; "
                              "they do not confirm the orders remain active today.*")
         return f"{heading}\n\n{interpretation}\n\n{context_line}", period_token, restaurant.id

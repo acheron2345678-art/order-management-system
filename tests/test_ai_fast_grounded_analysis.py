@@ -75,8 +75,10 @@ def test_no_raw_counts_dates_or_restaurant_reach_model_in_first_request(monkeypa
     payload = requests[0]
     model_context = " ".join(msg["content"] for msg in payload["messages"][:-1])
     assert "QUALITATIVE_REPORT_FLAGS" in model_context
-    assert '"pending_statuses_recorded": true' in model_context
-    assert '"latest_order_precedes_current_month": true' in model_context
+    # The stock question needs *inventory* flags, not unrelated order status
+    # context that used to make Qwen drift into historical-order discussion.
+    assert '"pending_statuses_recorded"' not in model_context
+    assert '"latest_order_precedes_current_month"' not in model_context
     assert '"any_products_at_or_below_reorder_now": false' in model_context
     for forbidden in ("City Kitchen", "994.00", "September 2026", '"total_orders": 6', '"current_total_stock_units": 28'):
         assert forbidden not in model_context

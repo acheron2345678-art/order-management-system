@@ -73,7 +73,13 @@ def test_followup_reuses_verified_september_scope(setup, followup):
     assert "AI interpretation" in result
     assert "September 2026" in result
     assert "Orders: 2" in result
-    assert "₹150.00" in result
+    if "focus on" in followup.lower():
+        # A priority question only needs its relevant verified status and
+        # inventory flags; repeating revenue would distract from the answer.
+        assert "products at/below reorder now" in result
+        assert "₹150.00" not in result
+    else:
+        assert "₹150.00" in result
     assert "Private Customer" not in str(captures)
     assert "KFC" not in str(captures)
     assert captures[-1][1]["report_period"] == "September 2026"

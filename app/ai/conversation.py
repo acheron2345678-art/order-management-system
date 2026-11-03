@@ -19,7 +19,10 @@ from sqlalchemy.orm import Session
 from app.ai.domain_service import scope_reply
 from app.ai.workflow_service import verified_workflow_answer
 from app.ai.assignment_service import answer_assignment_question
-from app.ai.analysis_service import answer_analysis_question, is_analysis_request
+from app.ai.analysis_service import (
+    _requests_detailed_answer, answer_analysis_question,
+    is_analysis_request, is_focused_analysis_question,
+)
 from app.ai.data_service import (
     _mentioned_restaurants,
     _select_restaurant,
@@ -422,6 +425,14 @@ async def answer_conversation(
         if workflow is not None:
             responses.append(workflow)
             continue
+        # Explicit references to an existing restaurant in a report-related
+        # question must be checked before optional semantic classification or
+        # general guidance. "Which KFC orders should I investigate?" must not
+        # escape the merchant tenant check just because it doesn't match the
+        # fast-path phrase "Which orders should I investigate?".
+        if (user.role == "merchant" and _REPORT_WORDS.search(raw)
+                and _mentioned_restaurants(db, raw)):
+            _select_restaurant(db, user, raw)
         # This also checks the first question when there is no prior context.
         if _unrecognized_report_target(db, raw):
             if user.role == "merchant":
@@ -493,7 +504,11 @@ async def answer_conversation(
             # The rewritten query is used for scoping; the original question
             # tells Qwen what the user actually needs from this follow-up.
             user_intent=raw if special == "analysis" else None,
-            concise=(special == "analysis" or semantic_analysis) and prior is not None,
+            concise=(
+                (special == "analysis" or semantic_analysis or is_analysis_request(query))
+                and (prior is not None or is_focused_analysis_question(raw))
+                and not _requests_detailed_answer(raw)
+            ),
             force_analysis=semantic_analysis,
         ) if (is_analysis_request(query) or semantic_analysis) else None
         result = None
