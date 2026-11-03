@@ -5,10 +5,25 @@
     const MAX_HISTORY = 8;
     const MAX_CHARS = 1200;
 
+    // Normalize only textual display/copy artifacts, never interpret as HTML.
+    // The browser renderer exclusively creates nodes and assigns textContent.
+    function normalizeAssistantText(raw) {
+        return String(raw || '').replace(/\r\n?/g, '\n')
+            .replace(/&#(?:x([0-9a-f]{1,6})|([0-9]{1,7}));/gi, (all, hex, dec) => {
+                const point = parseInt(hex || dec, hex ? 16 : 10);
+                return point >= 32 && point <= 0x10ffff && !(point >= 0xd800 && point <= 0xdfff)
+                    ? String.fromCodePoint(point) : all;
+            })
+            // A Markdown trailing backslash means a hard line break. Keep the
+            // newline but don't show/copy the literal backslash.
+            .replace(/\\[ \t]*(?=\n)/g, '');
+    }
+
     // Pure extractor: highlights only reproduce numbers already present in a
     // single recognized report. They are never calculated from chat history.
     function extractHighlights(source) {
         if (typeof source !== 'string') return null;
+        source = normalizeAssistantText(source);
         const recognized = /^Verified (?:Swiggy order-performance report|Swiggy order report|inventory) for /gm;
         if ([...source.matchAll(recognized)].length !== 1) return null;
 
@@ -66,7 +81,7 @@
     }
 
     if (typeof module !== 'undefined' && module.exports) {
-        module.exports = { extractHighlights };
+        module.exports = { extractHighlights, normalizeAssistantText };
     }
     if (typeof document === 'undefined') return;
 
@@ -168,16 +183,7 @@
     function renderMarkdown(raw) {
         const container = document.createElement('div');
         container.className = 'omai-rich-text';
-        // Decode numeric character references as text only, never as HTML.
-        // This corrects visible labels such as 'revenu&#x65;' while leaving
-        // the text-node renderer's XSS boundary intact.
-        const source = String(raw || '').replace(/\r\n?/g, '\n')
-            .replace(/&#(?:x([0-9a-f]{1,6})|([0-9]{1,7}));/gi, (all, hex, dec) => {
-                const point = parseInt(hex || dec, hex ? 16 : 10);
-                return point >= 32 && point <= 0x10ffff && !(point >= 0xd800 && point <= 0xdfff)
-                    ? String.fromCodePoint(point) : all;
-            })
-            .replace(/\\[ \t]*(?=\n)/g, '');
+        const source = normalizeAssistantText(raw);
         const lines = source.split('\n');
         let i = 0;
         const isList = line => /^\s*(?:[-*]|\d+[.)])\s+/.test(line);
@@ -258,15 +264,18 @@
     function reportHighlights(source) {
         const info = extractHighlights(source);
         if (!info) return null;
-        const box = document.createElement('div'); box.className = 'omai-report';
+        const box = document.createElement('section'); box.className = 'omai-report';
+        box.setAttribute('aria-label', 'Report highlights');
         const heading = document.createElement('div'); heading.className = 'omai-report-heading';
         heading.textContent = 'REPORT HIGHLIGHTS'; box.appendChild(heading);
-        const metrics = document.createElement('div'); metrics.className = 'omai-metrics';
+        const metrics = document.createElement('dl'); metrics.className = 'omai-metrics';
         info.metrics.forEach(([label, value]) => {
             const metric = document.createElement('div'); metric.className = 'omai-metric';
-            const name = document.createElement('span'); name.className = 'omai-metric-label'; name.textContent = label;
-            const number = document.createElement('strong'); number.className = 'omai-metric-value'; number.textContent = value;
-            metric.append(name, number); metrics.appendChild(metric);
+            const name = document.createElement('dt'); name.className = 'omai-metric-label'; name.textContent = `${label}:`;
+            const number = document.createElement('dd'); number.className = 'omai-metric-value'; number.textContent = value;
+            // Explicit separating whitespace also helps browser text selection.
+            metric.append(name, document.createTextNode(' '), number);
+            metrics.appendChild(metric);
         });
         box.appendChild(metrics);
         if (info.statuses) {
@@ -283,7 +292,8 @@
                 segment.style.width = `${value / info.total * 100}%`; track.appendChild(segment);
                 const item = document.createElement('span');
                 const swatch = document.createElement('i'); swatch.className = `omai-status-${cssName}`;
-                item.append(swatch, document.createTextNode(`${name} ${value}`)); legend.appendChild(item);
+                item.append(swatch, document.createTextNode(` ${name}: ${value} `));
+                legend.appendChild(item);
             });
             box.append(track, legend);
         }
@@ -313,6 +323,7 @@
         const surface = document.createElement('div'); surface.className = 'omai-message-surface';
         if (kind === 'user' || options.error || options.denied) surface.textContent = text;
         else {
+            text = normalizeAssistantText(text);
             const summary = reportHighlights(text);
             if (summary) { article.classList.add('omai-message-report'); surface.appendChild(summary); }
             surface.appendChild(renderMarkdown(text));
@@ -323,7 +334,7 @@
             if (!options.error) {
                 const copy = document.createElement('button'); copy.type = 'button';
                 copy.textContent = 'Copy response';
-                copy.addEventListener('click', () => copyText(text, copy));
+                copy.addEventListener('click', () => copyText(normalizeAssistantText(text), copy));
                 actions.appendChild(copy);
             } else if (options.question) {
                 const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = '↻ Retry question';

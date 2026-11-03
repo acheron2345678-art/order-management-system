@@ -17,6 +17,7 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy.orm import Session
 
 from app.ai.domain_service import scope_reply
+from app.ai.workflow_service import verified_workflow_answer
 from app.ai.assignment_service import answer_assignment_question
 from app.ai.analysis_service import answer_analysis_question, is_analysis_request
 from app.ai.data_service import (
@@ -411,6 +412,12 @@ async def answer_conversation(
         scope = scope_reply(raw, has_report_context=prior is not None)
         if scope is not None:
             responses.append(scope)
+            continue
+        # Give only verified, route-accurate workflow instructions. This is
+        # evaluated after the domain gate, before any semantic model call.
+        workflow = verified_workflow_answer(raw, user.role)
+        if workflow is not None:
+            responses.append(workflow)
             continue
         # This also checks the first question when there is no prior context.
         if _unrecognized_report_target(db, raw):
