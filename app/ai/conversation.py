@@ -24,6 +24,7 @@ from app.ai.data_service import (
     answer_data_question,
 )
 from app.ai.inventory_service import answer_inventory_question
+from app.ai.intent_service import eligible_for_classification, wants_grounded_analysis
 from app.ai.performance_service import answer_performance_question
 from app.ai.periods import named_months, only_date_words
 from app.ai.service import answer_question
@@ -229,6 +230,40 @@ def _unrecognized_report_target(db: Session, question: str) -> bool:
     return not bool(_mentioned_restaurants(db, question))
 
 
+# Detect an explicitly named unknown target in a new semantic-analysis query.
+# Never turn "How could I improve Ghost Cafe operations?" into a report for
+# the merchant's own City Kitchen merely because Ghost Cafe isn't in MySQL.
+_POSSIBLE_SEMANTIC_TARGET = re.compile(
+    r"\b(?:for|about|at|on)\s+(?P<name>"
+    r"[\w&'-]+(?:\s+[\w&'-]+){0,3})\s+"
+    r"(?:restaurant\s+)?(?:operations?|performance|inventory|stock|"
+    r"orders?|revenue|sales)\b", re.I,
+)
+_SEMANTIC_GENERIC_TARGET_WORDS = {
+    "my", "our", "the", "this", "a", "an", "your", "current",
+    "existing", "next", "month", "previous", "last", "overall",
+    "restaurant", "business", "own", "all", "more", "future",
+    "planning", "improving", "managing", "optimizing", "better",
+}
+
+
+def _unrecognized_semantic_target(db: Session, question: str) -> bool:
+    for match in _POSSIBLE_SEMANTIC_TARGET.finditer(question):
+        name = " ".join(match.group("name").split())
+        words = name.casefold().split()
+        # A lowercase single adjective/verb is not evidence of a restaurant
+        # name ("focus on improving operations"). Two-word names such as
+        # "ghost cafe" can still be detected before merchant fallback.
+        if (all(word in _SEMANTIC_GENERIC_TARGET_WORDS for word in words)
+                or (len(words) == 1 and name[0].islower())):
+            continue
+        known = _mentioned_restaurants(db, name)
+        if not any(item.name.casefold() == name.casefold() for item in known):
+            return True
+    return False
+
+
+
 def _looks_like_named_target(question: str, today: date) -> bool:
     """Unknown explicit target must not inherit a previous restaurant."""
     # E.g. 'What about Unknown Cafe?' is not a date follow-up.
@@ -265,6 +300,13 @@ def _followup_question(
         kind = previous.kind
     if cause_question:
         kind = "performance"
+    # A broad decision-support question is not merely an instruction to
+    # redisplay the old report. Let the optional intent classifier assess it.
+    # Preserve deterministic date comparisons and established WHY follow-ups.
+    if (not (explanation or cause_question or reasoning_followup)
+            and eligible_for_classification(question, has_report_context=True)
+            and not (_COMPARISON.search(question) and named_months(question, today))):
+        return question, None
     relevant = bool(
         explanation or cause_question or reasoning_followup
         or
@@ -397,6 +439,28 @@ async def answer_conversation(
             )
             continue
 
+        # An optional structured-output Ollama classifier recognizes broader
+        # first-person operational questions. Only its *intent* is accepted;
+        # the ORIGINAL question still goes through FastAPI's authenticated
+        # restaurant resolver and date parser. No model-selected SQL or scope.
+        semantic_analysis = False
+        if (user.role in ("merchant", "admin")
+                and special is None
+                and not is_analysis_request(query)
+                and eligible_for_classification(raw, has_report_context=prior is not None)):
+            semantic_analysis = await wants_grounded_analysis(raw)
+
+        if semantic_analysis and _unrecognized_semantic_target(db, raw):
+            if user.role == "merchant":
+                raise HTTPException(
+                    status_code=403,
+                    detail="You can view reports only for your assigned restaurant.",
+                )
+            responses.append(
+                "I couldn't verify that restaurant name. No report was generated."
+            )
+            continue
+
         # Interpretation questions use actual scoped metrics plus Qwen. This
         # must run before the assignment-claim matcher and report templates.
         # The signed previous context contains only selection metadata.
@@ -408,8 +472,9 @@ async def answer_conversation(
             # The rewritten query is used for scoping; the original question
             # tells Qwen what the user actually needs from this follow-up.
             user_intent=raw if special == "analysis" else None,
-            concise=special == "analysis" and prior is not None,
-        ) if is_analysis_request(query) else None
+            concise=(special == "analysis" or semantic_analysis) and prior is not None,
+            force_analysis=semantic_analysis,
+        ) if (is_analysis_request(query) or semantic_analysis) else None
         result = None
         dispatched_kind: str | None = None
         if analysis is not None:

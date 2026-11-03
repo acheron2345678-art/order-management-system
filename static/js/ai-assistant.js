@@ -168,7 +168,17 @@
     function renderMarkdown(raw) {
         const container = document.createElement('div');
         container.className = 'omai-rich-text';
-        const lines = String(raw || '').replace(/\r\n?/g, '\n').split('\n');
+        // Decode numeric character references as text only, never as HTML.
+        // This corrects visible labels such as 'revenu&#x65;' while leaving
+        // the text-node renderer's XSS boundary intact.
+        const source = String(raw || '').replace(/\r\n?/g, '\n')
+            .replace(/&#(?:x([0-9a-f]{1,6})|([0-9]{1,7}));/gi, (all, hex, dec) => {
+                const point = parseInt(hex || dec, hex ? 16 : 10);
+                return point >= 32 && point <= 0x10ffff && !(point >= 0xd800 && point <= 0xdfff)
+                    ? String.fromCodePoint(point) : all;
+            })
+            .replace(/\\[ \t]*(?=\n)/g, '');
+        const lines = source.split('\n');
         let i = 0;
         const isList = line => /^\s*(?:[-*]|\d+[.)])\s+/.test(line);
         const isHeading = line => /^\s*#{1,4}\s+/.test(line);

@@ -87,6 +87,9 @@ Trust boundary:
 - Only interpret the supplied metrics; never invent metrics, targets, growth rates,
   customer opinions, inventory demand, cancellations causes, order preparation
   times, profit, net revenue, payment status, or comparisons not provided.
+- Current inventory alone cannot prove whether the restaurant can fulfill a
+  proposed number of new orders or predict next month's demand. Explain this
+  limitation rather than promising capacity.
 - No numeric digits, amounts, currency symbols or percentages in your prose;
   the application appends verified totals below.
 - With no orders, say that performance cannot be assessed for this period.
@@ -98,6 +101,9 @@ Trust boundary:
 - Reorder thresholds are not demand forecasts and stock counts are current only.
 - Today's stock cannot establish whether shortages occurred during the report
   period. Never infer that past order outcomes were, or were not, caused by stock.
+- Aggregate reports do not identify individual order IDs or their urgency.
+  If asked which specific orders to investigate, recommend reviewing the
+  merchant's authorized orders list; do not invent IDs or priority rankings.
 - Order dates and statuses cannot establish how long preparation took.
 - If asked WHY, say the verified aggregates do not establish causes. Offer
   specific investigation steps as possibilities, clearly labeled unverified.
@@ -353,13 +359,14 @@ async def answer_analysis_question(
     as_of: date | None = None,
     user_intent: str | None = None,
     concise: bool = False,
+    force_analysis: bool = False,
 ) -> tuple[str, str | None, int | None] | None:
     """Return (interpretation + verified figures, YYYY-MM or None, restaurant id).
 
     No untrusted question/history text can change the authenticated role,
     restaurant, or report values. The assistant never writes to the database.
     """
-    if not is_analysis_request(question):
+    if not force_analysis and not is_analysis_request(question):
         return None
     if user.role not in ("merchant", "admin"):
         raise HTTPException(403, "Operational analysis is available to merchants and admins only.")
