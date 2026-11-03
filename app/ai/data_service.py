@@ -12,6 +12,7 @@ from fastapi import HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.ai.periods import named_months
 from app.merchants.models import MerchantRestaurant
 from app.orders.models import SwiggyOrders
 from app.products.models import Restaurant
@@ -34,6 +35,10 @@ ADVICE_TERMS = re.compile(
 
 def _report_window(question: str, today: date) -> tuple[date | None, date | None, str]:
     q = question.casefold()
+    months = named_months(question, today)
+    if months:
+        selected = months[0]
+        return selected.start, selected.end, selected.label
     if "last month" in q or "previous month" in q:
         end = today.replace(day=1)
         start = (end - timedelta(days=1)).replace(day=1)

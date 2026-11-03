@@ -44,6 +44,9 @@ def example():
         ("k3", kfc, "pending", 80.00, date(2026, 11, 2)),
         ("k4", kfc, "cancelled", 90.00, date(2026, 10, 20)),
         ("b1", rival, "completed", 9000.00, date(2026, 11, 2)),
+        ("s1", kfc, "completed", 120.00, date(2026, 9, 9)),
+        ("s2", kfc, "cancelled", 30.00, date(2026, 9, 17)),
+        ("a1", kfc, "completed", 20.00, date(2026, 8, 19)),
     ]:
         session.add(SwiggyOrders(
             customer_name="test", order_number=name, amount=amount,
@@ -114,3 +117,24 @@ def test_report_uses_select_only(example):
     report(db, admin, "KFC revenue this month")
     event.remove(db.bind, "before_cursor_execute", capture)
     assert statements and all(s.startswith("SELECT") for s in statements)
+
+
+def test_historical_september_revenue(example):
+    db, admin, merchant, _ = example
+    for user, question in [
+        (admin, "What was KFC revenue in September 2026?"),
+        (merchant, "Show my restaurant revenue for September"),
+    ]:
+        answer = report(db, user, question)
+        assert "September 2026" in answer
+        assert "₹120.00" in answer
+        assert "Total recorded orders: 2" in answer
+        assert "9000" not in answer
+
+
+def test_historical_month_order_counts(example):
+    db, _, merchant, _ = example
+    result = report(db, merchant, "How many orders were completed and cancelled in September?")
+    assert "September 2026" in result
+    assert "Total recorded orders: 2" in result
+    assert "Completed: 1; Cancelled: 1" in result
