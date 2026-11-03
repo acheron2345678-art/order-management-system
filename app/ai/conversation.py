@@ -59,6 +59,18 @@ _EXPLAIN_PREVIOUS = re.compile(
     r"what\s+should\s+i\s+do\s+next)\s*[?.!]*$",
     re.I,
 )
+# Short reasoning follow-ups need a signed previous report, not client-provided
+# history or claimed metrics. Without that context they remain normal chat.
+_REASONING_FOLLOWUP = re.compile(
+    r"^\s*(?:why\s+(?:is|was)\s+(?:that|this)\s+happening|"
+    r"why\s+did\s+(?:that|this)\s+happen|"
+    r"what\s+(?:might|could)\s+(?:explain|cause)\s+(?:that|this)|"
+    r"what\s+should\s+(?:i|we)\s+(?:do|check|improve|focus\s+on|prioriti[sz]e)\s+(?:first|next)|"
+    r"what(?:'s|\s+is)\s+the\s+first\s+thing\s+(?:i|we)\s+should\s+do|"
+    r"what\s+does\s+(?:that|this)\s+mean\s+for\s+(?:my|our)\s+(?:restaurant|business))"
+    r"\s*[?.!]*$",
+    re.I,
+)
 _CAUSAL_FOLLOWUP = re.compile(
     r"^\s*(?:why\b|what\s+caused\b|what\s+might\s+explain\b)"
     r".*\b(?:cancelled|cancellations?|revenue|sales|orders?|performance)\b",
@@ -236,12 +248,17 @@ def _followup_question(
     kind = _kind_for(question, previous)
     explanation = bool(_EXPLAIN_PREVIOUS.fullmatch(question))
     cause_question = bool(_CAUSAL_FOLLOWUP.match(question))
+    reasoning_followup = bool(_REASONING_FOLLOWUP.fullmatch(question))
+    if reasoning_followup:
+        # Re-run authorization-scoped queries and let Qwen explain verified
+        # aggregates. Do not transmit old model prose or purported data.
+        kind = "analysis"
     if explanation:
         kind = previous.kind
     if cause_question:
         kind = "performance"
     relevant = bool(
-        explanation or cause_question
+        explanation or cause_question or reasoning_followup
         or
         _FOLLOWUP_PREFIX.search(question)
         or named_months(question, today)
@@ -279,6 +296,15 @@ def _followup_question(
     new_period = _period_of_question(question, today, previous.period)
     period_text = f" for {_month_string(new_period)}" if new_period else " all time"
 
+    if reasoning_followup:
+        # Preserve the user's objective but never assume a cause or previous
+        # numbers. The model sees only freshly computed aggregate facts.
+        return (
+            f"Assess {target} restaurant performance{period_text} and explain "
+            "verified observations, possible concerns, and the first useful "
+            "check. Do not assert a cause without evidence.",
+            "analysis",
+        )
     if cause_question and previous.period:
         # Never invent causal explanations. Show comparable verified figures
         # and existing non-causal operational recommendations instead.
@@ -320,6 +346,16 @@ async def answer_conversation(
     questions = split_questions(question)
     responses: list[str] = []
     for raw in questions:
+        # A reference such as "why is that happening?" has no trustworthy
+        # referent without an unexpired, account-bound report context. Do not
+        # let generic model chat infer one from user-supplied history.
+        if prior is None and _REASONING_FOLLOWUP.fullmatch(raw):
+            responses.append(
+                "I need a verified report before interpreting that. Ask for "
+                "your restaurant performance for a specific month, then ask "
+                "what it means or what to check first."
+            )
+            continue
         # This also checks the first question when there is no prior context.
         if _unrecognized_report_target(db, raw):
             if user.role == "merchant":

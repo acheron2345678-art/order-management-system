@@ -88,6 +88,14 @@ Trust boundary:
 - With a very small sample, avoid a definitive positive or negative rating.
 - If pending orders exist, recommend reviewing them, but do not assume delay.
 - Reorder thresholds are not demand forecasts and stock counts are current only.
+- Today's stock cannot establish whether shortages occurred during the report
+  period. Never infer that past order outcomes were, or were not, caused by stock.
+- Order dates and statuses cannot establish how long preparation took.
+- If asked WHY, say the verified aggregates do not establish causes. Offer
+  specific investigation steps as possibilities, clearly labeled unverified.
+- Separate observed facts, possible explanations, and practical next steps.
+  Never state that inventory, staffing, demand or service was a bottleneck (or
+  was not a bottleneck) based on these aggregates alone.
 - Answer the user's question in a natural, practical tone. Limit to ~140 words.
 - Use short Markdown paragraphs with **Assessment**, **Priorities**, **Limits**.
 """
@@ -164,6 +172,27 @@ def _inventory_totals(db: Session, restaurant_id: int) -> dict[str, int]:
     }
 
 
+# Block a narrow class of unsupported causal claims which the small model can
+# make despite instructions. A current stock snapshot cannot rule out past
+# stock-related issues. General cautionary statements remain allowed.
+_STOCK_CAUSAL_OVERCLAIM = re.compile(
+    r"\b(?:stock|inventory|supply(?:-side)?)\b[^.\n]{0,130}"
+    r"\b(?:not|isn't|wasn't|aren't|weren't|no)\b[^.\n]{0,75}"
+    r"\b(?:bottleneck|cause|reason|constraint|factor|problem|issue)\b",
+    re.I,
+)
+
+
+def _validate_interpretation(text: str) -> str:
+    # Formatting-only numbered lists are fine; facts must come from Python.
+    result = re.sub(r"(?m)^\s*\d+[.)]\s+", "- ", text.strip())
+    if not result or re.search(r"\d|[₹$€£]", result):
+        raise ValueError("Model output contained unsupported numeric content")
+    if _STOCK_CAUSAL_OVERCLAIM.search(result):
+        raise ValueError("Model inferred historical causes from current stock")
+    return result[:2500]
+
+
 async def _generate_interpretation(question: str, facts: dict) -> str:
     """Generate safe narrative prose, retrying once for invalid model output.
 
@@ -179,7 +208,9 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
         "Your reply did not satisfy the output requirements. "
         "Write only a short qualitative assessment, priorities, and limits. "
         "Do not include any digits, currency symbols, numeric claims, "
-        "percentages, dates, or copied report figures."
+        "percentages, dates, or copied report figures. "
+        "Do not infer causes of historical orders from current inventory. "
+        "A stock snapshot cannot confirm or rule out past stock shortages."
     )
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(120.0, connect=5.0)) as client:
@@ -199,14 +230,7 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
                     content = response.json()["message"]["content"]
                     if not isinstance(content, str):
                         raise ValueError("Model content was not a string")
-                    result = content.strip()
-                    if not result:
-                        raise ValueError("Empty model response")
-                    # Numbered Markdown list markers are formatting, not facts.
-                    result = re.sub(r"(?m)^\s*\d+[.)]\s+", "- ", result)
-                    if re.search(r"\d|[₹$€£]", result):
-                        raise ValueError("Model generated unsupported numerical content")
-                    return result[:2500]
+                    return _validate_interpretation(content)
                 except (KeyError, TypeError, AttributeError, ValueError) as exc:
                     # Don't log the model content or user data.
                     logger.warning("Grounded analysis response rejected (attempt %s): %s", attempt + 1, type(exc).__name__)
