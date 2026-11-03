@@ -16,12 +16,14 @@ from datetime import date, timedelta
 
 import httpx
 from fastapi import HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.ai.data_service import _mentioned_restaurants, _select_restaurant
 from app.ai.performance_service import Window, _get_metrics, _windows
 from app.ai.periods import named_months
 from app.ai.service import AIServiceFailed, AIServiceUnavailable, MODEL, OLLAMA_URL
+from app.orders.models import SwiggyOrders
 from app.products.models import Product, Restaurant
 from app.users.models import User
 
@@ -90,8 +92,9 @@ Trust boundary:
 - Current inventory alone cannot prove whether the restaurant can fulfill a
   proposed number of new orders or predict next month's demand. Explain this
   limitation rather than promising capacity.
-- No numeric digits, amounts, currency symbols or percentages in your prose;
-  the application appends verified totals below.
+- Do not repeat ANY quantities, dates, fractions, rates, or amounts, including
+  spelled-out numbers (e.g., "twenty-eight" or "two-thirds"). The application
+  appends the verified totals below.
 - With no orders, say that performance cannot be assessed for this period.
 - With a very small sample, avoid a definitive positive or negative rating.
 - If pending orders exist, recommend reviewing them, but do not assume delay.
@@ -99,6 +102,21 @@ Trust boundary:
   during that period. Do not claim they remain active, delayed, or unfulfilled
   today; suggest verifying status history and reconciling stale records.
 - Reorder thresholds are not demand forecasts and stock counts are current only.
+- Total stock units alone never establish whether inventory is low, adequate,
+  sufficient to handle new orders, or high. Even when no products are at or
+  below reorder level, say only that none are flagged by these thresholds;
+  capacity and future demand remain unknown.
+- A report covering all recorded dates is NOT necessarily a recent period.
+  Use the verified most-recent order month and historical flag; never describe
+  old recorded orders as "recent", "active", "still pending", or "unfulfilled".
+- An order status recorded in the database does not prove a currently active
+  kitchen task. Say "recorded as pending" rather than "remain pending".
+- Historical order dates alone also do not prove that a pending record has
+  been resolved, completed, or closed since then. Never claim that historical
+  orders are definitely inactive today. Their current state is unknown until
+  independently verified from authorized order details and status history.
+- Do not imply that low order volume necessarily means poor demand, or that a
+  completed-order amount is confirmed sales, profit, or received payment.
 - Today's stock cannot establish whether shortages occurred during the report
   period. Never infer that past order outcomes were, or were not, caused by stock.
 - Aggregate reports do not identify individual order IDs or their urgency.
@@ -205,6 +223,53 @@ _STOCK_CAUSAL_OVERCLAIM = re.compile(
     re.I,
 )
 
+# Digits alone are insufficient: small models can rewrite a recorded value
+# as "twenty-eight units" or "two-thirds completion". Reject numeric *facts*
+# while allowing harmless prose such as "one useful next step".
+_NUMBER_WORD = (
+    r"(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|"
+    r"twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|"
+    r"nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|"
+    r"hundred|thousand|million|dozen)"
+)
+_SPELLED_NUMERIC_FACT = re.compile(
+    rf"\b{_NUMBER_WORD}(?:[- ]{_NUMBER_WORD})?\s+"
+    r"(?:(?:recorded|total|completed|pending|active|current|stock|available)\s+){0,3}"
+    r"(?:orders?|items?|products?|units?|sales|transactions?|cancellations?|"
+    r"rupees?|percent(?:age)?|percent|points?|completion\s+rate)\b"
+    rf"|\b{_NUMBER_WORD}[- ](?:halves|half|thirds?|quarters?)\b",
+    re.I,
+)
+# Aggregate stock counts do not say whether supply is sufficient for demand.
+_UNSUPPORTED_STOCK_JUDGMENT = re.compile(
+    r"\b(?:stock|inventory|supply)(?:\s+(?:levels?|counts?|units?))?"
+    r"\s+(?:is|are|seems?|appears?|remain(?:s)?)\s+"
+    r"(?:(?:very|quite|relatively|fairly|currently)\s+)?"
+    r"(?:low|insufficient|inadequate|scarce|depleted|limited|"
+    r"adequate|sufficient|plentiful|abundant|enough)\b", re.I,
+)
+_UNVERIFIED_PENDING_ACTIVITY = re.compile(
+    r"\b(?:orders?\s+)?(?:still|currently|remain|remains)\s+"
+    r"(?:(?:marked|recorded|flagged)\s+as\s+)?pending\b"
+    r"|\bpending\s+orders?\s+(?:still|currently|remain|remains|are\s+active|are\s+still)\b",
+    re.I,
+)
+_UNVERIFIED_RECENCY = re.compile(
+    r"\b(?:recent|last|past)\s+(?:month|week|orders?|data|sales)\b"
+    r"|\brecently\b", re.I,
+)
+# An old order date does not prove an old pending status has since been closed.
+# Match affirmative resolution claims, not careful statements such as
+# "we cannot confirm whether those records are no longer active".
+_UNVERIFIED_HISTORICAL_RESOLUTION = re.compile(
+    r"\b(?:those|these|the|historical|past|old)?\s*"
+    r"(?:orders?|records?|statuses|entries|they)\s+"
+    r"(?:are|were|have been|had been)\s+"
+    r"(?:(?:already|definitely|certainly)\s+)?"
+    r"(?:no longer active|resolved|closed|fulfilled|completed|cancelled|canceled)\b",
+    re.I,
+)
+
 
 def _compact_followup(text: str) -> str:
     """Flatten optional model headings in a brief follow-up; keep caveats intact."""
@@ -215,13 +280,21 @@ def _compact_followup(text: str) -> str:
     return " ".join(clean.split())
 
 
-def _validate_interpretation(text: str) -> str:
+def _validate_interpretation(text: str, facts: dict | None = None) -> str:
     # Formatting-only numbered lists are fine; facts must come from Python.
     result = re.sub(r"(?m)^\s*\d+[.)]\s+", "- ", text.strip())
-    if not result or re.search(r"\d|[₹$€£]", result):
+    if not result or re.search(r"\d|[₹$€£]", result) or _SPELLED_NUMERIC_FACT.search(result):
         raise ValueError("Model output contained unsupported numeric content")
     if _STOCK_CAUSAL_OVERCLAIM.search(result):
         raise ValueError("Model inferred historical causes from current stock")
+    if _UNSUPPORTED_STOCK_JUDGMENT.search(result):
+        raise ValueError("Model inferred inventory adequacy from aggregate stock")
+    if facts and facts.get("historical_period") and _UNVERIFIED_PENDING_ACTIVITY.search(result):
+        raise ValueError("Model implied historical pending orders are currently active")
+    if facts and facts.get("orders_older_than_current_month") and _UNVERIFIED_RECENCY.search(result):
+        raise ValueError("Model described older order history as recent")
+    if facts and facts.get("historical_period") and _UNVERIFIED_HISTORICAL_RESOLUTION.search(result):
+        raise ValueError("Model claimed historical order statuses are definitely resolved")
     return result[:2500]
 
 
@@ -245,6 +318,19 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
         "Answer with brief Assessment, Priorities, Limits sections. "
         "Do not present historical pending statuses as proof of active delays."
     )
+    # Comparison questions often cause a small model to copy the stock count
+    # and call it "low" or "high" without a demand baseline. Give a focused
+    # qualitative output requirement before asking it to interpret the facts.
+    if re.search(r"\b(?:compare|comparison|versus|vs\.?)\b", question, re.I) and re.search(
+        r"\b(?:inventory|stock|supply)\b", question, re.I
+    ):
+        style_instruction += (
+            " For sales-versus-inventory comparisons, contrast recorded order "
+            "outcomes with today's reorder-threshold flags only. Do not rate "
+            "the total stock units as low, high, enough, or insufficient; "
+            "historical stock, actual demand, and fulfillment capacity are "
+            "not established. No numerical facts in your prose."
+        )
     messages = [
         {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
         {"role": "system", "content": style_instruction},
@@ -254,7 +340,7 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
     corrective_instruction = (
         "Your reply did not satisfy the output requirements. "
         "Answer the user's exact question succinctly without copying a report. "
-        "Do not include any digits, currency symbols, numeric claims, "
+        "Do not include any digits, number words, currency symbols, numeric claims, "
         "percentages, dates, or copied report figures. "
         "Do not infer causes of historical orders from current inventory. "
         "A stock snapshot cannot confirm or rule out past stock shortages."
@@ -266,6 +352,8 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
         "has_recorded_orders": bool(facts.get("total_orders", 0)),
         "has_recorded_pending_statuses": bool(facts.get("pending", 0)),
         "historical_period": bool(facts.get("historical_period", False)),
+        "orders_older_than_current_month": bool(facts.get("orders_older_than_current_month", False)),
+        "no_demand_or_capacity_forecast_available": True,
         "inventory_is_current_snapshot_only": True,
         "order_aggregates_do_not_establish_causes": True,
     }
@@ -292,7 +380,7 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
                     content = response.json()["message"]["content"]
                     if not isinstance(content, str):
                         raise ValueError("Model content was not a string")
-                    return _validate_interpretation(content)
+                    return _validate_interpretation(content, facts)
                 except (KeyError, TypeError, AttributeError, ValueError) as exc:
                     # Don't log the model content or user data.
                     reason = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
@@ -344,11 +432,38 @@ def _verified_fallback(question: str, facts: dict) -> str:
             "treat staffing, stock and delivery explanations as unverified until "
             "you find evidence for them."
         )
+    # For comparisons, avoid an unhelpful generic refusal: these statements
+    # are derived from authorized aggregates, not generated by the model.
+    if re.search(r"\b(?:compare|comparison|versus|vs\.?)\b", question, re.I) and re.search(
+        r"\b(?:stock|inventory|supply)\b", question, re.I
+    ) and re.search(r"\b(?:sales|revenue|orders?|performance)\b", question, re.I):
+        order_phrase = (
+            "The selected period contains completed orders and orders recorded as pending. "
+            if facts.get("completed", 0) and facts.get("pending", 0) else
+            "The recorded order outcomes are shown in the verified figures below. "
+        )
+        stock = facts.get("inventory_now", {})
+        active = stock.get("active_products", 0)
+        low = stock.get("at_or_below_reorder_level", 0)
+        if active == 0:
+            inventory_phrase = "There are no active Swiggy products in the inventory snapshot. "
+        elif low == 0:
+            inventory_phrase = "No active Swiggy products are currently flagged at or below their reorder threshold. "
+        else:
+            inventory_phrase = "Some active Swiggy products are currently at or below their reorder threshold. "
+        return (
+            order_phrase + inventory_phrase +
+            "The recorded order values are not verified payments or profit, "
+            "and today's stock cannot establish earlier shortages or future "
+            "fulfillment capacity. Compare individual authorized order details "
+            "with relevant inventory records before making a causal claim."
+        )
     return (
-        "The local model's explanation did not pass the accuracy checks. "
-        "The verified figures below remain available, but they alone cannot "
-        "establish overall business health or the causes of order outcomes. "
-        "Review individual order records before making operational decisions."
+        "The verified data can support a cautious operational review, but not "
+        "a definitive assessment of business health or the causes of orders' "
+        "outcomes. Review recorded pending statuses and their available order "
+        "history first; the current inventory snapshot alone does not establish "
+        "historical shortages or future fulfillment capacity."
     )
 
 
@@ -380,6 +495,21 @@ async def answer_analysis_question(
     is_historical = bool(window.end and window.end <= report_today)
     metrics = _get_metrics(db, restaurant.id, window)
     inventory = _inventory_totals(db, restaurant.id)
+    # An all-time report can still be made entirely of historical orders.
+    # This is a read-only aggregate scoped by the authenticated restaurant.
+    latest_query = db.query(func.max(SwiggyOrders.order_date)).filter(
+        SwiggyOrders.restaurant_id == restaurant.id,
+    )
+    if window.start is not None:
+        latest_query = latest_query.filter(SwiggyOrders.order_date >= window.start)
+    if window.end is not None:
+        latest_query = latest_query.filter(SwiggyOrders.order_date < window.end)
+    latest_date = latest_query.scalar()
+    orders_older_than_current_month = bool(
+        latest_date and latest_date < report_today.replace(day=1)
+    )
+    if window.end is None and orders_older_than_current_month:
+        is_historical = True
     counts = metrics.counts
     # Only minimal aggregates; no user records, names of customers, transactions,
     # passwords, email addresses, raw SQL, or unscoped restaurant data.
@@ -398,6 +528,9 @@ async def answer_analysis_question(
         "completed_order_amount_inr": str(metrics.revenue),
         "inventory_now": inventory,
         "historical_period": is_historical,
+        "latest_recorded_order_month": latest_date.strftime("%B %Y") if latest_date else None,
+        "orders_older_than_current_month": orders_older_than_current_month,
+        "no_demand_or_capacity_forecast_available": True,
         "historical_pending_statuses_need_verification": is_historical and counts["pending"] > 0,
         "response_style": "brief_followup" if concise else "standard",
     }
@@ -436,6 +569,12 @@ async def answer_analysis_question(
         "Stock figures are current, not historical. "
         "These figures cannot establish reasons for cancellations or delays.*"
     )
+    if window.start is None and latest_date and orders_older_than_current_month:
+        verified += (
+            f"\n*Most recent recorded order month: {latest_date:%B %Y}. "
+            "These stored statuses do not establish whether orders remain "
+            "active today.*"
+        )
     period_token = window.start.strftime("%Y-%m") if window.start and window.end and window.start.day == 1 and window.end.day == 1 else None
     if concise:
         interpretation = _compact_followup(interpretation)
