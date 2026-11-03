@@ -43,7 +43,7 @@
             const metrics = [
                 ['Total orders', String(total)],
                 ['Completed', status[4]],
-                ['Revenue', revenue ? revenue[1].replace(/\s+/g, '') : '—'],
+                ['Completed revenue', revenue ? revenue[1].replace(/\s+/g, '') : '—'],
                 ['Completion', rate ? rate[1] : '—'],
             ];
             const goodCounts = counts.every(([, number]) => Number.isInteger(number) && number >= 0);
@@ -236,7 +236,9 @@
             const paragraph = document.createElement('p');
             while (i < lines.length && lines[i].trim() && (paragraph.childNodes.length === 0 || !isSpecial(lines[i], lines[i + 1]))) {
                 if (paragraph.childNodes.length) paragraph.appendChild(document.createElement('br'));
-                inline(paragraph, lines[i++]);
+                // A Markdown hard line break (trailing backslash) must not
+                // appear as a literal \ in the rendered conversation.
+                inline(paragraph, lines[i++].replace(/\\\s*$/, ''));
             }
             container.appendChild(paragraph);
         }

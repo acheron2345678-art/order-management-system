@@ -87,6 +87,9 @@ Trust boundary:
 - With no orders, say that performance cannot be assessed for this period.
 - With a very small sample, avoid a definitive positive or negative rating.
 - If pending orders exist, recommend reviewing them, but do not assume delay.
+- If the report period is historical, say orders were *recorded* as pending
+  during that period. Do not claim they remain active, delayed, or unfulfilled
+  today; suggest verifying status history and reconciling stale records.
 - Reorder thresholds are not demand forecasts and stock counts are current only.
 - Today's stock cannot establish whether shortages occurred during the report
   period. Never infer that past order outcomes were, or were not, caused by stock.
@@ -183,6 +186,15 @@ _STOCK_CAUSAL_OVERCLAIM = re.compile(
 )
 
 
+def _compact_followup(text: str) -> str:
+    """Flatten optional model headings in a brief follow-up; keep caveats intact."""
+    clean = re.sub(
+        r"(?im)^\s*\*{0,2}(?:Assessment|Priorities|Limits)\*{0,2}\s*\\?\s*$",
+        "", text,
+    )
+    return " ".join(clean.split())
+
+
 def _validate_interpretation(text: str) -> str:
     # Formatting-only numbered lists are fine; facts must come from Python.
     result = re.sub(r"(?m)^\s*\d+[.)]\s+", "- ", text.strip())
@@ -199,14 +211,29 @@ async def _generate_interpretation(question: str, facts: dict) -> str:
     Numerical evidence remains under FastAPI's control. We do not accept
     unexpected model-generated amounts, even when the local model is available.
     """
+    brief = facts.get("response_style") == "brief_followup"
+    style_instruction = (
+        "The user asked one follow-up to a previous report. Answer their EXACT "
+        "question directly in one short paragraph (roughly 45-70 words). "
+        "No Assessment/Priorities/Limits headings or repeated report. "
+        "Do not repeat statistics; the backend shows a verified context line. "
+        "If the question asks WHY, say that causes are not known and name "
+        "the best next check. If it asks WHAT FIRST, name one first action. "
+        "For past-month pending statuses, recommend checking whether the "
+        "historical statuses were updated; do not present them as active today."
+    ) if brief else (
+        "Answer with brief Assessment, Priorities, Limits sections. "
+        "Do not present historical pending statuses as proof of active delays."
+    )
     messages = [
         {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
+        {"role": "system", "content": style_instruction},
         {"role": "system", "content": "VERIFIED_REPORT_JSON:\n" + json.dumps(facts, ensure_ascii=False)},
         {"role": "user", "content": question},
     ]
     corrective_instruction = (
         "Your reply did not satisfy the output requirements. "
-        "Write only a short qualitative assessment, priorities, and limits. "
+        "Answer the user's exact question succinctly without copying a report. "
         "Do not include any digits, currency symbols, numeric claims, "
         "percentages, dates, or copied report figures. "
         "Do not infer causes of historical orders from current inventory. "
@@ -251,6 +278,8 @@ async def answer_analysis_question(
     previous_month: str | None = None,
     restaurant_id_hint: int | None = None,
     as_of: date | None = None,
+    user_intent: str | None = None,
+    concise: bool = False,
 ) -> tuple[str, str | None, int | None] | None:
     """Return (interpretation + verified figures, YYYY-MM or None, restaurant id).
 
@@ -266,7 +295,9 @@ async def answer_analysis_question(
     if restaurant is None:
         return ("Please name one existing restaurant to analyze. No records were read.", None, None)
 
-    window = _window(question, as_of or date.today(), previous_month)
+    report_today = as_of or date.today()
+    window = _window(question, report_today, previous_month)
+    is_historical = bool(window.end and window.end <= report_today)
     metrics = _get_metrics(db, restaurant.id, window)
     inventory = _inventory_totals(db, restaurant.id)
     counts = metrics.counts
@@ -286,9 +317,12 @@ async def answer_analysis_question(
         "cancellation_rate_percent": str(metrics.cancellation_rate) if metrics.cancellation_rate is not None else None,
         "completed_order_amount_inr": str(metrics.revenue),
         "inventory_now": inventory,
+        "historical_period": is_historical,
+        "historical_pending_statuses_need_verification": is_historical and counts["pending"] > 0,
+        "response_style": "brief_followup" if concise else "standard",
     }
     try:
-        interpretation = await _generate_interpretation(question, facts)
+        interpretation = await _generate_interpretation(user_intent or question, facts)
     except (AIServiceFailed, AIServiceUnavailable):
         interpretation = (
             "The local AI interpretation is currently unavailable. "
@@ -314,4 +348,18 @@ async def answer_analysis_question(
         "These figures cannot establish reasons for cancellations or delays.*"
     )
     period_token = window.start.strftime("%Y-%m") if window.start and window.end and window.start.day == 1 and window.end.day == 1 else None
+    if concise:
+        interpretation = _compact_followup(interpretation)
+        # Avoid reprinting the complete report after every short follow-up.
+        context_line = (
+            f"*Verified context: {restaurant.name} · {window.label} · "
+            f"Orders: {metrics.total} ({counts['completed']} completed, "
+            f"{counts['pending']} recorded as pending); "
+            f"Completion: {rate(metrics.completion_rate)}; "
+            f"completed-order value ₹{metrics.revenue:,.2f}.*"
+        )
+        if is_historical and counts["pending"]:
+            context_line += ("\n*These are historical status records; "
+                             "they do not confirm the orders remain active today.*")
+        return f"**AI interpretation**\n\n{interpretation}\n\n{context_line}", period_token, restaurant.id
     return f"**AI interpretation**\n\n{interpretation}\n\n{verified}", period_token, restaurant.id

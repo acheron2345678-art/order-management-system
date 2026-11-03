@@ -397,6 +397,10 @@ async def answer_conversation(
             previous_month=prior.period if prior else None,
             restaurant_id_hint=(prior.restaurant_id if prior and user.role == "admin" else None),
             as_of=today,
+            # The rewritten query is used for scoping; the original question
+            # tells Qwen what the user actually needs from this follow-up.
+            user_intent=raw if special == "analysis" else None,
+            concise=special == "analysis" and prior is not None,
         ) if is_analysis_request(query) else None
         result = None
         dispatched_kind: str | None = None
