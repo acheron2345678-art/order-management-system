@@ -256,7 +256,9 @@ def test_ollama_receives_verified_context_not_sql_or_raw_orders(sample, monkeypa
     assert payload['model'] == analysis_service.MODEL
     assert payload['think'] is False and payload['stream'] is False
     messages = repr(payload['messages'])
-    assert 'City Kitchen' in messages and '994.00' in messages
+    assert 'QUALITATIVE_REPORT_FLAGS' in messages
+    assert 'City Kitchen' not in messages and '994.00' not in messages
+    assert 'orders_recorded' in messages
     assert 'Customer PII' not in messages
     assert 'owner@sample.test' not in messages
     assert 'SELECT ' not in messages

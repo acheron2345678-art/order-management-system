@@ -167,7 +167,8 @@ def test_numeric_echo_retry_uses_qualitative_facts_only(monkeypatch):
     ))
     assert "do not reveal the cause" in result
     assert len(captured) == 2
-    assert '"total_orders": 6' in str(captured[0]["messages"])
+    assert "QUALITATIVE_REPORT_FLAGS" in str(captured[0]["messages"])
+    assert '"total_orders": 6' not in str(captured[0]["messages"])
     second_messages = str(captured[1]["messages"])
     assert "QUALITATIVE_REPORT_FLAGS" in second_messages
     assert '"total_orders": 6' not in second_messages
